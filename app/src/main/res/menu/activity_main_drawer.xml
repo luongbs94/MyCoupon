@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_coupon"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="My Coupon" />
+        <item
+            android:id="@+id/nav_new"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Tin mới" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Lịch sử" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Cài đặt" />
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Thoát" />
+
+    </group>
+
+
+</menu>

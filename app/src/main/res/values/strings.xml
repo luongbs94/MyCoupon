@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">My Coupon</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Đăng nhập</string>
+    <string name="face_login">Facebook</string>
+
+    <string name="g_login">Google +</string>
+
+    <string name="banla">Bạn là</string>
+    <string name="shop">Cửa hàng</string>
+    <string name="customer">Khách hàng</string>
+    <string name="not_fill_login">Bạn chưa điền đầy đủ thông tin</string>
+    <string name="title_activity_test_qrcode">TestQRCode</string>
+    <string name="reload">Mã mới</string>
+    <string name="exit">Thoát</string>
+    <string name="add_coupon">Thêm coupon mới</string>
+    <string name="add_message">Thêm tin mới</string>
+
+    <string name="money">Số tiền</string>
+    <string name="title">Tiêu đề </string>
+    <string name="content">Nội dung </string>
+    <string name="link">Link liên kết</string>
+    <string name="date">Ngày hết hạn</string>
+
+
+
+
+    <string name="description">Mô tả</string>
+    <string name="limit">Thời hạn</string>
+    <string name="month">Tháng</string>
+    <string name="add_coupon_success">Thêm coupon thành công </string>
+    <string name="add_coupon_fail">Thêm coupon thất bại </string>
+    <string name="delete_coupon_success">Xoá coupon thành công </string>
+    <string name="delete_coupon_fail">Xoá coupon thất bại </string>
+
+    <string name="add_message_success">Thêm message thành công </string>
+    <string name="add_message_fail">Thêm message thất bại </string>
+
+
+    <string name="title_delete_coupon">Xoá coupon</string>
+    <string name="content_delete_coupon">Bạn có chắc chắn muốn xoá coupon này không ?</string>
+    <string name="ok">Đồng ý</string>
+    <string name="cancel">Không</string>
+    <string name="qrcode">Quét mã Coupon</string>
+    <string name="name_company">Tên công ty</string>
+    <string name="address_company">Địa chỉ công ty</string>
+    <string name="username1">Username1</string>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</resources>

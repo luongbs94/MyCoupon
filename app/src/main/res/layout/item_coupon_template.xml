@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ripple="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:background="@drawable/card_background_white"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="16.0dip">
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="@android:dimen/app_icon_size"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_marginEnd="8.0dip"
+        android:layout_marginRight="8.0dip"
+        android:contentDescription="@null"
+        android:src="@drawable/logo"/>
+
+    <LinearLayout
+        android:layout_width="0.0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/app_coupon"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="50 % coupon"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+
+        <TextView
+            android:id="@+id/app_time"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="Còn 30 ngày"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="?android:textColorSecondary" />
+    </LinearLayout>
+
+    <com.ln.views.RippleView
+        android:id="@+id/riple_qrcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        ripple:rv_color="@color/title_bg"
+        ripple:rv_type="rectangle"
+        ripple:rv_zoom="true">
+
+        <TextView
+            android:id="@+id/download"
+            android:layout_width="80.0dip"
+            android:layout_height="40.0dip"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="5.0dip"
+            android:background="@drawable/remove_bg"
+            android:gravity="center"
+            android:text="QR Code"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_middle" />
+    </com.ln.views.RippleView>
+</LinearLayout>
