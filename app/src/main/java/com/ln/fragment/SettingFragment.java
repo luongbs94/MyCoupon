@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company;
+import com.ln.model.Models;
 import com.ln.model.UserPicture;
 import com.ln.mycoupon.MainApplication;
 import com.ln.mycoupon.R;
@@ -58,6 +59,14 @@ public class SettingFragment extends Fragment {
         mLoveCouponAPI = MainApplication.getAPI();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mFileUri = savedInstanceState.getParcelable(Models.FILE_URI);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,6 +92,12 @@ public class SettingFragment extends Fragment {
 
 
         return v;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Models.FILE_URI, mFileUri);
     }
 
     public void init() {
@@ -137,7 +152,7 @@ public class SettingFragment extends Fragment {
 
         if (resultCode == getActivity().RESULT_OK) {
 
-            mDrawable = mImgLogo.getDrawable().getConstantState().newDrawable();
+//            mDrawable = mImgLogo.getDrawable().getConstantState().newDrawable();
             if (requestCode == SELECT_PICTURE) {
                 try {
                     mImgLogo.setImageBitmap(new UserPicture(data.getData(), getActivity().getContentResolver()).getBitmap());
@@ -147,7 +162,7 @@ public class SettingFragment extends Fragment {
             } else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
 
                 Log.d("SettingFragment", mFileUri.getPath());
-//                previewCapturedImage(mFileUri.getPath());
+                previewCapturedImage(mFileUri.getPath());
             }
         } else if (resultCode == getActivity().RESULT_CANCELED) {
             getShowMessage("User cancelled image capture");
@@ -171,11 +186,9 @@ public class SettingFragment extends Fragment {
 
     private static File getOutputMediaFile(int type) {
 
-        // External sdcard location
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 IMAGE_DIRECTORY_NAME);
 
-        // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create " + IMAGE_DIRECTORY_NAME + " directory");
@@ -183,14 +196,9 @@ public class SettingFragment extends Fragment {
             }
         }
 
-        // Create a media file name
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.getDefault()).format(new Date());
-        File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
-        } else {
-            return null;
-        }
+        File mediaFile = new File(mediaStorageDir.getPath() +
+                File.separator + "IMG_" + timeStamp + ".jpg");
 
         return mediaFile;
     }
@@ -214,7 +222,7 @@ public class SettingFragment extends Fragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.cardview1:
-                    onClickSave();
+                    onClickSaveCompany();
                     break;
                 case R.id.img_logo_company:
                     onClickChangeLogo();
@@ -268,7 +276,7 @@ public class SettingFragment extends Fragment {
             mTxtGallery.setOnClickListener(new Events());
         }
 
-        private void onClickSave() {
+        private void onClickSaveCompany() {
 
             Company company = SaveData.company;
 

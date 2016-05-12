@@ -2,15 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ln.mycoupon">
 
-    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <permission
         android:name="com.ln.mycoupon.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -47,16 +50,22 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize">
+
+        </activity>
         <activity
             android:name=".TestQRCode"
             android:label="@string/title_activity_test_qrcode"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
 
         <activity
             android:name=".AddCouponActivity"
             android:label="@string/add_coupon"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
 
         <activity
             android:name=".ShopActivity"
@@ -70,13 +79,17 @@
         <activity
             android:name=".AddMessageActivity"
             android:label="@string/add_message"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
 
 
         <activity
             android:name=".QRCodeActivity"
             android:label="@string/qrcode"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
