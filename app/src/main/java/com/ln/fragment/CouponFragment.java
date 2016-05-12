@@ -31,12 +31,11 @@ import retrofit2.Response;
  */
 public class CouponFragment extends Fragment {
 
-    LoveCouponAPI apiService;
-    ListView listview;
-    List<CouponTemplate> listCoupons = new ArrayList<>();
-    String TAG = "Coupon";
-    LinearLayout layoutView;
-
+    private LoveCouponAPI apiService;
+    private ListView listview;
+    private List<CouponTemplate> listCoupons = new ArrayList<>();
+    private String TAG = "Coupon";
+    private LinearLayout layoutView;
 
     public CouponFragment() {
         // Required empty public constructor
@@ -47,7 +46,6 @@ public class CouponFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         apiService = MainApplication.getAPI();
-
     }
 
     @Override
@@ -60,7 +58,7 @@ public class CouponFragment extends Fragment {
 
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view,final int i, long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
 
                 MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                         .title(R.string.title_delete_coupon)
@@ -88,16 +86,12 @@ public class CouponFragment extends Fragment {
 
         getCouponTemplate();
 
-
-        // Inflate the layout for this fragment
         return view;
     }
 
-    public void deleteCouponTemplate(String coupon_template_id){
+    public void deleteCouponTemplate(String coupon_template_id) {
         CouponTemplate template = new CouponTemplate();
         template.setCoupon_template_id(coupon_template_id);
-
-
 
         //template.created_date= new Date();
 
@@ -120,14 +114,12 @@ public class CouponFragment extends Fragment {
                 Log.d(TAG, "fail");
                 Snackbar.make(layoutView, R.string.delete_coupon_fail, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-
-
             }
         });
     }
 
 
-    public void getCouponTemplate(){
+    public void getCouponTemplate() {
 
         listCoupons = new ArrayList<>();
         Call<List<CouponTemplate>> call = apiService.getCouponTemplatesByCompanyId(7);
@@ -149,9 +141,7 @@ public class CouponFragment extends Fragment {
             @Override
             public void onFailure(Call<List<CouponTemplate>> arg0, Throwable arg1) {
                 Log.d(TAG, "Failure");
-
             }
-
         });
     }
 

@@ -17,42 +17,35 @@ import java.util.List;
 
 public class Coupon2Adapter extends BaseAdapter {
 
-    public List<Coupon> mlistCouponTemplate;
-    LayoutInflater infater = null;
-    private Context mContext;
+    public List<Coupon> mListCouponTemplate;
+    LayoutInflater mInflater = null;
 
 
     public Coupon2Adapter(Context context, List<Coupon> apps) {
-        infater = LayoutInflater.from(context);
-        mContext = context;
-        this.mlistCouponTemplate = apps;
-
+        mInflater = LayoutInflater.from(context);
+        this.mListCouponTemplate = apps;
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        return mlistCouponTemplate.size();
+        return mListCouponTemplate.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return mlistCouponTemplate.get(position);
+        return mListCouponTemplate.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
-            convertView = infater.inflate(R.layout.item_coupon,
-                    null);
+            convertView = mInflater.inflate(R.layout.item_coupon, null);
             holder = new ViewHolder();
             holder.appIcon = (ImageView) convertView
                     .findViewById(R.id.app_icon);
@@ -70,17 +63,16 @@ public class Coupon2Adapter extends BaseAdapter {
         if (item != null) {
 
             holder.appName.setText(MainApplication.getCompanyName(item.getCompany_id()));
-            holder.appValue.setText(item.getValue() + " Coupon");
+            String string = item.getValue() + " Coupon";
+            holder.appValue.setText(string);
         }
 
         return convertView;
     }
 
-
-    class ViewHolder {
+    private class ViewHolder {
         ImageView appIcon;
         TextView appName;
         TextView appValue;
     }
-
 }

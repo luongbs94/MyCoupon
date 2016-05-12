@@ -51,17 +51,9 @@
     <string name="name_company">Tên công ty</string>
     <string name="address_company">Địa chỉ công ty</string>
     <string name="username1">Username1</string>
-
-
-
-
-
-
-
-
-
-
-
+    <string name="content_icon">Image of User</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
 
 </resources>

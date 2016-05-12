@@ -16,50 +16,40 @@ import java.util.List;
 
 public class Coupon1Adapter extends BaseAdapter {
 
-    public List<Company1> listcompany;
-    LayoutInflater infater = null;
-    private Context mContext;
+    public List<Company1> mListCompany;
+    private LayoutInflater mInflater = null;
 
 
     public Coupon1Adapter(Context context, List<Company1> apps) {
-        infater = LayoutInflater.from(context);
-        mContext = context;
-        this.listcompany = apps;
+        mInflater = LayoutInflater.from(context);
+        this.mListCompany = apps;
 
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        return listcompany.size();
+        return mListCompany.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return listcompany.get(position);
+        return mListCompany.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
-            convertView = infater.inflate(R.layout.item_company,
-                    null);
+            convertView = mInflater.inflate(R.layout.item_company, null);
             holder = new ViewHolder();
-            holder.appIcon = (ImageView) convertView
-                    .findViewById(R.id.app_icon);
-            holder.companyName = (TextView) convertView
-                    .findViewById(R.id.company_name);
-            holder.companyAddress = (TextView) convertView
-                    .findViewById(R.id.company_address);
-
+            holder.appIcon = (ImageView) convertView.findViewById(R.id.app_icon);
+            holder.companyName = (TextView) convertView.findViewById(R.id.company_name);
+            holder.companyAddress = (TextView) convertView.findViewById(R.id.company_address);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -70,17 +60,14 @@ public class Coupon1Adapter extends BaseAdapter {
 
             holder.companyName.setText(item.getName());
             holder.companyAddress.setText(item.getAddress());
-
         }
 
         return convertView;
     }
 
-
-    class ViewHolder {
+    private class ViewHolder {
         ImageView appIcon;
         TextView companyName;
         TextView companyAddress;
     }
-
 }

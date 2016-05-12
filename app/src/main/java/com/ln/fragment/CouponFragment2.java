@@ -18,7 +18,7 @@ import com.ln.mycoupon.ShopActivity;
 /**
  * Created by luongnguyen on 4/8/16.
  */
-public class CouponFragment2 extends Fragment{
+public class CouponFragment2 extends Fragment {
 
     ListView listView;
     Coupon1Adapter adapter;
@@ -48,9 +48,6 @@ public class CouponFragment2 extends Fragment{
                 startActivity(intent);
             }
         });
-
-
-
 
         return view;
     }

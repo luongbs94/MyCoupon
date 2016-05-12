@@ -68,6 +68,8 @@ public class LoginActivity extends AppCompatActivity {
     public void getCompanyProfile(String user,String pass){
         Call<List<Company>> call = apiService.getCompanyProfile(user, pass);
 
+//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//        startActivity(intent);
         call.enqueue(new Callback<List<Company>>() {
 
             @Override

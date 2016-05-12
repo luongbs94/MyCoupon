@@ -52,7 +52,8 @@ public class MainApplication extends MultiDexApplication {
         super.onCreate();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.1.11:3000")
+//                .baseUrl("http://10.0.1.11:3000")
+                .baseUrl("http://103.7.40.171:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

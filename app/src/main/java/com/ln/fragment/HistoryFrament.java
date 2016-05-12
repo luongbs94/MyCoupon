@@ -34,7 +34,6 @@ public class HistoryFrament extends Fragment {
         return v;
     }
 
-
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         oneFragment = new OneFragment();
