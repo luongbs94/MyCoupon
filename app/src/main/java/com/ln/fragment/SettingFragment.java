@@ -13,6 +13,8 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,8 +56,8 @@ public class SettingFragment extends Fragment {
             new Firebase("https://nhahv-firebase.firebaseio.com/");
 
     private static final String TAG = "SettingFragment";
-    MaterialEditText nameCompany, addressCompany, user1, pass1, user2, pass2;
-    CheckBox checkBox, checkBox1;
+    private MaterialEditText nameCompany, addressCompany, user1, pass1, user2, pass2;
+    private CheckBox checkBox, checkBox1;
     private CardView mCardView;
     private LoveCouponAPI mLoveCouponAPI;
     private CircleImageView mImgLogo;
@@ -64,6 +66,7 @@ public class SettingFragment extends Fragment {
     private Uri mFileUri;
     private Dialog mDialog;
     private Drawable mDrawable;
+    private boolean isNameCompanry;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -164,8 +167,14 @@ public class SettingFragment extends Fragment {
         }
 
 
+        addEvents();
+    }
+
+    private void addEvents() {
         mCardView.setOnClickListener(new Events());
         mImgLogo.setOnClickListener(new Events());
+        nameCompany.addTextChangedListener(new Events());
+        addressCompany.addTextChangedListener(new Events());
     }
 
 
@@ -239,7 +248,7 @@ public class SettingFragment extends Fragment {
     }
 
 
-    private class Events implements View.OnClickListener {
+    private class Events implements View.OnClickListener, TextWatcher {
 
         @Override
         public void onClick(View view) {
@@ -318,6 +327,25 @@ public class SettingFragment extends Fragment {
                 }
             });
 
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (nameCompany.isFocused()) {
+                mTxtNameCompany.setText(editable.toString());
+            } else {
+                mTxtAddress.setText(editable.toString());
+            }
         }
     }
 
