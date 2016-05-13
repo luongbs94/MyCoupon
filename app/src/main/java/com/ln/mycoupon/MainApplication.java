@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
+import com.firebase.client.Firebase;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company1;
@@ -51,6 +52,7 @@ public class MainApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        Firebase.setAndroidContext(getApplicationContext());
         Retrofit retrofit = new Retrofit.Builder()
 //                .baseUrl("http://10.0.1.11:3000")
                 .baseUrl("http://103.7.40.171:3000")
