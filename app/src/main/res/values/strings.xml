@@ -29,8 +29,6 @@
     <string name="date">Ngày hết hạn</string>
 
 
-
-
     <string name="description">Mô tả</string>
     <string name="limit">Thời hạn</string>
     <string name="month">Tháng</string>
@@ -55,5 +53,7 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
 
+    <string name="facebook_app_id">1073363172685474</string>
+    <string name="fb_login_protocol_scheme">fb1073363172685474</string>
 
 </resources>

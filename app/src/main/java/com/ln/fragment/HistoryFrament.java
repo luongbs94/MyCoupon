@@ -19,8 +19,8 @@ public class HistoryFrament extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    OneFragment oneFragment;
-    TwoFragment twoFragment;
+    private OneFragment oneFragment;
+    private TwoFragment twoFragment;
 
     @Nullable
     @Override

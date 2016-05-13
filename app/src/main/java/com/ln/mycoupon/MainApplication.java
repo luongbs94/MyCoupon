@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.firebase.client.Firebase;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
@@ -26,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainApplication extends MultiDexApplication {
 
     public static LoveCouponAPI apiService;
-    private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
+    private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
     public static LoveCouponAPI apiService1;
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
@@ -40,12 +42,8 @@ public class MainApplication extends MultiDexApplication {
     public static SharedPreferences.Editor editor;
 
 
-
-
-
 // server_api_key: AIzaSyBuchLzuoZfJ_f6Iuf145SMb9uDfNNS-mI
 // Sender ID help: 87052112933
-
 
 
     @Override
@@ -53,6 +51,9 @@ public class MainApplication extends MultiDexApplication {
         super.onCreate();
 
         Firebase.setAndroidContext(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+
         Retrofit retrofit = new Retrofit.Builder()
 //                .baseUrl("http://10.0.1.11:3000")
                 .baseUrl("http://103.7.40.171:3000")
@@ -74,30 +75,30 @@ public class MainApplication extends MultiDexApplication {
         getCompanyByUserId();
     }
 
-    public static SharedPreferences getSharedPreferences(){
+    public static SharedPreferences getSharedPreferences() {
         return sharedPreferences;
     }
 
-    public static String getDeviceToken(){
+    public static String getDeviceToken() {
         String token = sharedPreferences.getString(DEVICE_TOKEN, "a");
         return token;
     }
 
-    public static boolean isAddToken(){
+    public static boolean isAddToken() {
         return sharedPreferences.getBoolean(BOOL_ADD_TOKEN, false);
     }
 
-    public static void setDeviceToken(String deviceToken){
+    public static void setDeviceToken(String deviceToken) {
         editor.putString(DEVICE_TOKEN, deviceToken);
         editor.commit();
     }
 
-    public static void setIsAddToken(boolean isAddToken){
+    public static void setIsAddToken(boolean isAddToken) {
         editor.putBoolean(BOOL_ADD_TOKEN, isAddToken);
         editor.commit();
     }
 
-    public void getCompanyByUserId(){
+    public void getCompanyByUserId() {
 
         Call<List<Company1>> call3 = apiService1.getCompaniesByUserId("10205539341392320");
         call3.enqueue(new Callback<List<Company1>>() {
@@ -129,13 +130,13 @@ public class MainApplication extends MultiDexApplication {
 
     }
 
-    public static String getCompanyName(String company_id){
-        for(int i =0; i < SaveData.listCompany.size(); i ++){
+    public static String getCompanyName(String company_id) {
+        for (int i = 0; i < SaveData.listCompany.size(); i++) {
 
             Company1 company1 = SaveData.listCompany.get(i);
 
-            Log.d("Coupon",  company1.getCompany_id());
-            if(company_id.equals(company1.getCompany_id())){
+            Log.d("Coupon", company1.getCompany_id());
+            if (company_id.equals(company1.getCompany_id())) {
                 return company1.getName();
             }
         }
@@ -144,15 +145,14 @@ public class MainApplication extends MultiDexApplication {
 
     }
 
-    public static LoveCouponAPI getAPI(){
+    public static LoveCouponAPI getAPI() {
         return apiService;
     }
 
-    public static String getRandomString(final int sizeOfRandomString)
-    {
-        final Random random=new Random();
-        final StringBuilder sb=new StringBuilder(sizeOfRandomString);
-        for(int i=0;i<sizeOfRandomString;++i)
+    public static String getRandomString(final int sizeOfRandomString) {
+        final Random random = new Random();
+        final StringBuilder sb = new StringBuilder(sizeOfRandomString);
+        for (int i = 0; i < sizeOfRandomString; ++i)
             sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
         return sb.toString();
     }

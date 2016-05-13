@@ -2,16 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:weightSum="5">
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
-        android:layout_marginTop="50dp"
-        android:orientation="vertical">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:paddingTop="50dp">
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/username"
@@ -31,33 +35,33 @@
             android:textColor="@drawable/text_color" />
 
         <Button
-            android:id="@+id/login"
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimary"
             android:text="@string/login"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/size_15sp" />
 
-        <Button
-            android:id="@+id/face_login"
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/btn_login_facebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/facebook"
-            android:text="@string/face_login"
+            style="@style/Facebook"
+            android:layout_marginTop="10dp" />
 
-            android:textColor="@color/white" />
-
-        <Button
-            android:id="@+id/g_login"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btn_google"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:background="@color/google"
-            android:text="@string/g_login"
-            android:textColor="@color/white" />
+            android:backgroundTint="@color/google" />
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 </LinearLayout>

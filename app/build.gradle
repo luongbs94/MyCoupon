@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.ln.mycoupon"
-        minSdkVersion 10
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -28,6 +28,9 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE-FIREBASE.txt'
         exclude 'META-INF/NOTICE'
+    }
+    repositories {
+        mavenCentral()
     }
 }
 
@@ -50,4 +53,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.firebase:firebase-client-android:2.5.2+'
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.11.0'
 }
