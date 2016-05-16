@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ln.fragment.CouponFragment2;
-import com.ln.fragment.HistoryFrament;
 import com.ln.fragment.NewsFragment2;
 
 public class MainActivity1 extends AppCompatActivity
@@ -121,8 +120,15 @@ public class MainActivity1 extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.logout) {
 
+            Intent intent = new Intent(this, FirstActivity.class);
+            startActivity(intent);
+
+            MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
+            MainApplication.editor.commit();
+
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -31,6 +31,7 @@ public class FirstActivity extends AppCompatActivity {
 
     LoveCouponAPI apiService;
     String TAG = "Coupon";
+    boolean loginCompany, loginShop;
 
 
     @Override
@@ -75,7 +76,7 @@ public class FirstActivity extends AppCompatActivity {
                     // now subscribe to `global` topic to receive app wide notifications
                     String token = intent.getStringExtra("token");
 
-                    Toast.makeText(getApplicationContext(), "GCM registration token: " + token, Toast.LENGTH_LONG).show();
+               //     Toast.makeText(getApplicationContext(), "GCM registration token: " + token, Toast.LENGTH_LONG).show();
 
                 } else if (intent.getAction().equals(MainApplication.SENT_TOKEN_TO_SERVER)) {
                     // gcm registration id is stored in our server's MySQL
@@ -98,20 +99,33 @@ public class FirstActivity extends AppCompatActivity {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateFormateInUTC = formatter.format(now);
 
+        loginCompany = MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINCOMPANY, false);
+        loginShop = MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINSHOP, false);
 
 
-        // Date now = new Date();
-        Log.d("Coupon", dateFormateInUTC);
+        if(loginCompany == true){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }else if(loginShop == true){
+            start();
+        }
+
     }
 
     public void startLogin(){
         Intent intent = new Intent(FirstActivity.this, LoginActivity.class);
         startActivity(intent);
+
+        finish();
     }
 
     public void start(){
         Intent intent = new Intent(FirstActivity.this, MainActivity1.class);
         startActivity(intent);
+        MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, true);
+        MainApplication.editor.commit();
+
+        finish();
     }
 
     private void registerGCM() {

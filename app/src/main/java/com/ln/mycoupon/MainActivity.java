@@ -140,7 +140,13 @@ public class MainActivity extends AppCompatActivity
             setTitle("Setting");
             startFragment(new SettingFrament());
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.logout) {
+            Intent intent = new Intent(this, FirstActivity.class);
+            startActivity(intent);
+            MainApplication.editor.putBoolean(MainApplication.LOGINCOMPANY, false);
+            MainApplication.editor.commit();
+
+            finish();
 
         }
 

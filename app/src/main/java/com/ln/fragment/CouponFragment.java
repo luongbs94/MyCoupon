@@ -13,6 +13,8 @@ import android.widget.ListView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ln.adapter.CouponAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.model.CouponTemplate;
@@ -37,6 +39,8 @@ public class CouponFragment extends Fragment {
     String TAG = "Coupon";
     LinearLayout layoutView;
 
+    Gson gson = new Gson();
+
 
     public CouponFragment() {
         // Required empty public constructor
@@ -60,7 +64,7 @@ public class CouponFragment extends Fragment {
 
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view,final int i, long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
 
                 MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                         .title(R.string.title_delete_coupon)
@@ -86,7 +90,18 @@ public class CouponFragment extends Fragment {
             }
         });
 
-        getCouponTemplate();
+
+        if(MainApplication.isNetworkAvailable(getContext())){
+            getCouponTemplate();
+        }else{
+            String jsonListCoupon = MainApplication.sharedPreferences.getString(MainApplication.LISTCOUPON, "");
+            if(jsonListCoupon.length() > 0){
+                listCoupons = gson.fromJson(jsonListCoupon, new TypeToken<List<CouponTemplate>>(){}.getType());
+                CouponAdapter adapter = new CouponAdapter(getActivity(), listCoupons);
+                listview.setAdapter(adapter);
+            }
+        }
+
 
 
         // Inflate the layout for this fragment
@@ -138,8 +153,10 @@ public class CouponFragment extends Fragment {
                                    Response<List<CouponTemplate>> arg1) {
                 listCoupons = arg1.body();
 
-                Log.d(TAG, listCoupons.size() + "");
+                String jsonListCoupon = gson.toJson(listCoupons);
 
+                MainApplication.editor.putString(MainApplication.LISTCOUPON, jsonListCoupon);
+                MainApplication.editor.commit();
 
                 CouponAdapter adapter = new CouponAdapter(getActivity(), listCoupons);
                 listview.setAdapter(adapter);

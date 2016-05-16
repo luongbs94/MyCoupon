@@ -77,11 +77,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 SaveData.company = templates.get(0);
 
-
-          //      Log.d(TAG, SaveData.company.getLogo());
-
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
+
+                MainApplication.editor.putBoolean(MainApplication.LOGINCOMPANY, true);
+                MainApplication.editor.commit();
+
+                finish();
 
             }
 
