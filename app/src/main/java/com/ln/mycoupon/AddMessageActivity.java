@@ -51,9 +51,9 @@ public class AddMessageActivity extends AppCompatActivity {
                 String str_title = title.getText().toString();
                 String str_content = content.getText().toString();
                 String str_link = link.getText().toString();
-                if(str_title.length() > 0 && str_content.length() >0 && str_link.length() > 0){
-                    addNews(str_title,str_content, str_link);
-                }else{
+                if (str_title.length() > 0 && str_content.length() > 0 && str_link.length() > 0) {
+                    addNews(str_title, str_content, str_link);
+                } else {
                     Snackbar.make(view, R.string.not_fill_login, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
@@ -64,7 +64,7 @@ public class AddMessageActivity extends AppCompatActivity {
 
     }
 
-    public void addNews(final String title, final String content, final String link){
+    public void addNews(final String title, final String content, final String link) {
         Message template = new Message();
         template.setMessage_id(MainApplication.getRandomString(15));
         template.setContent(content);
@@ -109,8 +109,8 @@ public class AddMessageActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        if(id == android.R.id.home){
-            Intent intent=new Intent();
+        if (id == android.R.id.home) {
+            Intent intent = new Intent();
             setResult(3, intent);
             finish();
         }

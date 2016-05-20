@@ -24,42 +24,37 @@ import java.util.concurrent.TimeUnit;
 
 public class CouponAdapter extends BaseAdapter {
 
-    public List<CouponTemplate> mlistCouponTemplate;
-    LayoutInflater infater = null;
+    public List<CouponTemplate> mListCouponTemplate;
+    LayoutInflater mInflater = null;
     private Context mContext;
 
 
     public CouponAdapter(Context context, List<CouponTemplate> apps) {
-        infater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         mContext = context;
-        this.mlistCouponTemplate = apps;
-
+        this.mListCouponTemplate = apps;
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        return mlistCouponTemplate.size();
+        return mListCouponTemplate.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return mlistCouponTemplate.get(position);
+        return mListCouponTemplate.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
-            convertView = infater.inflate(R.layout.item_coupon_template,
-                    null);
+            convertView = mInflater.inflate(R.layout.item_coupon_template, null);
             holder = new ViewHolder();
             holder.appIcon = (ImageView) convertView
                     .findViewById(R.id.app_icon);
@@ -80,12 +75,12 @@ public class CouponAdapter extends BaseAdapter {
 
             holder.appCoupon.setText(item.getValue() + "Coupon");
             String dayLeft = dayLeft(item.getCreated_date(), item.getDuration()) + "";
-            holder.appTime.setText("Còn " + dayLeft +" ngày");
+            holder.appTime.setText("Còn " + dayLeft + " ngày");
 
-       //     String base= company.getLogo();
-       //     byte[] imageAsBytes = Base64.decode(base.getBytes(), Base64.DEFAULT);
-        //    holder.appIcon.setImageBitmap(
-        //            BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+            //     String base= company.getLogo();
+            //     byte[] imageAsBytes = Base64.decode(base.getBytes(), Base64.DEFAULT);
+            //    holder.appIcon.setImageBitmap(
+            //            BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
         }
 
         final String coupon = item.getValue() + "";
@@ -97,26 +92,22 @@ public class CouponAdapter extends BaseAdapter {
 
                 Intent intent = new Intent(mContext, TestQRCode.class);
                 intent.putExtra("value", coupon);
-                intent.putExtra("coupon_template_id", coupon_template_id );
+                intent.putExtra("coupon_template_id", coupon_template_id);
                 mContext.startActivity(intent);
-
-
             }
         });
-
 
         return convertView;
     }
 
-
-    class ViewHolder {
+    private class ViewHolder {
         ImageView appIcon;
         TextView appCoupon;
         TextView appTime;
         RippleView qrcode;
     }
 
-    public long dayLeft(Date created_date, int duration){
+    public long dayLeft(Date created_date, int duration) {
         Calendar last_cal = Calendar.getInstance();
         last_cal.setTime(created_date);
         last_cal.add(Calendar.DAY_OF_YEAR, duration);
@@ -126,12 +117,10 @@ public class CouponAdapter extends BaseAdapter {
         long diff = last_date.getTime() - new Date().getTime();
         long dayLeft = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 
-        if(dayLeft < 0){
+        if (dayLeft < 0) {
             dayLeft = 0;
         }
 
-
         return dayLeft;
     }
-
 }

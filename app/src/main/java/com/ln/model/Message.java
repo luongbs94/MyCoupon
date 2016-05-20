@@ -14,6 +14,8 @@ public class Message {
     String last_date;
     String link;
     Date created_date;
+    String logo;
+    String name;
 
     public Date getCreated_date() {
         return created_date;
@@ -78,6 +80,22 @@ public class Message {
 
     public void setLast_date(String last_date) {
         this.last_date = last_date;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
 

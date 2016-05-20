@@ -55,7 +55,7 @@ public class NewsFragment extends Fragment {
         return view;
     }
 
-    public void getMessage(){
+    public void getMessage() {
 
         listMessage = new ArrayList<>();
         Call<List<Message>> call = apiService.getNewsByCompanyId(7);
@@ -77,9 +77,7 @@ public class NewsFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
                 Log.d(TAG, "Failure");
-
             }
-
         });
     }
 

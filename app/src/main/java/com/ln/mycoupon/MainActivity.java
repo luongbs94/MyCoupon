@@ -19,7 +19,7 @@ import android.view.View;
 import com.ln.fragment.CouponFragment;
 import com.ln.fragment.HistoryFrament;
 import com.ln.fragment.NewsFragment;
-import com.ln.fragment.SettingFrament;
+import com.ln.fragment.SettingFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
             curentPosition = 2;
             setTitle("Setting");
-            startFragment(new SettingFrament());
+            startFragment(new SettingFragment());
 
         } else if (id == R.id.logout) {
             Intent intent = new Intent(this, FirstActivity.class);

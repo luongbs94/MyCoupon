@@ -18,42 +18,36 @@ import java.util.TimeZone;
 
 public class CreateCouponAdapter extends BaseAdapter {
 
-    public List<Coupon> mlistCouponTemplate;
-    LayoutInflater infater = null;
-    private Context mContext;
+    public List<Coupon> mListCouponTemplate;
+    LayoutInflater mInflater = null;
 
 
     public CreateCouponAdapter(Context context, List<Coupon> apps) {
-        infater = LayoutInflater.from(context);
-        mContext = context;
-        this.mlistCouponTemplate = apps;
+        mInflater = LayoutInflater.from(context);
+        this.mListCouponTemplate = apps;
 
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        return mlistCouponTemplate.size();
+        return mListCouponTemplate.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return mlistCouponTemplate.get(position);
+        return mListCouponTemplate.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
-            convertView = infater.inflate(R.layout.item_fragment_create,
-                    null);
+            convertView = mInflater.inflate(R.layout.item_fragment_create, null);
             holder = new ViewHolder();
             holder.appIcon = (ImageView) convertView
                     .findViewById(R.id.app_icon);
@@ -74,9 +68,9 @@ public class CreateCouponAdapter extends BaseAdapter {
             SimpleDateFormat formatter = new SimpleDateFormat("MMM dd yyyy");
 
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-            String dateFormateInUTC = formatter.format(item.getCreated_date());
+            String dateFormatInUTC = formatter.format(item.getCreated_date());
 
-            holder.time.setText(dateFormateInUTC);
+            holder.time.setText(dateFormatInUTC);
             holder.value.setText(item.getValue());
 
         }
@@ -84,11 +78,10 @@ public class CreateCouponAdapter extends BaseAdapter {
         return convertView;
     }
 
-    class ViewHolder {
+    private class ViewHolder {
         ImageView appIcon;
         TextView time;
         TextView name;
         TextView value;
     }
-
 }

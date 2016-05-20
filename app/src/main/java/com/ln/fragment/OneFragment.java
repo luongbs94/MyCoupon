@@ -32,7 +32,6 @@ public class OneFragment extends Fragment {
     String utc1 = "Mon, 6 Mar 2016 17:00:00 GMT";
     String utc2 = "Mon, 17 Oct 2016 17:00:00 GMT";
 
-
     public OneFragment() {
         // Required empty public constructor
     }
@@ -58,7 +57,7 @@ public class OneFragment extends Fragment {
         return view;
     }
 
-    public void getCreateCoupon(String company_id,String utc1, String utc2){
+    public void getCreateCoupon(String company_id, String utc1, String utc2) {
         Call<List<Coupon>> call = apiService.getCreatedCoupon(company_id, utc1, utc2);
 
         call.enqueue(new Callback<List<Coupon>>() {
@@ -70,7 +69,6 @@ public class OneFragment extends Fragment {
                 listCoupon = arg1.body();
                 CreateCouponAdapter adapter = new CreateCouponAdapter(getActivity(), listCoupon);
                 listview.setAdapter(adapter);
-
             }
 
             @Override
@@ -80,6 +78,5 @@ public class OneFragment extends Fragment {
             }
         });
     }
-
 
 }

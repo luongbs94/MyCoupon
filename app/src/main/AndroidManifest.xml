@@ -2,18 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ln.mycoupon">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission
         android:name="com.ln.mycoupon.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.ln.mycoupon.permission.C2D_MESSAGE" />
-
 
     <application
         android:name=".MainApplication"
@@ -35,26 +40,28 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".MainActivity1"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize">
+
+        </activity>
         <activity
             android:name=".TestQRCode"
             android:label="@string/title_activity_test_qrcode"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
 
+        </activity>
         <activity
             android:name=".AddCouponActivity"
             android:label="@string/add_coupon"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
 
+        </activity>
         <activity
             android:name=".ShopActivity"
             android:label="@string/shop"
@@ -63,17 +70,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity1" />
         </activity>
-
         <activity
             android:name=".AddMessageActivity"
             android:label="@string/add_message"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
 
-
+        </activity>
         <activity
             android:name=".QRCodeActivity"
             android:label="@string/qrcode"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -93,7 +101,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
         <service
             android:name="com.ln.gcm.GcmIntentService"
             android:exported="false">
@@ -102,7 +109,31 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1234"
+            android:exported="true" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
     </application>
 
 </manifest>

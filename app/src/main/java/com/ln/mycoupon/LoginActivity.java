@@ -9,9 +9,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company;
+import com.ln.model.InformationAccount;
+import com.ln.model.Models;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
@@ -23,13 +43,23 @@ import retrofit2.Response;
 /**
  * Created by luongnguyen on 3/30/16.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener {
 
-    Button login, flogin, glogin;
-    MaterialEditText username, password;
-    LoveCouponAPI apiService;
-    String TAG = "Coupon";
+    private Button mBtnLogin;
+    private LoginButton mBtnLoginFacebook;
+    private MaterialEditText username, password;
+    private LoveCouponAPI apiService;
+    private String TAG = getClass().getSimpleName();
+    private GoogleSignInOptions mInOptions;
+    private GoogleApiClient mGoogleApiClient;
 
+    private SignInButton mBtnGooglePlus;
+    private CallbackManager mCallbackManager;
+    private AccessTokenTracker mAccessTokenTracker;
+    private AccessToken mAccessToken;
+    private ProfileTracker mProfileTracker;
+    private Profile mProfile;
 
 
     @Override
@@ -39,57 +69,96 @@ public class LoginActivity extends AppCompatActivity {
         setTitle(R.string.login);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
         apiService = MainApplication.getAPI();
+        mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
+                .build();
 
-        login = (Button) findViewById(R.id.login);
+        initViews();
+        addEvents();
+    }
+
+    private void initViews() {
+
+        mCallbackManager = CallbackManager.Factory.create();
+
+        mBtnLogin = (Button) findViewById(R.id.btn_login);
         username = (MaterialEditText) findViewById(R.id.username);
         password = (MaterialEditText) findViewById(R.id.password);
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String str_user = username.getText().toString();
-                String str_password = password.getText().toString();
+        mBtnLoginFacebook = (LoginButton) findViewById(R.id.btn_login_facebook);
+        mBtnLoginFacebook.setReadPermissions("user_friends");
+        mBtnLoginFacebook.setReadPermissions("public_profile");
+        mBtnLoginFacebook.setReadPermissions("email");
 
-                if(str_user.length() > 0 && str_password.length() > 0) {
-                    getCompanyProfile(str_user, str_password);
+        mBtnGooglePlus = (SignInButton) findViewById(R.id.btn_google);
+        mBtnGooglePlus.setSize(SignInButton.SIZE_WIDE);
+        mBtnGooglePlus.setScopes(mInOptions.getScopeArray());
 
-                } else {
-                    Snackbar.make(view, R.string.not_fill_login, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            }
-        });
+
+
+    }
+
+    private void addEvents() {
+
+        mBtnLogin.setOnClickListener(new Events());
+        mBtnGooglePlus.setOnClickListener(new Events());
+        mBtnLoginFacebook.setOnClickListener(new Events());
     }
 
 
-    public void getCompanyProfile(String user,String pass){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Models.GOOGLE_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
+            GoogleSignInAccount accountGoogle = result.getSignInAccount();
+            InformationAccount account = new InformationAccount();
+            account.setId(accountGoogle.getId());
+            account.setDisplayName(accountGoogle.getDisplayName());
+            account.setEmail(accountGoogle.getEmail());
+            account.setPhotoUrl(accountGoogle.getPhotoUrl().toString());
+            account.setIdToken(accountGoogle.getIdToken());
+            username.setText(account.getDisplayName());
+        }
+    }
+
+    public void getCompanyProfile(String user, String pass) {
         Call<List<Company>> call = apiService.getCompanyProfile(user, pass);
 
+//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//        startActivity(intent);
         call.enqueue(new Callback<List<Company>>() {
 
             @Override
             public void onResponse(Call<List<Company>> arg0,
                                    Response<List<Company>> arg1) {
-                List<Company> templates= arg1.body();
+                List<Company> templates = arg1.body();
 
                 SaveData.company = templates.get(0);
 
+
+                //      Log.d(TAG, SaveData.company.getLogo());
+
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
-
-                MainApplication.editor.putBoolean(MainApplication.LOGINCOMPANY, true);
-                MainApplication.editor.commit();
-
-                finish();
 
             }
 
             @Override
             public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
-                Log.d(TAG,  "Failure");
+                Log.d(TAG, "Failure");
 
             }
         });
@@ -99,11 +168,138 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionListener + " + connectionResult);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (opr.isDone()) {
+            GoogleSignInResult result = opr.get();
+            handleSignInResult(result);
+        } else {
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(GoogleSignInResult googleSignInResult) {
+                    handleSignInResult(googleSignInResult);
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        initDataFacebook();
+    }
+
+    private void initDataFacebook() {
+
+        mAccessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(
+                    AccessToken oldAccessToken,
+                    AccessToken currentAccessToken) {
+                mAccessToken = currentAccessToken;
+
+            }
+        };
+
+        mAccessToken = AccessToken.getCurrentAccessToken();
+
+        mProfileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(
+                    Profile oldProfile, Profile currentProfile) {
+                mProfile = currentProfile;
+            }
+        };
+
+        mProfile = Profile.getCurrentProfile();
+
+        if (mAccessToken != null) {
+//            mStatusTextView.setText(mAccessToken.getUserId() + "");
+//            Log.i("Tagsss", mAccessToken.getUserId() + "");
+
+        }
+        if (mProfile != null) {
+            username.setText(mProfile.getId());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mProfileTracker.stopTracking();
+        mAccessTokenTracker.stopTracking();
+    }
+
+    private class Events implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+
+            switch (view.getId()) {
+                case R.id.btn_login:
+                    onClickLogin(view);
+                    break;
+                case R.id.btn_login_facebook:
+                    onClickLoginFacebook();
+                    break;
+                case R.id.btn_google:
+                    onClickGooglePlus();
+                    break;
+            }
+        }
+
+        private void onClickLogin(View view) {
+
+            String str_user = username.getText().toString();
+            String str_password = password.getText().toString();
+
+            if (str_user.length() > 0 && str_password.length() > 0) {
+                getCompanyProfile(str_user, str_password);
+
+            } else {
+                Snackbar.make(view, R.string.not_fill_login, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        }
+
+        private void onClickGooglePlus() {
+            Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(intent, Models.GOOGLE_SIGN_IN);
+        }
+
+        private void onClickLoginFacebook() {
+            mBtnLoginFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    mProfile = Profile.getCurrentProfile();
+//                    mAccessToken = AccessToken.getCurrentAccessToken();
+                    username.setText(mProfile.getId());
+                }
+
+                @Override
+                public void onCancel() {
+                }
+
+                @Override
+                public void onError(FacebookException error) {
+                }
+            });
+        }
+    }
 }
+

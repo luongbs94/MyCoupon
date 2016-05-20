@@ -13,8 +13,6 @@ import android.widget.ListView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ln.adapter.CouponAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.model.CouponTemplate;
@@ -33,14 +31,11 @@ import retrofit2.Response;
  */
 public class CouponFragment extends Fragment {
 
-    LoveCouponAPI apiService;
-    ListView listview;
-    List<CouponTemplate> listCoupons = new ArrayList<>();
-    String TAG = "Coupon";
-    LinearLayout layoutView;
-
-    Gson gson = new Gson();
-
+    private LoveCouponAPI apiService;
+    private ListView listview;
+    private List<CouponTemplate> listCoupons = new ArrayList<>();
+    private String TAG = "Coupon";
+    private LinearLayout layoutView;
 
     public CouponFragment() {
         // Required empty public constructor
@@ -51,7 +46,6 @@ public class CouponFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         apiService = MainApplication.getAPI();
-
     }
 
     @Override
@@ -90,29 +84,14 @@ public class CouponFragment extends Fragment {
             }
         });
 
+        getCouponTemplate();
 
-        if(MainApplication.isNetworkAvailable(getContext())){
-            getCouponTemplate();
-        }else{
-            String jsonListCoupon = MainApplication.sharedPreferences.getString(MainApplication.LISTCOUPON, "");
-            if(jsonListCoupon.length() > 0){
-                listCoupons = gson.fromJson(jsonListCoupon, new TypeToken<List<CouponTemplate>>(){}.getType());
-                CouponAdapter adapter = new CouponAdapter(getActivity(), listCoupons);
-                listview.setAdapter(adapter);
-            }
-        }
-
-
-
-        // Inflate the layout for this fragment
         return view;
     }
 
-    public void deleteCouponTemplate(String coupon_template_id){
+    public void deleteCouponTemplate(String coupon_template_id) {
         CouponTemplate template = new CouponTemplate();
         template.setCoupon_template_id(coupon_template_id);
-
-
 
         //template.created_date= new Date();
 
@@ -135,14 +114,12 @@ public class CouponFragment extends Fragment {
                 Log.d(TAG, "fail");
                 Snackbar.make(layoutView, R.string.delete_coupon_fail, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-
-
             }
         });
     }
 
 
-    public void getCouponTemplate(){
+    public void getCouponTemplate() {
 
         listCoupons = new ArrayList<>();
         Call<List<CouponTemplate>> call = apiService.getCouponTemplatesByCompanyId(7);
@@ -153,10 +130,8 @@ public class CouponFragment extends Fragment {
                                    Response<List<CouponTemplate>> arg1) {
                 listCoupons = arg1.body();
 
-                String jsonListCoupon = gson.toJson(listCoupons);
+                Log.d(TAG, listCoupons.size() + "");
 
-                MainApplication.editor.putString(MainApplication.LISTCOUPON, jsonListCoupon);
-                MainApplication.editor.commit();
 
                 CouponAdapter adapter = new CouponAdapter(getActivity(), listCoupons);
                 listview.setAdapter(adapter);
@@ -166,9 +141,7 @@ public class CouponFragment extends Fragment {
             @Override
             public void onFailure(Call<List<CouponTemplate>> arg0, Throwable arg1) {
                 Log.d(TAG, "Failure");
-
             }
-
         });
     }
 

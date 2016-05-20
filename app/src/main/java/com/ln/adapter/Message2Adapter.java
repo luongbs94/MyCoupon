@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ln.api.SaveData;
 import com.ln.model.Message;
 import com.ln.mycoupon.MainApplication;
 import com.ln.mycoupon.R;
@@ -21,42 +20,36 @@ import java.util.List;
 
 public class Message2Adapter extends BaseAdapter {
 
-    public List<Message> listMessage;
-    LayoutInflater infater = null;
-    private Context mContext;
+    public List<Message> mListMessage;
+    LayoutInflater mInflater = null;
 
 
     public Message2Adapter(Context context, List<Message> apps) {
-        infater = LayoutInflater.from(context);
-        mContext = context;
-        this.listMessage = apps;
+        mInflater = LayoutInflater.from(context);
+        this.mListMessage = apps;
 
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        return listMessage.size();
+        return mListMessage.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return listMessage.get(position);
+        return mListMessage.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
-            convertView = infater.inflate(R.layout.item_news,
-                    null);
+            convertView = mInflater.inflate(R.layout.item_news, null);
             holder = new ViewHolder();
             holder.appIcon = (ImageView) convertView
                     .findViewById(R.id.app_icon);
@@ -83,17 +76,12 @@ public class Message2Adapter extends BaseAdapter {
             holder.title.setText(item.getTitle());
             holder.content.setText(item.getContent());
             holder.link.setText(item.getLink());
-
-
         }
-
-
-
         return convertView;
     }
 
 
-    class ViewHolder {
+    private class ViewHolder {
         ImageView appIcon;
         TextView company_name;
         TextView date;

@@ -14,8 +14,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:orientation="vertical"
-        android:paddingTop="50dp">
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/username"
@@ -41,14 +41,13 @@
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimary"
             android:text="@string/login"
-            android:textColor="@color/white"
-            android:textSize="@dimen/size_15sp" />
+            android:textColor="@color/white" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/btn_login_facebook"
+            style="@style/Facebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Facebook"
             android:layout_marginTop="10dp" />
 
         <com.google.android.gms.common.SignInButton

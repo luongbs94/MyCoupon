@@ -59,7 +59,7 @@ public class TwoFragment extends Fragment {
 
     }
 
-    public void getUsedCoupon(String company_id,String utc1, String utc2){
+    public void getUsedCoupon(String company_id, String utc1, String utc2) {
         Call<List<Coupon>> call = apiService.getUsedCoupon(company_id, utc1, utc2);
 
         call.enqueue(new Callback<List<Coupon>>() {

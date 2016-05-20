@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.ln.adapter.Message2Adapter;
-import com.ln.adapter.MessageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.model.Message;
 import com.ln.mycoupon.MainApplication;
@@ -26,7 +25,7 @@ import retrofit2.Response;
 /**
  * Created by luongnguyen on 4/8/16.
  */
-public class NewsFragment2 extends Fragment{
+public class NewsFragment2 extends Fragment {
 
     LoveCouponAPI apiService;
     ListView listview;
@@ -38,7 +37,6 @@ public class NewsFragment2 extends Fragment{
         super.onCreate(savedInstanceState);
 
         apiService = MainApplication.getAPI();
-
     }
 
     @Nullable
@@ -50,12 +48,10 @@ public class NewsFragment2 extends Fragment{
         listview = (ListView) view.findViewById(R.id.listview);
 
         getMessage();
-
-
         return view;
     }
 
-    public void getMessage(){
+    public void getMessage() {
 
         listMessage = new ArrayList<>();
         Call<List<Message>> call = apiService.getNewsByUserId("10205539341392320");
@@ -68,7 +64,6 @@ public class NewsFragment2 extends Fragment{
 
                 Log.d(TAG, listMessage.size() + "");
 
-
                 Message2Adapter adapter = new Message2Adapter(getActivity(), listMessage);
                 listview.setAdapter(adapter);
 
@@ -77,9 +72,7 @@ public class NewsFragment2 extends Fragment{
             @Override
             public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
                 Log.d(TAG, "Failure");
-
             }
-
         });
     }
 }

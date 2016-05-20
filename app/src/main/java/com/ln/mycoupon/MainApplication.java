@@ -1,17 +1,18 @@
 package com.ln.mycoupon;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.firebase.client.Firebase;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company1;
+import com.ln.model.Coupon;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -35,17 +36,10 @@ public class MainApplication extends MultiDexApplication {
     public static final String DEVICE_TOKEN = "deviceToken";
     public static final String BOOL_ADD_TOKEN = "addToken";
     public static final String SHAREDPRE = "sharePre";
-    public static final String LISTCOMPANY = "listcompany";
-    public static final String LISTCOUPON = "listCoupon";
-    public static final String LOGINCOMPANY = "logincompany";
-    public static final String LOGINSHOP = "loginshop";
-
 
 
     public static SharedPreferences sharedPreferences;
     public static SharedPreferences.Editor editor;
-
-    Gson gson = new Gson();
 
 
 // server_api_key: AIzaSyBuchLzuoZfJ_f6Iuf145SMb9uDfNNS-mI
@@ -56,7 +50,12 @@ public class MainApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        Firebase.setAndroidContext(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+
         Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("http://10.0.1.11:3000")
                 .baseUrl("http://103.7.40.171:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -73,15 +72,7 @@ public class MainApplication extends MultiDexApplication {
         sharedPreferences = getSharedPreferences(SHAREDPRE, 4);
         editor = sharedPreferences.edit();
 
-        if(isNetworkAvailable(getApplicationContext())){
-            getCompanyByUserId();
-        }else{
-            String jsonListCompany = sharedPreferences.getString(LISTCOMPANY, "");
-            if(jsonListCompany.length() > 0) {
-                SaveData.listCompany = gson.fromJson(jsonListCompany, new TypeToken<List<Company1>>(){}.getType());
-            }
-        }
-
+        getCompanyByUserId();
     }
 
     public static SharedPreferences getSharedPreferences() {
@@ -116,12 +107,16 @@ public class MainApplication extends MultiDexApplication {
             public void onResponse(Call<List<Company1>> arg0,
                                    Response<List<Company1>> arg1) {
                 List<Company1> templates = arg1.body();
+                System.out.println(templates.size());
 
                 SaveData.listCompany = templates;
-                String jsonListCompany = gson.toJson(templates);
 
-                editor.putString(LISTCOMPANY, jsonListCompany);
-                editor.commit();
+
+                Company1 company1 = templates.get(0);
+                Coupon coupon = company1.getCoupon().get(0);
+                String value = coupon.getValue();
+                String company_id = coupon.getCompany_id();
+                Date date = coupon.getCreated_date();
 
             }
 
@@ -160,10 +155,5 @@ public class MainApplication extends MultiDexApplication {
         for (int i = 0; i < sizeOfRandomString; ++i)
             sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
         return sb.toString();
-    }
-
-
-    public static boolean isNetworkAvailable(final Context context) {
-        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
     }
 }

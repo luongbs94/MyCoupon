@@ -29,7 +29,7 @@ public interface LoveCouponAPI {
 
 
     @GET("/get_company_profile")
-    Call<List<Company>> getCompanyProfile(@Query("user_name") String user_name ,  @Query("password") String password);
+    Call<List<Company>> getCompanyProfile(@Query("user_name") String user_name, @Query("password") String password);
 
     @POST("/addCouponTemplate")
     Call<CouponTemplate> addCouponTemplate(@Body CouponTemplate template);
@@ -72,6 +72,7 @@ public interface LoveCouponAPI {
     @POST("/useCoupon")
     Call<Coupon> useCoupon(@Body Coupon template);
 
-
+    @POST("/updateCompany")
+    Call<Company> updateCompany(@Body Company template);
 
 }
