@@ -27,6 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MainApplication extends MultiDexApplication {
 
+    // test
     public static LoveCouponAPI apiService;
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
     public static LoveCouponAPI apiService1;
