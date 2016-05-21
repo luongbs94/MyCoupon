@@ -10,7 +10,7 @@
         android:layout_height="fill_parent"
         android:clipToPadding="false"
         android:divider="@null"
-        android:dividerHeight="4.0dip"
+        android:dividerHeight="4dip"
         android:fastScrollEnabled="true"
         android:focusable="true"
         android:layoutAnimation="@anim/listview_layout_animation"

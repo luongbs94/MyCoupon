@@ -1,6 +1,7 @@
 package com.ln.adapter;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.ln.api.SaveData;
+import com.ln.loadimage.LoadImages;
+import com.ln.loadimage.ViewHolder;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
 
@@ -40,6 +43,8 @@ public class MessageAdapter extends BaseAdapter {
     private String TAG = "MessageAdapter";
     private Context mContext;
 
+    private ViewHolder holder;
+
     public MessageAdapter(Context context, List<Message> apps) {
         mInflater = LayoutInflater.from(context);
         mListMessage = apps;
@@ -63,7 +68,7 @@ public class MessageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
+
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_news, null);
             holder = new ViewHolder();
@@ -100,8 +105,22 @@ public class MessageAdapter extends BaseAdapter {
             String date = formatter.format(item.getCreated_date());
             holder.date.setText(date);
 
+            String url = "user/coupon";
+            LoadImages loadImages = new LoadImages(holder, url);
+            new AsyncTaskLoadImages().execute(loadImages);
+
+        }
+        return convertView;
+    }
+
+
+    private class AsyncTaskLoadImages extends AsyncTask<LoadImages, String, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(LoadImages... params) {
+            final LoadImages urlImages = params[0];
             mListImages = new ArrayList<>();
-            ROOT.child("user/" + "coupon").addValueEventListener(new ValueEventListener() {
+            ROOT.child(urlImages.getUrl()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -109,7 +128,7 @@ public class MessageAdapter extends BaseAdapter {
                         String string = snapshot.getValue().toString();
                         mListImages.add(string);
                         mGridAdapter = new GridAdapter(mContext, mListImages);
-                        holder.mRecImages.setAdapter(mGridAdapter);
+                        urlImages.getViewHolder().mRecImages.setAdapter(mGridAdapter);
                         Log.d(TAG, snapshot.getValue().toString());
                     }
                 }
@@ -119,17 +138,17 @@ public class MessageAdapter extends BaseAdapter {
 
                 }
             });
+            return null;
         }
-        return convertView;
-    }
 
-    private class ViewHolder {
-        private ImageView appIcon;
-        private TextView company_name;
-        private TextView date;
-        private TextView title;
-        private TextView content;
-        private TextView link;
-        private RecyclerView mRecImages;
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+        }
     }
 }

@@ -12,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -24,10 +23,9 @@ import com.ln.fragment.SettingFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    String TAG = "Coupon";
-    int curentPosition = 0;
-
-
+    private String TAG = getClass().getSimpleName();
+    private int currentPosition = 0;
+    private FloatingActionButton mFbButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +34,24 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFbButton = (FloatingActionButton) findViewById(R.id.fab);
+        mFbButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(curentPosition == 0){
-                    Intent intent = new Intent(MainActivity.this, AddCouponActivity.class);
-                    startActivityForResult(intent, 2);
-                } else if(curentPosition == 1){
-                    Intent intent = new Intent(MainActivity.this, AddMessageActivity.class);
-                    startActivityForResult(intent, 3);
-                }
 
+                switch (currentPosition) {
+                    case 0:
+                        Intent intent = new Intent(MainActivity.this, AddCouponActivity.class);
+                        startActivityForResult(intent, 2);
+                        break;
+                    case 1:
+                        Intent intent1 = new Intent(MainActivity.this, AddMessageActivity.class);
+                        startActivityForResult(intent1, 3);
+                        break;
+                    case 2:
+
+                        break;
+                }
             }
         });
 
@@ -65,21 +69,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-//        if(requestCode == 2){
-//            startFragment(new CouponFragment());
-//
-//        }else if(requestCode == 3){
-//            startFragment(new NewsFragment());
-//
-//        }
-    }
-
-
-
 
     @Override
     public void onBackPressed() {
@@ -91,28 +80,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -120,33 +87,27 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_coupon) {
-            curentPosition = 0;
+            currentPosition = 0;
             setTitle("My Coupon");
             startFragment(new CouponFragment());
         } else if (id == R.id.nav_new) {
-            curentPosition = 1;
+            currentPosition = 1;
             setTitle("Tin mới");
             startFragment(new NewsFragment());
 
-
         } else if (id == R.id.nav_slideshow) {
-            curentPosition = 2;
+            currentPosition = 2;
             setTitle("History");
             startFragment(new HistoryFrament());
 
 
         } else if (id == R.id.nav_manage) {
-            curentPosition = 2;
+            currentPosition = 2;
+            mFbButton.setVisibility(View.GONE);
             setTitle("Setting");
             startFragment(new SettingFragment());
 
         } else if (id == R.id.logout) {
-            Intent intent = new Intent(this, FirstActivity.class);
-            startActivity(intent);
-            MainApplication.editor.putBoolean(MainApplication.LOGINCOMPANY, false);
-            MainApplication.editor.commit();
-
-            finish();
 
         }
 
@@ -170,7 +131,6 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
         }
     }
-
 
 
 }

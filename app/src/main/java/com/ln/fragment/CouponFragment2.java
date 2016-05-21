@@ -20,8 +20,8 @@ import com.ln.mycoupon.ShopActivity;
  */
 public class CouponFragment2 extends Fragment {
 
-    ListView listView;
-    Coupon1Adapter adapter;
+    private Coupon1Adapter adapter;
+    private ListView listView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

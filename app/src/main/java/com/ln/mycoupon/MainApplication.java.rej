@@ -1,0 +1,12 @@
+diff a/app/src/main/java/com/ln/mycoupon/MainApplication.java b/app/src/main/java/com/ln/mycoupon/MainApplication.java	(rejected hunks)
+@@ -36,6 +36,10 @@
+     public static final String DEVICE_TOKEN = "deviceToken";
+     public static final String BOOL_ADD_TOKEN = "addToken";
+     public static final String SHAREDPRE = "sharePre";
++    public static final String LISTCOMPANY = "listcompany";
++    public static final String LISTCOUPON = "listCoupon";
++    public static final String LOGINCOMPANY = "logincompany";
++    public static final String LOGINSHOP = "loginshop";
+ 
+ 
+ 

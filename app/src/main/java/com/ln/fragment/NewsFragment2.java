@@ -27,10 +27,10 @@ import retrofit2.Response;
  */
 public class NewsFragment2 extends Fragment {
 
-    LoveCouponAPI apiService;
-    ListView listview;
-    List<Message> listMessage = new ArrayList<>();
-    String TAG = "Coupon";
+    private LoveCouponAPI apiService;
+    private ListView listview;
+    private List<Message> listMessage = new ArrayList<>();
+    private String TAG = "Coupon";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

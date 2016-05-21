@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -61,6 +62,9 @@ public class SettingFragment extends Fragment {
     private CircleImageView mImgLogo;
     private TextView mTxtNameCompany, mTxtAddress;
     private TextView mTxtCamera, mTxtGallery;
+
+    private FloatingActionButton mFbFinish;
+
     private Uri mFileUri;
     private Dialog mDialog;
     private Drawable mDrawable;
@@ -83,8 +87,16 @@ public class SettingFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.layout_setting, container, false);
+        View v = inflater.inflate(R.layout.fragment_setting, container, false);
         mLoveCouponAPI = MainApplication.getAPI();
+
+        initViews(v);
+        init();
+        addEvents();
+        return v;
+    }
+
+    private void initViews(View v) {
         nameCompany = (MaterialEditText) v.findViewById(R.id.name_company);
         addressCompany = (MaterialEditText) v.findViewById(R.id.adress_company);
         user1 = (MaterialEditText) v.findViewById(R.id.username1);
@@ -100,10 +112,6 @@ public class SettingFragment extends Fragment {
         mImgLogo = (CircleImageView) v.findViewById(R.id.img_logo_company);
         mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_company);
         mTxtAddress = (TextView) v.findViewById(R.id.txt_address_company);
-
-        init();
-
-        return v;
     }
 
     @Override
@@ -161,8 +169,6 @@ public class SettingFragment extends Fragment {
             checkBox1.setChecked(false);
         }
 
-
-        addEvents();
     }
 
     private void addEvents() {

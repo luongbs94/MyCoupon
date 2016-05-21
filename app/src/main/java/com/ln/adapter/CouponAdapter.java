@@ -9,9 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
+import com.ln.mycoupon.MainApplication;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.TestQRCode;
 import com.ln.views.RippleView;
@@ -25,14 +27,13 @@ import java.util.concurrent.TimeUnit;
 public class CouponAdapter extends BaseAdapter {
 
     public List<CouponTemplate> mListCouponTemplate;
-    LayoutInflater mInflater = null;
+    private LayoutInflater mInflater = null;
     private Context mContext;
-
 
     public CouponAdapter(Context context, List<CouponTemplate> apps) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
-        this.mListCouponTemplate = apps;
+        mListCouponTemplate = apps;
     }
 
     @Override
@@ -58,35 +59,44 @@ public class CouponAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.appIcon = (ImageView) convertView
                     .findViewById(R.id.app_icon);
-            holder.appCoupon = (TextView) convertView
-                    .findViewById(R.id.app_coupon);
-            holder.appTime = (TextView) convertView
-                    .findViewById(R.id.app_time);
+            holder.mTxtNameCoupon = (TextView) convertView
+                    .findViewById(R.id.txt_company_name);
+            holder.mTxtTimeCoupon = (TextView) convertView
+                    .findViewById(R.id.txt_time);
 
-            holder.qrcode = (RippleView) convertView
+            holder.mQRCode = (RippleView) convertView
                     .findViewById(R.id.riple_qrcode);
+            holder.mTxtPriceCoupon = (TextView)
+                    convertView.findViewById(R.id.txt_price_coupon);
+            holder.mTxtDescription = (TextView)
+                    convertView.findViewById(R.id.txt_description);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        final CouponTemplate item = (CouponTemplate) getItem(position);
-        Company company = SaveData.company;
+
+        CouponTemplate item = (CouponTemplate) getItem(position);
         if (item != null) {
-
-            holder.appCoupon.setText(item.getValue() + "Coupon");
+            Company company = SaveData.company;
+            if (company != null) {
+                holder.mTxtNameCoupon.setText(company.getName());
+                Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
+                        .asBitmap()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .into(holder.appIcon);
+            }
+            holder.mTxtPriceCoupon.setText(item.getValue());
             String dayLeft = dayLeft(item.getCreated_date(), item.getDuration()) + "";
-            holder.appTime.setText("Còn " + dayLeft + " ngày");
+            holder.mTxtTimeCoupon.setText(dayLeft + " ngày");
+            holder.mTxtDescription.setText(item.getContent());
 
-            //     String base= company.getLogo();
-            //     byte[] imageAsBytes = Base64.decode(base.getBytes(), Base64.DEFAULT);
-            //    holder.appIcon.setImageBitmap(
-            //            BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
         }
 
         final String coupon = item.getValue() + "";
         final String coupon_template_id = item.getCoupon_template_id();
 
-        holder.qrcode.setOnClickListener(new View.OnClickListener() {
+        holder.mQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -101,10 +111,10 @@ public class CouponAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        ImageView appIcon;
-        TextView appCoupon;
-        TextView appTime;
-        RippleView qrcode;
+        private ImageView appIcon;
+        private TextView mTxtNameCoupon, mTxtPriceCoupon, mTxtDescription;
+        private TextView mTxtTimeCoupon;
+        private RippleView mQRCode;
     }
 
     public long dayLeft(Date created_date, int duration) {

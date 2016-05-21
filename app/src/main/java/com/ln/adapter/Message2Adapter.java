@@ -21,7 +21,7 @@ import java.util.List;
 public class Message2Adapter extends BaseAdapter {
 
     public List<Message> mListMessage;
-    LayoutInflater mInflater = null;
+    private LayoutInflater mInflater = null;
 
 
     public Message2Adapter(Context context, List<Message> apps) {

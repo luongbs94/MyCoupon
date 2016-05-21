@@ -57,5 +57,6 @@
     <string name="fb_login_protocol_scheme">fb1073363172685474</string>
     <string name="name_user">Le Hong Hai</string>
     <string name="email">hailh@vnu.edu.vn</string>
-
+    <string name="price">123234</string>
+    <string name="txt_time_coupon">30 ngày</string>
 </resources>

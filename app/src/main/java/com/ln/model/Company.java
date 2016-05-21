@@ -5,7 +5,8 @@ package com.ln.model;
  */
 public class Company {
 
-    public String name, address, logo, created_date, user_id, user1, pass1, user2, pass2, user2_admin, user1_admin;
+    public String name, address, logo, created_date,
+            user_id, user1, pass1, user2, pass2, user2_admin, user1_admin;
     public int company_id;
 
     public String getName() {

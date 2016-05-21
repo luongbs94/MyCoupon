@@ -2,6 +2,7 @@ package com.ln.mycoupon;
 
 import android.content.SharedPreferences;
 import android.support.multidex.MultiDexApplication;
+import android.util.Base64;
 import android.util.Log;
 
 import com.facebook.FacebookSdk;
@@ -27,7 +28,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MainApplication extends MultiDexApplication {
 
-    // test
     public static LoveCouponAPI apiService;
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
     public static LoveCouponAPI apiService1;
@@ -37,11 +37,11 @@ public class MainApplication extends MultiDexApplication {
     public static final String DEVICE_TOKEN = "deviceToken";
     public static final String BOOL_ADD_TOKEN = "addToken";
     public static final String SHAREDPRE = "sharePre";
+
     public static final String LISTCOMPANY = "listcompany";
     public static final String LISTCOUPON = "listCoupon";
     public static final String LOGINCOMPANY = "logincompany";
     public static final String LOGINSHOP = "loginshop";
-
 
 
     public static SharedPreferences sharedPreferences;
@@ -161,5 +161,10 @@ public class MainApplication extends MultiDexApplication {
         for (int i = 0; i < sizeOfRandomString; ++i)
             sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
         return sb.toString();
+    }
+
+    public static byte[] convertToBytes(String path) {
+        path = path.substring(path.indexOf(",") + 1);
+        return Base64.decode(path, Base64.NO_WRAP);
     }
 }

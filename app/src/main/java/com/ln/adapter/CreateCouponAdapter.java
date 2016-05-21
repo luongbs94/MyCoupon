@@ -19,7 +19,7 @@ import java.util.TimeZone;
 public class CreateCouponAdapter extends BaseAdapter {
 
     public List<Coupon> mListCouponTemplate;
-    LayoutInflater mInflater = null;
+    private LayoutInflater mInflater = null;
 
 
     public CreateCouponAdapter(Context context, List<Coupon> apps) {

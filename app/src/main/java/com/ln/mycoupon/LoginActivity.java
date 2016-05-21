@@ -97,8 +97,6 @@ public class LoginActivity extends AppCompatActivity
         mBtnGooglePlus.setSize(SignInButton.SIZE_WIDE);
         mBtnGooglePlus.setScopes(mInOptions.getScopeArray());
 
-
-
     }
 
     private void addEvents() {
@@ -146,18 +144,13 @@ public class LoginActivity extends AppCompatActivity
 
                 SaveData.company = templates.get(0);
 
-
-                //      Log.d(TAG, SaveData.company.getLogo());
-
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
-
             }
 
             @Override
             public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
                 Log.d(TAG, "Failure");
-
             }
         });
     }
@@ -240,8 +233,8 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mProfileTracker.stopTracking();
-        mAccessTokenTracker.stopTracking();
+//        mProfileTracker.stopTracking();
+//        mAccessTokenTracker.stopTracking();
     }
 
     private class Events implements View.OnClickListener {

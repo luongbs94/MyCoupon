@@ -10,6 +10,10 @@
     <dimen name="detail_backdrop_height">256dp</dimen>
     <dimen name="size_15sp">15sp</dimen>
     <dimen name="size_8">8dp</dimen>
+    <dimen name="size_30sp">28sp</dimen>
+    <dimen name="size_18sp">18sp</dimen>
+    <dimen name="size_10">10dp</dimen>
+
 
 
 </resources>

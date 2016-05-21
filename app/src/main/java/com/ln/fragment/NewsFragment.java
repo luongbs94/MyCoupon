@@ -26,13 +26,12 @@ import retrofit2.Response;
  */
 public class NewsFragment extends Fragment {
 
-    LoveCouponAPI apiService;
-    ListView listview;
-    List<Message> listMessage = new ArrayList<>();
-    String TAG = "Coupon";
+    private LoveCouponAPI apiService;
+    private ListView listview;
+    private List<Message> listMessage = new ArrayList<>();
+    private String TAG = "Coupon";
 
     public NewsFragment() {
-        // Required empty public constructor
 
     }
 
@@ -40,7 +39,6 @@ public class NewsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         apiService = MainApplication.getAPI();
-
     }
 
     @Override
@@ -67,7 +65,6 @@ public class NewsFragment extends Fragment {
                 listMessage = arg1.body();
 
                 Log.d(TAG, listMessage.size() + "");
-
 
                 MessageAdapter adapter = new MessageAdapter(getActivity(), listMessage);
                 listview.setAdapter(adapter);

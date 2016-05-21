@@ -18,7 +18,7 @@ import java.util.List;
 public class Coupon2Adapter extends BaseAdapter {
 
     public List<Coupon> mListCouponTemplate;
-    LayoutInflater mInflater = null;
+    private LayoutInflater mInflater = null;
 
 
     public Coupon2Adapter(Context context, List<Coupon> apps) {
