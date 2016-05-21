@@ -55,5 +55,7 @@
 
     <string name="facebook_app_id">1073363172685474</string>
     <string name="fb_login_protocol_scheme">fb1073363172685474</string>
+    <string name="name_user">Le Hong Hai</string>
+    <string name="email">hailh@vnu.edu.vn</string>
 
 </resources>
