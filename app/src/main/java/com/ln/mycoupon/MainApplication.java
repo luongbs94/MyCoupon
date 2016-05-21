@@ -36,6 +36,11 @@ public class MainApplication extends MultiDexApplication {
     public static final String DEVICE_TOKEN = "deviceToken";
     public static final String BOOL_ADD_TOKEN = "addToken";
     public static final String SHAREDPRE = "sharePre";
+    public static final String LISTCOMPANY = "listcompany";
+    public static final String LISTCOUPON = "listCoupon";
+    public static final String LOGINCOMPANY = "logincompany";
+    public static final String LOGINSHOP = "loginshop";
+
 
 
     public static SharedPreferences sharedPreferences;
