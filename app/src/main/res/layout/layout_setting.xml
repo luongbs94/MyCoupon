@@ -60,7 +60,7 @@
 
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/adress_company"
+                android:id="@+id/address_company"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/address_company"

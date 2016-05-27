@@ -30,6 +30,7 @@ import com.ln.api.SaveData;
 import com.ln.model.Company;
 import com.ln.model.InformationAccount;
 import com.ln.model.Models;
+import com.ln.mycoupon.shop.ShopMainActivity;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
@@ -133,8 +134,6 @@ public class LoginActivity extends AppCompatActivity
     public void getCompanyProfile(String user, String pass) {
         Call<List<Company>> call = apiService.getCompanyProfile(user, pass);
 
-//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//        startActivity(intent);
         call.enqueue(new Callback<List<Company>>() {
 
             @Override
@@ -144,7 +143,7 @@ public class LoginActivity extends AppCompatActivity
 
                 SaveData.company = templates.get(0);
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
             }
 

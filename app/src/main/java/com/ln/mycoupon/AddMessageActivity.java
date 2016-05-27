@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.ln.adapter.AdapterSelectImages;
+import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.ItemImage;
@@ -59,7 +59,7 @@ public class AddMessageActivity extends AppCompatActivity {
     private static final int WIDTH = 100;
 
     private ArrayList<ItemImage> mImages = new ArrayList<>();
-    private AdapterSelectImages mAdapterSelectImages;
+    private SelectedImageAdapter mSelectedImageAdapter;
 
 
     @Override
@@ -88,8 +88,8 @@ public class AddMessageActivity extends AppCompatActivity {
         mRvSelectImages = (RecyclerView) findViewById(R.id.rec_select_images);
         mRvSelectImages.setLayoutManager(new GridLayoutManager(this, 3));
 
-        mAdapterSelectImages = new AdapterSelectImages(getApplicationContext(), mImages);
-        mRvSelectImages.setAdapter(mAdapterSelectImages);
+        mSelectedImageAdapter = new SelectedImageAdapter(getApplicationContext(), mImages);
+        mRvSelectImages.setAdapter(mSelectedImageAdapter);
     }
 
 
@@ -162,7 +162,7 @@ public class AddMessageActivity extends AppCompatActivity {
                 mImages.add(new ItemImage(s));
             }
             // do something
-            mAdapterSelectImages.notifyDataSetChanged();
+            mSelectedImageAdapter.notifyDataSetChanged();
             isUpload = false;
         }
     }

@@ -2,8 +2,6 @@ package com.ln.adapter;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,16 +74,16 @@ public class MessageAdapter extends BaseAdapter {
                     .findViewById(R.id.app_icon);
             holder.company_name = (TextView) convertView
                     .findViewById(R.id.company_name);
-            holder.date = (TextView) convertView
-                    .findViewById(R.id.date);
+//            holder.date = (TextView) convertView
+//                    .findViewById(R.id.date);
             holder.title = (TextView) convertView
                     .findViewById(R.id.title);
             holder.content = (TextView) convertView
                     .findViewById(R.id.content);
             holder.link = (TextView) convertView
                     .findViewById(R.id.link);
-            holder.mRecImages = (RecyclerView) convertView.findViewById(R.id.rec_images);
-            holder.mRecImages.setLayoutManager(new GridLayoutManager(mContext, 3));
+//            holder.mRecImages = (RecyclerView) convertView.findViewById(R.id.rec_images);
+//            holder.mRecImages.setLayoutManager(new GridLayoutManager(mContext, 3));
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.ln.api.LoveCouponAPI;
 import com.ln.gcm.GcmIntentService;
 import com.ln.model.User;
+import com.ln.mycoupon.customer.CustomerMainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -110,7 +111,7 @@ public class FirstActivity extends AppCompatActivity {
     }
 
     public void start(){
-        Intent intent = new Intent(FirstActivity.this, MainActivity1.class);
+        Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
         startActivity(intent);
     }
 

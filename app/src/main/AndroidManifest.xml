@@ -37,11 +37,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".shop.ShopMainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MainActivity1"
+            android:name=".customer.CustomerMainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -68,7 +68,7 @@
             android:theme="@style/Base.Theme.DesignDemo">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity1" />
+                android:value=".customer.CustomerMainActivity" />
         </activity>
         <activity
             android:name=".AddMessageActivity"

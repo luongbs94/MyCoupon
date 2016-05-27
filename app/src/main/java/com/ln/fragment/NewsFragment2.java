@@ -45,7 +45,7 @@ public class NewsFragment2 extends Fragment {
 
         View view = inflater.inflate(R.layout.layout_news2, container, false);
 
-        listview = (ListView) view.findViewById(R.id.listview);
+        listview = (ListView) view.findViewById(R.id.rec_coupon);
 
         getMessage();
         return view;

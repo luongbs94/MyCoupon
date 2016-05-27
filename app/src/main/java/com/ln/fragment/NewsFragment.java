@@ -2,13 +2,14 @@ package com.ln.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
-import com.ln.adapter.MessageAdapter;
+import com.ln.adapter.NewsAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.model.Message;
 import com.ln.mycoupon.MainApplication;
@@ -26,10 +27,13 @@ import retrofit2.Response;
  */
 public class NewsFragment extends Fragment {
 
-    private LoveCouponAPI apiService;
-    private ListView listview;
-    private List<Message> listMessage = new ArrayList<>();
-    private String TAG = "Coupon";
+    private LoveCouponAPI mApiServices;
+
+    private View mView;
+    private RecyclerView mRecNews;
+    private List<Message> mListNews = new ArrayList<>();
+    private String TAG = getClass().getSimpleName();
+
 
     public NewsFragment() {
 
@@ -38,37 +42,46 @@ public class NewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        apiService = MainApplication.getAPI();
+        mApiServices = MainApplication.getAPI();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_news, container, false);
-        listview = (ListView) view.findViewById(R.id.listview_news);
-
-        getMessage();
-
-        return view;
+        mView = inflater.inflate(R.layout.fragment_news, container, false);
+        initViews();
+        getNewsByCompanyId();
+        Log.d(TAG, "onCreate");
+        return mView;
     }
 
-    public void getMessage() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+        getNewsByCompanyId();
+    }
 
-        listMessage = new ArrayList<>();
-        Call<List<Message>> call = apiService.getNewsByCompanyId(7);
+    private void initViews() {
+        mRecNews = (RecyclerView) mView.findViewById(R.id.rec_coupon);
+        mRecNews.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    public void getNewsByCompanyId() {
+
+        mListNews = new ArrayList<>();
+        Call<List<Message>> call = mApiServices.getNewsByCompanyId(7);
         call.enqueue(new Callback<List<Message>>() {
 
             @Override
             public void onResponse(Call<List<Message>> arg0,
                                    Response<List<Message>> arg1) {
-                listMessage = arg1.body();
+                mListNews = arg1.body();
 
-                Log.d(TAG, listMessage.size() + "");
-
-                MessageAdapter adapter = new MessageAdapter(getActivity(), listMessage);
-                listview.setAdapter(adapter);
-
+                Log.d(TAG, mListNews.size() + "");
+                NewsAdapter adapter = new NewsAdapter(getActivity(), mListNews);
+                mRecNews.setAdapter(adapter);
             }
 
             @Override
@@ -76,14 +89,5 @@ public class NewsFragment extends Fragment {
                 Log.d(TAG, "Failure");
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        Log.d(TAG, "onResume");
-
-        getMessage();
     }
 }

@@ -33,7 +33,6 @@ public class AddCouponActivity extends AppCompatActivity {
     MaterialEditText money, content;
     CardView saveCoupon;
     Spinner spinner;
-    private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
     LoveCouponAPI apiService;
     String TAG = "Coupon";
     LinearLayout layoutView;

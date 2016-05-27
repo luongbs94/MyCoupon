@@ -55,8 +55,8 @@ public class Message2Adapter extends BaseAdapter {
                     .findViewById(R.id.app_icon);
             holder.company_name = (TextView) convertView
                     .findViewById(R.id.company_name);
-            holder.date = (TextView) convertView
-                    .findViewById(R.id.date);
+//            holder.date = (TextView) convertView
+//                    .findViewById(R.id.date);
             holder.title = (TextView) convertView
                     .findViewById(R.id.title);
             holder.content = (TextView) convertView

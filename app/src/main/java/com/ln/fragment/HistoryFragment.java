@@ -19,8 +19,8 @@ public class HistoryFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private OneFragment oneFragment;
-    private TwoFragment twoFragment;
+    private CreateFragment createFragment;
+    private UseFragment useFragment;
 
     @Nullable
     @Override
@@ -36,10 +36,10 @@ public class HistoryFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        oneFragment = new OneFragment();
-        twoFragment = new TwoFragment();
-        adapter.addFragment(oneFragment, "CREATE");
-        adapter.addFragment(twoFragment, "USE");
+        createFragment = new CreateFragment();
+        useFragment = new UseFragment();
+        adapter.addFragment(createFragment, "CREATE");
+        adapter.addFragment(useFragment, "USE");
         viewPager.setAdapter(adapter);
     }
 }

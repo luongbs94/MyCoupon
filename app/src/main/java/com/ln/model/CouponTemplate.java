@@ -1,25 +1,26 @@
 package com.ln.model;
 
-import java.util.Date;
-
 /**
- * Created by luongnguyen on 4/1/16.
+ * Created by Nhahv on 5/21/2016.
  */
-public class CouponTemplate  {
+public class CouponTemplate {
 
-    String coupon_template_id;
-    String content;
-    String value;
-    int duration;
-    Date created_date;
-    String company_id;
+    private String coupon_template_id, content,
+            created_date, company_id, value;
 
-    public String getCompany_id() {
-        return company_id;
+    private int duration;
+    public CouponTemplate() {
     }
 
-    public void setCompany_id(String company_id) {
+    public CouponTemplate(String coupon_template_id, String content,
+                          int duration, String created_date, String company_id,
+                          String value) {
+        this.coupon_template_id = coupon_template_id;
+        this.content = content;
+        this.duration = duration;
+        this.created_date = created_date;
         this.company_id = company_id;
+        this.value = value;
     }
 
     public String getCoupon_template_id() {
@@ -34,13 +35,8 @@ public class CouponTemplate  {
         return content;
     }
 
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public int getDuration() {
@@ -51,16 +47,27 @@ public class CouponTemplate  {
         this.duration = duration;
     }
 
-    public Date getCreated_date() {
+    public String getCreated_date() {
         return created_date;
     }
 
-    public void setCreated_date(Date created_date) {
+    public void setCreated_date(String created_date) {
         this.created_date = created_date;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getCompany_id() {
+        return company_id;
+    }
 
+    public void setCompany_id(String company_id) {
+        this.company_id = company_id;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
