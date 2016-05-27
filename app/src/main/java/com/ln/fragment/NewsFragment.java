@@ -64,7 +64,7 @@ public class NewsFragment extends Fragment {
     }
 
     private void initViews() {
-        mRecNews = (RecyclerView) mView.findViewById(R.id.rec_coupon);
+        mRecNews = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecNews.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 

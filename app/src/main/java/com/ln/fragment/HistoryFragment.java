@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ln.adapter.ViewPagerAdapter;
+import com.ln.fragment.shop.CreateFragment;
+import com.ln.fragment.shop.UseFragment;
 import com.ln.mycoupon.R;
 
 /**

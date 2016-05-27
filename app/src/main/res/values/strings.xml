@@ -67,4 +67,9 @@
     <string name="setting">Cài Đặt</string>
     <string name="title_news">News</string>
     <string name="qr_code">QRCode</string>
+
+
+    <string name="time_news">May 20, 2016</string>
+    <string name="share">Chia Sẻ</string>
+
 </resources>

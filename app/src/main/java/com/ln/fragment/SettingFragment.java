@@ -313,7 +313,6 @@ public class SettingFragment extends Fragment {
                 mFileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
                 startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-                mDialog.dismiss();
             } else {
                 getShowMessage("Driver do not Support");
             }
@@ -325,7 +324,6 @@ public class SettingFragment extends Fragment {
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent, SELECT_PICTURE);
-                mDialog.dismiss();
             } else {
                 getShowMessage("Driver do not Support");
             }
@@ -333,18 +331,6 @@ public class SettingFragment extends Fragment {
 
 
         private void onClickChangeLogo(View view) {
-
-//            mDialog = new Dialog(getActivity());
-//
-//            mDialog.setContentView(R.layout.item_select_logo);
-//            mDialog.setTitle("Avatar");
-//            mDialog.show();
-//
-//            mTxtCamera = (TextView) mDialog.findViewById(R.id.txt_camera);
-//            mTxtGallery = (TextView) mDialog.findViewById(R.id.txt_gallery);
-//
-//            mTxtCamera.setOnClickListener(new Events());
-//            mTxtGallery.setOnClickListener(new Events());
 
             PopupMenu popupMenu = new PopupMenu(getActivity(), view);
             final MenuInflater inflater = popupMenu.getMenuInflater();

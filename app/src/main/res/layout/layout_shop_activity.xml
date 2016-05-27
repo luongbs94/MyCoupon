@@ -77,7 +77,7 @@
 
 
         <ListView
-            android:id="@+id/rec_coupon"
+            android:id="@+id/recycler_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:clipToPadding="false"

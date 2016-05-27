@@ -33,7 +33,7 @@ public class ShopMainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_shop_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,7 +69,6 @@ public class ShopMainActivity extends AppCompatActivity
 
         startFragment(new CouponFragment());
 
-
     }
 
 
@@ -103,7 +102,6 @@ public class ShopMainActivity extends AppCompatActivity
             setTitle(getString(R.string.history));
             startFragment(new HistoryFragment());
 
-
         } else if (id == R.id.nav_manage) {
             currentPosition = 2;
             mFbButton.setVisibility(View.GONE);
@@ -111,7 +109,7 @@ public class ShopMainActivity extends AppCompatActivity
             startFragment(new SettingFragment());
 
         } else if (id == R.id.logout) {
-
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

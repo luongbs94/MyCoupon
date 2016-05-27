@@ -13,7 +13,6 @@ import com.ln.api.SaveData;
 import com.ln.model.Company1;
 import com.ln.model.Coupon;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -122,7 +121,7 @@ public class MainApplication extends MultiDexApplication {
                 Coupon coupon = company1.getCoupon().get(0);
                 String value = coupon.getValue();
                 String company_id = coupon.getCompany_id();
-                Date date = coupon.getCreated_date();
+//                Date date = coupon.getCreated_date();
 
             }
 

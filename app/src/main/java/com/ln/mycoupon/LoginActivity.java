@@ -145,6 +145,7 @@ public class LoginActivity extends AppCompatActivity
 
                 Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
+                finish();
             }
 
             @Override

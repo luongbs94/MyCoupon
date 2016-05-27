@@ -1,87 +1,73 @@
 package com.ln.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.ln.api.SaveData;
+import com.ln.model.Company;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.ArrayList;
+
+/**
+ * Created by Nhahv on 5/22/2016.
+ */
+public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapter.ViewHolder> {
 
 
-public class CreateCouponAdapter extends BaseAdapter {
+    private ArrayList<Coupon> mListCoupons;
+    private LayoutInflater mInflater;
+    private Context mContext;
 
-    public List<Coupon> mListCouponTemplate;
-    private LayoutInflater mInflater = null;
-
-
-    public CreateCouponAdapter(Context context, List<Coupon> apps) {
+    public CreateCouponAdapter(Context context, ArrayList<Coupon> listCoupon) {
         mInflater = LayoutInflater.from(context);
-        this.mListCouponTemplate = apps;
-
+        mListCoupons = listCoupon;
+        mContext = context;
     }
 
     @Override
-    public int getCount() {
-        return mListCouponTemplate.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(mInflater.inflate(R.layout.item_fragment_create, parent, false));
     }
 
     @Override
-    public Object getItem(int position) {
-        return mListCouponTemplate.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        Coupon coupon = mListCoupons.get(position);
+        Company company = SaveData.company;
+        Glide.with(mContext).load(coupon.getUser_image_link())
+                .placeholder(R.drawable.ic_logo)
+                .into(holder.mImgLogo);
+
+        holder.mTxtCompanyName.setText(company.getName());
+        holder.mTxtPrice.setText(coupon.getValue());
+
+        holder.mTxtDate.setText(coupon.getCreated_date());
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public int getItemCount() {
+        return mListCoupons.size();
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_fragment_create, null);
-            holder = new ViewHolder();
-            holder.appIcon = (ImageView) convertView
-                    .findViewById(R.id.app_icon);
-            holder.time = (TextView) convertView
-                    .findViewById(R.id.time);
-            holder.name = (TextView) convertView
-                    .findViewById(R.id.name);
-            holder.value = (TextView) convertView.findViewById(R.id.value);
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+        private ImageView mImgLogo;
+        private TextView mTxtCompanyName, mTxtPrice, mTxtDate;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mImgLogo = (ImageView) itemView.findViewById(R.id.img_logo_coupon);
+            mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_coupon);
+            mTxtDate = (TextView) itemView.findViewById(R.id.txt_date_coupon);
+            mTxtPrice = (TextView) itemView.findViewById(R.id.txt_price_coupon);
         }
-
-        Coupon item = (Coupon) getItem(position);
-        if (item != null) {
-
-            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd yyyy");
-
-            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-            String dateFormatInUTC = formatter.format(item.getCreated_date());
-
-            holder.time.setText(dateFormatInUTC);
-            holder.value.setText(item.getValue());
-
-        }
-
-        return convertView;
-    }
-
-    private class ViewHolder {
-        ImageView appIcon;
-        TextView time;
-        TextView name;
-        TextView value;
     }
 }

@@ -16,15 +16,15 @@ import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.model.Models;
 import com.ln.mycoupon.MainApplication;
-import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
+import com.ln.mycoupon.TestQRCode;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,11 +33,11 @@ import java.util.concurrent.TimeUnit;
 
 public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAdapter.ViewHolder> {
 
-    private ArrayList<CouponTemplate> mListCoupon;
+    private List<CouponTemplate> mListCoupon;
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public CouponTemplateAdapter(Context context, ArrayList<CouponTemplate> coupons) {
+    public CouponTemplateAdapter(Context context, List<CouponTemplate> coupons) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
         mListCoupon = coupons;
@@ -74,7 +74,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(mContext, QRCodeActivity.class);
+                    Intent intent = new Intent(mContext, TestQRCode.class);
                     intent.putExtra(Models.VALUE, item.getValue());
                     intent.putExtra(Models.COUPON_TEMpLATE_ID, item.getCoupon_template_id());
                     mContext.startActivity(intent);
