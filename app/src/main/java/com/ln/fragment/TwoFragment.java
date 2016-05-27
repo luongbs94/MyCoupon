@@ -25,12 +25,12 @@ import retrofit2.Response;
 
 public class TwoFragment extends Fragment {
 
-    ListView listview;
-    List<Coupon> listCoupon = new ArrayList<>();
-    LoveCouponAPI apiService;
-    String TAG = "Coupon";
-    String utc1 = "Mon, 6 Mar 2016 17:00:00 GMT";
-    String utc2 = "Mon, 17 Oct 2016 17:00:00 GMT";
+    private ListView listview;
+    private List<Coupon> listCoupon = new ArrayList<>();
+    private LoveCouponAPI apiService;
+    private String TAG = "Coupon";
+    private static final String utc1 = "Mon, 6 Mar 2016 17:00:00 GMT";
+    private static final String utc2 = "Mon, 17 Oct 2016 17:00:00 GMT";
 
     public TwoFragment() {
         // Required empty public constructor
