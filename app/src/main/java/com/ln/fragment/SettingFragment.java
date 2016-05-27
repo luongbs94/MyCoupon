@@ -66,14 +66,8 @@ public class SettingFragment extends Fragment {
     private LoveCouponAPI mLoveCouponAPI;
     private CircleImageView mImgLogo;
     private TextView mTxtNameCompany, mTxtAddress;
-    private TextView mTxtCamera, mTxtGallery;
-
-    private FloatingActionButton mFbFinish;
 
     private Uri mFileUri;
-    private Dialog mDialog;
-    private Drawable mDrawable;
-    private boolean isNameCompanry;
 
     private AppBarLayout mAppBarLayout;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -298,12 +292,8 @@ public class SettingFragment extends Fragment {
                 case R.id.img_logo_company:
                     onClickChangeLogo(mImgLogo);
                     break;
-                case R.id.txt_camera:
-                    onClickOpenCamera();
-                    break;
-                case R.id.txt_gallery:
-                    onClickOpenGallery();
-                    break;
+               default:
+                   break;
             }
         }
 
