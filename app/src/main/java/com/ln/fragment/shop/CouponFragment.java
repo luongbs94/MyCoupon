@@ -13,8 +13,8 @@ import android.widget.LinearLayout;
 
 import com.ln.adapter.CouponTemplateAdapter;
 import com.ln.api.LoveCouponAPI;
-import com.ln.model.CouponTemplate;
 import com.ln.app.MainApplication;
+import com.ln.model.CouponTemplate;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;

@@ -16,8 +16,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.ln.mycoupon.shop.ShopMainActivity;
 import com.ln.mycoupon.R;
+import com.ln.mycoupon.shop.ShopMainActivity;
 
 /**
  * Created by luong on 08/03/2016.

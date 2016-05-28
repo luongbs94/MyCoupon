@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import com.ln.adapter.CreateCouponAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.Coupon;
-import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;

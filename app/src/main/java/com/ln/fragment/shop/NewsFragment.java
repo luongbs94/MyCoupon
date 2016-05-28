@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.ln.adapter.NewsAdapter;
 import com.ln.api.LoveCouponAPI;
-import com.ln.model.Message;
 import com.ln.app.MainApplication;
+import com.ln.model.Message;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;

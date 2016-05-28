@@ -3,8 +3,10 @@ package com.ln.gcm;
 /**
  * Created by luongnguyen on 4/18/16.
  */
+
 import android.content.Intent;
 import android.util.Log;
+
 import com.google.android.gms.iid.InstanceIDListenerService;
 
 public class MyInstanceIDListenerService extends InstanceIDListenerService {

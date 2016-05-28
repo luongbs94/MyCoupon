@@ -21,7 +21,6 @@ import com.ln.mycoupon.R;
 import java.io.IOException;
 
 
-
 public class GcmIntentService extends IntentService {
 
     private static final String TAG = GcmIntentService.class.getSimpleName();

@@ -18,7 +18,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.interfaces.OnPreviewPicture;
 import com.ln.model.Company;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
@@ -36,7 +35,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private List<Message> mListNews;
     private LayoutInflater mInflater;
     private ArrayList<String> mListImages;
-    private OnPreviewPicture mOnPreviewPicture;
 
     public NewsAdapter(Context context, List<Message> listNews) {
         mContext = context;

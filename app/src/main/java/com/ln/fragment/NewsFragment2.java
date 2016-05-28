@@ -11,8 +11,8 @@ import android.widget.ListView;
 
 import com.ln.adapter.Message2Adapter;
 import com.ln.api.LoveCouponAPI;
-import com.ln.model.Message;
 import com.ln.app.MainApplication;
+import com.ln.model.Message;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ public class NewsFragment2 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         apiService = MainApplication.getAPI();
     }
 
