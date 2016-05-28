@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ln.model.Message;
-import com.ln.mycoupon.MainApplication;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.util.List;

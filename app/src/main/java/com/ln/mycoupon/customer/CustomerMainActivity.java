@@ -19,7 +19,7 @@ import android.view.View;
 import com.ln.fragment.CouponFragment2;
 import com.ln.fragment.NewsFragment2;
 import com.ln.mycoupon.FirstActivity;
-import com.ln.mycoupon.MainApplication;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
 

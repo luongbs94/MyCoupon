@@ -22,6 +22,7 @@ import com.firebase.client.FirebaseError;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.ItemImage;
 import com.ln.model.Message;
 import com.rengwuxian.materialedittext.MaterialEditText;

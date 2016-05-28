@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.model.Company;
 import com.ln.model.Message;
-import com.ln.mycoupon.MainApplication;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.util.List;
@@ -58,6 +58,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 //        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 //        String date = formatter.format(news.getCreated_date());
 //        holder.mTxtTime.setText(date);
+
 
     }
 

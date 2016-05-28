@@ -17,7 +17,7 @@ import android.view.View;
 
 import com.ln.fragment.shop.CouponFragment;
 import com.ln.fragment.HistoryFragment;
-import com.ln.fragment.NewsFragment;
+import com.ln.fragment.shop.NewsFragment;
 import com.ln.fragment.SettingFragment;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;

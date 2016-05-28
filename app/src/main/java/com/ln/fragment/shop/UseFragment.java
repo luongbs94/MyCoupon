@@ -14,7 +14,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company;
 import com.ln.model.Coupon;
-import com.ln.mycoupon.MainApplication;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;

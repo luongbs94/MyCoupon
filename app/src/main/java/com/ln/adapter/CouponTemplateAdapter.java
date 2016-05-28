@@ -15,7 +15,7 @@ import com.ln.api.SaveData;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.model.Models;
-import com.ln.mycoupon.MainApplication;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.TestQRCode;
 

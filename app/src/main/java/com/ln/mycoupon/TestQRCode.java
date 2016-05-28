@@ -15,6 +15,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.Coupon;
 
 import retrofit2.Call;

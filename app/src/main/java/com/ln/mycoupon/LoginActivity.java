@@ -27,6 +27,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.InformationAccount;
 import com.ln.model.Models;

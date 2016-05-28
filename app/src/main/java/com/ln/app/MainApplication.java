@@ -1,4 +1,4 @@
-package com.ln.mycoupon;
+package com.ln.app;
 
 import android.content.SharedPreferences;
 import android.support.multidex.MultiDexApplication;
@@ -45,10 +45,6 @@ public class MainApplication extends MultiDexApplication {
 
     public static SharedPreferences sharedPreferences;
     public static SharedPreferences.Editor editor;
-
-
-// server_api_key: AIzaSyBuchLzuoZfJ_f6Iuf145SMb9uDfNNS-mI
-// Sender ID help: 87052112933
 
 
     @Override

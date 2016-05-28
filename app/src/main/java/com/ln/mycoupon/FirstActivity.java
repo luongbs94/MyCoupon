@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.ln.api.LoveCouponAPI;
+import com.ln.app.MainApplication;
 import com.ln.gcm.GcmIntentService;
 import com.ln.model.User;
 import com.ln.mycoupon.customer.CustomerMainActivity;

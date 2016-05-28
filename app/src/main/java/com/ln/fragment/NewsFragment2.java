@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.ln.adapter.Message2Adapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.model.Message;
-import com.ln.mycoupon.MainApplication;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.ln.fragment;
+package com.ln.fragment.shop;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.ln.adapter.NewsAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.model.Message;
-import com.ln.mycoupon.MainApplication;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;

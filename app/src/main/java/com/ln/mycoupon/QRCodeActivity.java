@@ -12,6 +12,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.ln.api.LoveCouponAPI;
+import com.ln.app.MainApplication;
 import com.ln.model.Company1;
 import com.ln.model.Coupon;
 
