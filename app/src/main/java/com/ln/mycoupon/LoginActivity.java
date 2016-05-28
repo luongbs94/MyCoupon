@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void getCompanyProfile(String user, String pass) {
+
         Call<List<Company>> call = apiService.getCompanyProfile(user, pass);
 
         call.enqueue(new Callback<List<Company>>() {
@@ -151,7 +152,7 @@ public class LoginActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
+                Log.d(TAG, "Failure" + arg1.toString());
             }
         });
     }
