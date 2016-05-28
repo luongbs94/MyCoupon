@@ -32,17 +32,15 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.Models;
-import com.ln.model.UserPicture;
-import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -216,11 +214,11 @@ public class SettingFragment extends Fragment {
         if (resultCode == getActivity().RESULT_OK) {
 
             if (requestCode == SELECT_PICTURE) {
-                try {
-                    mImgLogo.setImageBitmap(new UserPicture(data.getData(), getActivity().getContentResolver()).getBitmap());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+//                    mImgLogo.setImageBitmap(new UserPicture(data.getData(), getActivity().getContentResolver()).getBitmap());
+                previewCapturedImage(data.getData().toString());
+                Log.d(TAG, data.getData().toString());
+
             } else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
 
                 Log.d(TAG, mFileUri.getPath());
@@ -289,8 +287,8 @@ public class SettingFragment extends Fragment {
                 case R.id.img_logo_company:
                     onClickChangeLogo(mImgLogo);
                     break;
-               default:
-                   break;
+                default:
+                    break;
             }
         }
 

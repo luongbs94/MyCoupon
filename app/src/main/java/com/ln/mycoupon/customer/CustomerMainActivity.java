@@ -114,7 +114,7 @@ public class CustomerMainActivity extends AppCompatActivity
             startFragment(new NewsFragment2());
 
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_history) {
 
 
         } else if (id == R.id.nav_manage) {

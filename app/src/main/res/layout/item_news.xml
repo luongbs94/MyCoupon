@@ -106,6 +106,19 @@
             android:textSize="@dimen/size_15sp" />
     </LinearLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:dividerHeight="4dp"
+        android:fastScrollEnabled="true"
+        android:focusable="true"
+        android:layoutAnimation="@anim/list_anim"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="vertical" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"

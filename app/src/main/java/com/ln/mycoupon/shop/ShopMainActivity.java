@@ -88,30 +88,38 @@ public class ShopMainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_coupon) {
-            currentPosition = 0;
-            setTitle(getString(R.string.my_coupon));
-            startFragment(new CouponFragment());
-        } else if (id == R.id.nav_new) {
-            currentPosition = 1;
-            setTitle(getString(R.string.news));
-            startFragment(new NewsFragment());
+        switch (id) {
+            case R.id.nav_coupon:
+                currentPosition = 0;
+                setTitle(getString(R.string.my_coupon));
+                startFragment(new CouponFragment());
+                break;
+            case R.id.nav_new:
+                currentPosition = 1;
+                setTitle(getString(R.string.news));
+                startFragment(new NewsFragment());
+                break;
+            case R.id.nav_history:
+                currentPosition = 2;
+                setTitle(getString(R.string.history));
+                startFragment(new HistoryFragment());
+                break;
+            case R.id.nav_manage:
+                currentPosition = 2;
+                mFbButton.setVisibility(View.GONE);
+                setTitle(getString(R.string.setting));
+                startFragment(new SettingFragment());
+                break;
+            case R.id.logout:
+                finish();
+                break;
+            default:
+                break;
 
-        } else if (id == R.id.nav_slideshow) {
-            currentPosition = 2;
-            setTitle(getString(R.string.history));
-            startFragment(new HistoryFragment());
-
-        } else if (id == R.id.nav_manage) {
-            currentPosition = 2;
-            mFbButton.setVisibility(View.GONE);
-            setTitle(getString(R.string.setting));
-            startFragment(new SettingFragment());
-
-        } else if (id == R.id.logout) {
-            finish();
         }
-
+        if (id != R.id.nav_manage) {
+            mFbButton.setVisibility(View.VISIBLE);
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

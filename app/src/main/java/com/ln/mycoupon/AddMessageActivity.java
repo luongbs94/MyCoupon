@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
@@ -41,7 +43,10 @@ import retrofit2.Response;
 public class AddMessageActivity extends AppCompatActivity {
 
     private static final Firebase ROOT =
-            new Firebase("https://nhahv-firebase.firebaseio.com/");
+            new Firebase("https://nhahv-fire-chat.firebaseio.com/users");
+
+    private static final FirebaseDatabase DATABASE = FirebaseDatabase.getInstance();
+    private static DatabaseReference sReference;
     private String TAG = getClass().getSimpleName();
 
     private MaterialEditText title, content, link;
@@ -69,7 +74,8 @@ public class AddMessageActivity extends AppCompatActivity {
         setContentView(R.layout.layout_add_message);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        sReference = DATABASE.getReference("users");
+        sReference.child("post").push().setValue("hoang nha");
         initViews();
 
         addEvents();
@@ -129,7 +135,6 @@ public class AddMessageActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Message> arg0, Throwable arg1) {
-                // TODO Auto-generated method stub
                 Log.d(TAG, "fail");
                 Snackbar.make(layoutView, R.string.add_message_fail, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -162,7 +167,6 @@ public class AddMessageActivity extends AppCompatActivity {
             for (String s : images) {
                 mImages.add(new ItemImage(s));
             }
-            // do something
             mSelectedImageAdapter.notifyDataSetChanged();
             isUpload = false;
         }
@@ -200,14 +204,14 @@ public class AddMessageActivity extends AppCompatActivity {
                     String string = convertBase64(mImages.get(i).getPath());
 
                     if (i == mImages.size() - 1) {
-                        ROOT.child("user/" + "coupon").push().setValue(string, new Firebase.CompletionListener() {
+                        ROOT.child("coupon").push().setValue(string, new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                 getShowToast("Upload Success");
                             }
                         });
                     } else {
-                        ROOT.child("user/" + "coupon").push().setValue(string);
+                        ROOT.child("coupon").push().setValue(string);
                     }
                 }
 
