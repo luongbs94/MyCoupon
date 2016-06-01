@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ln.app.MainApplication;
 import com.ln.model.Coupon;
-import com.ln.mycoupon.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 public class Coupon2Adapter extends BaseAdapter {
 
     public List<Coupon> mListCouponTemplate;
-    LayoutInflater mInflater = null;
+    private LayoutInflater mInflater = null;
 
 
     public Coupon2Adapter(Context context, List<Coupon> apps) {

@@ -77,7 +77,7 @@
 
 
         <ListView
-            android:id="@+id/listview"
+            android:id="@+id/recycler_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:clipToPadding="false"
@@ -85,7 +85,7 @@
             android:dividerHeight="4.0dip"
             android:fastScrollEnabled="true"
             android:focusable="true"
-            android:layoutAnimation="@anim/listview_layout_animation"
+            android:layoutAnimation="@anim/list_anim"
             android:listSelector="@android:color/transparent"
             android:padding="12.0dip"
             android:scrollbars="none" />

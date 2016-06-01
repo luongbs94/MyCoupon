@@ -57,5 +57,22 @@
     <string name="fb_login_protocol_scheme">fb1073363172685474</string>
     <string name="name_user">Le Hong Hai</string>
     <string name="email">hailh@vnu.edu.vn</string>
+    <string name="price">123234</string>
+    <string name="txt_time_coupon">30 ngày</string>
+    <string name="check_admin">Check admin</string>
+    <string name="save">SAVE</string>
+    <string name="my_coupon">My Coupon</string>
+    <string name="news">Tin mới</string>
+    <string name="history">History</string>
+    <string name="setting">Cài Đặt</string>
+    <string name="title_news">News</string>
+    <string name="qr_code">QRCode</string>
+
+
+    <string name="time_news">May 20, 2016</string>
+    <string name="share">Chia Sẻ</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

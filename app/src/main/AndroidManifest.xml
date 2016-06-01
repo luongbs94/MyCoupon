@@ -21,7 +21,7 @@
     <uses-permission android:name="com.ln.mycoupon.permission.C2D_MESSAGE" />
 
     <application
-        android:name=".MainApplication"
+        android:name="com.ln.app.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -37,51 +37,41 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".shop.ShopMainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MainActivity1"
+            android:name=".customer.CustomerMainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".TestQRCode"
             android:label="@string/title_activity_test_qrcode"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".AddCouponActivity"
             android:label="@string/add_coupon"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ShopActivity"
             android:label="@string/shop"
             android:theme="@style/Base.Theme.DesignDemo">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity1" />
+                android:value=".customer.CustomerMainActivity" />
         </activity>
         <activity
             android:name=".AddMessageActivity"
             android:label="@string/add_message"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".QRCodeActivity"
             android:label="@string/qrcode"
-            android:theme="@style/AppTheme">
-
-        </activity>
+            android:theme="@style/AppTheme" />
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -131,6 +121,7 @@
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider1234"
             android:exported="true" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -144,8 +135,7 @@
         <activity
             android:name="com.yongchun.library.view.ImageCropActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".PreviewImagesActivity"></activity>
     </application>
-
 
 </manifest>

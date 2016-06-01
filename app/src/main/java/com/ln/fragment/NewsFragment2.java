@@ -11,8 +11,8 @@ import android.widget.ListView;
 
 import com.ln.adapter.Message2Adapter;
 import com.ln.api.LoveCouponAPI;
+import com.ln.app.MainApplication;
 import com.ln.model.Message;
-import com.ln.mycoupon.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
@@ -27,10 +27,10 @@ import retrofit2.Response;
  */
 public class NewsFragment2 extends Fragment {
 
-    LoveCouponAPI apiService;
-    ListView listview;
-    List<Message> listMessage = new ArrayList<>();
-    String TAG = "Coupon";
+    private LoveCouponAPI apiService;
+    private ListView listview;
+    private List<Message> listMessage = new ArrayList<>();
+    private String TAG = "Coupon";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class NewsFragment2 extends Fragment {
 
         View view = inflater.inflate(R.layout.layout_news2, container, false);
 
-        listview = (ListView) view.findViewById(R.id.listview);
+        listview = (ListView) view.findViewById(R.id.recycler_view);
 
         getMessage();
         return view;

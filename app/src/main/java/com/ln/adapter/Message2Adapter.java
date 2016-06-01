@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ln.app.MainApplication;
 import com.ln.model.Message;
-import com.ln.mycoupon.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 public class Message2Adapter extends BaseAdapter {
 
     public List<Message> mListMessage;
-    LayoutInflater mInflater = null;
+    private LayoutInflater mInflater = null;
 
 
     public Message2Adapter(Context context, List<Message> apps) {
@@ -55,8 +55,8 @@ public class Message2Adapter extends BaseAdapter {
                     .findViewById(R.id.app_icon);
             holder.company_name = (TextView) convertView
                     .findViewById(R.id.company_name);
-            holder.date = (TextView) convertView
-                    .findViewById(R.id.date);
+//            holder.date = (TextView) convertView
+//                    .findViewById(R.id.date);
             holder.title = (TextView) convertView
                     .findViewById(R.id.title);
             holder.content = (TextView) convertView

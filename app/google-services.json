@@ -1,103 +1,35 @@
 {
   "project_info": {
-    "project_number": "463200986528",
-    "project_id": "nha-uet-126006"
+    "project_number": "643354514368",
+    "firebase_url": "https://project-1434002452471638692.firebaseio.com",
+    "project_id": "project-1434002452471638692",
+    "storage_bucket": "project-1434002452471638692.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:463200986528:android:01f097ec36c7c98b",
+        "mobilesdk_app_id": "1:643354514368:android:8fc178cd30ebff25",
         "android_client_info": {
-          "package_name": "com.example.nhahv.firebasechat"
+          "package_name": "com.nhahv.coupon"
         }
       },
       "oauth_client": [
         {
-          "client_id": "463200986528-gk5jtjhkc1lvvs15eqq5m04jikgammhl.apps.googleusercontent.com",
+          "client_id": "643354514368-fpbmco2uh0me2d71eo0oar7u2ouh3u7b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.nhahv.firebasechat",
-            "certificate_hash": "239BD5BAEBA5B5ED60AAE34385E04AE8AE0E2654"
-          }
-        },
-        {
-          "client_id": "463200986528-0il2u5eg0obo4mop46otffrljaqtopmi.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDytrGTgZudSZP8TbbWlFZ6bNdTk7ElLv0"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:463200986528:android:1a62be43f68816a5",
-        "android_client_info": {
-          "package_name": "com.example.nhahv.chat"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "463200986528-0il2u5eg0obo4mop46otffrljaqtopmi.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDytrGTgZudSZP8TbbWlFZ6bNdTk7ElLv0"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:463200986528:android:6b9b985971cd8a00",
-        "android_client_info": {
-          "package_name": "com.nhahv.share"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "463200986528-mg26cmq6k60jb92fmessip7gb9t1l1di.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nhahv.share",
+            "package_name": "com.nhahv.coupon",
             "certificate_hash": "0882D4EDE1488AFE27D9EDA3B9FA09FBE1BD9CC0"
           }
         },
         {
-          "client_id": "463200986528-0il2u5eg0obo4mop46otffrljaqtopmi.apps.googleusercontent.com",
+          "client_id": "643354514368-t4t4o9sa92luv2tec4ocs33pum0s7lsf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDytrGTgZudSZP8TbbWlFZ6bNdTk7ElLv0"
+          "current_key": "AIzaSyCYSyA5Vxjafj7OLVDPGmRHDXm-nDcQsyA"
         }
       ],
       "services": {
@@ -105,77 +37,35 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643354514368-t4t4o9sa92luv2tec4ocs33pum0s7lsf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:463200986528:android:aa5135cfca867eb6",
-        "android_client_info": {
-          "package_name": "com.nhahv.facebookgoogleplus"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "463200986528-b3fld4rju3q51tfcvgb0ln992jh1lvd0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nhahv.facebookgoogleplus",
-            "certificate_hash": "0882D4EDE1488AFE27D9EDA3B9FA09FBE1BD9CC0"
-          }
-        },
-        {
-          "client_id": "463200986528-0il2u5eg0obo4mop46otffrljaqtopmi.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDytrGTgZudSZP8TbbWlFZ6bNdTk7ElLv0"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:463200986528:android:9085741a1db8973d",
+        "mobilesdk_app_id": "1:643354514368:android:9085741a1db8973d",
         "android_client_info": {
           "package_name": "com.ln.mycoupon"
         }
       },
       "oauth_client": [
         {
-          "client_id": "463200986528-0n0urf2ij69mjoto3q6skinlnc326kkn.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ln.mycoupon",
-            "certificate_hash": "0882D4EDE1488AFE27D9EDA3B9FA09FBE1BD9CC0"
-          }
-        },
-        {
-          "client_id": "463200986528-0il2u5eg0obo4mop46otffrljaqtopmi.apps.googleusercontent.com",
+          "client_id": "643354514368-t4t4o9sa92luv2tec4ocs33pum0s7lsf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDytrGTgZudSZP8TbbWlFZ6bNdTk7ElLv0"
+          "current_key": "AIzaSyCYSyA5Vxjafj7OLVDPGmRHDXm-nDcQsyA"
         }
       ],
       "services": {
@@ -187,7 +77,7 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

@@ -14,6 +14,7 @@ import android.widget.Spinner;
 
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.CouponTemplate;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -33,11 +34,9 @@ public class AddCouponActivity extends AppCompatActivity {
     MaterialEditText money, content;
     CardView saveCoupon;
     Spinner spinner;
-    private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
     LoveCouponAPI apiService;
     String TAG = "Coupon";
     LinearLayout layoutView;
-
 
 
     @Override
@@ -56,14 +55,14 @@ public class AddCouponActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String str_money = money.getText().toString();
                 String str_content = content.getText().toString();
-                 if(str_money.length() > 0 && str_content.length() >0){
-                     String text = spinner.getSelectedItem().toString();
-                     int duration = Integer.parseInt(text) * 30 ;
-                     postCouponTemplate(str_money,str_content, duration);
-                 }else{
-                     Snackbar.make(view, R.string.not_fill_login, Snackbar.LENGTH_LONG)
-                             .setAction("Action", null).show();
-                 }
+                if (str_money.length() > 0 && str_content.length() > 0) {
+                    String text = spinner.getSelectedItem().toString();
+                    int duration = Integer.parseInt(text) * 30;
+                    postCouponTemplate(str_money, str_content, duration);
+                } else {
+                    Snackbar.make(view, R.string.not_fill_login, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
 
@@ -81,7 +80,7 @@ public class AddCouponActivity extends AppCompatActivity {
         apiService = MainApplication.getAPI();
     }
 
-    public void postCouponTemplate(final String value, final String content, int duration){
+    public void postCouponTemplate(final String value, final String content, int duration) {
         CouponTemplate template = new CouponTemplate();
         template.setCoupon_template_id(MainApplication.getRandomString(15));
         template.setContent(content);
@@ -112,7 +111,6 @@ public class AddCouponActivity extends AppCompatActivity {
                 Snackbar.make(layoutView, R.string.add_coupon_fail, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-
             }
         });
     }
@@ -123,15 +121,14 @@ public class AddCouponActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        if(id == android.R.id.home){
-            Intent intent=new Intent();
+        if (id == android.R.id.home) {
+            Intent intent = new Intent();
             setResult(2, intent);
             finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }

@@ -1,24 +1,27 @@
 package com.ln.fragment;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -29,10 +32,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.Models;
 import com.ln.model.UserPicture;
-import com.ln.mycoupon.MainApplication;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -60,11 +63,11 @@ public class SettingFragment extends Fragment {
     private LoveCouponAPI mLoveCouponAPI;
     private CircleImageView mImgLogo;
     private TextView mTxtNameCompany, mTxtAddress;
-    private TextView mTxtCamera, mTxtGallery;
+
     private Uri mFileUri;
-    private Dialog mDialog;
-    private Drawable mDrawable;
-    private boolean isNameCompanry;
+
+    private AppBarLayout mAppBarLayout;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,10 +86,45 @@ public class SettingFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.layout_setting, container, false);
+        View v = inflater.inflate(R.layout.fragment_setting, container, false);
         mLoveCouponAPI = MainApplication.getAPI();
+
+        initViews(v);
+        initCollapsingToolBar();
+        init();
+        addEvents();
+        return v;
+    }
+
+    private void initCollapsingToolBar() {
+
+        mAppBarLayout.setExpanded(true);
+        mCollapsingToolbarLayout.setTitle(" ");
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+                if (scrollRange == -1) {
+                    scrollRange = mAppBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    mCollapsingToolbarLayout.setTitle(getString(R.string.setting));
+                    isShow = true;
+                } else if (isShow) {
+                    mCollapsingToolbarLayout.setTitle(" ");
+                    isShow = false;
+                }
+            }
+        });
+    }
+
+    private void initViews(View v) {
         nameCompany = (MaterialEditText) v.findViewById(R.id.name_company);
-        addressCompany = (MaterialEditText) v.findViewById(R.id.adress_company);
+        addressCompany = (MaterialEditText) v.findViewById(R.id.address_company);
         user1 = (MaterialEditText) v.findViewById(R.id.username1);
         pass1 = (MaterialEditText) v.findViewById(R.id.password1);
         pass2 = (MaterialEditText) v.findViewById(R.id.password2);
@@ -101,9 +139,9 @@ public class SettingFragment extends Fragment {
         mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_company);
         mTxtAddress = (TextView) v.findViewById(R.id.txt_address_company);
 
-        init();
+        mAppBarLayout = (AppBarLayout) v.findViewById(R.id.app_bar);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
 
-        return v;
     }
 
     @Override
@@ -130,7 +168,7 @@ public class SettingFragment extends Fragment {
 
         Glide.with(getActivity()).load(convertToBytes(logo))
                 .asBitmap()
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_profile)
                 .into(mImgLogo);
 
         if (company.user1 != null) {
@@ -161,8 +199,6 @@ public class SettingFragment extends Fragment {
             checkBox1.setChecked(false);
         }
 
-
-        addEvents();
     }
 
     private void addEvents() {
@@ -179,7 +215,6 @@ public class SettingFragment extends Fragment {
 
         if (resultCode == getActivity().RESULT_OK) {
 
-//            mDrawable = mImgLogo.getDrawable().getConstantState().newDrawable();
             if (requestCode == SELECT_PICTURE) {
                 try {
                     mImgLogo.setImageBitmap(new UserPicture(data.getData(), getActivity().getContentResolver()).getBitmap());
@@ -188,7 +223,7 @@ public class SettingFragment extends Fragment {
                 }
             } else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
 
-                Log.d("SettingFragment", mFileUri.getPath());
+                Log.d(TAG, mFileUri.getPath());
                 previewCapturedImage(mFileUri.getPath());
             }
         } else if (resultCode == getActivity().RESULT_CANCELED) {
@@ -252,14 +287,10 @@ public class SettingFragment extends Fragment {
                     onClickSaveCompany();
                     break;
                 case R.id.img_logo_company:
-                    onClickChangeLogo();
+                    onClickChangeLogo(mImgLogo);
                     break;
-                case R.id.txt_camera:
-                    onClickOpenCamera();
-                    break;
-                case R.id.txt_gallery:
-                    onClickOpenGallery();
-                    break;
+               default:
+                   break;
             }
         }
 
@@ -269,7 +300,6 @@ public class SettingFragment extends Fragment {
                 mFileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
                 startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-                mDialog.dismiss();
             } else {
                 getShowMessage("Driver do not Support");
             }
@@ -281,26 +311,35 @@ public class SettingFragment extends Fragment {
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent, SELECT_PICTURE);
-                mDialog.dismiss();
             } else {
                 getShowMessage("Driver do not Support");
             }
         }
 
 
-        private void onClickChangeLogo() {
+        private void onClickChangeLogo(View view) {
 
-            mDialog = new Dialog(getActivity());
+            PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+            final MenuInflater inflater = popupMenu.getMenuInflater();
+            inflater.inflate(R.menu.menu_chose_images, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.menu_camera:
+                            onClickOpenCamera();
+                            break;
+                        case R.id.menu_gallery:
+                            onClickOpenGallery();
+                            break;
+                        default:
+                            break;
+                    }
+                    return false;
+                }
+            });
+            popupMenu.show();
 
-            mDialog.setContentView(R.layout.item_select_logo);
-            mDialog.setTitle("Avatar");
-            mDialog.show();
-
-            mTxtCamera = (TextView) mDialog.findViewById(R.id.txt_camera);
-            mTxtGallery = (TextView) mDialog.findViewById(R.id.txt_gallery);
-
-            mTxtCamera.setOnClickListener(new Events());
-            mTxtGallery.setOnClickListener(new Events());
         }
 
         private void onClickSaveCompany() {

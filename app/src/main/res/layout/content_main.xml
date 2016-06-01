@@ -7,7 +7,7 @@
     android:id="@+id/content_main"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ln.mycoupon.MainActivity"
+    tools:context=".shop.ShopMainActivity"
     tools:showIn="@layout/app_bar_main">
 
 

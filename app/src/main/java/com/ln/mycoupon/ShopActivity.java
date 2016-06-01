@@ -38,7 +38,7 @@ public class ShopActivity extends AppCompatActivity {
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(company1.getName());
 
-        listView = (ListView) findViewById(R.id.listview);
+        listView = (ListView) findViewById(R.id.recycler_view);
 
         Coupon2Adapter adapter = new Coupon2Adapter(this, company1.getCoupon());
 

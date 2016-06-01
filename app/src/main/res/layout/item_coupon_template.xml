@@ -1,71 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ripple="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
+    xmlns:app="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/size_8"
+    android:layout_marginRight="@dimen/size_8"
     android:background="@drawable/card_background_white"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="16.0dip">
+    android:paddingBottom="@dimen/size_16"
+    android:paddingLeft="@dimen/size_8"
+    android:paddingRight="@dimen/size_8"
+    android:paddingTop="@dimen/size_16">
 
-    <ImageView
+    <com.ln.views.CircleImageView
         android:id="@+id/app_icon"
-        android:layout_width="@android:dimen/app_icon_size"
-        android:layout_height="@android:dimen/app_icon_size"
-        android:layout_marginEnd="8.0dip"
-        android:layout_marginRight="8.0dip"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="@dimen/size_8"
+        android:layout_marginRight="@dimen/size_8"
+        android:layout_marginTop="@dimen/size_10"
         android:contentDescription="@null"
-        android:src="@drawable/logo" />
+        android:src="@drawable/ic_logo"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="1dp" />
 
     <LinearLayout
-        android:layout_width="0.0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/app_coupon"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:id="@+id/txt_company_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:text="50 % coupon"
-            android:textAlignment="viewStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
+            android:text="@string/name_company"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textSize="@dimen/size_18sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/app_time"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/txt_price_coupon"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_gravity="start"
-            android:text="Còn 30 ngày"
-            android:textAlignment="viewStart"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="@string/price"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="@dimen/size_30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_description"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            android:text="@string/description"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="?android:textColorSecondary" />
+            android:textColor="?android:textColorSecondary"
+            android:textSize="@dimen/size_18sp" />
     </LinearLayout>
 
-    <com.ln.views.RippleView
-        android:id="@+id/riple_qrcode"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        ripple:rv_color="@color/title_bg"
-        ripple:rv_type="rectangle"
-        ripple:rv_zoom="true">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_qr_code"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/facebook"
+            android:text="@string/qr_code"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size_15sp" />
 
         <TextView
-            android:id="@+id/download"
-            android:layout_width="80.0dip"
-            android:layout_height="40.0dip"
-            android:layout_centerInParent="true"
-            android:layout_marginRight="5.0dip"
-            android:background="@drawable/remove_bg"
+            android:id="@+id/txt_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="QR Code"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_middle" />
-    </com.ln.views.RippleView>
+            android:text="@string/txt_time_coupon"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="?android:textColorSecondary" />
+
+    </LinearLayout>
+
 </LinearLayout>

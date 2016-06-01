@@ -1,21 +1,14 @@
 package com.ln.model;
 
-import java.util.Date;
 
-/**
- * Created by luongnguyen on 4/7/16.
- */
 public class Coupon {
 
-    public String coupon_id;
-    public String coupon_template_id;
-    public String company_id;
-    public String value;
-    public String user_id;
+    private String coupon_id, user_id, coupon_template_id,
+            created_date, company_id, value, user_name,
+            user_social, user_image_link;
+    private int duration;
 
-    Date created_date;
-
-    public Date getCreated_date() {
+    public String getCreated_date() {
         return created_date;
     }
 
@@ -27,13 +20,12 @@ public class Coupon {
         this.user_id = user_id;
     }
 
-    public void setCreated_date(Date created_date) {
+    public void setCreated_date(String created_date) {
         this.created_date = created_date;
     }
 
     public String getCoupon_id() {
         return coupon_id;
-
     }
 
     public void setCoupon_id(String coupon_id) {
@@ -62,6 +54,38 @@ public class Coupon {
 
     public void setCompany_id(String company_id) {
         this.company_id = company_id;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getUser_social() {
+        return user_social;
+    }
+
+    public void setUser_social(String user_social) {
+        this.user_social = user_social;
+    }
+
+    public String getUser_image_link() {
+        return user_image_link;
+    }
+
+    public void setUser_image_link(String user_image_link) {
+        this.user_image_link = user_image_link;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 }
 

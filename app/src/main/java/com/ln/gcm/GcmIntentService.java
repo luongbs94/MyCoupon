@@ -15,11 +15,10 @@ import android.widget.Toast;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-import com.ln.mycoupon.MainApplication;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.io.IOException;
-
 
 
 public class GcmIntentService extends IntentService {

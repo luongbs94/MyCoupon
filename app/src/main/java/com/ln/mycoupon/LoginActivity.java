@@ -27,9 +27,11 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.InformationAccount;
 import com.ln.model.Models;
+import com.ln.mycoupon.shop.ShopMainActivity;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
@@ -97,8 +99,6 @@ public class LoginActivity extends AppCompatActivity
         mBtnGooglePlus.setSize(SignInButton.SIZE_WIDE);
         mBtnGooglePlus.setScopes(mInOptions.getScopeArray());
 
-
-
     }
 
     private void addEvents() {
@@ -135,8 +135,6 @@ public class LoginActivity extends AppCompatActivity
     public void getCompanyProfile(String user, String pass) {
         Call<List<Company>> call = apiService.getCompanyProfile(user, pass);
 
-//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//        startActivity(intent);
         call.enqueue(new Callback<List<Company>>() {
 
             @Override
@@ -146,18 +144,14 @@ public class LoginActivity extends AppCompatActivity
 
                 SaveData.company = templates.get(0);
 
-
-                //      Log.d(TAG, SaveData.company.getLogo());
-
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
-
+                finish();
             }
 
             @Override
             public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
                 Log.d(TAG, "Failure");
-
             }
         });
     }
@@ -240,8 +234,8 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mProfileTracker.stopTracking();
-        mAccessTokenTracker.stopTracking();
+//        mProfileTracker.stopTracking();
+//        mAccessTokenTracker.stopTracking();
     }
 
     private class Events implements View.OnClickListener {

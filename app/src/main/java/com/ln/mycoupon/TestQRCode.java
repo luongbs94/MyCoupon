@@ -15,6 +15,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.Coupon;
 
 import retrofit2.Call;
@@ -24,13 +25,13 @@ import retrofit2.Response;
 public class TestQRCode extends AppCompatActivity {
 
 
-    ImageView qrCodeImageview;
-    String QRcode;
+    private ImageView qrCodeImageview;
+    private String QRcode;
     public final static int WIDTH = 500;
-    private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
-    LoveCouponAPI apiService;
-    String TAG = "Coupon";
-    String value, coupon_template_id;
+    private LoveCouponAPI apiService;
+    private final String TAG = "Coupon";
+    private String value, coupon_template_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +57,7 @@ public class TestQRCode extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String test = MainApplication.getRandomString(10);
-                genarateQRCode(test);
+                generateQRCode(test);
             }
         });
 
@@ -66,12 +67,12 @@ public class TestQRCode extends AppCompatActivity {
         String value = getIntent().getExtras().getString("value");
         setTitle("QR Code - " + value + " coupon");
 
-        genarateQRCode(MainApplication.getRandomString(10));
+        generateQRCode(MainApplication.getRandomString(10));
 
 
     }
 
-    public void genarateQRCode(final String text){
+    public void generateQRCode(final String text) {
 
         addCoupon(text);
 
@@ -126,7 +127,7 @@ public class TestQRCode extends AppCompatActivity {
         for (int y = 0; y < h; y++) {
             int offset = y * w;
             for (int x = 0; x < w; x++) {
-                pixels[offset + x] = result.get(x, y) ? getResources().getColor(R.color.black):getResources().getColor(R.color.white);
+                pixels[offset + x] = result.get(x, y) ? getResources().getColor(R.color.black) : getResources().getColor(R.color.white);
             }
         }
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -139,7 +140,7 @@ public class TestQRCode extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             finish();
         }
 
@@ -147,7 +148,7 @@ public class TestQRCode extends AppCompatActivity {
     }
 
 
-    public void addCoupon(final String coupon_id){
+    public void addCoupon(final String coupon_id) {
         Coupon template = new Coupon();
         template.setCompany_id(SaveData.company.company_id + "");
         template.setCoupon_id(coupon_id);
@@ -174,7 +175,6 @@ public class TestQRCode extends AppCompatActivity {
             }
         });
     }
-
 
 
 }
