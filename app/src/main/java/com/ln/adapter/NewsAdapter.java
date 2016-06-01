@@ -21,6 +21,7 @@ import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
+import com.ln.views.MyTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +83,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImgLogo, mImgLike, mImgShare, mImgDelete;
-        private TextView mTxtCompanyName, mTxtTime, mTxtTile, mTxtContent, mTxtLink;
+        private TextView  mTxtTile, mTxtLink;
         private RecyclerView mRecyclerView;
+
+        MyTextView mTxtTime, mTxtContent;
+        TextView mTxtCompanyName;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -94,9 +98,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             mImgDelete = (ImageView) itemView.findViewById(R.id.img_delete_news);
 
             mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_news);
-            mTxtTime = (TextView) itemView.findViewById(R.id.txt_date_news);
+            mTxtTime = (MyTextView) itemView.findViewById(R.id.txt_date_news);
             mTxtTile = (TextView) itemView.findViewById(R.id.txt_title_news);
-            mTxtContent = (TextView) itemView.findViewById(R.id.txt_content_news);
+            mTxtContent = (MyTextView) itemView.findViewById(R.id.txt_content_news);
             mTxtLink = (TextView) itemView.findViewById(R.id.txt_link_news);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
             mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));

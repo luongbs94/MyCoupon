@@ -3,6 +3,7 @@ package com.ln.fragment;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,6 +37,9 @@ public class CouponFragment2 extends Fragment {
     private List<CouponTemplate> mListCoupon = new ArrayList<>();
     private String TAG = getClass().getSimpleName();
 
+    private SwipeRefreshLayout swipeContainer;
+
+
     public CouponFragment2() {
     }
 
@@ -49,6 +53,22 @@ public class CouponFragment2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_coupon, container, false);
+
+        swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getCouponTemplate();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
 
         initViews();
 
@@ -131,20 +151,17 @@ public class CouponFragment2 extends Fragment {
 
                 CouponTemplateAdapter adapter = new CouponTemplateAdapter(getActivity(), mListCoupon);
                 mRecCoupon.setAdapter(adapter);
+
+                swipeContainer.setRefreshing(false);
+
             }
 
             @Override
             public void onFailure(Call<List<CouponTemplate>> arg0, Throwable arg1) {
                 Log.d(TAG, "Failure");
+                swipeContainer.setRefreshing(false);
+
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        Log.d(TAG, "onResume");
-        getCouponTemplate();
     }
 }

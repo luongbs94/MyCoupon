@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.ln.app.MainApplication;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
+import com.ln.views.MyTextView;
 
 import java.util.List;
 
@@ -54,15 +55,15 @@ public class Message2Adapter extends BaseAdapter {
             holder.appIcon = (ImageView) convertView
                     .findViewById(R.id.app_icon);
             holder.company_name = (TextView) convertView
-                    .findViewById(R.id.company_name);
-//            holder.date = (TextView) convertView
+                    .findViewById(R.id.txt_company_name_news);
+//            holder.date = (MyTextView) convertView
 //                    .findViewById(R.id.date);
             holder.title = (TextView) convertView
-                    .findViewById(R.id.title);
-            holder.content = (TextView) convertView
-                    .findViewById(R.id.content);
+                    .findViewById(R.id.txt_title_news);
+            holder.content = (MyTextView) convertView
+                    .findViewById(R.id.txt_content_news);
             holder.link = (TextView) convertView
-                    .findViewById(R.id.link);
+                    .findViewById(R.id.txt_link_news);
 
             convertView.setTag(holder);
         } else {
@@ -72,10 +73,10 @@ public class Message2Adapter extends BaseAdapter {
 
         if (item != null) {
 
-            holder.company_name.setText(MainApplication.getCompanyName(item.getCompany_id()));
-            holder.title.setText(item.getTitle());
-            holder.content.setText(item.getContent());
-            holder.link.setText(item.getLink());
+            holder.company_name.setText(" " + MainApplication.getCompanyName(item.getCompany_id()));
+            holder.title.setText(item.getTitle() + "");
+            holder.content.setText(item.getContent() + "");
+            holder.link.setText(item.getLink() + "");
         }
         return convertView;
     }
@@ -84,9 +85,9 @@ public class Message2Adapter extends BaseAdapter {
     private class ViewHolder {
         ImageView appIcon;
         TextView company_name;
-        TextView date;
+        MyTextView date;
         TextView title;
-        TextView content;
+        MyTextView content;
         TextView link;
     }
 }
