@@ -3,6 +3,7 @@ package com.ln.fragment.shop;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,6 +38,8 @@ public class CreateFragment extends Fragment {
     private String utc1 = "Mon, 6 Mar 2016 17:00:00 GMT";
     private String utc2 = "Mon, 17 Oct 2016 17:00:00 GMT";
     private static boolean isInitRecyclerView;
+    private SwipeRefreshLayout swipeContainer;
+
 
 
     public CreateFragment() {
@@ -54,15 +57,24 @@ public class CreateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_create, container, false);
+
+        swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getCreateCoupon();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         initViews();
         getCreateCoupon();
         return mView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getCreateCoupon();
     }
 
     private void initViews() {
@@ -82,10 +94,12 @@ public class CreateFragment extends Fragment {
 
                 mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupon);
                 mRecyclerCreate.setAdapter(mCouponAdapter);
+                swipeContainer.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<ArrayList<Coupon>> call, Throwable t) {
+                swipeContainer.setRefreshing(false);
 
             }
         });

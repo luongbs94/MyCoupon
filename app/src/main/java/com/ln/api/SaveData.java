@@ -22,4 +22,8 @@ public class SaveData {
     public static void setCompany(Company company1) {
         company = company1;
     }
+
+    public static String web_token = "";
+
+
 }

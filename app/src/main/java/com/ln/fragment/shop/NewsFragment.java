@@ -2,6 +2,7 @@ package com.ln.fragment.shop;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +34,9 @@ public class NewsFragment extends Fragment {
     private RecyclerView mRecNews;
     private List<Message> mListNews = new ArrayList<>();
     private String TAG = getClass().getSimpleName();
+    private SwipeRefreshLayout swipeContainer;
+
+
 
 
     public NewsFragment() {
@@ -50,17 +54,25 @@ public class NewsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_news, container, false);
+
+        swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getNewsByCompanyId();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         initViews();
         getNewsByCompanyId();
         Log.d(TAG, "onCreate");
         return mView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
-        getNewsByCompanyId();
     }
 
     private void initViews() {
@@ -82,11 +94,15 @@ public class NewsFragment extends Fragment {
                 Log.d(TAG, mListNews.size() + "");
                 NewsAdapter adapter = new NewsAdapter(getActivity(), mListNews);
                 mRecNews.setAdapter(adapter);
+                swipeContainer.setRefreshing(false);
+
             }
 
             @Override
             public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
                 Log.d(TAG, "Failure");
+                swipeContainer.setRefreshing(false);
+
             }
         });
     }

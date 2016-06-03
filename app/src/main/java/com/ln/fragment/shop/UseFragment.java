@@ -3,6 +3,7 @@ package com.ln.fragment.shop;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ public class UseFragment extends Fragment {
     private CreateCouponAdapter mCouponAdapter;
     private ArrayList<Coupon> mListCoupons = new ArrayList<>();
     private String TAG = getClass().getSimpleName();
+    private SwipeRefreshLayout swipeContainer;
 
     public UseFragment() {
     }
@@ -52,6 +54,21 @@ public class UseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_create, container, false);
+
+        swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getUseCoupon();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         initViews();
         return mView;
     }
@@ -71,18 +88,14 @@ public class UseFragment extends Fragment {
                 mListCoupons = response.body();
                 mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupons);
                 mRecyclerView.setAdapter(mCouponAdapter);
+                swipeContainer.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<ArrayList<Coupon>> call, Throwable t) {
-
+                swipeContainer.setRefreshing(false);
             }
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getUseCoupon();
-    }
 }

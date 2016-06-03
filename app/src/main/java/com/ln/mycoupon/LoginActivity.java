@@ -36,6 +36,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -132,7 +133,40 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    public void getCompanyProfile(String user, String pass) {
+    public void getWebTokenUser(String user, String pass){
+        Call<ResponseBody> call1 = apiService.getWebTokenUser(user, pass);
+
+        call1.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> arg0,
+                                   Response<ResponseBody> arg1) {
+
+                try {
+                    String webToken = arg1.body().string();
+                    SaveData.web_token = webToken;
+                    Log.d("mycoupon", SaveData.web_token);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("mycoupon", "false");
+
+                }
+
+                finish();
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> arg0, Throwable arg1) {
+                Log.d(TAG, "Failure");
+            }
+        });
+    }
+
+
+    public void getCompanyProfile(final String user, final String pass) {
+
+
         Call<List<Company>> call = apiService.getCompanyProfile(user, pass);
 
         call.enqueue(new Callback<List<Company>>() {
@@ -144,9 +178,11 @@ public class LoginActivity extends AppCompatActivity
 
                 SaveData.company = templates.get(0);
 
+                getWebTokenUser(user, pass);
+
                 Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
-                finish();
+            //    finish();
             }
 
             @Override

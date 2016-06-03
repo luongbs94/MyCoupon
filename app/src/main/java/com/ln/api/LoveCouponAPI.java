@@ -10,13 +10,16 @@ import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.Message;
 import com.ln.model.User;
+import com.ln.model.WebToken;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -24,6 +27,9 @@ public interface LoveCouponAPI {
 
     @GET("/get_coupon_template_by_company_id")
     Call<List<CouponTemplate>> getCouponTemplatesByCompanyId(@Query("company_id") int id);
+
+    @GET("/get_coupon_template_by_company_id")
+    Call<List<CouponTemplate>> getCouponTemplates(@Header("Authorization") String authorization, @Query("company_id") int id);
 
     @GET("/get_news_by_company_id")
     Call<List<Message>> getNewsByCompanyId(@Query("company_id") int id);
@@ -75,5 +81,12 @@ public interface LoveCouponAPI {
 
     @POST("/updateCompany")
     Call<Company> updateCompany(@Body Company template);
+
+
+    @GET("/get_web_token")
+    Call<ResponseBody> getWebTokenUser(@Query("user_name") String user_name, @Query("password") String password);
+
+    @GET("/get_web_token")
+    Call<WebToken> getWebTokenSocial(@Query("user_id") String user_id, @Query("social") String social, @Query("access_token") String access_token);
 
 }
