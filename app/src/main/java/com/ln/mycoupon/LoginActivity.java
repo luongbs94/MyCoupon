@@ -163,6 +163,33 @@ public class LoginActivity extends AppCompatActivity
         });
     }
 
+    public void getWebTokenSocial(String user_id, String social, String access_token){
+        Call<ResponseBody> call1 = apiService.getWebTokenSocial(user_id, social, access_token);
+
+        call1.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> arg0,
+                                   Response<ResponseBody> arg1) {
+
+                try {
+                    String webToken = arg1.body().string();
+                    SaveData.web_token = webToken;
+                    Log.d("mycoupon", SaveData.web_token);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("mycoupon", "false");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> arg0, Throwable arg1) {
+                Log.d(TAG, "Failure");
+            }
+        });
+    }
+
 
     public void getCompanyProfile(final String user, final String pass) {
 
@@ -315,8 +342,10 @@ public class LoginActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(LoginResult loginResult) {
                     mProfile = Profile.getCurrentProfile();
-//                    mAccessToken = AccessToken.getCurrentAccessToken();
-                    username.setText(mProfile.getId());
+                    mAccessToken = AccessToken.getCurrentAccessToken();
+                    username.setText(mProfile.getId() + "");
+
+                    getWebTokenSocial(mProfile.getId(), "facebook", mAccessToken.toString());
                 }
 
                 @Override

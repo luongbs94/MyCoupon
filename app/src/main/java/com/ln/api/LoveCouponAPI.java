@@ -87,6 +87,6 @@ public interface LoveCouponAPI {
     Call<ResponseBody> getWebTokenUser(@Query("user_name") String user_name, @Query("password") String password);
 
     @GET("/get_web_token")
-    Call<WebToken> getWebTokenSocial(@Query("user_id") String user_id, @Query("social") String social, @Query("access_token") String access_token);
+    Call<ResponseBody> getWebTokenSocial(@Query("user_id") String user_id, @Query("social") String social, @Query("access_token") String access_token);
 
 }
