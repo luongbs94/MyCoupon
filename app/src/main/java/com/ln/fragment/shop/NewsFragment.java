@@ -37,8 +37,6 @@ public class NewsFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
 
 
-
-
     public NewsFragment() {
 
     }

@@ -14,11 +14,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.fragment.HistoryFragment;
 import com.ln.fragment.SettingFragment;
 import com.ln.fragment.shop.CouponFragment;
 import com.ln.fragment.shop.NewsFragment;
+import com.ln.model.Company;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.R;
@@ -29,6 +35,8 @@ public class ShopMainActivity extends AppCompatActivity
     private String TAG = getClass().getSimpleName();
     private int currentPosition = 0;
     private FloatingActionButton mFbButton;
+    private ImageView mImageLogo;
+    private TextView mTxtNameCompany, mTxtAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +74,16 @@ public class ShopMainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headView = navigationView.getHeaderView(0);
+        mImageLogo = (ImageView) headView.findViewById(R.id.img_logo_nav);
+        mTxtNameCompany = (TextView) headView.findViewById(R.id.txt_name_nav);
+        mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
+
+        Company company = SaveData.company;
+        Glide.with(this).load(MainApplication.convertToBytes(company.getLogo())).into(mImageLogo);
+        mTxtNameCompany.setText(company.getName());
+        mTxtAddress.setText(company.getAddress());
 
         startFragment(new CouponFragment());
 
