@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
-    private static Firebase sRoot = new Firebase("https://nhahv-fire-chat.firebaseio.com/users");
+    private static Firebase sRoot = new Firebase(MainApplication.URL_FIRE_BASE);
     private Context mContext;
     private List<Message> mListNews;
     private LayoutInflater mInflater;

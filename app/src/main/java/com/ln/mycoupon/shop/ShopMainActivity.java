@@ -81,7 +81,12 @@ public class ShopMainActivity extends AppCompatActivity
         mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
         Company company = SaveData.company;
-        Glide.with(this).load(MainApplication.convertToBytes(company.getLogo())).into(mImageLogo);
+        if (company.getLogo() != null) {
+            Glide.with(this).load(MainApplication
+                    .convertToBytes(company.getLogo()))
+                    .placeholder(R.drawable.ic_profile)
+                    .into(mImageLogo);
+        }
         mTxtNameCompany.setText(company.getName());
         mTxtAddress.setText(company.getAddress());
 
