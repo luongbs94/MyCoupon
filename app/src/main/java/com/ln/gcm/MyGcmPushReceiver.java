@@ -11,20 +11,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.shop.ShopMainActivity;
+
+import java.util.Map;
 
 /**
  * Created by luong on 08/03/2016.
  */
 
 
-public class MyGcmPushReceiver extends GcmListenerService {
+public class MyGcmPushReceiver extends FirebaseMessagingService {
 
     private static final String TAG = MyGcmPushReceiver.class.getSimpleName();
 
@@ -36,15 +37,11 @@ public class MyGcmPushReceiver extends GcmListenerService {
      *               For Set of keys use data.keySet().
      */
 
-    @Override
-    public void onMessageReceived(String from, Bundle bundle) {
-        String message = bundle.getString("message");
-        Log.d(TAG, "From: " + from);
-        Log.d(TAG, "Message: " + message);
-
-        sendNotification(message);
-
-
+    public void onMessageReceived(RemoteMessage message){
+        String from = message.getFrom();
+        Map data = message.getData();
+        String aaa = data.toString();
+        sendNotification(aaa);
     }
 
     private void sendNotification(String message) {
