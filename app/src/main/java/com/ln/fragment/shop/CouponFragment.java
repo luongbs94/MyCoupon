@@ -40,7 +40,6 @@ public class CouponFragment extends Fragment {
     private String TAG = getClass().getSimpleName();
     private SwipeRefreshLayout swipeContainer;
 
-
     public CouponFragment() {
     }
 
@@ -70,30 +69,6 @@ public class CouponFragment extends Fragment {
                 android.R.color.holo_red_light);
 
         initViews();
-
-        /*
-          MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                        .title(R.string.title_delete_coupon)
-                        .content(R.string.content_delete_coupon)
-                        .positiveText(R.string.ok)
-                        .negativeText(R.string.cancel)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog dialog, DialogAction which) {
-                                deleteCouponTemplate(listCoupons.get(i).getCoupon_template_id());
-                                dialog.dismiss();
-                            }
-                        })
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog dialog, DialogAction which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .show();
-
-         */
-
         getCouponTemplate();
 
         return mView;
@@ -139,7 +114,7 @@ public class CouponFragment extends Fragment {
 
         mListCoupon.clear();
 
-        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, 7);
+        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplatesByCompanyId(SaveData.company.getCompany_id());
         call.enqueue(new Callback<List<CouponTemplate>>() {
 
             @Override
@@ -147,7 +122,7 @@ public class CouponFragment extends Fragment {
                                    Response<List<CouponTemplate>> arg1) {
                 mListCoupon = arg1.body();
 
-                Log.d(TAG, mListCoupon.size() + "");
+            //    Log.d(TAG, mListCoupon.size() + "");
 
                 CouponTemplateAdapter adapter = new CouponTemplateAdapter(getActivity(), mListCoupon);
                 mRecCoupon.setAdapter(adapter);

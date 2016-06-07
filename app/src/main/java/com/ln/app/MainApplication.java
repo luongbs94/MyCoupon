@@ -11,14 +11,9 @@ import com.firebase.client.Firebase;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company1;
-import com.ln.model.Coupon;
 
-import java.util.List;
 import java.util.Random;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -43,10 +38,11 @@ public class MainApplication extends MultiDexApplication {
     public static final String BOOL_ADD_TOKEN = "addToken";
     public static final String SHAREDPRE = "sharePre";
 
-    public static final String LISTCOMPANY = "listcompany";
-    public static final String LISTCOUPON = "listCoupon";
-    public static final String LOGINCOMPANY = "logincompany";
+    public static final String LOGINCLIENT = "loginclient";
+    public static final String CLIENT_DATA = "client_data";
     public static final String LOGINSHOP = "loginshop";
+    public static final String SHOP_DATA = "shop_data";
+
 
 
     public static SharedPreferences sharedPreferences;
@@ -68,9 +64,9 @@ public class MainApplication extends MultiDexApplication {
 
         Retrofit retrofit = new Retrofit.Builder()
                 //      .baseUrl("http://192.168.1.6:3000")
-                .baseUrl("http://188.166.179.187:3000")
+           //     .baseUrl("http://188.166.179.187:3000")
                         //      .baseUrl("http://192.168.1.6:3000")
-                        //     .baseUrl("http://103.7.40.171:3000")
+                .baseUrl("http://103.7.40.171:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -86,7 +82,6 @@ public class MainApplication extends MultiDexApplication {
         sharedPreferences = getSharedPreferences(SHAREDPRE, 4);
         editor = sharedPreferences.edit();
 
-        getCompanyByUserId();
     }
 
     public static SharedPreferences getSharedPreferences() {
@@ -112,37 +107,7 @@ public class MainApplication extends MultiDexApplication {
         editor.commit();
     }
 
-    public void getCompanyByUserId() {
 
-        Call<List<Company1>> call3 = apiService1.getCompaniesByUserId("10205539341392320");
-        call3.enqueue(new Callback<List<Company1>>() {
-
-            @Override
-            public void onResponse(Call<List<Company1>> arg0,
-                                   Response<List<Company1>> arg1) {
-                List<Company1> templates = arg1.body();
-                System.out.println(templates.size());
-
-                SaveData.listCompany = templates;
-
-
-                Company1 company1 = templates.get(0);
-                Coupon coupon = company1.getCoupon().get(0);
-                String value = coupon.getValue();
-                String company_id = coupon.getCompany_id();
-//                Date date = coupon.getCreated_date();
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-
-
-    }
 
     public static String getCompanyName(String company_id) {
         for (int i = 0; i < SaveData.listCompany.size(); i++) {

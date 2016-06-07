@@ -134,6 +134,8 @@ public class ShopMainActivity extends AppCompatActivity
                 startFragment(new SettingFragment());
                 break;
             case R.id.logout:
+                MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
+                MainApplication.editor.commit();
                 finish();
                 break;
             default:

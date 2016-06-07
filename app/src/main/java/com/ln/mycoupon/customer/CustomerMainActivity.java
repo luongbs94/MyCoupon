@@ -124,7 +124,7 @@ public class CustomerMainActivity extends AppCompatActivity
             Intent intent = new Intent(this, FirstActivity.class);
             startActivity(intent);
 
-            MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
+            MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
             MainApplication.editor.commit();
 
             finish();

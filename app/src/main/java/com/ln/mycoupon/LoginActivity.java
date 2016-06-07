@@ -25,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
@@ -208,6 +209,15 @@ public class LoginActivity extends AppCompatActivity
                 List<Company> templates = arg1.body();
 
                 SaveData.company = templates.get(0);
+
+                Gson gson = new Gson();
+
+                String data = gson.toJson(SaveData.company);
+                MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, true);
+                MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
+                MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
+                MainApplication.editor.commit();
+
 
                 getWebTokenUser(user, pass);
 
