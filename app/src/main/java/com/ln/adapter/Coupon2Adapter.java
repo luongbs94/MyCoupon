@@ -51,8 +51,7 @@ public class Coupon2Adapter extends BaseAdapter {
                     .findViewById(R.id.app_icon);
             holder.appName = (TextView) convertView
                     .findViewById(R.id.company_name);
-            holder.appValue = (TextView) convertView
-                    .findViewById(R.id.company_coupon);
+
 
             convertView.setTag(holder);
         } else {

@@ -37,9 +37,14 @@
                 android:layout_gravity="start"
                 android:ellipsize="marquee"
                 android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textSize="@dimen/size_18sp"
+                android:textStyle="bold"
                 android:text="GONE"
                 android:textAlignment="viewStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                android:textColor="@color/colorTextNews"
+
+                />
 
             <TextView
                 android:id="@+id/company_address"

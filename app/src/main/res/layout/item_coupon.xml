@@ -31,25 +31,28 @@
             android:layout_margin="5dp">
 
             <TextView
-                android:id="@+id/company_name"
+                android:id="@+id/coupon_name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:ellipsize="marquee"
                 android:singleLine="true"
-                android:text="GONE"
+                android:text="1000"
                 android:textAlignment="viewStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                android:textColor="@color/colorPrimary"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textSize="@dimen/size_30sp"
+                android:textStyle="bold"  />
 
             <TextView
-                android:id="@+id/company_coupon"
+                android:id="@+id/coupon_date"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:text="100 coupon"
+                android:text="11/11/11"
                 android:textAlignment="viewStart"
                 android:textColor="?android:textColorSecondary"
-                android:textSize="20dp"/>
+                android:textSize="18sp"/>
         </LinearLayout>
 
     </LinearLayout>

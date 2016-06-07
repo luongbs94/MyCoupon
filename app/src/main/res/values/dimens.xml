@@ -17,6 +17,8 @@
     <dimen name="size_20sp">20sp</dimen>
     <dimen name="size_16">16dp</dimen>
     <dimen name="size_5">5dp</dimen>
+    <dimen name="app_bar_height">180.0dip</dimen>
+
     <dimen name="size_15">15dp</dimen>
 
 
