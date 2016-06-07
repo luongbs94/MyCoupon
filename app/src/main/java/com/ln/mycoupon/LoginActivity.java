@@ -146,6 +146,8 @@ public class LoginActivity extends AppCompatActivity
                     String webToken = arg1.body().string();
                     SaveData.web_token = webToken;
                     Log.d("mycoupon", SaveData.web_token);
+                    Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
+                    startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.d("mycoupon", "false");
@@ -175,6 +177,8 @@ public class LoginActivity extends AppCompatActivity
                 try {
                     String webToken = arg1.body().string();
                     SaveData.web_token = webToken;
+                    Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
+                    startActivity(intent);
                     Log.d("mycoupon", SaveData.web_token);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -207,8 +211,7 @@ public class LoginActivity extends AppCompatActivity
 
                 getWebTokenUser(user, pass);
 
-                Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
-                startActivity(intent);
+
             //    finish();
             }
 

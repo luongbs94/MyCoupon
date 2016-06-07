@@ -138,6 +138,7 @@ public class CouponFragment extends Fragment {
     public void getCouponTemplate() {
 
         mListCoupon.clear();
+
         Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, 7);
         call.enqueue(new Callback<List<CouponTemplate>>() {
 
