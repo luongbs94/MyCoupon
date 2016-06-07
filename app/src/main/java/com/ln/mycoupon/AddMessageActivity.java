@@ -57,7 +57,7 @@ public class AddMessageActivity extends AppCompatActivity {
     private static final boolean isPreview = true;
     private static final boolean isCrop = false;
     private boolean isUpload;
-    private static final int WIDTH = 100;
+
 
     private ArrayList<ItemImage> mImages = new ArrayList<>();
     private SelectedImageAdapter mSelectedImageAdapter;
@@ -231,8 +231,8 @@ public class AddMessageActivity extends AppCompatActivity {
         options.inSampleSize = 8;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
-        int height = WIDTH * bitmap.getHeight() / bitmap.getWidth();
-        Bitmap resized = Bitmap.createScaledBitmap(bitmap, WIDTH, height, true);
+        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
+        Bitmap resized = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES, height, true);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         resized.compress(Bitmap.CompressFormat.PNG, 100, stream);

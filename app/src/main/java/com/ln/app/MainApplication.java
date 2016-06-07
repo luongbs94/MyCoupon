@@ -27,6 +27,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MainApplication extends MultiDexApplication {
 
+    public static final String POSITION = "POSITION";
+    public static final String DATA = "DATA";
+    public static final String LIST_IMAGES = "LIST_IMAGES";
+
+    public static final String URL_FIRE_BASE = "https://nhahv-fire-chat.firebaseio.com/users";
+
     public static LoveCouponAPI apiService;
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
     public static LoveCouponAPI apiService1;
@@ -47,6 +53,11 @@ public class MainApplication extends MultiDexApplication {
     public static SharedPreferences.Editor editor;
 
 
+    public static final String PATH = "path";
+
+    // size images firebase
+    public static final int WIDTH_IMAGES = 200;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -56,8 +67,10 @@ public class MainApplication extends MultiDexApplication {
         AppEventsLogger.activateApp(this);
 
         Retrofit retrofit = new Retrofit.Builder()
-         //      .baseUrl("http://192.168.1.6:3000")
+                //      .baseUrl("http://192.168.1.6:3000")
                 .baseUrl("http://188.166.179.187:3000")
+                        //      .baseUrl("http://192.168.1.6:3000")
+                        //     .baseUrl("http://103.7.40.171:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
