@@ -41,7 +41,7 @@ import retrofit2.Response;
 public class AddMessageActivity extends AppCompatActivity {
 
     private static final Firebase ROOT =
-            new Firebase("https://nhahv-firebase.firebaseio.com/");
+            new Firebase(MainApplication.URL_FIRE_BASE);
     private String TAG = getClass().getSimpleName();
 
     private MaterialEditText title, content, link;
@@ -196,24 +196,26 @@ public class AddMessageActivity extends AppCompatActivity {
                             .setAction("Action", null).show();
                 }
 
+                ItemImage itemImage = null;
                 for (int i = 0; i < mImages.size(); i++) {
-                    String string = convertBase64(mImages.get(i).getPath());
+                    String string = convertBase64(mImages.get(i).getImages());
 
                     if (i == mImages.size() - 1) {
-                        ROOT.child("user/" + "coupon").push().setValue(string, new Firebase.CompletionListener() {
+                        itemImage = new ItemImage(string);
+                        ROOT.child("coupon").push().setValue(itemImage, new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                 getShowToast("Upload Success");
                             }
                         });
                     } else {
-                        ROOT.child("user/" + "coupon").push().setValue(string);
+                        itemImage = new ItemImage(string);
+                        ROOT.child("coupon").push().setValue(itemImage);
                     }
                 }
 
                 isUpload = true;
             }
-
         }
 
         private void onClickSelectImages() {

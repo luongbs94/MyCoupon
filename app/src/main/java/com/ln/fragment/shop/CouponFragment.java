@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 
 import com.ln.adapter.CouponTemplateAdapter;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.CouponTemplate;
 import com.ln.mycoupon.R;
@@ -114,15 +113,14 @@ public class CouponFragment extends Fragment {
 
         mListCoupon.clear();
 
-        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplatesByCompanyId(SaveData.company.getCompany_id());
+//        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplatesByCompanyId(SaveData.company.getCompany_id());
+        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplatesByCompanyId(7);
         call.enqueue(new Callback<List<CouponTemplate>>() {
 
             @Override
             public void onResponse(Call<List<CouponTemplate>> arg0,
                                    Response<List<CouponTemplate>> arg1) {
                 mListCoupon = arg1.body();
-
-            //    Log.d(TAG, mListCoupon.size() + "");
 
                 CouponTemplateAdapter adapter = new CouponTemplateAdapter(getActivity(), mListCoupon);
                 mRecCoupon.setAdapter(adapter);

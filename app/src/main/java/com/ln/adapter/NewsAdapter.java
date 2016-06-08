@@ -19,6 +19,7 @@ import com.firebase.client.ValueEventListener;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
+import com.ln.model.ItemImage;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
 import com.ln.views.MyTextView;
@@ -35,7 +36,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private Context mContext;
     private List<Message> mListNews;
     private LayoutInflater mInflater;
-    private ArrayList<String> mListImages;
+    private ArrayList<ItemImage> mListImages;
 
     public NewsAdapter(Context context, List<Message> listNews) {
         mContext = context;
@@ -83,7 +84,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImgLogo, mImgLike, mImgShare, mImgDelete;
-        private TextView  mTxtTile, mTxtLink;
+        private TextView mTxtTile, mTxtLink;
         private RecyclerView mRecyclerView;
 
         MyTextView mTxtTime, mTxtContent;
@@ -119,14 +120,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String string = snapshot.getValue().toString();
-                        if (!isExists(string, mListImages)) {
-                            mListImages.add(string);
+
+                        ItemImage itemImage = snapshot.getValue(ItemImage.class);
+                        if (!isExists(itemImage, mListImages)) {
+                            mListImages.add(itemImage);
                         }
 
                         GridAdapter mGridAdapter = new GridAdapter(mContext, mListImages);
                         urlImages.getViewHolder().mRecyclerView.setAdapter(mGridAdapter);
-                        Log.d("NewsAdapter", string);
+                        Log.d("NewsAdapter", itemImage.getImages());
                     }
                 }
 
@@ -178,9 +180,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         }
     }
 
-    private boolean isExists(String string, ArrayList<String> mListImages) {
-        for (String strImages : mListImages) {
-            if (strImages.equals(string)) {
+    private boolean isExists(ItemImage itemImage, ArrayList<ItemImage> mListImages) {
+        for (ItemImage image : mListImages) {
+            if (image.getImages().equals(itemImage.getImages())) {
                 return true;
             }
         }

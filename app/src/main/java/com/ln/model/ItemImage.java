@@ -6,20 +6,20 @@ import java.io.Serializable;
  * Created by Nhahv on 5/11/2016.
  */
 public class ItemImage implements Serializable {
-    private String path;
 
-    public ItemImage() {
+    private String images;
+
+    public ItemImage(){}
+
+    public ItemImage(String images){
+        this.images = images;
     }
 
-    public ItemImage(String path) {
-        this.path = path;
+    public String getImages() {
+        return images;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
+    public void setImages(String images) {
+        this.images = images;
     }
 }
