@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -81,10 +82,10 @@ public class ShopMainActivity extends AppCompatActivity
         mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
         Company company = SaveData.company;
+        Log.d(TAG, company.getLogo());
         if (company.getLogo() != null) {
             Glide.with(this).load(MainApplication
                     .convertToBytes(company.getLogo()))
-                    .placeholder(R.drawable.ic_profile)
                     .into(mImageLogo);
         }
         mTxtNameCompany.setText(company.getName());

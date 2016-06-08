@@ -71,9 +71,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 //        String date = formatter.format(news.getCreated_date());
 //        holder.mTxtTime.setText(date);
 
-        LoadImages loadImages = new LoadImages(holder, "coupon");
-        new AsyncTaskLoadImages().execute(loadImages);
-
+        String url_image = news.getImages_link();
+        if (url_image != null && !url_image.isEmpty()) {
+            LoadImages loadImages = new LoadImages(holder, url_image);
+            new AsyncTaskLoadImages().execute(loadImages);
+        }
     }
 
     @Override
