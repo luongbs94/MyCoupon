@@ -168,7 +168,6 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         Coupon template = new Coupon();
         template.setCoupon_id(coupon_id);
         template.setUser_id(user_id);
-        template.setDuration(duration);
 
 
 
