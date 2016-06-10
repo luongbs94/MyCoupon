@@ -76,6 +76,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
 
                     Intent intent = new Intent(mContext, TestQRCode.class);
                     intent.putExtra(Models.VALUE, item.getValue());
+                    intent.putExtra(Models.DURATION, item.getDuration());
                     intent.putExtra(Models.COUPON_TEMpLATE_ID, item.getCoupon_template_id());
                     mContext.startActivity(intent);
                 }

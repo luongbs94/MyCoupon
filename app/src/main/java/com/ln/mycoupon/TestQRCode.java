@@ -17,6 +17,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Coupon;
+import com.ln.model.Models;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +32,7 @@ public class TestQRCode extends AppCompatActivity {
     private LoveCouponAPI apiService;
     private final String TAG = "Coupon";
     private String value, coupon_template_id;
+    int duration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class TestQRCode extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         value = getIntent().getExtras().getString("value");
+        duration = getIntent().getExtras().getInt(Models.DURATION);
         coupon_template_id = getIntent().getExtras().getString("coupon_template_id");
 
         Button exit = (Button) findViewById(R.id.exit);
@@ -154,6 +157,7 @@ public class TestQRCode extends AppCompatActivity {
         template.setCoupon_id(coupon_id);
         template.setValue(value);
         template.setCoupon_template_id(coupon_template_id);
+        template.setDuration(duration);
 
 
         //template.created_date= new Date();
