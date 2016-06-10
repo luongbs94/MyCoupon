@@ -35,7 +35,7 @@ public class CustomerMainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop_main);
+        setContentView(R.layout.activity_customer_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -114,12 +114,7 @@ public class CustomerMainActivity extends AppCompatActivity
             startFragment(new NewsFragment2());
 
 
-        } else if (id == R.id.nav_history) {
-
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.logout) {
+        }else if (id == R.id.logout) {
 
             Intent intent = new Intent(this, FirstActivity.class);
             startActivity(intent);

@@ -129,7 +129,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
 
 
                     }else{
-                        updateCoupon(coupon_id, "10205539341392320");
+                        updateCoupon(coupon_id, "10205539341392320", coupon.getDuration());
                     }
 
                 }else{
@@ -164,10 +164,12 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         });
     }
 
-    public void updateCoupon(String coupon_id, String user_id){
+    public void updateCoupon(String coupon_id, String user_id, int duration){
         Coupon template = new Coupon();
         template.setCoupon_id(coupon_id);
         template.setUser_id(user_id);
+        template.setDuration(duration);
+
 
 
         Call<Company1> call2 = apiService.updateUserCoupon(template);
