@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    public void getWebTokenUser(String user, String pass){
+    public void getWebTokenUser(String user, String pass) {
         Call<ResponseBody> call1 = apiService.getWebTokenUser(user, pass);
 
         call1.enqueue(new Callback<ResponseBody>() {
@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity
         });
     }
 
-    public void getWebTokenSocial(String user_id, String social, String access_token){
+    public void getWebTokenSocial(String user_id, String social, String access_token) {
         Call<ResponseBody> call1 = apiService.getWebTokenSocial(user_id, social, access_token);
 
         call1.enqueue(new Callback<ResponseBody>() {
@@ -222,7 +222,7 @@ public class LoginActivity extends AppCompatActivity
                 getWebTokenUser(user, pass);
 
 
-            //    finish();
+                //    finish();
             }
 
             @Override
@@ -270,7 +270,7 @@ public class LoginActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-//        initDataFacebook();
+        initDataFacebook();
     }
 
     private void initDataFacebook() {
@@ -310,8 +310,8 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        mProfileTracker.stopTracking();
-//        mAccessTokenTracker.stopTracking();
+        mProfileTracker.stopTracking();
+        mAccessTokenTracker.stopTracking();
     }
 
     private class Events implements View.OnClickListener {
@@ -356,9 +356,12 @@ public class LoginActivity extends AppCompatActivity
                 public void onSuccess(LoginResult loginResult) {
                     mProfile = Profile.getCurrentProfile();
                     mAccessToken = AccessToken.getCurrentAccessToken();
-                    username.setText(mProfile.getId() + "");
+//                    username.setText(mProfile.getId() + "");
+                    Log.d(TAG, mProfile.getId());
+                    Log.d(TAG, mAccessToken.getUserId());
 
                     getWebTokenSocial(mProfile.getId(), "facebook", mAccessToken.toString());
+
                 }
 
                 @Override

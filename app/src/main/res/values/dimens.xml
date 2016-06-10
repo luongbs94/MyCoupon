@@ -24,6 +24,7 @@
 
     <dimen name="size_72">72dp</dimen>
     <dimen name="size_3">3dp</dimen>
+    <dimen name="size_1">1dp</dimen>
 
 
 </resources>

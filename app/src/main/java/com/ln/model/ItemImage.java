@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class ItemImage implements Serializable {
 
     private String images;
+    private int idNews;
 
     public ItemImage(){}
 
@@ -15,11 +16,17 @@ public class ItemImage implements Serializable {
         this.images = images;
     }
 
+    public ItemImage(String images, int idCompany) {
+        this.images = images;
+        this.idNews = idCompany;
+    }
+
     public String getImages() {
         return images;
     }
 
-    public void setImages(String images) {
-        this.images = images;
+
+    public int getIdCompany() {
+        return idNews;
     }
 }
