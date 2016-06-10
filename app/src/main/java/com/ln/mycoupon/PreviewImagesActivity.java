@@ -10,14 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.ln.app.MainApplication;
 import com.ln.fragment.PreviewImagesFragment;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.ln.model.ListItemImages;
 
 public class PreviewImagesActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
-    private List<String> mListImages = new ArrayList<>();
+    private ListItemImages mListImages = new ListItemImages();
     private int mPosition;
 
 
@@ -38,7 +36,7 @@ public class PreviewImagesActivity extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra(MainApplication.DATA);
         if (bundle != null) {
             mPosition = bundle.getInt(MainApplication.POSITION);
-            mListImages = bundle.getStringArrayList(MainApplication.LIST_IMAGES);
+            mListImages = (ListItemImages) bundle.getSerializable(MainApplication.LIST_IMAGES);
         }
     }
 
@@ -77,12 +75,12 @@ public class PreviewImagesActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return PreviewImagesFragment.getInstance(mListImages.get(position));
+            return PreviewImagesFragment.getInstance(mListImages.getListImages().get(position).getImages());
         }
 
         @Override
         public int getCount() {
-            return mListImages.size();
+            return mListImages.getListImages().size();
         }
     }
 }

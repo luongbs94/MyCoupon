@@ -114,15 +114,15 @@ public class CouponFragment extends Fragment {
 
         mListCoupon.clear();
 
-        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
+      //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
+        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplatesByCompanyId(SaveData.company.getCompany_id());
+     //   Call<List<CouponTemplate>> call = mApiServices.getCouponTemplatesByCompanyId(7);
         call.enqueue(new Callback<List<CouponTemplate>>() {
 
             @Override
             public void onResponse(Call<List<CouponTemplate>> arg0,
                                    Response<List<CouponTemplate>> arg1) {
                 mListCoupon = arg1.body();
-
-            //    Log.d(TAG, mListCoupon.size() + "");
 
                 CouponTemplateAdapter adapter = new CouponTemplateAdapter(getActivity(), mListCoupon);
                 mRecCoupon.setAdapter(adapter);

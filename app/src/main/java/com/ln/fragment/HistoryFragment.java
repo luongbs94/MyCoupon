@@ -40,8 +40,8 @@ public class HistoryFragment extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         createFragment = new CreateFragment();
         useFragment = new UseFragment();
-        adapter.addFragment(createFragment, "CREATE");
-        adapter.addFragment(useFragment, "USE");
+        adapter.addFragment(createFragment, getString(R.string.create));
+        adapter.addFragment(useFragment, getString(R.string.use));
         viewPager.setAdapter(adapter);
     }
 }

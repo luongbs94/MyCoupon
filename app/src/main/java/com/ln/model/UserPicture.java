@@ -30,10 +30,10 @@ public class UserPicture {
 
     static int MAX_WIDTH = 600;
     static int MAX_HEIGHT = 800;
-    Uri uri;
-    ContentResolver resolver;
-    String path;
-    Matrix orientation;
+    private Uri uri;
+    private ContentResolver resolver;
+    private String path;
+    private Matrix orientation;
     int storedHeight;
     int storedWidth;
 

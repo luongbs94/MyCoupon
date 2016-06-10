@@ -37,7 +37,7 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Glide.with(mContext)
-                .load(new File(mListImages.get(position).getPath()))
+                .load(new File(mListImages.get(position).getImages()))
                 .centerCrop()
                 .into(holder.mImages);
 

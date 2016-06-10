@@ -12,6 +12,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.ln.app.MainApplication;
+import com.ln.model.ItemImage;
+import com.ln.model.ListItemImages;
 import com.ln.mycoupon.PreviewImagesActivity;
 import com.ln.mycoupon.R;
 
@@ -20,11 +22,11 @@ import java.util.ArrayList;
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<String> mListImages = new ArrayList<>();
+    private ListItemImages mListImages = new ListItemImages();
 
-    public GridAdapter(Context mContext, ArrayList<String> mListImages) {
+    public GridAdapter(Context mContext, ArrayList<ItemImage> listImages) {
         this.mContext = mContext;
-        this.mListImages = mListImages;
+        mListImages.setListImages(listImages);
     }
 
     @Override
@@ -35,7 +37,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(GridAdapter.ViewHolder holder, final int position) {
-        byte[] bytes = Base64.decode(mListImages.get(position), Base64.NO_WRAP);
+        byte[] bytes = Base64.decode(mListImages.getListImages().get(position).getImages(), Base64.NO_WRAP);
         Glide.with(mContext)
                 .load(bytes)
                 .centerCrop()
@@ -48,7 +50,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                 Intent intent = new Intent(mContext, PreviewImagesActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt(MainApplication.POSITION, position);
-                bundle.putStringArrayList(MainApplication.LIST_IMAGES, mListImages);
+                bundle.putSerializable(MainApplication.LIST_IMAGES, mListImages);
                 intent.putExtra(MainApplication.DATA, bundle);
                 mContext.startActivity(intent);
             }
@@ -57,7 +59,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mListImages.size();
+        return mListImages.getListImages().size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
