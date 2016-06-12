@@ -97,7 +97,7 @@ public class AddMessageActivity extends AppCompatActivity {
         mSelectedImageAdapter = new SelectedImageAdapter(getApplicationContext(), mImages);
         mRvSelectImages.setAdapter(mSelectedImageAdapter);
 
-        idNews = MainApplication.getRandomString(30);
+        idNews = MainApplication.getRandomString(15);
         imagesLink = MainApplication.getRandomString(40);
     }
 

@@ -27,6 +27,7 @@ import com.ln.model.Company;
 import com.ln.model.Company1;
 import com.ln.model.User;
 import com.ln.mycoupon.customer.CustomerMainActivity;
+import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.mycoupon.shop.ShopMainActivity;
 
 import java.security.MessageDigest;
@@ -156,7 +157,7 @@ public class FirstActivity extends AppCompatActivity {
     }
 
     public void startLogin(){
-        Intent intent = new Intent(FirstActivity.this, LoginActivity.class);
+        Intent intent = new Intent(FirstActivity.this, ShopLoginActivity.class);
         startActivity(intent);
     }
 

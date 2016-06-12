@@ -44,7 +44,6 @@ public class MainApplication extends MultiDexApplication {
     public static final String SHOP_DATA = "shop_data";
 
 
-
     public static SharedPreferences sharedPreferences;
     public static SharedPreferences.Editor editor;
 
@@ -52,7 +51,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String PATH = "path";
 
     // size images firebase
-    public static final int WIDTH_IMAGES = 200;
+    public static final int WIDTH_IMAGES = 450;
 
     @Override
     public void onCreate() {
@@ -65,9 +64,9 @@ public class MainApplication extends MultiDexApplication {
         Retrofit retrofit = new Retrofit.Builder()
                 //      .baseUrl("http://192.168.1.6:3000")
                 .baseUrl("http://188.166.179.187:3000")
-                        //      .baseUrl("http://192.168.1.6:3000")
+                //      .baseUrl("http://192.168.1.6:3000")
 //                .baseUrl("http://103.7.40.171:3000")
-           //     .baseUrl("http://103.7.40.171:3000")
+                //     .baseUrl("http://103.7.40.171:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -109,7 +108,6 @@ public class MainApplication extends MultiDexApplication {
     }
 
 
-
     public static String getCompanyName(String company_id) {
         for (int i = 0; i < SaveData.listCompany.size(); i++) {
 
@@ -140,5 +138,9 @@ public class MainApplication extends MultiDexApplication {
     public static byte[] convertToBytes(String path) {
         path = path.substring(path.indexOf(",") + 1);
         return Base64.decode(path, Base64.NO_WRAP);
+    }
+
+    public static String getStringNoBase64(String path) {
+        return path.substring(path.indexOf(",") + 1);
     }
 }
