@@ -10,7 +10,6 @@ import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.Message;
 import com.ln.model.User;
-import com.ln.model.WebToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,10 @@ public interface LoveCouponAPI {
 
 
     @GET("/get_company_profile")
-    Call<List<Company>> getCompanyProfile(@Query("user_name") String user_name, @Query("password") String password);
+    Call<List<Company>> getCompanyProfile(@Query("user_name") String user_name, @Query("password") String password, @Query("user_id") String user_id);
+
+    @GET("/get_company_profile")
+    Call<List<Company>> getCompanyProfileSocial(@Query("user_id") String user_id);
 
     @POST("/addCouponTemplate")
     Call<CouponTemplate> addCouponTemplate(@Body CouponTemplate template);

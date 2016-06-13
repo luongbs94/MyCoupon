@@ -198,7 +198,7 @@ public class LoginActivity extends AppCompatActivity
     public void getCompanyProfile(final String user, final String pass) {
 
 
-        Call<List<Company>> call = apiService.getCompanyProfile(user, pass);
+        Call<List<Company>> call = apiService.getCompanyProfile(user, pass, null);
 
         call.enqueue(new Callback<List<Company>>() {
 
@@ -229,6 +229,43 @@ public class LoginActivity extends AppCompatActivity
             public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
                 Log.d(TAG, "Failure");
             }
+        });
+    }
+
+    public void getCompanyProfileSocial(String user_id) {
+
+
+        Call<List<Company>> call = apiService.getCompanyProfileSocial(user_id);
+
+                call.enqueue(new Callback<List<Company>>() {
+
+                    @Override
+                    public void onResponse(Call<List<Company>> arg0,
+                                           Response<List<Company>> arg1) {
+                        List<Company> templates = arg1.body();
+
+                        SaveData.company = templates.get(0);
+
+                        Gson gson = new Gson();
+
+                        String data = gson.toJson(SaveData.company);
+                        MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, true);
+                        MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
+                        MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
+                        MainApplication.editor.commit();
+
+
+                        Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
+                        startActivity(intent);
+
+
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
+                        Log.d(TAG, "Failure");
+                    }
         });
     }
 
@@ -352,15 +389,39 @@ public class LoginActivity extends AppCompatActivity
 
         private void onClickLoginFacebook() {
             mBtnLoginFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+
+                private ProfileTracker mProfileTracker;
+
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    mProfile = Profile.getCurrentProfile();
-                    mAccessToken = AccessToken.getCurrentAccessToken();
-//                    username.setText(mProfile.getId() + "");
-                    Log.d(TAG, mProfile.getId());
-                    Log.d(TAG, mAccessToken.getUserId());
 
-                    getWebTokenSocial(mProfile.getId(), "facebook", mAccessToken.toString());
+                    if(Profile.getCurrentProfile() == null) {
+                        mProfileTracker = new ProfileTracker() {
+                            @Override
+                            protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+                                Log.d(TAG, profile2.getFirstName());
+                                Log.d(TAG, profile2.getId());
+                                Log.d(TAG, profile2.getName());
+                                Log.d(TAG, profile2.getLinkUri() + "");
+                                getCompanyProfileSocial(profile2.getId());
+                                mProfileTracker.stopTracking();
+                            }
+                        };
+                        // no need to call startTracking() on mProfileTracker
+                        // because it is called by its constructor, internally.
+                    }
+                    else {
+                        Profile profile = Profile.getCurrentProfile();
+                        Log.v(TAG, profile.getFirstName());
+                    }
+
+
+
+//                    username.setText(mProfile.getId() + "");
+                   // Log.d(TAG, mProfile.getId());
+          //          Log.d(TAG, mAccessToken.getUserId());
+
+//                    getWebTokenSocial(mProfile.getId(), "facebook", mAccessToken.toString());
 
                 }
 

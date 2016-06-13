@@ -67,7 +67,7 @@ public class MainApplication extends MultiDexApplication {
                 .baseUrl("http://188.166.179.187:3000")
                         //      .baseUrl("http://192.168.1.6:3000")
 //                .baseUrl("http://103.7.40.171:3000")
-           //     .baseUrl("http://103.7.40.171:3000")
+       //         .baseUrl("http://10.0.1.23:3000")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
