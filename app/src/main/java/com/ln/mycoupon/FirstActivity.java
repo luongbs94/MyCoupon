@@ -26,6 +26,7 @@ import com.ln.gcm.GcmIntentService;
 import com.ln.model.Company;
 import com.ln.model.Company1;
 import com.ln.model.User;
+import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.customer.CustomerMainActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.mycoupon.shop.ShopMainActivity;
@@ -45,11 +46,11 @@ public class FirstActivity extends AppCompatActivity {
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
-    LoveCouponAPI apiService;
-    String TAG = "Coupon";
+    private LoveCouponAPI apiService;
+    private String TAG = getClass().getSimpleName();
 
-    Gson gson = new Gson();
-    ProgressDialog progressDialog;
+    private Gson gson = new Gson();
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -74,45 +75,27 @@ public class FirstActivity extends AppCompatActivity {
         }
 
 
-
         setTitle(R.string.banla);
 
         apiService = MainApplication.getAPI();
 
+        Button btnShop = (Button) findViewById(R.id.shop);
+        Button btnCustom = (Button) findViewById(R.id.customer);
 
-        Button shop = (Button) findViewById(R.id.shop);
-        Button custom = (Button) findViewById(R.id.customer);
+        btnShop.setOnClickListener(new Events());
 
-        shop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startLogin();
-            }
-        });
+        btnCustom.setOnClickListener(new Events());
 
-        custom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                getCompanyByUserId();
-                progressDialog = ProgressDialog.show(FirstActivity.this, "Please wait ...",  "Task in progress ...", true);
-                progressDialog.setCancelable(true);
-
-             //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
-                    updateUserToken("10205539341392320", MainApplication.getDeviceToken(), "android");
-             //   }
-            }
-        });
-
-        if(MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINSHOP, false)){
+        if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINSHOP, false)) {
 
             String data = MainApplication.sharedPreferences.getString(MainApplication.SHOP_DATA, "");
             SaveData.company = gson.fromJson(data, Company.class);
             Intent intent = new Intent(FirstActivity.this, ShopMainActivity.class);
             startActivity(intent);
-        }else if(MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINCLIENT, false)){
+        } else if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINCLIENT, false)) {
             String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
-            SaveData.listCompany = gson.fromJson(data, new TypeToken<List<Company1>>(){}.getType());
+            SaveData.listCompany = gson.fromJson(data, new TypeToken<List<Company1>>() {
+            }.getType());
             start();
         }
 
@@ -127,7 +110,7 @@ public class FirstActivity extends AppCompatActivity {
                     String token = intent.getStringExtra("token");
                     Log.d("register token", token);
 
-                 //   Toast.makeText(getApplicationContext(), "GCM registration token: " + token, Toast.LENGTH_LONG).show();
+                    //   Toast.makeText(getApplicationContext(), "GCM registration token: " + token, Toast.LENGTH_LONG).show();
 
                 } else if (intent.getAction().equals(MainApplication.SENT_TOKEN_TO_SERVER)) {
                     // gcm registration id is stored in our server's MySQL
@@ -151,17 +134,16 @@ public class FirstActivity extends AppCompatActivity {
         String dateFormateInUTC = formatter.format(now);
 
 
-
         // Date now = new Date();
         Log.d("Coupon", dateFormateInUTC);
     }
 
-    public void startLogin(){
+    public void startLogin() {
         Intent intent = new Intent(FirstActivity.this, ShopLoginActivity.class);
         startActivity(intent);
     }
 
-    public void start(){
+    public void start() {
         Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
         startActivity(intent);
     }
@@ -191,7 +173,7 @@ public class FirstActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
-                // TODO Auto-generated method stub
+
                 progressDialog.dismiss();
             }
         });
@@ -224,7 +206,7 @@ public class FirstActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    public void updateUserToken(String userId,String token, String device_os){
+    public void updateUserToken(String userId, String token, String device_os) {
         Call<List<User>> call = apiService.updateUserToken(userId, token, device_os);
 
         call.enqueue(new Callback<List<User>>() {
@@ -242,5 +224,25 @@ public class FirstActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private class Events implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.shop:
+                    startLogin();
+                    break;
+                case R.id.customer:
+                    onClickCustomer();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void onClickCustomer() {
+            startActivity(new Intent(FirstActivity.this, CustomerLoginActivity.class));
+        }
     }
 }

@@ -146,11 +146,11 @@ public class ShopLoginActivity extends AppCompatActivity
                 try {
                     String webToken = arg1.body().string();
                     SaveData.web_token = webToken;
-                    Log.d("mycoupon", SaveData.web_token);
+                    Log.d(TAG, SaveData.web_token);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.d("mycoupon", "false");
+                    Log.d(TAG, "false");
 
                 }
 
@@ -166,8 +166,8 @@ public class ShopLoginActivity extends AppCompatActivity
     }
 
     public void getWebTokenSocial(String user_id, String social, String access_token) {
-        Call<ResponseBody> call1 = apiService.getWebTokenSocial(user_id, social, access_token);
 
+        Call<ResponseBody> call1 = apiService.getWebTokenSocial(user_id, social, access_token);
         call1.enqueue(new Callback<ResponseBody>() {
 
             @Override
@@ -183,7 +183,6 @@ public class ShopLoginActivity extends AppCompatActivity
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.d("mycoupon", "false");
-
                 }
             }
 
@@ -196,7 +195,6 @@ public class ShopLoginActivity extends AppCompatActivity
 
 
     public void getCompanyProfile(final String user, final String pass) {
-
 
         Call<List<Company>> call = apiService.getCompanyProfile(user, pass);
 
