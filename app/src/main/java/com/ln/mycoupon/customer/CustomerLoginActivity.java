@@ -104,7 +104,8 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
     public void getCompanyByUserId(String userId) {
 
-        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId(userId);
+//        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId(userId);
+        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId("10205539341392320");
         call3.enqueue(new Callback<List<Company1>>() {
 
             @Override
@@ -179,12 +180,12 @@ public class CustomerLoginActivity extends AppCompatActivity {
                     mAccessToken = AccessToken.getCurrentAccessToken();
                     if (mAccessToken != null) {
                         Log.d(TAG, mAccessToken.getUserId());
+                        //10205539341392320
                         getCompanyByUserId(mAccessToken.getUserId());
-//                    progressDialog = ProgressDialog.show(FirstActivity.this, "Please wait ...", "Task in progress ...", true);
-//                    progressDialog.setCancelable(true);
 
                         //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
-                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
+//                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
+                        updateUserToken("10205539341392320", MainApplication.getDeviceToken(), "android");
 
                     }
                 }

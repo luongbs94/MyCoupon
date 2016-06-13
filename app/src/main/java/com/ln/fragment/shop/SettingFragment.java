@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,7 +16,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -25,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +37,6 @@ import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -150,7 +146,7 @@ public class SettingFragment extends Fragment {
         outState.putParcelable(Models.FILE_URI, mFileUri);
     }
 
-    public void init() {
+    private void init() {
 
         Company company = SaveData.company;
 
@@ -166,7 +162,7 @@ public class SettingFragment extends Fragment {
 
         String logo = company.getLogo();
 
-        Glide.with(getActivity()).load(convertToBytes(logo))
+        Glide.with(getActivity()).load(MainApplication.convertToBytes(logo))
                 .asBitmap()
                 .placeholder(R.drawable.ic_profile)
                 .into(mImgLogo);
@@ -289,8 +285,8 @@ public class SettingFragment extends Fragment {
                 case R.id.img_logo_company:
                     onClickChangeLogo(mImgLogo);
                     break;
-               default:
-                   break;
+                default:
+                    break;
             }
         }
 
@@ -349,7 +345,7 @@ public class SettingFragment extends Fragment {
             company.setName(nameCompany.getText().toString());
             company.setAddress(nameCompany.getText().toString());
 
-            String logo = convertToBitmap(mImgLogo);
+            String logo = MainApplication.convertToBitmap(mImgLogo);
             logo = Models.FIRST_BASE64 + logo;
 
             company.setLogo(logo);
@@ -392,19 +388,4 @@ public class SettingFragment extends Fragment {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
-    private byte[] convertToBytes(String path) {
-        path = path.substring(path.indexOf(",") + 1);
-        Log.d(TAG, path);
-        return Base64.decode(path, Base64.NO_WRAP);
-    }
-
-    private String convertToBitmap(ImageView imageView) {
-
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
-        Bitmap bitmap = bitmapDrawable.getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-        byte[] bytes = outputStream.toByteArray();
-        return Base64.encodeToString(bytes, Base64.NO_WRAP);
-    }
 }

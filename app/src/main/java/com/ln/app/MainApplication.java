@@ -1,9 +1,12 @@
 package com.ln.app;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.multidex.MultiDexApplication;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -12,6 +15,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company1;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Random;
 
 import retrofit2.Retrofit;
@@ -141,5 +145,15 @@ public class MainApplication extends MultiDexApplication {
 
     public static String getStringNoBase64(String path) {
         return path.substring(path.indexOf(",") + 1);
+    }
+
+    public static  String convertToBitmap(ImageView imageView) {
+
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        byte[] bytes = outputStream.toByteArray();
+        return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
 }

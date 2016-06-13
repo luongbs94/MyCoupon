@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.ln.app.MainApplication;
 import com.ln.model.Company1;
 import com.ln.mycoupon.R;
+import com.ln.views.CircleImageView;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
 
     private List<Company1> listCompany;
     private Context mContext;
+    private String TAG = getClass().getSimpleName();
 
     public CompanyAdapter(Context context, List<Company1> company) {
         mContext = context;
@@ -38,13 +41,14 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
         final Company1 item = listCompany.get(position);
         if (item != null) {
             holder.companyName.setText(item.getName());
-            holder.companyAdress.setText(item.getAddress());
+            holder.companyAddress.setText(item.getAddress());
 
-//            Glide.with(mContext).load(MainApplication
-//                    .convertToBytes(item.getLogo()))
-//                    .asBitmap()
-//                    .placeholder(R.drawable.ic_profile)
-//                    .into(holder.mImgLogo);
+            if (item.getLogo() != null) {
+                Glide.with(mContext).load(MainApplication.convertToBytes(item.getLogo()))
+                        .asBitmap()
+                        .placeholder(R.drawable.ic_profile)
+                        .into(holder.mImgLogo);
+            }
         }
     }
 
@@ -54,15 +58,15 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView mImgLogo;
-        private TextView companyName, companyAdress;
+        private CircleImageView mImgLogo;
+        private TextView companyName, companyAddress;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            mImgLogo = (ImageView) itemView.findViewById(R.id.app_icon);
+            mImgLogo = (CircleImageView) itemView.findViewById(R.id.app_icon);
             companyName = (TextView) itemView.findViewById(R.id.company_name);
-            companyAdress = (TextView) itemView.findViewById(R.id.company_address);
+            companyAddress = (TextView) itemView.findViewById(R.id.company_address);
         }
     }
 }
