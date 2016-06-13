@@ -15,8 +15,8 @@
 
     <com.ln.views.CircleImageView
         android:id="@+id/app_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/size_82"
+        android:layout_height="@dimen/size_82"
         android:layout_gravity="center"
         android:layout_marginRight="@dimen/size_8"
         android:contentDescription="@null"
@@ -36,7 +36,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
-            android:singleLine="true"
             android:text="@string/name_company"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="@color/colorTextNews"

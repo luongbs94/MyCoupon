@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ln.app.MainApplication;
-import com.ln.fragment.CouponFragment2;
+import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.NewsFragment2;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
@@ -58,7 +58,7 @@ public class CustomerMainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        startFragment(new CouponFragment2());
+        startFragment(new CouponFragment());
 
 
     }
@@ -107,7 +107,7 @@ public class CustomerMainActivity extends AppCompatActivity
         if (id == R.id.nav_coupon) {
             currentPosition = 0;
             setTitle("My Coupon");
-            startFragment(new CouponFragment2());
+            startFragment(new CouponFragment());
         } else if (id == R.id.nav_new) {
             currentPosition = 1;
             setTitle("Tin mới");

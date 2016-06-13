@@ -1,4 +1,4 @@
-package com.ln.fragment;
+package com.ln.fragment.shop;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
