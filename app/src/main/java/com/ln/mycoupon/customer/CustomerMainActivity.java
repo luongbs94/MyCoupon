@@ -36,6 +36,8 @@ public class CustomerMainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
+
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -82,7 +84,6 @@ public class CustomerMainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -114,7 +115,7 @@ public class CustomerMainActivity extends AppCompatActivity
             startFragment(new NewsFragment2());
 
 
-        }else if (id == R.id.logout) {
+        } else if (id == R.id.logout) {
 
             Intent intent = new Intent(this, FirstActivity.class);
             startActivity(intent);

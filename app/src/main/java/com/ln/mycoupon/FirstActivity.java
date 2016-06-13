@@ -1,6 +1,5 @@
 package com.ln.mycoupon;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,13 +18,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.gcm.GcmIntentService;
 import com.ln.model.Company;
 import com.ln.model.Company1;
-import com.ln.model.User;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.customer.CustomerMainActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
@@ -38,20 +35,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class FirstActivity extends AppCompatActivity {
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
-    private LoveCouponAPI apiService;
     private String TAG = getClass().getSimpleName();
-
     private Gson gson = new Gson();
-    private ProgressDialog progressDialog;
 
+    private Button mBtnShop, mBtnCustomer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +68,11 @@ public class FirstActivity extends AppCompatActivity {
 
         setTitle(R.string.banla);
 
-        apiService = MainApplication.getAPI();
+        mBtnShop = (Button) findViewById(R.id.shop);
+        mBtnCustomer = (Button) findViewById(R.id.customer);
 
-        Button btnShop = (Button) findViewById(R.id.shop);
-        Button btnCustom = (Button) findViewById(R.id.customer);
-
-        btnShop.setOnClickListener(new Events());
-
-        btnCustom.setOnClickListener(new Events());
+        mBtnShop.setOnClickListener(new Events());
+        mBtnCustomer.setOnClickListener(new Events());
 
         if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINSHOP, false)) {
 
@@ -135,50 +123,19 @@ public class FirstActivity extends AppCompatActivity {
 
 
         // Date now = new Date();
-        Log.d("Coupon", dateFormateInUTC);
+        Log.d(TAG, dateFormateInUTC);
     }
 
-    public void startLogin() {
+    private void startLogin() {
         Intent intent = new Intent(FirstActivity.this, ShopLoginActivity.class);
         startActivity(intent);
     }
 
-    public void start() {
+    private void start() {
         Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
         startActivity(intent);
     }
 
-    public void getCompanyByUserId() {
-
-        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId("10205539341392320");
-        call3.enqueue(new Callback<List<Company1>>() {
-
-            @Override
-            public void onResponse(Call<List<Company1>> arg0,
-                                   Response<List<Company1>> arg1) {
-                List<Company1> templates = arg1.body();
-                System.out.println(templates.size());
-                SaveData.listCompany = templates;
-
-                String data = gson.toJson(SaveData.listCompany);
-                MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
-                MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, true);
-                MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
-                MainApplication.editor.commit();
-
-                progressDialog.dismiss();
-
-                start();
-            }
-
-            @Override
-            public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
-
-                progressDialog.dismiss();
-            }
-        });
-
-    }
 
     private void registerGCM() {
         Intent intent = new Intent(this, GcmIntentService.class);
@@ -206,25 +163,6 @@ public class FirstActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    public void updateUserToken(String userId, String token, String device_os) {
-        Call<List<User>> call = apiService.updateUserToken(userId, token, device_os);
-
-        call.enqueue(new Callback<List<User>>() {
-
-            @Override
-            public void onResponse(Call<List<User>> arg0,
-                                   Response<List<User>> arg1) {
-
-                MainApplication.setIsAddToken(true);
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
-
-            }
-        });
-    }
 
     private class Events implements View.OnClickListener {
         @Override

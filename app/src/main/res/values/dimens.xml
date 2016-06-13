@@ -28,6 +28,7 @@
     <dimen name="size_2">2dp</dimen>
     <dimen name="size_96">96dp</dimen>
     <dimen name="size_82">82dp</dimen>
+    <dimen name="size_56">56dp</dimen>
 
 
 </resources>
