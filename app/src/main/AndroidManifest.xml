@@ -38,7 +38,7 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".shop.ShopLoginActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
@@ -65,12 +65,10 @@
             android:name=".QRCodeActivity"
             android:label="@string/qrcode"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".customer.CouponCompanyOfClientActivity"
             android:label="@string/my_coupon"
             android:theme="@style/AppTheme" />
-
 
         <service
             android:name="com.ln.gcm.MyGcmPushReceiver"
@@ -79,9 +77,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name="com.ln.gcm.GcmIntentService"
-            >
+        <service android:name="com.ln.gcm.GcmIntentService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -107,7 +103,7 @@
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider1234"
+            android:authorities="com.facebook.app.FacebookContentProvider1073363172685474"
             android:exported="true" />
 
         <meta-data
@@ -123,7 +119,8 @@
         <activity
             android:name="com.yongchun.library.view.ImageCropActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PreviewImagesActivity"></activity>
+        <activity android:name=".PreviewImagesActivity" />
+        <activity android:name=".customer.CustomerLoginActivity"></activity>
     </application>
 
 </manifest>

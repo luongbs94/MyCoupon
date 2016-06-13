@@ -8,25 +8,26 @@ import java.io.Serializable;
 public class ItemImage implements Serializable {
 
     private String images;
-    private int idNews;
+    private String idNews;
 
-    public ItemImage(){}
-
-    public ItemImage(String images){
-        this.images = images;
+    public ItemImage() {
     }
 
-    public ItemImage(String images, int idCompany) {
+
+    public ItemImage(String images, String idNews) {
         this.images = images;
-        this.idNews = idCompany;
+        this.idNews = idNews;
     }
 
     public String getImages() {
         return images;
     }
 
-
-    public int getIdCompany() {
+    public String getIdNews() {
         return idNews;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 }

@@ -1,4 +1,4 @@
-package com.ln.fragment;
+package com.ln.fragment.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +33,7 @@ import retrofit2.Response;
 /**
  * Created by luongnguyen on 4/8/16.
  */
-public class CouponFragment2 extends Fragment {
+public class CouponFragment extends Fragment {
     private LoveCouponAPI mApiServices;
 
     private View mView;
@@ -45,7 +45,7 @@ public class CouponFragment2 extends Fragment {
     private SwipeRefreshLayout swipeContainer;
 
 
-    public CouponFragment2() {
+    public CouponFragment() {
     }
 
     @Override
@@ -105,7 +105,7 @@ public class CouponFragment2 extends Fragment {
                 .setAction("Action", null).show();
     }
 
-    public void getCompanyByUserId() {
+    private void getCompanyByUserId() {
 
         Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId("10205539341392320");
         call3.enqueue(new Callback<List<Company1>>() {
@@ -125,7 +125,6 @@ public class CouponFragment2 extends Fragment {
 
             @Override
             public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
-                // TODO Auto-generated method stub
                 swipeContainer.setRefreshing(false);
 
             }

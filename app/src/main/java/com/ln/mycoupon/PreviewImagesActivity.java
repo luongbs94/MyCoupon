@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.ln.app.MainApplication;
 import com.ln.fragment.PreviewImagesFragment;
@@ -17,7 +18,7 @@ public class PreviewImagesActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private ListItemImages mListImages = new ListItemImages();
     private int mPosition;
-
+    private String TAG = getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,9 @@ public class PreviewImagesActivity extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra(MainApplication.DATA);
         if (bundle != null) {
             mPosition = bundle.getInt(MainApplication.POSITION);
+            Log.d(TAG, mPosition + "");
             mListImages = (ListItemImages) bundle.getSerializable(MainApplication.LIST_IMAGES);
+            Log.d(TAG, mListImages.getListImages().size() + "");
         }
     }
 
@@ -48,22 +51,22 @@ public class PreviewImagesActivity extends AppCompatActivity {
 
     private void addEvents() {
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
     }
 
     private class PreviewAdapter extends FragmentPagerAdapter {

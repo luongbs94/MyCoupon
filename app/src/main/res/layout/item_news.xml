@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/size_8"
@@ -93,9 +92,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginLeft="@dimen/size_15"
-        android:layout_marginRight="@dimen/size_15">
+        android:layout_marginRight="@dimen/size_15"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/txt_title_news"
@@ -106,8 +105,7 @@
             android:text="@string/title_news"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/colorTextNews"
-            android:textSize="@dimen/size_18sp"
-            />
+            android:textSize="@dimen/size_18sp" />
 
         <com.ln.views.MyTextView
             android:id="@+id/txt_content_news"
@@ -130,7 +128,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/colorTextNews"
             android:textSize="@dimen/size_15sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -149,8 +147,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/size_5"
         android:layout_marginBottom="@dimen/size_5"
+        android:layout_marginTop="@dimen/size_5"
         android:background="@android:color/darker_gray" />
 
     <LinearLayout
@@ -165,23 +163,8 @@
             android:layout_marginLeft="12dp"
             android:layout_weight="1"
             android:padding="12dp"
-            android:src="@mipmap/voteup_disable" />
+            android:src="@drawable/ic_bookmark" />
 
-        <ImageView
-            android:id="@+id/votedown"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="12dp"
-            android:src="@mipmap/votedown_disable" />
-
-        <ImageView
-            android:id="@+id/comment"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="12dp"
-            android:src="@mipmap/comment_disable" />
 
         <ImageView
             android:id="@+id/img_share_newx"
@@ -189,7 +172,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="12dp"
-            android:src="@mipmap/share_disable" />
+            android:src="@drawable/ic_share" />
 
         <ImageView
             android:id="@+id/img_delete_news"
@@ -198,7 +181,7 @@
             android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:padding="12dp"
-            android:src="@mipmap/more" />
+            android:src="@drawable/ic_more" />
     </LinearLayout>
 
     <TextView

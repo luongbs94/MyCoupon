@@ -1,7 +1,6 @@
 package com.ln.adapter;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +19,7 @@ import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.ItemImage;
+import com.ln.model.ListItemImages;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
 import com.ln.views.MyTextView;
@@ -33,25 +33,48 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private static Firebase sRoot = new Firebase(MainApplication.URL_FIRE_BASE);
+
     private Context mContext;
     private List<Message> mListNews;
-    private LayoutInflater mInflater;
-    private ArrayList<ItemImage> mListImages;
+
+
+    private List<ListItemImages> mListImages = new ArrayList<>();
+    private List<String> mListIdNews = new ArrayList<>();
+    private List<GridAdapter> mListGridAdapters;
+
+    private String TAG = getClass().getSimpleName();
+
+    private List<ItemImage> mListItemImages = new ArrayList<>();
+    private int mPosition;
+
+    private ListItemImages mList[];
 
     public NewsAdapter(Context context, List<Message> listNews) {
         mContext = context;
-        mInflater = LayoutInflater.from(context);
         mListNews = listNews;
+
+        mList = new ListItemImages[mListNews.size()];
+
+        for (Message message : mListNews) {
+            mListIdNews.add(message.getMessage_id());
+        }
+
+        for (int i = 0; i < mList.length; i++) {
+            mList[i] = new ListItemImages();
+        }
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(mInflater.inflate(R.layout.item_news, parent, false));
+        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_news, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Message news = mListNews.get(position);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+        final Message news = mListNews.get(position);
+        mPosition = position;
         Company company = SaveData.company;
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
@@ -71,11 +94,72 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 //        String date = formatter.format(news.getCreated_date());
 //        holder.mTxtTime.setText(date);
 
-        String url_image = news.getImages_link();
-        if (url_image != null && !url_image.isEmpty()) {
-            LoadImages loadImages = new LoadImages(holder, url_image);
-            new AsyncTaskLoadImages().execute(loadImages);
+        final int size = mListImages.size();
+        if (news.getImages_link() != null) {
+
+            mListItemImages = new ArrayList<>();
+            sRoot.child(news.getImages_link()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                        ItemImage itemImage = snapshot.getValue(ItemImage.class);
+//                        for (int i = 0; i < size; i++) {
+//                            if (itemImage.getIdNews().equals(news.getMessage_id())) {
+//                                mList[i].getListImages().add(itemImage);
+//                            }
+//                        }
+                        if (itemImage.getIdNews().equals(news.getMessage_id())) {
+                            mListItemImages.add(itemImage);
+                        }
+
+//                        mListImages.get(mPosition).getListImages().addAll(mListItemImages);
+                        GridAdapter mGridAdapter = new GridAdapter(mContext, mListItemImages);
+                        holder.mRecyclerView.setAdapter(mGridAdapter);
+                        Log.d(TAG, itemImage.getImages());
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+
         }
+
+//        if (news.getImages_link() != null && news.getImages_link().equals(url_image)) {
+//            final LoadImages loadImages = new LoadImages(holder, url_image);
+//            mListItemImages = new ArrayList<>();
+//            sRoot.child(loadImages.getUrl()).addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//
+//                        Log.d("ActivityMessages", snapshot.toString());
+//                        ItemImage itemImage = snapshot.getValue(ItemImage.class);
+////                        if (!isExists(itemImage, mListItemImages)) {
+////                            mListItemImages.add(itemImage);
+////                        }
+//
+//
+//
+//                        GridAdapter mGridAdapter = new GridAdapter(mContext, mListItemImages);
+//                        loadImages.getViewHolder().mRecyclerView.setAdapter(mGridAdapter);
+//                        Log.d("NewsAdapter", itemImage.getImages());
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(FirebaseError firebaseError) {
+//
+//                }
+//            });
+//
+//        }
+
     }
 
     @Override
@@ -108,88 +192,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
             mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
         }
-    }
 
 
-    private class AsyncTaskLoadImages extends AsyncTask<LoadImages, String, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(LoadImages... params) {
-            final LoadImages urlImages = params[0];
-            mListImages = new ArrayList<>();
-            sRoot.child(urlImages.getUrl()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-                        ItemImage itemImage = snapshot.getValue(ItemImage.class);
-                        if (!isExists(itemImage, mListImages)) {
-                            mListImages.add(itemImage);
-                        }
-
-                        GridAdapter mGridAdapter = new GridAdapter(mContext, mListImages);
-                        urlImages.getViewHolder().mRecyclerView.setAdapter(mGridAdapter);
-                        Log.d("NewsAdapter", itemImage.getImages());
-                    }
+        private boolean isExists(ItemImage itemImage, List<ItemImage> mListImages) {
+            for (ItemImage image : mListImages) {
+                if (image.getImages().equals(itemImage.getImages())) {
+                    return true;
                 }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-        }
-    }
-
-    public class LoadImages {
-        public ViewHolder viewHolder;
-        public String url;
-
-        public LoadImages() {
-        }
-
-        public LoadImages(ViewHolder viewHolder, String url) {
-            this.viewHolder = viewHolder;
-            this.url = url;
-        }
-
-        public ViewHolder getViewHolder() {
-            return viewHolder;
-        }
-
-        public void setViewHolder(ViewHolder viewHolder) {
-            this.viewHolder = viewHolder;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-    }
-
-    private boolean isExists(ItemImage itemImage, ArrayList<ItemImage> mListImages) {
-        for (ItemImage image : mListImages) {
-            if (image.getImages().equals(itemImage.getImages())) {
-                return true;
             }
+
+            return false;
         }
-
-        return false;
     }
-
 }
+
+

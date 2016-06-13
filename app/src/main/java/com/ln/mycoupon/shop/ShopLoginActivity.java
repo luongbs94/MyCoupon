@@ -1,4 +1,4 @@
-package com.ln.mycoupon;
+package com.ln.mycoupon.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +32,7 @@ import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.InformationAccount;
 import com.ln.model.Models;
-import com.ln.mycoupon.shop.ShopMainActivity;
+import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
@@ -45,7 +45,7 @@ import retrofit2.Response;
 /**
  * Created by luongnguyen on 3/30/16.
  */
-public class LoginActivity extends AppCompatActivity
+public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
     private Button mBtnLogin;
@@ -146,11 +146,11 @@ public class LoginActivity extends AppCompatActivity
                 try {
                     String webToken = arg1.body().string();
                     SaveData.web_token = webToken;
-                    Log.d("mycoupon", SaveData.web_token);
+                    Log.d(TAG, SaveData.web_token);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.d("mycoupon", "false");
+                    Log.d(TAG, "false");
 
                 }
 
@@ -166,8 +166,8 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void getWebTokenSocial(String user_id, String social, String access_token) {
-        Call<ResponseBody> call1 = apiService.getWebTokenSocial(user_id, social, access_token);
 
+        Call<ResponseBody> call1 = apiService.getWebTokenSocial(user_id, social, access_token);
         call1.enqueue(new Callback<ResponseBody>() {
 
             @Override
@@ -177,13 +177,12 @@ public class LoginActivity extends AppCompatActivity
                 try {
                     String webToken = arg1.body().string();
                     SaveData.web_token = webToken;
-                    Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
+                    Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
                     startActivity(intent);
                     Log.d("mycoupon", SaveData.web_token);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.d("mycoupon", "false");
-
                 }
             }
 
@@ -197,9 +196,7 @@ public class LoginActivity extends AppCompatActivity
 
     public void getCompanyProfile(final String user, final String pass) {
 
-
         Call<List<Company>> call = apiService.getCompanyProfile(user, pass, null);
-
         call.enqueue(new Callback<List<Company>>() {
 
             @Override
@@ -218,7 +215,7 @@ public class LoginActivity extends AppCompatActivity
                 MainApplication.editor.commit();
 
 
-                Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
+                Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
 
 
@@ -254,9 +251,9 @@ public class LoginActivity extends AppCompatActivity
                         MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
                         MainApplication.editor.commit();
 
-
-                        Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
-                        startActivity(intent);
+//
+//                        Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
+//                        startActivity(intent);
 
 
                         finish();
@@ -317,6 +314,7 @@ public class LoginActivity extends AppCompatActivity
             protected void onCurrentAccessTokenChanged(
                     AccessToken oldAccessToken,
                     AccessToken currentAccessToken) {
+
                 mAccessToken = currentAccessToken;
 
             }
@@ -338,9 +336,6 @@ public class LoginActivity extends AppCompatActivity
 //            mStatusTextView.setText(mAccessToken.getUserId() + "");
 //            Log.i("Tagsss", mAccessToken.getUserId() + "");
 
-        }
-        if (mProfile != null) {
-            username.setText(mProfile.getId());
         }
     }
 
@@ -414,15 +409,6 @@ public class LoginActivity extends AppCompatActivity
                         Profile profile = Profile.getCurrentProfile();
                         Log.v(TAG, profile.getFirstName());
                     }
-
-
-
-//                    username.setText(mProfile.getId() + "");
-                   // Log.d(TAG, mProfile.getId());
-          //          Log.d(TAG, mAccessToken.getUserId());
-
-//                    getWebTokenSocial(mProfile.getId(), "facebook", mAccessToken.toString());
-
                 }
 
                 @Override
@@ -432,6 +418,7 @@ public class LoginActivity extends AppCompatActivity
                 @Override
                 public void onError(FacebookException error) {
                 }
+
             });
         }
     }

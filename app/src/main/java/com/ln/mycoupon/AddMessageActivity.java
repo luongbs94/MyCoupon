@@ -25,6 +25,7 @@ import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.ItemImage;
 import com.ln.model.Message;
+import com.ln.model.Models;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.yongchun.library.view.ImageSelectorActivity;
 
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.ln.app.MainApplication.getRandomString;
 
 /**
  * Created by luongnguyen on 4/7/16.
@@ -51,6 +54,7 @@ public class AddMessageActivity extends AppCompatActivity {
     private ImageView mImgSelectImages;
     private RecyclerView mRvSelectImages, mRvShow;
 
+
     private static final int mSelectNumber = 9;
     private static final int mMode = 1;
     private static final boolean isShow = true;
@@ -58,6 +62,7 @@ public class AddMessageActivity extends AppCompatActivity {
     private static final boolean isCrop = false;
     private boolean isUpload;
 
+    private String idNews, imagesLink;
 
     private ArrayList<ItemImage> mImages = new ArrayList<>();
     private SelectedImageAdapter mSelectedImageAdapter;
@@ -91,6 +96,9 @@ public class AddMessageActivity extends AppCompatActivity {
 
         mSelectedImageAdapter = new SelectedImageAdapter(getApplicationContext(), mImages);
         mRvSelectImages.setAdapter(mSelectedImageAdapter);
+
+        idNews = MainApplication.getRandomString(15);
+        imagesLink = MainApplication.getRandomString(40);
     }
 
 
@@ -102,12 +110,15 @@ public class AddMessageActivity extends AppCompatActivity {
 
     public void addNews(final String title, final String content, final String link) {
         Message template = new Message();
-        template.setMessage_id(MainApplication.getRandomString(15));
+
+        template.setMessage_id(idNews);
         template.setContent(content);
         template.setLink(link);
         template.setTitle(title);
         template.setCompany_id(SaveData.company.company_id + "");
-
+        if (mImages.size() > 0) {
+            template.setImages_link(imagesLink);
+        }
 
         //template.created_date= new Date();
 
@@ -129,7 +140,6 @@ public class AddMessageActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Message> arg0, Throwable arg1) {
-                // TODO Auto-generated method stub
                 Log.d(TAG, "fail");
                 Snackbar.make(layoutView, R.string.add_message_fail, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -160,7 +170,7 @@ public class AddMessageActivity extends AppCompatActivity {
             ArrayList<String> images = (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity.REQUEST_OUTPUT);
 
             for (String s : images) {
-                mImages.add(new ItemImage(s));
+                mImages.add(new ItemImage(s, idNews));
             }
             // do something
             mSelectedImageAdapter.notifyDataSetChanged();
@@ -185,7 +195,7 @@ public class AddMessageActivity extends AppCompatActivity {
 
             if (!isUpload) {
 
-                String linkCompany = MainApplication.getRandomString(12);
+                String linkCompany = getRandomString(12);
                 String str_title = title.getText().toString();
                 String str_content = content.getText().toString();
                 String str_link = link.getText().toString();
@@ -198,19 +208,19 @@ public class AddMessageActivity extends AppCompatActivity {
 
                 ItemImage itemImage = null;
                 for (int i = 0; i < mImages.size(); i++) {
-                    String string = convertBase64(mImages.get(i).getImages());
+                    String string = Models.FIRST_BASE64 + convertBase64(mImages.get(i).getImages());
 
                     if (i == mImages.size() - 1) {
-                        itemImage = new ItemImage(string);
-                        ROOT.child("coupon").push().setValue(itemImage, new Firebase.CompletionListener() {
+                        itemImage = new ItemImage(string, idNews);
+                        ROOT.child(imagesLink).push().setValue(itemImage, new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                 getShowToast("Upload Success");
                             }
                         });
                     } else {
-                        itemImage = new ItemImage(string);
-                        ROOT.child("coupon").push().setValue(itemImage);
+                        itemImage = new ItemImage(string, idNews);
+                        ROOT.child(imagesLink).push().setValue(itemImage);
                     }
                 }
 

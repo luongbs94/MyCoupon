@@ -25,6 +25,9 @@
     <dimen name="size_72">72dp</dimen>
     <dimen name="size_3">3dp</dimen>
     <dimen name="size_1">1dp</dimen>
+    <dimen name="size_2">2dp</dimen>
+    <dimen name="size_96">96dp</dimen>
+    <dimen name="size_82">82dp</dimen>
 
 
 </resources>

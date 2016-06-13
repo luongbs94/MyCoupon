@@ -12,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,8 +20,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.fragment.HistoryFragment;
-import com.ln.fragment.SettingFragment;
+import com.ln.fragment.shop.HistoryFragment;
+import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.CouponFragment;
 import com.ln.fragment.shop.NewsFragment;
 import com.ln.model.Company;
@@ -82,7 +81,6 @@ public class ShopMainActivity extends AppCompatActivity
         mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
         Company company = SaveData.company;
-        Log.d(TAG, company.getLogo());
         if (company.getLogo() != null) {
             Glide.with(this).load(MainApplication
                     .convertToBytes(company.getLogo()))
@@ -102,7 +100,7 @@ public class ShopMainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 
