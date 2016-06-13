@@ -1,4 +1,4 @@
-package com.ln.mycoupon;
+package com.ln.mycoupon.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +32,7 @@ import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.InformationAccount;
 import com.ln.model.Models;
-import com.ln.mycoupon.shop.ShopMainActivity;
+import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
@@ -45,7 +45,7 @@ import retrofit2.Response;
 /**
  * Created by luongnguyen on 3/30/16.
  */
-public class LoginActivity extends AppCompatActivity
+public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
     private Button mBtnLogin;
@@ -177,7 +177,7 @@ public class LoginActivity extends AppCompatActivity
                 try {
                     String webToken = arg1.body().string();
                     SaveData.web_token = webToken;
-                    Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
+                    Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
                     startActivity(intent);
                     Log.d("mycoupon", SaveData.web_token);
                 } catch (Exception e) {
@@ -218,7 +218,7 @@ public class LoginActivity extends AppCompatActivity
                 MainApplication.editor.commit();
 
 
-                Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
+                Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
 
 
@@ -280,6 +280,7 @@ public class LoginActivity extends AppCompatActivity
             protected void onCurrentAccessTokenChanged(
                     AccessToken oldAccessToken,
                     AccessToken currentAccessToken) {
+
                 mAccessToken = currentAccessToken;
 
             }
@@ -301,9 +302,6 @@ public class LoginActivity extends AppCompatActivity
 //            mStatusTextView.setText(mAccessToken.getUserId() + "");
 //            Log.i("Tagsss", mAccessToken.getUserId() + "");
 
-        }
-        if (mProfile != null) {
-            username.setText(mProfile.getId());
         }
     }
 
@@ -356,7 +354,6 @@ public class LoginActivity extends AppCompatActivity
                 public void onSuccess(LoginResult loginResult) {
                     mProfile = Profile.getCurrentProfile();
                     mAccessToken = AccessToken.getCurrentAccessToken();
-//                    username.setText(mProfile.getId() + "");
                     Log.d(TAG, mProfile.getId());
                     Log.d(TAG, mAccessToken.getUserId());
 
