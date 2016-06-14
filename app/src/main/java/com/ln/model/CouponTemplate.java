@@ -2,6 +2,7 @@ package com.ln.model;
 
 /**
  * Created by Nhahv on 5/21/2016.
+ *
  */
 public class CouponTemplate {
 

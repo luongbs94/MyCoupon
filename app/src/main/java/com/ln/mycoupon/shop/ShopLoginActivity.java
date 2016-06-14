@@ -31,7 +31,6 @@ import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.InformationAccount;
-import com.ln.model.Models;
 import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -113,7 +112,7 @@ public class ShopLoginActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Models.GOOGLE_SIGN_IN) {
+        if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
@@ -314,7 +313,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
         private void onClickGooglePlus() {
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(intent, Models.GOOGLE_SIGN_IN);
+            startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
         }
 
         private void onClickLoginFacebook() {

@@ -25,6 +25,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/13/16.
+ *
  */
 public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
 

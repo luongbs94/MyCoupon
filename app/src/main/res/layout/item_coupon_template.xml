@@ -93,6 +93,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:gravity="bottom"
+                android:paddingLeft="@dimen/size_3"
+                android:paddingRight="@dimen/size_3"
                 android:text="@string/txt_time_coupon"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="?android:textColorSecondary" />

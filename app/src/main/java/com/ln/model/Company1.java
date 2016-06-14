@@ -7,12 +7,12 @@ import java.util.List;
  */
 public class Company1 {
 
-    String name;
-    String address;
-    String logo;
-    String company_id;
-    String created_date;
-    List<Coupon> coupon;
+    private String name;
+    private String address;
+    private String logo;
+    private String company_id;
+    private String created_date;
+    private List<Coupon> coupon;
 
     public String getCompany_id() {
         return company_id;

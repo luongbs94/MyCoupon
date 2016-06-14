@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
@@ -16,23 +17,22 @@ import java.util.List;
 
 /**
  * Created by Nhahv on 5/21/2016.
+ *
  */
 
 public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemplateClientAdapter.ViewHolder> {
 
     private List<Coupon> mListCoupon;
     private Context mContext;
-    private LayoutInflater mInflater;
 
     public CouponTemplateClientAdapter(Context context, List<Coupon> coupons) {
-        mInflater = LayoutInflater.from(context);
         mContext = context;
         mListCoupon = coupons;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_coupon, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_coupon, parent, false);
         return new ViewHolder(view);
     }
 
@@ -41,10 +41,16 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
         final Coupon item = mListCoupon.get(position);
         if (item != null) {
-            holder.couponName.setText(item.getValue());
-            holder.couponDate.setText(item.getDuration() + "");
+            if (item.getValue() != null) {
+                holder.couponName.setText(item.getValue());
+            }
 
+            String duration = item.getDuration() + "";
+            holder.couponDate.setText(duration);
 
+            if (item.getUser_image_link() != null){
+                Glide.with(mContext).load(item.getCoupon_template_id()).into(holder.mImgLogo);
+            }
 
         }
     }
@@ -53,7 +59,6 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
     public int getItemCount() {
         return mListCoupon.size();
     }
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -17,7 +17,6 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Coupon;
-import com.ln.model.Models;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,7 +42,7 @@ public class TestQRCode extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         value = getIntent().getExtras().getString("value");
-        duration = getIntent().getExtras().getInt(Models.DURATION);
+        duration = getIntent().getExtras().getInt(MainApplication.DURATION);
         coupon_template_id = getIntent().getExtras().getString("coupon_template_id");
 
         Button exit = (Button) findViewById(R.id.exit);

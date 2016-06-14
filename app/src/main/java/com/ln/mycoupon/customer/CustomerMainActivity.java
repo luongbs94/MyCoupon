@@ -62,7 +62,6 @@ public class CustomerMainActivity extends AppCompatActivity
 
         startFragment(new CouponFragment());
 
-
     }
 
     @Override
@@ -131,7 +130,7 @@ public class CustomerMainActivity extends AppCompatActivity
         return true;
     }
 
-    public void startFragment(Fragment fragment) {
+    private void startFragment(Fragment fragment) {
         String backStateName = fragment.getClass().getName();
         String fragmentTag = backStateName;
 

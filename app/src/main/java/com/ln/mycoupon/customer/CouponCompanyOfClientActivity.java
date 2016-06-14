@@ -14,15 +14,16 @@ import com.ln.mycoupon.R;
 
 /**
  * Created by luongnguyen on 6/7/16.
+ *
  */
 public class CouponCompanyOfClientActivity extends Activity {
 
     private LinearLayout mLnLayout;
     private RecyclerView mRecCoupon;
 
-    CollapsingToolbarLayout toolbarLayout;
+    private CollapsingToolbarLayout toolbarLayout;
 
-    Company1 company1;
+    private Company1 company1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

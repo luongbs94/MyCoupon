@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Created by Nhahv on 6/8/2016.
+ *
  */
 public class ListItemImages implements Serializable {
     private List<ItemImage> mListImages = new ArrayList<>();

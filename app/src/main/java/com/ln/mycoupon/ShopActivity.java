@@ -16,6 +16,7 @@ import com.ln.model.Company1;
 
 /**
  * Created by luongnguyen on 4/8/16.
+ *
  */
 public class ShopActivity extends AppCompatActivity {
 

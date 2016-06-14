@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by Nhahv on 28/5/2016.
+ *
  */
 public class LocalMediaStore implements Serializable {
 

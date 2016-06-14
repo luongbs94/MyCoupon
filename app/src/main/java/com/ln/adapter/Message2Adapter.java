@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * Created by luongnguyen on 4/6/16.
+ *
  */
 
 public class Message2Adapter extends BaseAdapter {

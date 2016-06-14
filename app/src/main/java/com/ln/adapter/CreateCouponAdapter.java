@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Nhahv on 5/22/2016.
+ *
  */
 public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapter.ViewHolder> {
 

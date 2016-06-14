@@ -31,14 +31,11 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
-import com.ln.model.Models;
-import com.ln.model.UserPicture;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -75,7 +72,7 @@ public class SettingFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            mFileUri = savedInstanceState.getParcelable(Models.FILE_URI);
+            mFileUri = savedInstanceState.getParcelable(MainApplication.FILE_URI);
         }
     }
 
@@ -143,7 +140,7 @@ public class SettingFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Models.FILE_URI, mFileUri);
+        outState.putParcelable(MainApplication.FILE_URI, mFileUri);
     }
 
     private void init() {
@@ -160,7 +157,7 @@ public class SettingFragment extends Fragment {
             mTxtAddress.setText(company.getAddress());
         }
 
-        if(company.getLogo() != null){
+        if (company.getLogo() != null) {
             String logo = company.getLogo();
 
             Glide.with(getActivity()).load(MainApplication.convertToBytes(logo))
@@ -186,7 +183,7 @@ public class SettingFragment extends Fragment {
             pass2.setText(company.pass2);
         }
 
-        if(company.user1_admin != null){
+        if (company.user1_admin != null) {
             if (company.user1_admin.equals("1")) {
                 checkBox.setChecked(true);
             } else {
@@ -194,7 +191,7 @@ public class SettingFragment extends Fragment {
             }
         }
 
-        if(company.user2_admin != null) {
+        if (company.user2_admin != null) {
             if (company.user2_admin.equals("1")) {
                 checkBox1.setChecked(true);
             } else {
@@ -218,11 +215,7 @@ public class SettingFragment extends Fragment {
         if (resultCode == getActivity().RESULT_OK) {
 
             if (requestCode == SELECT_PICTURE) {
-                try {
-                    mImgLogo.setImageBitmap(new UserPicture(data.getData(), getActivity().getContentResolver()).getBitmap());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                previewCapturedImage(data.getData().getPath());
             } else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
 
                 Log.d(TAG, mFileUri.getPath());
@@ -239,14 +232,14 @@ public class SettingFragment extends Fragment {
                 hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    public Uri getOutputMediaFileUri(int type) {
+    private Uri getOutputMediaFileUri(int type) {
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
     private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
-    public static final int SELECT_PICTURE = 1;
+    private static final int MEDIA_TYPE_IMAGE = 1;
+    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
+    private static final int SELECT_PICTURE = 1;
 
     private static File getOutputMediaFile(int type) {
 
@@ -352,7 +345,7 @@ public class SettingFragment extends Fragment {
             company.setAddress(nameCompany.getText().toString());
 
             String logo = MainApplication.convertToBitmap(mImgLogo);
-            logo = Models.FIRST_BASE64 + logo;
+            logo = MainApplication.FIRST_BASE64 + logo;
 
             company.setLogo(logo);
             Call<Company> call = mLoveCouponAPI.updateCompany(company);

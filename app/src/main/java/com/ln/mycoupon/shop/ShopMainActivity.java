@@ -48,7 +48,7 @@ public class ShopMainActivity extends AppCompatActivity
         if (company != null) {
             if (company.getUser_id() != null
                     || (company.getUser1_admin() != null && company.getUser1_admin().equals("1"))
-                    || (company.getUser1_admin() != null && company.getUser2_admin().equals("1"))) {
+                    || (company.getUser2_admin() != null && company.getUser2_admin().equals("1"))) {
                 MainApplication.sIsAdmin = true;
             }
         }

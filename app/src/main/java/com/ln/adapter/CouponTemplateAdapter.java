@@ -19,7 +19,6 @@ import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
-import com.ln.model.Models;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.TestQRCode;
 
@@ -74,7 +73,8 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
 
             Date date = convertStringToDate(itemCoupon.getCreated_date());
             String dayLeft = dayLeft(date, itemCoupon.getDuration()) + "";
-            holder.mTxtTimeCoupon.setText(dayLeft + " ngày");
+            String day = dayLeft + " ngày";
+            holder.mTxtTimeCoupon.setText(day);
             holder.mTxtDescription.setText(itemCoupon.getContent());
 
 
@@ -83,9 +83,9 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
                 public void onClick(View v) {
 
                     Intent intent = new Intent(mContext, TestQRCode.class);
-                    intent.putExtra(Models.VALUE, itemCoupon.getValue());
-                    intent.putExtra(Models.DURATION, itemCoupon.getDuration());
-                    intent.putExtra(Models.COUPON_TEMpLATE_ID, itemCoupon.getCoupon_template_id());
+                    intent.putExtra(MainApplication.VALUE, itemCoupon.getValue());
+                    intent.putExtra(MainApplication.DURATION, itemCoupon.getDuration());
+                    intent.putExtra(MainApplication.COUPON_TEMpLATE_ID, itemCoupon.getCoupon_template_id());
                     mContext.startActivity(intent);
                 }
             });

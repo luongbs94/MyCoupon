@@ -24,6 +24,7 @@ import com.ln.mycoupon.R;
 
 
 public class RippleView extends RelativeLayout {
+
     private int WIDTH;
     private int HEIGHT;
     private int FRAME_RATE = 10;
