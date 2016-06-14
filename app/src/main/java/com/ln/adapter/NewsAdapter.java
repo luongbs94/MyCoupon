@@ -3,20 +3,13 @@ package com.ln.adapter;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.ln.api.SaveData;
-import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.ItemImage;
 import com.ln.model.ListItemImages;
@@ -29,10 +22,10 @@ import java.util.List;
 
 /**
  * Created by Nhahv on 5/21/2016.
+ *
  */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
-    private static Firebase sRoot = new Firebase(MainApplication.URL_FIRE_BASE);
 
     private Context mContext;
     private List<Message> mListNews;
@@ -78,10 +71,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         Company company = SaveData.company;
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
-            Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
-                    .asBitmap()
-                    .placeholder(R.drawable.ic_profile)
-                    .into(holder.mImgLogo);
+//            Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
+//                    .asBitmap()
+//                    .placeholder(R.drawable.ic_profile)
+//                    .into(holder.mImgLogo);
         }
 
         holder.mTxtTile.setText(news.getTitle());
@@ -94,40 +87,40 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 //        String date = formatter.format(news.getCreated_date());
 //        holder.mTxtTime.setText(date);
 
-        final int size = mListImages.size();
-        if (news.getImages_link() != null) {
-
-            mListItemImages = new ArrayList<>();
-            sRoot.child(news.getImages_link()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-                        ItemImage itemImage = snapshot.getValue(ItemImage.class);
-//                        for (int i = 0; i < size; i++) {
-//                            if (itemImage.getIdNews().equals(news.getMessage_id())) {
-//                                mList[i].getListImages().add(itemImage);
-//                            }
+//        final int size = mListImages.size();
+//        if (news.getImages_link() != null) {
+//
+//            mListItemImages = new ArrayList<>();
+//            sRoot.child(news.getImages_link()).addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//
+//                        ItemImage itemImage = snapshot.getValue(ItemImage.class);
+////                        for (int i = 0; i < size; i++) {
+////                            if (itemImage.getIdNews().equals(news.getMessage_id())) {
+////                                mList[i].getListImages().add(itemImage);
+////                            }
+////                        }
+//                        if (itemImage.getIdNews().equals(news.getMessage_id())) {
+//                            mListItemImages.add(itemImage);
 //                        }
-                        if (itemImage.getIdNews().equals(news.getMessage_id())) {
-                            mListItemImages.add(itemImage);
-                        }
-
-//                        mListImages.get(mPosition).getListImages().addAll(mListItemImages);
-                        GridAdapter mGridAdapter = new GridAdapter(mContext, mListItemImages);
-                        holder.mRecyclerView.setAdapter(mGridAdapter);
-                        Log.d(TAG, itemImage.getImages());
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-
-        }
+//
+////                        mListImages.get(mPosition).getListImages().addAll(mListItemImages);
+//                        GridAdapter mGridAdapter = new GridAdapter(mContext, mListItemImages);
+//                        holder.mRecyclerView.setAdapter(mGridAdapter);
+//                        Log.d(TAG, itemImage.getImages());
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(FirebaseError firebaseError) {
+//
+//                }
+//            });
+//
+//        }
 
 //        if (news.getImages_link() != null && news.getImages_link().equals(url_image)) {
 //            final LoadImages loadImages = new LoadImages(holder, url_image);
@@ -205,5 +198,3 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         }
     }
 }
-
-

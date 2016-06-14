@@ -80,17 +80,33 @@
             android:textColor="@color/white"
             android:textSize="@dimen/size_15sp" />
 
-        <TextView
-            android:id="@+id/txt_time"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/txt_time_coupon"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="?android:textColorSecondary" />
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
 
+            <TextView
+                android:id="@+id/txt_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:text="@string/txt_time_coupon"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="?android:textColorSecondary" />
+
+            <ImageView
+                android:id="@+id/image_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:contentDescription="@null"
+                android:paddingLeft="@dimen/size_3"
+                android:paddingRight="@dimen/size_3"
+                android:src="@drawable/ic_more_vertical" />
+        </TableRow>
     </LinearLayout>
 
 </LinearLayout>

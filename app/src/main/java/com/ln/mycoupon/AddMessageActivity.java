@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -11,27 +12,33 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.ItemImage;
 import com.ln.model.Message;
-import com.ln.model.Models;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.yongchun.library.view.ImageSelectorActivity;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,14 +50,11 @@ import static com.ln.app.MainApplication.getRandomString;
  */
 public class AddMessageActivity extends AppCompatActivity {
 
-    private static final Firebase ROOT =
-            new Firebase(MainApplication.URL_FIRE_BASE);
     private String TAG = getClass().getSimpleName();
 
     private MaterialEditText title, content, link;
     private CardView addMessage;
     private LinearLayout layoutView;
-    private LoveCouponAPI apiService;
     private ImageView mImgSelectImages;
     private RecyclerView mRvSelectImages, mRvShow;
 
@@ -67,6 +71,10 @@ public class AddMessageActivity extends AppCompatActivity {
     private ArrayList<ItemImage> mImages = new ArrayList<>();
     private SelectedImageAdapter mSelectedImageAdapter;
 
+    private LoveCouponAPI mApiService;
+    private LoveCouponAPI apiService;
+
+    private File mImageDir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +83,16 @@ public class AddMessageActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mImageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "MyCoupon");
+        Log.d(TAG, "imageDir" + mImageDir.getAbsolutePath());
+
+        apiService = MainApplication.getAPI();
+        mApiService = MainApplication.getAPI1();
+
         initViews();
 
         addEvents();
 
-        apiService = MainApplication.getAPI();
 
     }
 
@@ -108,7 +121,25 @@ public class AddMessageActivity extends AppCompatActivity {
     }
 
 
-    public void addNews(final String title, final String content, final String link) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add_news, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_add:
+                onClickAddMessages(layoutView);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    private void addNews(final String title, final String content, final String link) {
         Message template = new Message();
 
         template.setMessage_id(idNews);
@@ -140,10 +171,8 @@ public class AddMessageActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Message> arg0, Throwable arg1) {
-                Log.d(TAG, "fail");
-                Snackbar.make(layoutView, R.string.add_message_fail, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
 
+                getSnackBar(getString(R.string.add_message_fail));
             }
         });
     }
@@ -167,12 +196,13 @@ public class AddMessageActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == ImageSelectorActivity.REQUEST_IMAGE) {
-            ArrayList<String> images = (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity.REQUEST_OUTPUT);
+            List<String> images = (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity.REQUEST_OUTPUT);
 
             for (String s : images) {
-                mImages.add(new ItemImage(s, idNews));
+                Log.d(TAG, createFile(s));
+                mImages.add(new ItemImage(createFile(s), idNews));
             }
-            // do something
+
             mSelectedImageAdapter.notifyDataSetChanged();
             isUpload = false;
         }
@@ -191,53 +221,34 @@ public class AddMessageActivity extends AppCompatActivity {
             }
         }
 
-        private void onClickAddMessages(View view) {
-
-            if (!isUpload) {
-
-                String linkCompany = getRandomString(12);
-                String str_title = title.getText().toString();
-                String str_content = content.getText().toString();
-                String str_link = link.getText().toString();
-                if (str_title.length() > 0 && str_content.length() > 0 && str_link.length() > 0) {
-                    addNews(str_title, str_content, str_link);
-                } else {
-                    Snackbar.make(view, R.string.not_fill_login, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-
-                ItemImage itemImage = null;
-                for (int i = 0; i < mImages.size(); i++) {
-                    String string = Models.FIRST_BASE64 + convertBase64(mImages.get(i).getImages());
-
-                    if (i == mImages.size() - 1) {
-                        itemImage = new ItemImage(string, idNews);
-                        ROOT.child(imagesLink).push().setValue(itemImage, new Firebase.CompletionListener() {
-                            @Override
-                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                getShowToast("Upload Success");
-                            }
-                        });
-                    } else {
-                        itemImage = new ItemImage(string, idNews);
-                        ROOT.child(imagesLink).push().setValue(itemImage);
-                    }
-                }
-
-                isUpload = true;
-            }
-        }
-
         private void onClickSelectImages() {
             ImageSelectorActivity.start(AddMessageActivity.this, mSelectNumber, mMode, isShow, isPreview, isCrop);
         }
     }
 
-    private void getShowToast(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    private void onClickAddMessages(View view) {
+
+        if (!isUpload) {
+
+            String linkCompany = getRandomString(12);
+            String str_title = title.getText().toString();
+            String str_content = content.getText().toString();
+            String str_link = link.getText().toString();
+            if (str_title.length() > 0 && str_content.length() > 0 && str_link.length() > 0) {
+                addNews(str_title, str_content, str_link);
+            } else {
+                getSnackBar(getString(R.string.not_fill_login));
+            }
+
+            for (ItemImage itemImage : mImages) {
+                uploadFile(itemImage.getImages());
+            }
+
+            isUpload = true;
+        }
     }
 
-    private String convertBase64(final String path) {
+    private String convertBase64(String path) {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 8;
@@ -251,5 +262,80 @@ public class AddMessageActivity extends AppCompatActivity {
         byte[] byteArray = stream.toByteArray();
         String title = Base64.encodeToString(byteArray, Base64.NO_WRAP);
         return title;
+    }
+
+    private String createFile(String path) {
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 8;
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+
+        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
+        Bitmap resized = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES, height, true);
+
+        String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));
+        Log.d(TAG, path);
+
+
+        File resizedFile = new File(this.getCacheDir(), nameImages + ".png");
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(resizedFile);
+            fos.write(byteArray);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, e.toString());
+        } catch (IOException e) {
+            Log.d(TAG, e.toString());
+
+        }
+
+        return resizedFile.getAbsolutePath();
+    }
+
+    private void uploadFile(String path) {
+
+        File file = new File(path);
+        Log.d(TAG, file.getName());
+        // create RequestBody instance from file
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
+
+        // add another part within the multipart request
+        String descriptionString = "hello, this is description speaking";
+        RequestBody description =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), descriptionString);
+
+        // finally, execute the request
+        Call<ResponseBody> call = mApiService.upload(description, body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call,
+                                   Response<ResponseBody> response) {
+
+                Log.d(TAG, response.message());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
+    }
+
+    private void getSnackBar(String s) {
+        Snackbar.make(layoutView, s, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 }

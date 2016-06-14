@@ -42,6 +42,14 @@ public class ShopMainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_main);
+
+
+        Company company = SaveData.getCompany();
+//        if (company.getUser_id() != null || company.getUser1_admin().equals("1") || company.getUser2_admin().equals("1")) {
+//            MainApplication.sIsAdmin = true;
+//        }
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -80,7 +88,6 @@ public class ShopMainActivity extends AppCompatActivity
         mTxtNameCompany = (TextView) headView.findViewById(R.id.txt_name_nav);
         mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
-        Company company = SaveData.company;
         if (company.getLogo() != null) {
             Glide.with(this).load(MainApplication
                     .convertToBytes(company.getLogo()))

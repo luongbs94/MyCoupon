@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Nhahv on 5/11/2016.
+ *
  */
 public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdapter.ViewHolder> {
 

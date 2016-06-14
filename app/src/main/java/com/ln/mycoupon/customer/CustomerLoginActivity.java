@@ -20,6 +20,7 @@ import com.ln.model.Company1;
 import com.ln.model.User;
 import com.ln.mycoupon.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -102,10 +103,10 @@ public class CustomerLoginActivity extends AppCompatActivity {
         mAccessTokenTracker.stopTracking();
     }
 
-    public void getCompanyByUserId(final String userId) {
+    private void getCompanyByUserId(final String userId) {
 
 //        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId(userId);
-        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId(userId);
+        Call<List<Company1>> call3 = MainApplication.apiService.getCompaniesByUserId(userId);
         call3.enqueue(new Callback<List<Company1>>() {
 
             @Override
@@ -113,9 +114,12 @@ public class CustomerLoginActivity extends AppCompatActivity {
                                    Response<List<Company1>> arg1) {
                 List<Company1> templates = arg1.body();
 
-                Log.d(TAG, templates.size() + "");
+                if (templates == null) {
+                    SaveData.listCompany = new ArrayList<Company1>();
+                } else {
+                    SaveData.listCompany = templates;
+                }
 
-                SaveData.listCompany = templates;
                 SaveData.USER_ID = userId;
 
                 String data = gson.toJson(SaveData.listCompany);
@@ -123,8 +127,6 @@ public class CustomerLoginActivity extends AppCompatActivity {
                 MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, true);
                 MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
                 MainApplication.editor.commit();
-
-
 
                 start();
             }
@@ -137,7 +139,7 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
     }
 
-    public void updateUserToken(String userId, String token, String device_os) {
+    private void updateUserToken(String userId, String token, String device_os) {
 
         Call<List<User>> call = MainApplication.apiService.updateUserToken(userId, token, device_os);
         call.enqueue(new Callback<List<User>>() {

@@ -37,7 +37,6 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -134,67 +133,7 @@ public class ShopLoginActivity extends AppCompatActivity
         }
     }
 
-    public void getWebTokenUser(String user, String pass) {
-        Call<ResponseBody> call1 = apiService.getWebTokenUser(user, pass);
-
-        call1.enqueue(new Callback<ResponseBody>() {
-
-            @Override
-            public void onResponse(Call<ResponseBody> arg0,
-                                   Response<ResponseBody> arg1) {
-
-                try {
-                    String webToken = arg1.body().string();
-                    SaveData.web_token = webToken;
-                    Log.d(TAG, SaveData.web_token);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.d(TAG, "false");
-
-                }
-
-                finish();
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
-            }
-        });
-    }
-
-    public void getWebTokenSocial(String user_id, String social, String access_token) {
-
-        Call<ResponseBody> call1 = apiService.getWebTokenSocial(user_id, social, access_token);
-        call1.enqueue(new Callback<ResponseBody>() {
-
-            @Override
-            public void onResponse(Call<ResponseBody> arg0,
-                                   Response<ResponseBody> arg1) {
-
-                try {
-                    String webToken = arg1.body().string();
-                    SaveData.web_token = webToken;
-                    Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
-                    startActivity(intent);
-                    Log.d("mycoupon", SaveData.web_token);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.d("mycoupon", "false");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
-            }
-        });
-    }
-
-
-    public void getCompanyProfile(final String user, final String pass) {
+    private void getCompanyProfile(final String user, final String pass) {
 
         Call<List<Company>> call = apiService.getCompanyProfile(user, pass, null);
         call.enqueue(new Callback<List<Company>>() {
@@ -218,8 +157,6 @@ public class ShopLoginActivity extends AppCompatActivity
                 Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
 
-
-                //    finish();
             }
 
             @Override
@@ -229,40 +166,35 @@ public class ShopLoginActivity extends AppCompatActivity
         });
     }
 
-    public void getCompanyProfileSocial(String user_id) {
+    private void getCompanyProfileSocial(String user_id) {
 
 
         Call<List<Company>> call = apiService.getCompanyProfileSocial(user_id);
 
-                call.enqueue(new Callback<List<Company>>() {
+        call.enqueue(new Callback<List<Company>>() {
 
-                    @Override
-                    public void onResponse(Call<List<Company>> arg0,
-                                           Response<List<Company>> arg1) {
-                        List<Company> templates = arg1.body();
+            @Override
+            public void onResponse(Call<List<Company>> arg0,
+                                   Response<List<Company>> arg1) {
+                List<Company> templates = arg1.body();
 
-                        SaveData.company = templates.get(0);
+                SaveData.company = templates.get(0);
 
-                        Gson gson = new Gson();
+                Gson gson = new Gson();
 
-                        String data = gson.toJson(SaveData.company);
-                        MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, true);
-                        MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
-                        MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
-                        MainApplication.editor.commit();
+                String data = gson.toJson(SaveData.company);
+                MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, true);
+                MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
+                MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
+                MainApplication.editor.commit();
 
-//
-//                        Intent intent = new Intent(LoginActivity.this, ShopMainActivity.class);
-//                        startActivity(intent);
+                finish();
+            }
 
-
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
-                        Log.d(TAG, "Failure");
-                    }
+            @Override
+            public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
+                Log.d(TAG, "Failure");
+            }
         });
     }
 
@@ -390,7 +322,7 @@ public class ShopLoginActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(LoginResult loginResult) {
 
-                    if(Profile.getCurrentProfile() == null) {
+                    if (Profile.getCurrentProfile() == null) {
                         mProfileTracker = new ProfileTracker() {
                             @Override
                             protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
@@ -404,8 +336,7 @@ public class ShopLoginActivity extends AppCompatActivity
                         };
                         // no need to call startTracking() on mProfileTracker
                         // because it is called by its constructor, internally.
-                    }
-                    else {
+                    } else {
                         Profile profile = Profile.getCurrentProfile();
                         Log.v(TAG, profile.getFirstName());
                     }

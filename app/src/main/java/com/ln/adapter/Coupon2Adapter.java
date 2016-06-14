@@ -17,13 +17,13 @@ import java.util.List;
 
 public class Coupon2Adapter extends BaseAdapter {
 
-    public List<Coupon> mListCouponTemplate;
-    private LayoutInflater mInflater = null;
+    private List<Coupon> mListCouponTemplate;
+    private Context mContext;
 
 
     public Coupon2Adapter(Context context, List<Coupon> apps) {
-        mInflater = LayoutInflater.from(context);
-        this.mListCouponTemplate = apps;
+        mContext = context;
+        mListCouponTemplate = apps;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Coupon2Adapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_coupon, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_coupon, null);
             holder = new ViewHolder();
             holder.appIcon = (ImageView) convertView
                     .findViewById(R.id.app_icon);

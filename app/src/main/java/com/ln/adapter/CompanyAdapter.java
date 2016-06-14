@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * Created by luongnguyen on 6/7/16.
+ *
  */
 public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHolder> {
 

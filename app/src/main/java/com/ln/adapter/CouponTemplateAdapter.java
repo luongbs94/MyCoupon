@@ -29,23 +29,24 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nhahv on 5/21/2016.
+ *
  */
 
 public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAdapter.ViewHolder> {
 
     private List<CouponTemplate> mListCoupon;
     private Context mContext;
-    private LayoutInflater mInflater;
+
 
     public CouponTemplateAdapter(Context context, List<CouponTemplate> coupons) {
-        mInflater = LayoutInflater.from(context);
+
         mContext = context;
         mListCoupon = coupons;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_coupon_template, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_coupon_template, parent, false);
         return new ViewHolder(view);
     }
 
@@ -89,7 +90,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
         return mListCoupon.size();
     }
 
-    public long dayLeft(Date created_date, int duration) {
+    private long dayLeft(Date created_date, int duration) {
         Calendar last_cal = Calendar.getInstance();
         last_cal.setTime(created_date);
         last_cal.add(Calendar.DAY_OF_YEAR, duration);
@@ -119,7 +120,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView mImgLogo;
+        private ImageView mImgLogo, mImageMore;
         private TextView mTxtNameCoupon, mTxtPriceCoupon, mTxtDescription, mTxtTimeCoupon;
         private Button mQRCode;
 
@@ -127,11 +128,15 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
             super(itemView);
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.app_icon);
+            mImageMore = (ImageView) itemView.findViewById(R.id.image_more);
             mTxtNameCoupon = (TextView) itemView.findViewById(R.id.txt_company_name);
             mTxtPriceCoupon = (TextView) itemView.findViewById(R.id.txt_price_coupon);
             mTxtTimeCoupon = (TextView) itemView.findViewById(R.id.txt_time);
             mTxtDescription = (TextView) itemView.findViewById(R.id.txt_description);
             mQRCode = (Button) itemView.findViewById(R.id.btn_qr_code);
+            if (!MainApplication.sIsAdmin) {
+                mImageMore.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
