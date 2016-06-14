@@ -2,8 +2,12 @@ package com.ln.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,9 +31,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by Nhahv on 5/21/2016.
- *
  */
 
 public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAdapter.ViewHolder> {
@@ -51,10 +58,10 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        final CouponTemplate item = mListCoupon.get(position);
-        if (item != null) {
+        final CouponTemplate itemCoupon = mListCoupon.get(position);
+        if (itemCoupon != null) {
             Company company = SaveData.company;
             if (company != null) {
                 holder.mTxtNameCoupon.setText(company.getName());
@@ -63,12 +70,12 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
                         .placeholder(R.drawable.ic_profile)
                         .into(holder.mImgLogo);
             }
-            holder.mTxtPriceCoupon.setText(item.getValue());
+            holder.mTxtPriceCoupon.setText(itemCoupon.getValue());
 
-            Date date = convertStringToDate(item.getCreated_date());
-            String dayLeft = dayLeft(date, item.getDuration()) + "";
+            Date date = convertStringToDate(itemCoupon.getCreated_date());
+            String dayLeft = dayLeft(date, itemCoupon.getDuration()) + "";
             holder.mTxtTimeCoupon.setText(dayLeft + " ngày");
-            holder.mTxtDescription.setText(item.getContent());
+            holder.mTxtDescription.setText(itemCoupon.getContent());
 
 
             holder.mQRCode.setOnClickListener(new View.OnClickListener() {
@@ -76,13 +83,68 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
                 public void onClick(View v) {
 
                     Intent intent = new Intent(mContext, TestQRCode.class);
-                    intent.putExtra(Models.VALUE, item.getValue());
-                    intent.putExtra(Models.DURATION, item.getDuration());
-                    intent.putExtra(Models.COUPON_TEMpLATE_ID, item.getCoupon_template_id());
+                    intent.putExtra(Models.VALUE, itemCoupon.getValue());
+                    intent.putExtra(Models.DURATION, itemCoupon.getDuration());
+                    intent.putExtra(Models.COUPON_TEMpLATE_ID, itemCoupon.getCoupon_template_id());
                     mContext.startActivity(intent);
                 }
             });
+
+            holder.mImageMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+//
+                    PopupMenu popupMenu = new PopupMenu(mContext, view);
+                    final MenuInflater inflater = popupMenu.getMenuInflater();
+                    inflater.inflate(R.menu.menu_delete_coupon, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.menu_delete:
+                                    deleteCouponTemplate(itemCoupon.getCoupon_template_id(), view, position);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+                    popupMenu.show();
+                }
+            });
         }
+    }
+
+    private void deleteCouponTemplate(String coupon_template_id, final View view, final int position) {
+        CouponTemplate template = new CouponTemplate();
+        template.setCoupon_template_id(coupon_template_id);
+
+        //template.created_date= new Date();
+
+        Call<CouponTemplate> call2 = MainApplication.getAPI().deleteCouponTemplate(template);
+        call2.enqueue(new Callback<CouponTemplate>() {
+
+            @Override
+            public void onResponse(Call<CouponTemplate> arg0,
+                                   Response<CouponTemplate> arg1) {
+
+                getSnackBar(view, mContext.getString(R.string.delete_coupon_success));
+                mListCoupon.remove(position);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<CouponTemplate> arg0, Throwable arg1) {
+
+                getSnackBar(view, mContext.getString(R.string.delete_coupon_fail));
+            }
+        });
+    }
+
+
+    private void getSnackBar(View view, String text) {
+        Snackbar.make(view, text, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override
@@ -139,5 +201,4 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
             }
         }
     }
-
 }

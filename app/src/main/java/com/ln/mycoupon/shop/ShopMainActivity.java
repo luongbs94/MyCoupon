@@ -20,10 +20,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.fragment.shop.HistoryFragment;
-import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.CouponFragment;
+import com.ln.fragment.shop.HistoryFragment;
 import com.ln.fragment.shop.NewsFragment;
+import com.ln.fragment.shop.SettingFragment;
 import com.ln.model.Company;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
@@ -45,9 +45,13 @@ public class ShopMainActivity extends AppCompatActivity
 
 
         Company company = SaveData.getCompany();
-//        if (company.getUser_id() != null || company.getUser1_admin().equals("1") || company.getUser2_admin().equals("1")) {
-//            MainApplication.sIsAdmin = true;
-//        }
+        if (company != null) {
+            if (company.getUser_id() != null
+                    || (company.getUser1_admin() != null && company.getUser1_admin().equals("1"))
+                    || (company.getUser1_admin() != null && company.getUser2_admin().equals("1"))) {
+                MainApplication.sIsAdmin = true;
+            }
+        }
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -114,7 +118,8 @@ public class ShopMainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
+//        Fragment fragment = new CouponFragment();
         int id = item.getItemId();
 
         switch (id) {
@@ -156,7 +161,7 @@ public class ShopMainActivity extends AppCompatActivity
         return true;
     }
 
-    public void startFragment(Fragment fragment) {
+    private void startFragment(Fragment fragment) {
         String backStateName = fragment.getClass().getName();
         String fragmentTag = backStateName;
 

@@ -22,6 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by luongnguyen on 4/1/16.
+ *
  */
 public class MainApplication extends MultiDexApplication {
 

@@ -82,31 +82,6 @@ public class CouponFragment extends Fragment {
         mLnLayout = (LinearLayout) mView.findViewById(R.id.ln_fragment_coupon);
     }
 
-    public void deleteCouponTemplate(String coupon_template_id) {
-        CouponTemplate template = new CouponTemplate();
-        template.setCoupon_template_id(coupon_template_id);
-
-        //template.created_date= new Date();
-
-        Call<CouponTemplate> call2 = mApiServices.deleteCouponTemplate(template);
-        call2.enqueue(new Callback<CouponTemplate>() {
-
-            @Override
-            public void onResponse(Call<CouponTemplate> arg0,
-                                   Response<CouponTemplate> arg1) {
-
-                getSnackBar(getString(R.string.delete_coupon_success));
-                getCouponTemplate();
-            }
-
-            @Override
-            public void onFailure(Call<CouponTemplate> arg0, Throwable arg1) {
-                Log.d(TAG, "fail");
-                getSnackBar(getString(R.string.delete_coupon_fail));
-            }
-        });
-    }
-
     private void getSnackBar(String text) {
         Snackbar.make(mLnLayout, text, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();

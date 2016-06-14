@@ -7,6 +7,7 @@ import com.ln.mycoupon.R;
 
 /**
  * Created by luongnguyen on 6/7/16.
+ *
  */
 public class ItemClickSupport {
 

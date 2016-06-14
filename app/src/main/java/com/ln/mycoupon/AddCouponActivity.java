@@ -26,7 +26,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/2/16.
- * 
+ *
  */
 public class AddCouponActivity extends AppCompatActivity {
 

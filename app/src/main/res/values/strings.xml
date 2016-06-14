@@ -76,5 +76,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create">CREATE</string>
     <string name="add">AddMessage</string>
+    <string name="delete">Delete</string>
 
 </resources>
