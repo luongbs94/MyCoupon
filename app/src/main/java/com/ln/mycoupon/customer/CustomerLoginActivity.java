@@ -102,10 +102,10 @@ public class CustomerLoginActivity extends AppCompatActivity {
         mAccessTokenTracker.stopTracking();
     }
 
-    public void getCompanyByUserId(String userId) {
+    public void getCompanyByUserId(final String userId) {
 
 //        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId(userId);
-        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId("10205539341392320");
+        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId(userId);
         call3.enqueue(new Callback<List<Company1>>() {
 
             @Override
@@ -116,12 +116,15 @@ public class CustomerLoginActivity extends AppCompatActivity {
                 Log.d(TAG, templates.size() + "");
 
                 SaveData.listCompany = templates;
+                SaveData.USER_ID = userId;
 
                 String data = gson.toJson(SaveData.listCompany);
                 MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
                 MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, true);
                 MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
                 MainApplication.editor.commit();
+
+
 
                 start();
             }

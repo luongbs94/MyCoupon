@@ -107,7 +107,7 @@ public class CouponFragment extends Fragment {
 
     private void getCompanyByUserId() {
 
-        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId("10205539341392320");
+        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId(SaveData.USER_ID);
         call3.enqueue(new Callback<List<Company1>>() {
 
             @Override

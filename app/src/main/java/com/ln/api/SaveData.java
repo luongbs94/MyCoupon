@@ -24,6 +24,7 @@ public class SaveData {
     }
 
     public static String web_token = "";
+    public static String USER_ID = "";
 
 
 }

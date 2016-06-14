@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.ln.adapter.Message2Adapter;
 import com.ln.api.LoveCouponAPI;
+import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
@@ -71,7 +72,7 @@ public class NewsFragment2 extends Fragment {
     public void getMessage() {
 
         listMessage = new ArrayList<>();
-        Call<List<Message>> call = apiService.getNewsByUserId("10205539341392320");
+        Call<List<Message>> call = apiService.getNewsByUserId(SaveData.USER_ID);
         call.enqueue(new Callback<List<Message>>() {
 
             @Override

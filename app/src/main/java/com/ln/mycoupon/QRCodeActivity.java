@@ -12,6 +12,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.ln.api.LoveCouponAPI;
+import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company1;
 import com.ln.model.Coupon;
@@ -129,7 +130,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
 
 
                     }else{
-                        updateCoupon(coupon_id, "10205539341392320", coupon.getDuration());
+                        updateCoupon(coupon_id, SaveData.USER_ID, coupon.getDuration());
                     }
 
                 }else{
