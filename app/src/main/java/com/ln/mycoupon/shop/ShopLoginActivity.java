@@ -188,6 +188,9 @@ public class ShopLoginActivity extends AppCompatActivity
                 MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
                 MainApplication.editor.commit();
 
+                Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
+                startActivity(intent);
+
                 finish();
             }
 
@@ -266,7 +269,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
         if (mAccessToken != null) {
 //            mStatusTextView.setText(mAccessToken.getUserId() + "");
-//            Log.i("Tagsss", mAccessToken.getUserId() + "");
+            Log.i("Tagsss", mAccessToken.getUserId() + "");
 
         }
     }
@@ -332,6 +335,7 @@ public class ShopLoginActivity extends AppCompatActivity
                                 Log.d(TAG, profile2.getLinkUri() + "");
                                 getCompanyProfileSocial(profile2.getId());
                                 mProfileTracker.stopTracking();
+
                             }
                         };
                         // no need to call startTracking() on mProfileTracker

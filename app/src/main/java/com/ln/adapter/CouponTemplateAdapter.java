@@ -63,7 +63,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
         final CouponTemplate itemCoupon = mListCoupon.get(position);
         if (itemCoupon != null) {
             Company company = SaveData.company;
-            if (company != null) {
+            if (company != null && company.getLogo() != null) {
                 holder.mTxtNameCoupon.setText(company.getName());
                 Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
                         .asBitmap()

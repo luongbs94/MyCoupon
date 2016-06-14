@@ -160,12 +160,15 @@ public class SettingFragment extends Fragment {
             mTxtAddress.setText(company.getAddress());
         }
 
-        String logo = company.getLogo();
+        if(company.getLogo() != null){
+            String logo = company.getLogo();
 
-        Glide.with(getActivity()).load(MainApplication.convertToBytes(logo))
-                .asBitmap()
-                .placeholder(R.drawable.ic_profile)
-                .into(mImgLogo);
+            Glide.with(getActivity()).load(MainApplication.convertToBytes(logo))
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_profile)
+                    .into(mImgLogo);
+        }
+
 
         if (company.user1 != null) {
             user1.setText(company.user1);
@@ -183,18 +186,21 @@ public class SettingFragment extends Fragment {
             pass2.setText(company.pass2);
         }
 
-        if (company.user1_admin.equals("1")) {
-            checkBox.setChecked(true);
-        } else {
-            checkBox.setChecked(false);
+        if(company.user1_admin != null){
+            if (company.user1_admin.equals("1")) {
+                checkBox.setChecked(true);
+            } else {
+                checkBox.setChecked(false);
+            }
         }
 
-        if (company.user2_admin.equals("1")) {
-            checkBox1.setChecked(true);
-        } else {
-            checkBox1.setChecked(false);
+        if(company.user2_admin != null) {
+            if (company.user2_admin.equals("1")) {
+                checkBox1.setChecked(true);
+            } else {
+                checkBox1.setChecked(false);
+            }
         }
-
     }
 
     private void addEvents() {
