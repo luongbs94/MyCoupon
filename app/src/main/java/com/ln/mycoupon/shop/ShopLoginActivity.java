@@ -42,6 +42,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 3/30/16.
+ *
  */
 public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {

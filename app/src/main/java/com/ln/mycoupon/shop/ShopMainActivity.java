@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -45,6 +46,7 @@ public class ShopMainActivity extends AppCompatActivity
 
 
         Company company = SaveData.getCompany();
+
         if (company != null) {
             if (company.getUser_id() != null
                     || (company.getUser1_admin() != null && company.getUser1_admin().equals("1"))
@@ -92,13 +94,18 @@ public class ShopMainActivity extends AppCompatActivity
         mTxtNameCompany = (TextView) headView.findViewById(R.id.txt_name_nav);
         mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
-        if (company.getLogo() != null) {
+        if (company != null && company.getLogo() != null) {
             Glide.with(this).load(MainApplication
                     .convertToBytes(company.getLogo()))
                     .into(mImageLogo);
+            Log.d(TAG, company.getLogo());
         }
-        mTxtNameCompany.setText(company.getName());
-        mTxtAddress.setText(company.getAddress());
+        if (company != null && company.getName() != null) {
+            mTxtNameCompany.setText(company.getName());
+        }
+        if (company != null && company.getAddress() != null) {
+            mTxtAddress.setText(company.getAddress());
+        }
 
         startFragment(new CouponFragment());
 
@@ -119,30 +126,30 @@ public class ShopMainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-//        Fragment fragment = new CouponFragment();
+        Fragment fragment = new CouponFragment();
         int id = item.getItemId();
 
         switch (id) {
             case R.id.nav_coupon:
                 currentPosition = 0;
                 setTitle(getString(R.string.my_coupon));
-                startFragment(new CouponFragment());
+                fragment = new CouponFragment();
                 break;
             case R.id.nav_new:
                 currentPosition = 1;
                 setTitle(getString(R.string.news));
-                startFragment(new NewsFragment());
+                fragment = new NewsFragment();
                 break;
             case R.id.nav_history:
                 currentPosition = 2;
                 setTitle(getString(R.string.history));
-                startFragment(new HistoryFragment());
+                fragment = new HistoryFragment();
                 break;
             case R.id.nav_manage:
                 currentPosition = 2;
                 mFbButton.setVisibility(View.GONE);
                 setTitle(getString(R.string.setting));
-                startFragment(new SettingFragment());
+                fragment = new SettingFragment();
                 break;
             case R.id.logout:
                 MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
@@ -155,9 +162,11 @@ public class ShopMainActivity extends AppCompatActivity
         if (id != R.id.nav_manage) {
             mFbButton.setVisibility(View.VISIBLE);
         }
+        startFragment(fragment);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
@@ -176,5 +185,4 @@ public class ShopMainActivity extends AppCompatActivity
             ft.commit();
         }
     }
-
 }

@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.ItemImage;
 import com.ln.model.ListItemImages;
@@ -71,87 +73,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         Company company = SaveData.company;
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
-//            Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
-//                    .asBitmap()
-//                    .placeholder(R.drawable.ic_profile)
-//                    .into(holder.mImgLogo);
+            if (company.getLogo() != null) {
+                Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
+                        .asBitmap()
+                        .placeholder(R.drawable.ic_profile)
+                        .into(holder.mImgLogo);
+            }
         }
 
         holder.mTxtTile.setText(news.getTitle());
         holder.mTxtContent.setText(news.getContent());
         holder.mTxtLink.setText(news.getLink());
-
-//        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy");
-//
-//        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        String date = formatter.format(news.getCreated_date());
-//        holder.mTxtTime.setText(date);
-
-//        final int size = mListImages.size();
-//        if (news.getImages_link() != null) {
-//
-//            mListItemImages = new ArrayList<>();
-//            sRoot.child(news.getImages_link()).addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//
-//                        ItemImage itemImage = snapshot.getValue(ItemImage.class);
-////                        for (int i = 0; i < size; i++) {
-////                            if (itemImage.getIdNews().equals(news.getMessage_id())) {
-////                                mList[i].getListImages().add(itemImage);
-////                            }
-////                        }
-//                        if (itemImage.getIdNews().equals(news.getMessage_id())) {
-//                            mListItemImages.add(itemImage);
-//                        }
-//
-////                        mListImages.get(mPosition).getListImages().addAll(mListItemImages);
-//                        GridAdapter mGridAdapter = new GridAdapter(mContext, mListItemImages);
-//                        holder.mRecyclerView.setAdapter(mGridAdapter);
-//                        Log.d(TAG, itemImage.getImages());
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(FirebaseError firebaseError) {
-//
-//                }
-//            });
-//
-//        }
-
-//        if (news.getImages_link() != null && news.getImages_link().equals(url_image)) {
-//            final LoadImages loadImages = new LoadImages(holder, url_image);
-//            mListItemImages = new ArrayList<>();
-//            sRoot.child(loadImages.getUrl()).addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//
-//                        Log.d("ActivityMessages", snapshot.toString());
-//                        ItemImage itemImage = snapshot.getValue(ItemImage.class);
-////                        if (!isExists(itemImage, mListItemImages)) {
-////                            mListItemImages.add(itemImage);
-////                        }
-//
-//
-//
-//                        GridAdapter mGridAdapter = new GridAdapter(mContext, mListItemImages);
-//                        loadImages.getViewHolder().mRecyclerView.setAdapter(mGridAdapter);
-//                        Log.d("NewsAdapter", itemImage.getImages());
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(FirebaseError firebaseError) {
-//
-//                }
-//            });
-//
-//        }
 
     }
 

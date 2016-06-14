@@ -36,6 +36,7 @@ import retrofit2.Response;
 
 /**
  * Created by Nhahv on 5/21/2016.
+ *
  */
 
 public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAdapter.ViewHolder> {

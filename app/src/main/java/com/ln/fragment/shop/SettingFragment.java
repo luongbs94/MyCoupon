@@ -46,6 +46,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/14/16.
+ *
  */
 public class SettingFragment extends Fragment {
 
