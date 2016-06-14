@@ -32,6 +32,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/8/16.
+ *
  */
 public class CouponFragment extends Fragment {
     private LoveCouponAPI mApiServices;
@@ -107,14 +108,14 @@ public class CouponFragment extends Fragment {
 
     private void getCompanyByUserId() {
 
-        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId(SaveData.USER_ID);
+        Call<List<Company1>> call3 = MainApplication.apiService.getCompaniesByUserId(SaveData.USER_ID);
         call3.enqueue(new Callback<List<Company1>>() {
 
             @Override
             public void onResponse(Call<List<Company1>> arg0,
                                    Response<List<Company1>> arg1) {
                 List<Company1> templates = arg1.body();
-                System.out.println(templates.size());
+//                System.out.println(templates.size());
                 SaveData.listCompany = templates;
 
                 swipeContainer.setRefreshing(false);

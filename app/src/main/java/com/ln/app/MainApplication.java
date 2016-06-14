@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.firebase.client.Firebase;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company1;
@@ -57,11 +56,18 @@ public class MainApplication extends MultiDexApplication {
     // size images firebase
     public static final int WIDTH_IMAGES = 450;
 
+    public static final String PATH_IMAGE_FACEBOOK = "https://graph.facebook.com/";
+    public static final String PATH_IMAGE_FACEBOOK_END = "/picture?type=large";
+
+    private static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
+
+
+    public static boolean sIsAdmin = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        Firebase.setAndroidContext(getApplicationContext());
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
@@ -75,9 +81,10 @@ public class MainApplication extends MultiDexApplication {
 
 
         Retrofit retrofit1 = new Retrofit.Builder()
-                .baseUrl("http://188.166.179.187:3000")
+                .baseUrl(URL_UPDATE_IMAGE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         apiService = retrofit.create(LoveCouponAPI.class);
 
         apiService1 = retrofit1.create(LoveCouponAPI.class);
@@ -130,6 +137,10 @@ public class MainApplication extends MultiDexApplication {
         return apiService;
     }
 
+    public static LoveCouponAPI getAPI1() {
+        return apiService1;
+    }
+
     public static String getRandomString(final int sizeOfRandomString) {
         final Random random = new Random();
         final StringBuilder sb = new StringBuilder(sizeOfRandomString);
@@ -147,7 +158,7 @@ public class MainApplication extends MultiDexApplication {
         return path.substring(path.indexOf(",") + 1);
     }
 
-    public static  String convertToBitmap(ImageView imageView) {
+    public static String convertToBitmap(ImageView imageView) {
 
         BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
         Bitmap bitmap = bitmapDrawable.getBitmap();

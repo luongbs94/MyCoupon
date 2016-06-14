@@ -28,6 +28,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/6/16.
+ *
  */
 public class CouponFragment extends Fragment {
 
@@ -36,9 +37,10 @@ public class CouponFragment extends Fragment {
     private View mView;
     private LinearLayout mLnLayout;
     private RecyclerView mRecCoupon;
+    private SwipeRefreshLayout swipeContainer;
+
     private List<CouponTemplate> mListCoupon = new ArrayList<>();
     private String TAG = getClass().getSimpleName();
-    private SwipeRefreshLayout swipeContainer;
 
     public CouponFragment() {
     }
@@ -110,7 +112,7 @@ public class CouponFragment extends Fragment {
                 .setAction("Action", null).show();
     }
 
-    public void getCouponTemplate() {
+    private void getCouponTemplate() {
 
         mListCoupon.clear();
 
