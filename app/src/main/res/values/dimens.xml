@@ -30,6 +30,8 @@
     <dimen name="size_82">82dp</dimen>
     <dimen name="size_56">56dp</dimen>
     <dimen name="size_12dp">12dp</dimen>
+    <dimen name="size_30">30dp</dimen>
+    <dimen name="size_12">12dp</dimen>
 
 
 </resources>

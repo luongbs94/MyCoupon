@@ -109,6 +109,9 @@ public class ShopMainActivity extends AppCompatActivity
             mTxtAddress.setText(company.getAddress());
         }
 
+        if (!MainApplication.sIsAdmin) {
+            mFbButton.setVisibility(View.GONE);
+        }
         startFragment(new CouponFragment());
 
     }
@@ -164,9 +167,17 @@ public class ShopMainActivity extends AppCompatActivity
             default:
                 break;
         }
-        if (id != R.id.nav_manage) {
-            mFbButton.setVisibility(View.VISIBLE);
+
+        if (MainApplication.sIsAdmin) {
+            if (id == R.id.nav_coupon || id == R.id.nav_new) {
+                mFbButton.setVisibility(View.VISIBLE);
+            } else if (R.id.nav_history == id || R.id.nav_manage == id || R.id.nav_view == id) {
+                mFbButton.setVisibility(View.GONE);
+            }
+        } else {
+            mFbButton.setVisibility(View.GONE);
         }
+
         startFragment(fragment);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

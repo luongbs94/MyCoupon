@@ -25,6 +25,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/6/16.
+ * show news in shop
  */
 public class NewsFragment extends Fragment {
 
@@ -78,7 +79,7 @@ public class NewsFragment extends Fragment {
         mRecNews.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    public void getNewsByCompanyId() {
+    private void getNewsByCompanyId() {
 
         mListNews = new ArrayList<>();
         Call<List<Message>> call = mApiServices.getNewsByCompanyId(7);

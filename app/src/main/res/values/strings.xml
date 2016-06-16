@@ -78,5 +78,8 @@
     <string name="add">AddMessage</string>
     <string name="delete">Delete</string>
     <string name="show_password">Show Password</string>
+    <string name="like">Like</string>
+    <string name="share_news">Share</string>
+    <string name="more">More</string>
 
 </resources>

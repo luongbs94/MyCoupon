@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * Created by Nhahv on 5/21/2016.
- *
+ * adapter connect news fragments
  */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
