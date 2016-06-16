@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
@@ -34,7 +35,6 @@ public class PreviewImagesFragment extends Fragment {
 
 
     public PreviewImagesFragment() {
-        // Required empty public constructor
     }
 
 
@@ -50,21 +50,12 @@ public class PreviewImagesFragment extends Fragment {
 
         Log.d(TAG, string);
         final PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImagePreview);
-//        Glide.with(container.getContext())
-//                .load(MainApplication.convertToBytes(string))
-//                .asBitmap()
-//                .into(new SimpleTarget<Bitmap>(480, 800) {
-//                    @Override
-//                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                        mImagePreview.setImageBitmap(resource);
-//                        mAttacher.update();
-//                    }
-//                });
+        Glide.with(container.getContext())
+                .load(string)
+                .into(mImagePreview);
         mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {
-//                PreviewImagesActivity activity = (PreviewImagesActivity) getActivity();
-//                activity.switchBarVisibility();
             }
         });
         return mView;

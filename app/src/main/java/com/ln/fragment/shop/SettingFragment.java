@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,7 @@ public class SettingFragment extends Fragment {
 
     private FloatingActionButton mFabDoneSave;
     private CheckBox mChbShowPass;
+    private LinearLayout mLinearLayout;
 
 
     @Override
@@ -98,6 +100,12 @@ public class SettingFragment extends Fragment {
 
         mFabDoneSave = (FloatingActionButton) v.findViewById(R.id.fab_done);
         mChbShowPass = (CheckBox) v.findViewById(R.id.chb_show_password);
+        mLinearLayout = (LinearLayout) v.findViewById(R.id.linear_information);
+
+        if (!MainApplication.sIsAdmin) {
+            mLinearLayout.setVisibility(View.GONE);
+            mFabDoneSave.setVisibility(View.GONE);
+        }
 
         nameCompany = (EditText) v.findViewById(R.id.name_company);
         addressCompany = (EditText) v.findViewById(R.id.address_company);

@@ -11,13 +11,16 @@ import android.util.Log;
 
 import com.ln.app.MainApplication;
 import com.ln.fragment.PreviewImagesFragment;
-import com.ln.model.ListItemImages;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PreviewImagesActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
-    private ListItemImages mListImages = new ListItemImages();
     private int mPosition;
+    private List<String> mListImages = new ArrayList<>();
+
     private String TAG = getClass().getSimpleName();
 
     @Override
@@ -38,8 +41,7 @@ public class PreviewImagesActivity extends AppCompatActivity {
         if (bundle != null) {
             mPosition = bundle.getInt(MainApplication.POSITION);
             Log.d(TAG, mPosition + "");
-            mListImages = (ListItemImages) bundle.getSerializable(MainApplication.LIST_IMAGES);
-            Log.d(TAG, mListImages.getListImages().size() + "");
+            mListImages = (List<String>) bundle.getSerializable(MainApplication.LIST_IMAGES);
         }
     }
 
@@ -72,18 +74,18 @@ public class PreviewImagesActivity extends AppCompatActivity {
     private class PreviewAdapter extends FragmentPagerAdapter {
 
 
-        public PreviewAdapter(FragmentManager fm) {
+        PreviewAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return PreviewImagesFragment.getInstance(mListImages.getListImages().get(position).getImages());
+            return PreviewImagesFragment.getInstance(mListImages.get(position));
         }
 
         @Override
         public int getCount() {
-            return mListImages.getListImages().size();
+            return mListImages.size();
         }
     }
 }

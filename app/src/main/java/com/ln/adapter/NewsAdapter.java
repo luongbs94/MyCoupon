@@ -14,12 +14,12 @@ import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.ItemImage;
-import com.ln.model.ListItemImages;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
 import com.ln.views.MyTextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,35 +28,15 @@ import java.util.List;
  */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
-
     private Context mContext;
     private List<Message> mListNews;
 
-
-    private List<ListItemImages> mListImages = new ArrayList<>();
-    private List<String> mListIdNews = new ArrayList<>();
-    private List<GridAdapter> mListGridAdapters;
-
     private String TAG = getClass().getSimpleName();
 
-    private List<ItemImage> mListItemImages = new ArrayList<>();
-    private int mPosition;
-
-    private ListItemImages mList[];
 
     public NewsAdapter(Context context, List<Message> listNews) {
         mContext = context;
         mListNews = listNews;
-
-        mList = new ListItemImages[mListNews.size()];
-
-        for (Message message : mListNews) {
-            mListIdNews.add(message.getMessage_id());
-        }
-
-        for (int i = 0; i < mList.length; i++) {
-            mList[i] = new ListItemImages();
-        }
     }
 
 
@@ -66,10 +46,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final Message news = mListNews.get(position);
-        mPosition = position;
+        Message news = mListNews.get(position);
+
         Company company = SaveData.company;
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
@@ -84,6 +64,32 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.mTxtTile.setText(news.getTitle());
         holder.mTxtContent.setText(news.getContent());
         holder.mTxtLink.setText(news.getLink());
+
+        String strImages = news.getImages_link();
+        if (strImages != null) {
+            List<String> listImages = new ArrayList<>();
+
+            String[] listStrImages = strImages.split(";");
+            listImages.addAll(Arrays.asList(listStrImages));
+            GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
+            holder.mRecyclerView.setAdapter(gridAdapter);
+        }
+
+
+        holder.mImgLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        holder.mImgShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
     }
 
@@ -115,7 +121,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             mTxtContent = (MyTextView) itemView.findViewById(R.id.txt_content_news);
             mTxtLink = (TextView) itemView.findViewById(R.id.txt_link_news);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
-            mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
+            mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 10));
         }
 
 

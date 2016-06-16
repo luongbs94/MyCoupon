@@ -51,6 +51,7 @@
 
 
             <LinearLayout
+                android:id="@+id/linear_information"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
@@ -155,7 +156,6 @@
                             android:textSize="@dimen/size_18sp" />
 
                         <EditText
-                            android:text="hoangnha"
                             android:id="@+id/password2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -163,6 +163,7 @@
                             android:inputType="textPassword"
                             android:paddingBottom="@dimen/size_12dp"
                             android:paddingTop="@dimen/size_12dp"
+                            android:text="hoangnha"
                             android:textColor="@drawable/text_color"
                             android:textSize="@dimen/size_18sp" />
 
@@ -218,6 +219,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_done" />
+        android:src="@drawable/ic_done_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
