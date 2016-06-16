@@ -19,7 +19,7 @@ import com.ln.app.MainApplication;
 import com.ln.gcm.GcmIntentService;
 import com.ln.model.Company;
 import com.ln.model.Company1;
-import com.ln.mycoupon.customer.CustomerMainActivity;
+import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.mycoupon.shop.ShopMainActivity;
 
@@ -119,7 +119,7 @@ public class FirstActivity extends AppCompatActivity {
     }
 
     private void onClickLoginCustomer() {
-        Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
+        Intent intent = new Intent(FirstActivity.this, CustomerLoginActivity.class);
         startActivity(intent);
     }
 

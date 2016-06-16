@@ -80,6 +80,7 @@ public class CouponFragment extends Fragment {
     }
 
     private void initViews() {
+
         mRecCoupon = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLnLayout = (LinearLayout) mView.findViewById(R.id.ln_fragment_coupon);

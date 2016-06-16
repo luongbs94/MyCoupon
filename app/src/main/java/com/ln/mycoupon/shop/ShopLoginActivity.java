@@ -146,8 +146,6 @@ public class ShopLoginActivity extends AppCompatActivity
 
                 MainApplication.sIdCompany = SaveData.company.getCompany_id();
 
-                Log.d("MainApplication", MainApplication.sIdCompany + "");
-
                 Gson gson = new Gson();
 
                 String data = gson.toJson(SaveData.company);
@@ -159,6 +157,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
                 Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
+                finish();
 
             }
 

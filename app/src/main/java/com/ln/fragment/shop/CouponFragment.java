@@ -97,7 +97,6 @@ public class CouponFragment extends Fragment {
             idCompany = SaveData.company.getCompany_id();
         }
 
-        Log.d("MainApplication", MainApplication.sIdCompany + "");
         //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
         Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates("abc", idCompany);
         call.enqueue(new Callback<List<CouponTemplate>>() {
