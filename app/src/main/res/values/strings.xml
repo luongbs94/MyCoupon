@@ -59,7 +59,7 @@
     <string name="email">hailh@vnu.edu.vn</string>
     <string name="price">123234</string>
     <string name="txt_time_coupon">30 ngày</string>
-    <string name="check_admin">Check admin</string>
+    <string name="check_admin">Admin</string>
     <string name="save">SAVE</string>
     <string name="my_coupon">My Coupon</string>
     <string name="news">Tin mới</string>
@@ -77,5 +77,6 @@
     <string name="create">CREATE</string>
     <string name="add">AddMessage</string>
     <string name="delete">Delete</string>
+    <string name="show_password">Show Password</string>
 
 </resources>

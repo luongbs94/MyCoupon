@@ -34,7 +34,9 @@ public class ShopMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private String TAG = getClass().getSimpleName();
+
     private int currentPosition = 0;
+
     private FloatingActionButton mFbButton;
     private ImageView mImageLogo;
     private TextView mTxtNameCompany, mTxtAddress;
@@ -177,11 +179,10 @@ public class ShopMainActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
 
-        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) { //fragment not in back stack, create it.
+        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
             FragmentTransaction ft = manager.beginTransaction();
             ft.replace(R.id.content_main, fragment, fragmentTag);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            //ft.addToBackStack(backStateName);
             ft.commit();
         }
     }

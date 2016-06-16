@@ -9,13 +9,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -23,6 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +35,6 @@ import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -46,13 +47,14 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/14/16.
- *
+ * setting account shop
  */
 public class SettingFragment extends Fragment {
 
     private static final String TAG = "SettingFragment";
-    private MaterialEditText nameCompany, addressCompany, user1, pass1, user2, pass2;
+    private EditText addressCompany, user1, pass1, user2, pass2;
     private CheckBox checkBox, checkBox1;
+    private EditText nameCompany;
     private CardView mCardView;
     private LoveCouponAPI mLoveCouponAPI;
     private CircleImageView mImgLogo;
@@ -60,8 +62,9 @@ public class SettingFragment extends Fragment {
 
     private Uri mFileUri;
 
-    private AppBarLayout mAppBarLayout;
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private FloatingActionButton mFabDoneSave;
+    private CheckBox mChbShowPass;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,46 +87,25 @@ public class SettingFragment extends Fragment {
         mLoveCouponAPI = MainApplication.getAPI();
 
         initViews(v);
-        initCollapsingToolBar();
+//        initCollapsingToolBar();
         init();
         addEvents();
         return v;
     }
 
-    private void initCollapsingToolBar() {
-
-        mAppBarLayout.setExpanded(true);
-        mCollapsingToolbarLayout.setTitle(" ");
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-
-            boolean isShow = false;
-            int scrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-
-                if (scrollRange == -1) {
-                    scrollRange = mAppBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    mCollapsingToolbarLayout.setTitle(getString(R.string.setting));
-                    isShow = true;
-                } else if (isShow) {
-                    mCollapsingToolbarLayout.setTitle(" ");
-                    isShow = false;
-                }
-            }
-        });
-    }
 
     private void initViews(View v) {
-        nameCompany = (MaterialEditText) v.findViewById(R.id.name_company);
-        addressCompany = (MaterialEditText) v.findViewById(R.id.address_company);
-        user1 = (MaterialEditText) v.findViewById(R.id.username1);
-        pass1 = (MaterialEditText) v.findViewById(R.id.password1);
-        pass2 = (MaterialEditText) v.findViewById(R.id.password2);
 
-        user2 = (MaterialEditText) v.findViewById(R.id.username2);
+        mFabDoneSave = (FloatingActionButton) v.findViewById(R.id.fab_done);
+        mChbShowPass = (CheckBox) v.findViewById(R.id.chb_show_password);
+
+        nameCompany = (EditText) v.findViewById(R.id.name_company);
+        addressCompany = (EditText) v.findViewById(R.id.address_company);
+        user1 = (EditText) v.findViewById(R.id.username1);
+        pass1 = (EditText) v.findViewById(R.id.password1);
+        pass2 = (EditText) v.findViewById(R.id.password2);
+
+        user2 = (EditText) v.findViewById(R.id.username2);
 
         checkBox = (CheckBox) v.findViewById(R.id.check_admin);
         checkBox1 = (CheckBox) v.findViewById(R.id.check_admin2);
@@ -133,8 +115,6 @@ public class SettingFragment extends Fragment {
         mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_company);
         mTxtAddress = (TextView) v.findViewById(R.id.txt_address_company);
 
-        mAppBarLayout = (AppBarLayout) v.findViewById(R.id.app_bar);
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
 
     }
 
@@ -202,10 +182,14 @@ public class SettingFragment extends Fragment {
     }
 
     private void addEvents() {
+
         mCardView.setOnClickListener(new Events());
         mImgLogo.setOnClickListener(new Events());
         nameCompany.addTextChangedListener(new Events());
         addressCompany.addTextChangedListener(new Events());
+
+        mFabDoneSave.setOnClickListener(new Events());
+        mChbShowPass.setOnCheckedChangeListener(new Events());
     }
 
 
@@ -274,7 +258,7 @@ public class SettingFragment extends Fragment {
     }
 
 
-    private class Events implements View.OnClickListener, TextWatcher {
+    private class Events implements View.OnClickListener, TextWatcher, CompoundButton.OnCheckedChangeListener {
 
         @Override
         public void onClick(View view) {
@@ -284,6 +268,9 @@ public class SettingFragment extends Fragment {
                     break;
                 case R.id.img_logo_company:
                     onClickChangeLogo(mImgLogo);
+                    break;
+                case R.id.fab_done:
+                    onClickSaveCompany();
                     break;
                 default:
                     break;
@@ -380,6 +367,17 @@ public class SettingFragment extends Fragment {
                 mTxtNameCompany.setText(editable.toString());
             } else {
                 mTxtAddress.setText(editable.toString());
+            }
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                pass1.setTransformationMethod(null);
+                pass2.setTransformationMethod(null);
+            } else {
+                pass1.setTransformationMethod(new PasswordTransformationMethod());
+                pass2.setTransformationMethod(new PasswordTransformationMethod());
             }
         }
     }

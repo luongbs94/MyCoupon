@@ -4,13 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,16 +19,14 @@ import com.ln.app.MainApplication;
 import com.ln.gcm.GcmIntentService;
 import com.ln.model.Company;
 import com.ln.model.Company1;
-import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.customer.CustomerMainActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.mycoupon.shop.ShopMainActivity;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class FirstActivity extends AppCompatActivity {
@@ -50,29 +44,9 @@ public class FirstActivity extends AppCompatActivity {
         setContentView(R.layout.layout_first);
 
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.ln.mycoupon",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
+        initViews();
 
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-
-
-        setTitle(R.string.banla);
-
-        mBtnShop = (Button) findViewById(R.id.shop);
-        mBtnCustomer = (Button) findViewById(R.id.customer);
-
-        mBtnShop.setOnClickListener(new Events());
-        mBtnCustomer.setOnClickListener(new Events());
+        addEvents();
 
         if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINSHOP, false)) {
 
@@ -84,7 +58,7 @@ public class FirstActivity extends AppCompatActivity {
             String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
             SaveData.listCompany = gson.fromJson(data, new TypeToken<List<Company1>>() {
             }.getType());
-            start();
+            onClickLoginCustomer();
         }
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -116,7 +90,7 @@ public class FirstActivity extends AppCompatActivity {
         registerGCM();
 
         Date now = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z'('Z')'");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z'('Z')'", Locale.getDefault());
 //Convert the date from the local timezone to UTC timezone
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateFormateInUTC = formatter.format(now);
@@ -126,12 +100,25 @@ public class FirstActivity extends AppCompatActivity {
         Log.d(TAG, dateFormateInUTC);
     }
 
-    private void startLogin() {
+
+    private void initViews() {
+        setTitle(R.string.banla);
+
+        mBtnShop = (Button) findViewById(R.id.shop);
+        mBtnCustomer = (Button) findViewById(R.id.customer);
+    }
+
+    private void addEvents() {
+        mBtnShop.setOnClickListener(new Events());
+        mBtnCustomer.setOnClickListener(new Events());
+    }
+
+    private void onClickLoginShop() {
         Intent intent = new Intent(FirstActivity.this, ShopLoginActivity.class);
         startActivity(intent);
     }
 
-    private void start() {
+    private void onClickLoginCustomer() {
         Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
         startActivity(intent);
     }
@@ -169,18 +156,14 @@ public class FirstActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.shop:
-                    startLogin();
+                    onClickLoginShop();
                     break;
                 case R.id.customer:
-                    onClickCustomer();
+                    onClickLoginCustomer();
                     break;
                 default:
                     break;
             }
-        }
-
-        private void onClickCustomer() {
-            startActivity(new Intent(FirstActivity.this, CustomerLoginActivity.class));
         }
     }
 }
