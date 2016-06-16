@@ -36,7 +36,7 @@ import retrofit2.Response;
 
 /**
  * Created by Nhahv on 5/21/2016.
- *
+ * Set coupon for show
  */
 
 public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAdapter.ViewHolder> {
@@ -197,6 +197,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
             mTxtTimeCoupon = (TextView) itemView.findViewById(R.id.txt_time);
             mTxtDescription = (TextView) itemView.findViewById(R.id.txt_description);
             mQRCode = (Button) itemView.findViewById(R.id.btn_qr_code);
+
             if (!MainApplication.sIsAdmin) {
                 mImageMore.setVisibility(View.INVISIBLE);
             }

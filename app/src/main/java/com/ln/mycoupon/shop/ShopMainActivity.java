@@ -156,6 +156,9 @@ public class ShopMainActivity extends AppCompatActivity
             case R.id.logout:
                 MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
                 MainApplication.editor.commit();
+
+                SaveData.company = null;
+                MainApplication.sIsAdmin = false;
                 finish();
                 break;
             default:

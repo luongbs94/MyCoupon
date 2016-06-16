@@ -239,10 +239,9 @@ public class SettingFragment extends Fragment {
         }
 
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.getDefault()).format(new Date());
-        File mediaFile = new File(mediaStorageDir.getPath() +
-                File.separator + "IMG_" + timeStamp + ".jpg");
 
-        return mediaFile;
+        return new File(mediaStorageDir.getPath() +
+                File.separator + "IMG_" + timeStamp + ".jpg");
     }
 
 
