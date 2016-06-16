@@ -50,6 +50,7 @@ public class ShopMainActivity extends AppCompatActivity
         Company company = SaveData.getCompany();
 
         if (company != null) {
+
             if (company.getUser_id() != null
                     || (company.getUser1_admin() != null && company.getUser1_admin().equals("1"))
                     || (company.getUser2_admin() != null && company.getUser2_admin().equals("1"))) {
@@ -160,9 +161,11 @@ public class ShopMainActivity extends AppCompatActivity
                 MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
                 MainApplication.editor.commit();
 
+                finish();
+
                 SaveData.company = null;
                 MainApplication.sIsAdmin = false;
-                finish();
+
                 break;
             default:
                 break;

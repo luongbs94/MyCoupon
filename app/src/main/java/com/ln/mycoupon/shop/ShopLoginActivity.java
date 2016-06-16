@@ -42,7 +42,6 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 3/30/16.
- *
  */
 public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
@@ -144,6 +143,10 @@ public class ShopLoginActivity extends AppCompatActivity
                 List<Company> templates = arg1.body();
 
                 SaveData.company = templates.get(0);
+
+                MainApplication.sIdCompany = SaveData.company.getCompany_id();
+
+                Log.d("MainApplication", MainApplication.sIdCompany + "");
 
                 Gson gson = new Gson();
 

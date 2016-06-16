@@ -65,6 +65,9 @@ public class MainApplication extends MultiDexApplication {
 
     public static boolean sIsAdmin = false;
 
+    // id company when logout
+    public static int sIdCompany;
+
 
 
     public static final String FILE_URI = "file_uri";

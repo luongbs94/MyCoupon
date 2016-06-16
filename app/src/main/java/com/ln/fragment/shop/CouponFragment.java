@@ -28,7 +28,6 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/6/16.
- *
  */
 public class CouponFragment extends Fragment {
 
@@ -91,9 +90,16 @@ public class CouponFragment extends Fragment {
 
         mListCoupon.clear();
 
-//        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplatesByCompanyId(7);
+        int idCompany;
+        if (SaveData.company == null) {
+            idCompany = MainApplication.sIdCompany;
+        } else {
+            idCompany = SaveData.company.getCompany_id();
+        }
+
+        Log.d("MainApplication", MainApplication.sIdCompany + "");
         //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
-        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates("abc", SaveData.company.getCompany_id());
+        Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates("abc", idCompany);
         call.enqueue(new Callback<List<CouponTemplate>>() {
 
             @Override
