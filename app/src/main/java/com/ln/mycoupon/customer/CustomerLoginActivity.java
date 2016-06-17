@@ -106,7 +106,6 @@ public class CustomerLoginActivity extends AppCompatActivity {
             Log.i(TAG, mAccessToken.getUserId() + "");
             getCompanyByUserId(mAccessToken.getUserId());
 
-            //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
             updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
 
         }

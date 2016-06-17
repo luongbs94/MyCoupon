@@ -19,11 +19,15 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:excludeFromRecents="true"
+
         android:theme="@style/AppTheme">
 
         <activity
             android:name=".FirstActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:excludeFromRecents="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,12 +38,16 @@
         <activity
             android:name=".shop.ShopMainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:excludeFromRecents="true"
+            />
 
         <activity
             android:name=".customer.CustomerMainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:excludeFromRecents="true"
+            />
 
         <activity
             android:name=".shop.ShopLoginActivity"
@@ -74,16 +82,16 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name="com.ln.gcm.MyGcmPushReceiver"
-            android:exported="false">
+            android:name="com.ln.firebase.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
-        <service android:name="com.ln.gcm.GcmIntentService">
+        <service
+            android:name="com.ln.firebase.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
 
