@@ -47,10 +47,9 @@ public class FirstActivity extends AppCompatActivity {
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int height = displaymetrics.heightPixels;
-        int width = displaymetrics.widthPixels;
+        MainApplication.HEIGHT = displaymetrics.heightPixels;
+        MainApplication.WIDTH = displaymetrics.widthPixels;
 
-        Log.d(TAG, height + " - " + width);
 
         initViews();
 

@@ -79,6 +79,11 @@ public class MainApplication extends MultiDexApplication {
     public static final String COUPON_TEMpLATE_ID = "COUPON_TEMpLATE_ID" ;
 
 
+    // size screen
+
+    public static  int WIDTH ;
+    public static int HEIGHT;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -182,4 +187,6 @@ public class MainApplication extends MultiDexApplication {
         byte[] bytes = outputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
+
+
 }

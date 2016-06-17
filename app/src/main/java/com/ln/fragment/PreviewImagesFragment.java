@@ -4,8 +4,6 @@ package com.ln.fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,18 +48,14 @@ public class PreviewImagesFragment extends Fragment {
         mImagePreview = (ImageView) mView.findViewById(R.id.image_preview);
 
         String string = getArguments().getString(MainApplication.PATH);
-        string = MainApplication.getStringNoBase64(string);
 
-        Log.d(TAG, string);
+
         final PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImagePreview);
-
-
-
 
         Glide.with(container.getContext())
                 .load(string)
                 .asBitmap()
-                .into(new SimpleTarget<Bitmap>(480, 800) {
+                .into(new SimpleTarget<Bitmap>(MainApplication.WIDTH, 800) {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         mImagePreview.setImageBitmap(resource);
