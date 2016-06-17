@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.ln.app.MainApplication;
 import com.ln.fragment.PreviewImagesFragment;
@@ -22,17 +23,15 @@ public class PreviewImagesActivity extends AppCompatActivity {
     private List<String> mListImages = new ArrayList<>();
 
     private String TAG = getClass().getSimpleName();
+    private PreviewAdapter mPreviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview_images);
 
-
         initGetData();
         initViews();
-
-        addEvents();
     }
 
     private void initGetData() {
@@ -40,52 +39,56 @@ public class PreviewImagesActivity extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra(MainApplication.DATA);
         if (bundle != null) {
             mPosition = bundle.getInt(MainApplication.POSITION);
-            Log.d(TAG, mPosition + "");
             mListImages = (List<String>) bundle.getSerializable(MainApplication.LIST_IMAGES);
+            for (String string : mListImages) {
+                Log.d(TAG, string);
+            }
         }
     }
 
     private void initViews() {
+
+
+        getSupportActionBar().setTitle(R.string.show_images);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         mViewPager = (ViewPager) findViewById(R.id.preview_pager);
-        mViewPager.setAdapter(new PreviewAdapter(getSupportFragmentManager()));
+        mPreviewAdapter = new PreviewAdapter(getSupportFragmentManager());
+        mPreviewAdapter.setListImages(mListImages);
+        mViewPager.setAdapter(mPreviewAdapter);
+        mPreviewAdapter.notifyDataSetChanged();
         mViewPager.setCurrentItem(mPosition);
     }
 
-    private void addEvents() {
-
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class PreviewAdapter extends FragmentPagerAdapter {
 
+        private List<String> mListStringImages = new ArrayList<>();
 
-        PreviewAdapter(FragmentManager fm) {
+        public PreviewAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return PreviewImagesFragment.getInstance(mListImages.get(position));
+            return PreviewImagesFragment.getInstance(mListStringImages.get(position));
+        }
+
+        private void setListImages(List<String> listImages) {
+            mListStringImages.addAll(listImages);
         }
 
         @Override
         public int getCount() {
-            return mListImages.size();
+            return mListStringImages.size();
         }
     }
 }

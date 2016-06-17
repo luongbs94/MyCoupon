@@ -2,6 +2,7 @@
 <com.yongchun.library.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/size_2"
     android:orientation="vertical">
 
     <ImageView
@@ -9,5 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:contentDescription="@null"
         android:padding="@dimen/size_1" />
 </com.yongchun.library.widget.SquareRelativeLayout>

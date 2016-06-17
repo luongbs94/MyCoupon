@@ -124,7 +124,9 @@
         <activity
             android:name="com.yongchun.library.view.ImageCropActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PreviewImagesActivity" />
+        <activity android:name=".PreviewImagesActivity"
+
+            />
         <activity android:name=".customer.CustomerLoginActivity"></activity>
     </application>
 

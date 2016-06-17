@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
-import com.ln.model.ItemImage;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
 import com.ln.views.MyTextView;
@@ -46,7 +45,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         Message news = mListNews.get(position);
 
@@ -79,6 +78,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.mImgLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                if (holder.mImgLike.getDrawable().equals(mContext.getResources().getDrawable(R.drawable.ic_heart))) {
+//                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+//                } else {
+//                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
+//                }
+                holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
 
             }
         });
@@ -90,6 +95,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             }
         });
 
+        holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
@@ -121,18 +132,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             mTxtContent = (MyTextView) itemView.findViewById(R.id.txt_content_news);
             mTxtLink = (TextView) itemView.findViewById(R.id.txt_link_news);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
-            mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 10));
-        }
-
-
-        private boolean isExists(ItemImage itemImage, List<ItemImage> mListImages) {
-            for (ItemImage image : mListImages) {
-                if (image.getImages().equals(itemImage.getImages())) {
-                    return true;
-                }
-            }
-
-            return false;
+            mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
         }
     }
 }

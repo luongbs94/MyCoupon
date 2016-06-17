@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.yongchun.library.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/size_2">
 
     <ImageView
         android:id="@+id/picture"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@null" />
 
     <ImageView
         android:id="@+id/check"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentRight="true"
+        android:contentDescription="@null"
         android:scaleType="fitXY"
         android:src="@android:drawable/ic_menu_close_clear_cancel" />
 </com.yongchun.library.widget.SquareRelativeLayout>
