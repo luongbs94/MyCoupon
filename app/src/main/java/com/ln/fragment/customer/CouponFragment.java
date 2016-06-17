@@ -35,6 +35,8 @@ import retrofit2.Response;
  *
  */
 public class CouponFragment extends Fragment {
+
+
     private LoveCouponAPI mApiServices;
 
     private View mView;

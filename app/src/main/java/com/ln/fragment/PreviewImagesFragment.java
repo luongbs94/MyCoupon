@@ -55,7 +55,7 @@ public class PreviewImagesFragment extends Fragment {
         Glide.with(container.getContext())
                 .load(string)
                 .asBitmap()
-                .into(new SimpleTarget<Bitmap>(MainApplication.WIDTH, 800) {
+                .into(new SimpleTarget<Bitmap>(480, 800) {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         mImagePreview.setImageBitmap(resource);
