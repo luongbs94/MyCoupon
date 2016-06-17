@@ -32,7 +32,6 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/8/16.
- *
  */
 public class CouponFragment extends Fragment {
 
@@ -60,6 +59,9 @@ public class CouponFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+
         mView = inflater.inflate(R.layout.fragment_company_of_client, container, false);
 
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
@@ -80,6 +82,8 @@ public class CouponFragment extends Fragment {
 
         return mView;
     }
+
+
 
     private void initViews() {
 

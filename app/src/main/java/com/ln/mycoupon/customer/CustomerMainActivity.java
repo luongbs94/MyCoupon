@@ -15,7 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.NewsFragment2;
@@ -27,7 +31,7 @@ public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = getClass().getSimpleName();
-    public int currentPosition = 0;
+    private int currentPosition = 0;
     private Toolbar toolbar;
     private FloatingActionButton mFabButton;
 
@@ -60,6 +64,19 @@ public class CustomerMainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        View headerView = navigationView.getHeaderView(0);
+        ImageView imageView = (ImageView) headerView.findViewById(R.id.img_logo_customer_nav);
+        TextView txt = (TextView) headerView.findViewById(R.id.txt_name_customer_nav);
+
+
+        if (SaveData.USER_ID != null) {
+            String url = MainApplication.IMAGE_FACEBOOK + SaveData.USER_ID + MainApplication.IMAGE_FACEBOOK_END;
+            Glide.with(this).load(url).into(imageView);
+        }
+        if (MainApplication.sDetailUser != null) {
+            txt.setText(MainApplication.sDetailUser.getName());
+        }
         startFragment(new CouponFragment());
 
     }

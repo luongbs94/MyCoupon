@@ -1,8 +1,8 @@
 package com.ln.mycoupon.customer;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
@@ -14,9 +14,10 @@ import com.ln.mycoupon.R;
 
 /**
  * Created by luongnguyen on 6/7/16.
- *
+ * <p>
+ * coupon
  */
-public class CouponCompanyOfClientActivity extends Activity {
+public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
     private LinearLayout mLnLayout;
     private RecyclerView mRecCoupon;
@@ -29,10 +30,12 @@ public class CouponCompanyOfClientActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         setContentView(R.layout.activity_coupon_company_client);
 
+
         mRecCoupon = (RecyclerView) findViewById(R.id.recycler_view);
-        toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(this));
         mLnLayout = (LinearLayout) findViewById(R.id.ln_fragment_coupon);
 
@@ -40,10 +43,11 @@ public class CouponCompanyOfClientActivity extends Activity {
 
         company1 = SaveData.listCompany.get(position);
 
-        toolbarLayout.setTitle(company1.getName());
+      /*  toolbarLayout.setTitle(company1.getName());*/
 
         CouponTemplateClientAdapter adapter = new CouponTemplateClientAdapter(this, company1.getCoupon());
         mRecCoupon.setAdapter(adapter);
 
     }
+
 }
