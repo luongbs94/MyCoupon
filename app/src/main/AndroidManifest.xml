@@ -71,8 +71,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".customer.CouponCompanyOfClientActivity"
-            android:label="@string/my_coupon"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name="com.ln.gcm.MyGcmPushReceiver"

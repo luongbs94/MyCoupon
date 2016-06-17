@@ -13,6 +13,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company1;
+import com.ln.model.DetailUser;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Random;
@@ -57,8 +58,11 @@ public class MainApplication extends MultiDexApplication {
     // size images firebase
     public static final int WIDTH_IMAGES = 450;
 
-    public static final String PATH_IMAGE_FACEBOOK = "https://graph.facebook.com/";
-    public static final String PATH_IMAGE_FACEBOOK_END = "/picture?type=large";
+
+    // information user
+    public static DetailUser sDetailUser;
+    public static final String IMAGE_FACEBOOK = "https://graph.facebook.com/";
+    public static final String IMAGE_FACEBOOK_END = "/picture?type=large";
 
     private static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
 

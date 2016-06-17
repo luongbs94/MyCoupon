@@ -11,12 +11,15 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company1;
+import com.ln.model.DetailUser;
 import com.ln.model.User;
 import com.ln.mycoupon.R;
 
@@ -34,6 +37,8 @@ public class CustomerLoginActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
     private AccessTokenTracker mAccessTokenTracker;
     private AccessToken mAccessToken;
+    private Profile mProfile;
+    private ProfileTracker mProfileTracker;
 
     private final String TAG = getClass().getSimpleName();
 
@@ -87,6 +92,16 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
         mAccessToken = AccessToken.getCurrentAccessToken();
 
+        mProfileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+
+                mProfile = currentProfile;
+            }
+        };
+
+        mProfile = Profile.getCurrentProfile();
+
         if (mAccessToken != null) {
             Log.i(TAG, mAccessToken.getUserId() + "");
             getCompanyByUserId(mAccessToken.getUserId());
@@ -94,6 +109,11 @@ public class CustomerLoginActivity extends AppCompatActivity {
             //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
             updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
 
+        }
+
+        if (mProfile != null) {
+            MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
+            Log.d(TAG, mProfile.getName() + " - " + mProfile.getId());
         }
     }
 
