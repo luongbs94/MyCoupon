@@ -2,12 +2,14 @@ package com.ln.mycoupon.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -25,6 +27,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
@@ -61,6 +70,11 @@ public class ShopLoginActivity extends AppCompatActivity
     private ProfileTracker mProfileTracker;
     private Profile mProfile;
 
+    private LinearLayout mLinearLayout;
+
+    //login with google
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +84,36 @@ public class ShopLoginActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         apiService = MainApplication.getAPI();
+
+
+        //AIzaSyBLJK1uGLj_okcAwZz4gL1rPhaRwJAmvg4
         mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
                 .build();
+
+        // key login google
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    ;
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid() + " - " + user.getEmail());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
 
         initViews();
         addEvents();
@@ -96,9 +133,9 @@ public class ShopLoginActivity extends AppCompatActivity
         mBtnLoginFacebook.setReadPermissions("email");
 
         mBtnGooglePlus = (SignInButton) findViewById(R.id.btn_google);
-        mBtnGooglePlus.setSize(SignInButton.SIZE_WIDE);
         mBtnGooglePlus.setScopes(mInOptions.getScopeArray());
 
+        mLinearLayout = (LinearLayout) findViewById(R.id.linear_login_shop);
     }
 
     private void addEvents() {
@@ -112,10 +149,25 @@ public class ShopLoginActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
+//            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+//            handleSignInResult(result);
+//        }
+
         if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+            if (result.isSuccess()) {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = result.getSignInAccount();
+                firebaseAuthWithGoogle(account);
+            } else {
+                // Google Sign In failed, update UI appropriately
+                // ...
+
+                getSnackBar(getString(R.string.login_google_fails));
+            }
         }
+
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -163,9 +215,14 @@ public class ShopLoginActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
+                getSnackBar(getString(R.string.login_fails));
             }
         });
+    }
+
+    private void getSnackBar(String string) {
+        Snackbar.make(mLinearLayout, string, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     private void getCompanyProfileSocial(String user_id) {
@@ -235,6 +292,16 @@ public class ShopLoginActivity extends AppCompatActivity
 //                }
 //            });
 //        }
+
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     @Override
@@ -244,6 +311,7 @@ public class ShopLoginActivity extends AppCompatActivity
         initDataFacebook();
     }
 
+    // integrator login facebook save state facebook login
     private void initDataFacebook() {
 
         mAccessTokenTracker = new AccessTokenTracker() {
@@ -274,6 +342,30 @@ public class ShopLoginActivity extends AppCompatActivity
             Log.i("Tagsss", mAccessToken.getUserId() + "");
 
         }
+    }
+
+    // integrator login google save state google login
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            getSnackBar("Authentication failed.");
+                        }
+                        // ...
+                    }
+                });
     }
 
     @Override
@@ -309,8 +401,7 @@ public class ShopLoginActivity extends AppCompatActivity
                 getCompanyProfile(str_user, str_password);
 
             } else {
-                Snackbar.make(view, R.string.not_fill_login, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                getSnackBar(getString(R.string.not_fill_login));
             }
         }
 

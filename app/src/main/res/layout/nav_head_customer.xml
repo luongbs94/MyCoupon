@@ -10,10 +10,10 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <com.ln.views.CircleImageView
-        android:layout_marginTop="@dimen/size_20"
         android:id="@+id/img_logo_customer_nav"
         android:layout_width="@dimen/size_82"
         android:layout_height="@dimen/size_82"
+        android:layout_marginTop="@dimen/size_20"
         android:src="@drawable/ic_profile"
         app:civ_border_color="@android:color/white"
         app:civ_border_width="1dp" />

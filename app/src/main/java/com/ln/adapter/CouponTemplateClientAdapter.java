@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.ln.app.MainApplication;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
@@ -49,7 +50,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
             holder.couponDate.setText(duration);
 
             if (item.getUser_image_link() != null){
-                Glide.with(mContext).load(item.getCoupon_template_id()).into(holder.mImgLogo);
+                Glide.with(mContext).load(MainApplication.convertToBytes(item.getCoupon_template_id())).into(holder.mImgLogo);
             }
 
         }
@@ -64,7 +65,6 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView mImgLogo;
         private TextView couponName, couponDate;
-        private Button mQRCode;
 
         public ViewHolder(View itemView) {
             super(itemView);
