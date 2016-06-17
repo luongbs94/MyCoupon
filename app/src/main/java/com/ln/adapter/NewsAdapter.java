@@ -67,12 +67,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         String strImages = news.getImages_link();
         if (strImages != null) {
-            List<String> listImages = new ArrayList<>();
+                List<String> listImages = new ArrayList<>();
 
-            String[] listStrImages = strImages.split(";");
-            listImages.addAll(Arrays.asList(listStrImages));
-            GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
-            holder.mRecyclerView.setAdapter(gridAdapter);
+                String[] listStrImages = strImages.split(";");
+                listImages.addAll(Arrays.asList(listStrImages));
+                GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
+                holder.mRecyclerView.setAdapter(gridAdapter);
+            holder.mRecyclerView.setVisibility(View.VISIBLE);
+
+
+        } else{
+            holder.mRecyclerView.setVisibility(View.GONE);
+
         }
 
 
@@ -92,6 +98,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
 
     }
+
 
     @Override
     public int getItemCount() {
