@@ -108,9 +108,12 @@ public class CustomerMainActivity extends AppCompatActivity
             currentPosition = 0;
             setTitle("My Coupon");
             startFragment(new CouponFragment());
+            mFabButton.setVisibility(View.VISIBLE);
+
         } else if (id == R.id.nav_new) {
             currentPosition = 1;
             setTitle("Tin mới");
+            mFabButton.setVisibility(View.GONE);
             startFragment(new NewsFragment2());
 
 
