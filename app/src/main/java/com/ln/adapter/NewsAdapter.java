@@ -1,7 +1,7 @@
 package com.ln.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private Context mContext;
     private List<Message> mListNews;
-
 
 
     public NewsAdapter(Context context, List<Message> listNews) {
@@ -138,7 +137,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             mTxtContent = (MyTextView) itemView.findViewById(R.id.txt_content_news);
             mTxtLink = (TextView) itemView.findViewById(R.id.txt_link_news);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
-            mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
+
+            LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            mRecyclerView.setLayoutManager(manager);
         }
     }
 }

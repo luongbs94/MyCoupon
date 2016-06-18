@@ -139,7 +139,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:clipToPadding="false"
         android:divider="@null"
         android:dividerHeight="4dp"
@@ -147,7 +147,7 @@
         android:focusable="true"
         android:layoutAnimation="@anim/list_anim"
         android:listSelector="@android:color/transparent"
-        android:scrollbars="vertical" />
+        android:scrollbars="horizontal" />
 
     <TextView
         android:layout_width="match_parent"
