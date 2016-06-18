@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Created by minhpq on 3/29/16.
- *
+ *<></>
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 

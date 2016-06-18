@@ -30,7 +30,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private Context mContext;
     private List<Message> mListNews;
 
-    private String TAG = getClass().getSimpleName();
 
 
     public NewsAdapter(Context context, List<Message> listNews) {

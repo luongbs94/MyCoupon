@@ -22,7 +22,7 @@ import java.util.List;
 
 public class Message2Adapter extends BaseAdapter {
 
-    public List<Message> mListMessage;
+    private List<Message> mListMessage;
     private LayoutInflater mInflater = null;
 
 

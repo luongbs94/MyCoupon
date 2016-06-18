@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by luongnguyen on 4/1/16.
- *
+ *<></>
  */
 public class MainApplication extends MultiDexApplication {
 
@@ -31,11 +31,12 @@ public class MainApplication extends MultiDexApplication {
     public static final String DATA = "DATA";
     public static final String LIST_IMAGES = "LIST_IMAGES";
 
-    public static final String URL_FIRE_BASE = "https://nhahv-fire-chat.firebaseio.com/users";
+    private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
+
 
     public static LoveCouponAPI apiService;
-    private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
     public static LoveCouponAPI apiService1;
+
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String PUSH_NOTIFICATION = "pushNotification";

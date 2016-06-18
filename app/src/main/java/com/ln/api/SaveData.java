@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Created by luongnguyen on 4/2/16.
- *
+ * <></>
  */
 public class SaveData {
 
@@ -26,6 +26,5 @@ public class SaveData {
 
     public static String web_token = "";
     public static String USER_ID = "";
-
 
 }
