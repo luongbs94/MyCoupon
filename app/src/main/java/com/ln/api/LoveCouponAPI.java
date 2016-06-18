@@ -68,7 +68,7 @@ public interface LoveCouponAPI {
     Call<List<Message>> getNewsByUserId(@Query("user_id") String id);
 
     @POST("/update_user_coupon")
-    Call<Company1> updateUserCoupon(@Body Coupon template);
+    Call<List<Company1>> updateUserCoupon(@Body Coupon template);
 
 
     @GET("/getCoupon")

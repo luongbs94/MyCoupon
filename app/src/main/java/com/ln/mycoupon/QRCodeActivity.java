@@ -173,12 +173,12 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
 
 
 
-        Call<Company1> call2 = apiService.updateUserCoupon(template);
-        call2.enqueue(new Callback<Company1>() {
+        Call<List<Company1>> call2 = apiService.updateUserCoupon(template);
+        call2.enqueue(new Callback<List<Company1>>() {
 
             @Override
-            public void onResponse(Call<Company1> arg0,
-                                   Response<Company1> arg1) {
+            public void onResponse(Call<List<Company1>> arg0,
+                                   Response<List<Company1>> arg1) {
                 MaterialDialog dialog = new MaterialDialog.Builder(QRCodeActivity.this)
                         .title("Coupon")
                         .content("Bạn đã thêm mới một coupon")
@@ -194,7 +194,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
             }
 
             @Override
-            public void onFailure(Call<Company1> arg0, Throwable arg1) {
+            public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
                 // TODO Auto-generated method stub
                 Toast.makeText(QRCodeActivity.this, "Not found", Toast.LENGTH_LONG).show();
 
