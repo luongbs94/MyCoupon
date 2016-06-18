@@ -2,9 +2,12 @@ package com.ln.mycoupon.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -15,6 +18,19 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.Gson;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
@@ -30,8 +46,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CustomerLoginActivity extends AppCompatActivity {
+public class CustomerLoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+    // create login facebook
     private LoginButton mBtnFacebook;
 
     private CallbackManager mCallbackManager;
@@ -43,6 +60,12 @@ public class CustomerLoginActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
 
     private Gson gson = new Gson();
+
+    // create login google
+    private Button mBtnGoogle;
+    private GoogleApiClient mGoogleApiClient;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +80,93 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
         mCallbackManager = CallbackManager.Factory.create();
         mBtnFacebook = (LoginButton) findViewById(R.id.btn_facebook_customer);
-        mBtnFacebook.setReadPermissions("public_profile");
-        mBtnFacebook.setReadPermissions("email");
+        if (mBtnFacebook != null) {
+            mBtnFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL);
+        }
+
+        // google
+        mBtnGoogle = (Button) findViewById(R.id.btn_google_customer);
+
+
+        //56:CE:70:45:DA:93:5A:92:02:D8:45:C3:58:4E:10:36:09:24:42:C4
+        GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
+                .build();
+
+
+        // key login google
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+//                    MainApplication.sDetailUser = new DetailUser(user)
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid() + " - " + user.getEmail());
+//                    onClickLoginGoogle();
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
+
     }
 
     private void addEvents() {
         mBtnFacebook.setOnClickListener(new Events());
+        mBtnGoogle.setOnClickListener(new Events());
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = result.getSignInAccount();
+                loginGoogleSuccess(account);
+            } else {
+                // login fails
+                getSnackBar(getString(R.string.login_google_fails));
+            }
+        } else {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void loginGoogleSuccess(GoogleSignInAccount account) {
+        // init detailUser
+        Log.d(TAG, "id google:" + account.getId());
+        MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail());
+
+
+
+        getCompanyByUserId(account.getId());
+        updateUserToken(account.getIdToken(), MainApplication.getDeviceToken(), "android");
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e(TAG, "signInWithCredential", task.getException());
+                            getSnackBar("Authentication failed.");
+                        }
+                    }
+                });
+    }
+
+    private void getSnackBar(String string) {
+        Snackbar.make(mBtnFacebook, string, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override
@@ -82,9 +180,7 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
         mAccessTokenTracker = new AccessTokenTracker() {
             @Override
-            protected void onCurrentAccessTokenChanged(
-                    AccessToken oldAccessToken,
-                    AccessToken currentAccessToken) {
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
 
                 mAccessToken = currentAccessToken;
             }
@@ -105,7 +201,6 @@ public class CustomerLoginActivity extends AppCompatActivity {
         if (mAccessToken != null) {
             Log.i(TAG, mAccessToken.getUserId() + "");
             getCompanyByUserId(mAccessToken.getUserId());
-
             updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
 
         }
@@ -120,7 +215,23 @@ public class CustomerLoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mAccessTokenTracker.stopTracking();
+        mProfileTracker.stopTracking();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
 
     private void getCompanyByUserId(final String userId) {
 
@@ -152,10 +263,8 @@ public class CustomerLoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
-
             }
         });
-
     }
 
     private void updateUserToken(String userId, String token, String device_os) {
@@ -184,6 +293,16 @@ public class CustomerLoginActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private void onClickLoginGoogle() {
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
+    }
+
 
     private class Events implements View.OnClickListener {
         @Override
@@ -192,10 +311,14 @@ public class CustomerLoginActivity extends AppCompatActivity {
                 case R.id.btn_facebook_customer:
                     onClickLoginFaceBook();
                     break;
+                case R.id.btn_google_customer:
+                    onClickLoginGoogle();
+                    break;
                 default:
                     break;
             }
         }
+
 
         private void onClickLoginFaceBook() {
             mBtnFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -210,7 +333,12 @@ public class CustomerLoginActivity extends AppCompatActivity {
                         //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
 //                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
                         updateUserToken("10205539341392320", MainApplication.getDeviceToken(), "android");
+                    }
 
+                    mProfile = Profile.getCurrentProfile();
+                    if (mProfile != null) {
+                        MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
+                        Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
                     }
                 }
 

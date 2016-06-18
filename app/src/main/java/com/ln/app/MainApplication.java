@@ -70,6 +70,8 @@ public class MainApplication extends MultiDexApplication {
 
     private static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
 
+    // login with // STOPSHIP: 6/18/2016
+    public static DetailUser sShopDetail;
 
     public static boolean sIsAdmin = false;
 

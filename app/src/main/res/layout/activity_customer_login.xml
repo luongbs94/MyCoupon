@@ -24,11 +24,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp" />
 
-        <com.google.android.gms.common.SignInButton
+        <Button
             android:id="@+id/btn_google_customer"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:background="@color/google"
+            android:text="@string/google_login"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size_15sp" />
 
     </LinearLayout>
 

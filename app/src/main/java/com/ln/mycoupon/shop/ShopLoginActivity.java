@@ -78,7 +78,7 @@ public class ShopLoginActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_login);
+        setContentView(R.layout.activity_shop_login);
 
         getSupportActionBar().setTitle(R.string.login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -317,8 +317,8 @@ public class ShopLoginActivity extends AppCompatActivity
 
         // init detailUser
         Log.d(TAG, "id google:" + acct.getId());
-        MainApplication.sDetailUser = new DetailUser(acct.getId(), acct.getEmail());
-
+        MainApplication.sShopDetail = new DetailUser(acct.getId(), acct.getEmail());
+        Log.d(TAG, "url: " + acct.getPhotoUrl());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -381,7 +381,7 @@ public class ShopLoginActivity extends AppCompatActivity
                 public void onSuccess(LoginResult loginResult) {
 
                     mProfile = Profile.getCurrentProfile();
-                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
+                    MainApplication.sShopDetail = new DetailUser(mProfile.getId(), mProfile.getName());
                     Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
                 }
 
