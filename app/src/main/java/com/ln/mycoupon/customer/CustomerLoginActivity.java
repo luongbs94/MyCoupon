@@ -245,14 +245,14 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
                 List<Company1> templates = arg1.body();
 
                 if (templates == null) {
-                    SaveData.listCompany = new ArrayList<Company1>();
+                    SaveData.listCompanyCustomer = new ArrayList<>();
                 } else {
-                    SaveData.listCompany = templates;
+                    SaveData.listCompanyCustomer = templates;
                 }
 
                 SaveData.USER_ID = userId;
 
-                String data = gson.toJson(SaveData.listCompany);
+                String data = gson.toJson(SaveData.listCompanyCustomer);
                 MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
                 MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, true);
                 MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);

@@ -51,7 +51,7 @@ public class FirstActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINCLIENT, false)) {
             String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
-            SaveData.listCompany = gson.fromJson(data, new TypeToken<List<Company1>>() {
+            SaveData.listCompanyCustomer = gson.fromJson(data, new TypeToken<List<Company1>>() {
             }.getType());
             onClickLoginCustomer();
         }

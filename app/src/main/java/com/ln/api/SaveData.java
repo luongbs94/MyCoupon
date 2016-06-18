@@ -13,7 +13,7 @@ public class SaveData {
 
     public static Company company;
 
-    public static List<Company1> listCompany;
+    public static List<Company1> listCompanyCustomer;
 
 
     public static Company getCompany() {

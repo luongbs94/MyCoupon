@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,15 +39,12 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_coupon_company_client);
 
         initViews();
-
-
     }
 
     private void initViews() {
 
         int position = getIntent().getExtras().getInt("position");
-        company1 = SaveData.listCompany.get(position);
-
+        company1 = SaveData.listCompanyCustomer.get(position);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,7 +56,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
         if (company1.getLogo() != null) {
             Glide.with(this).load(MainApplication.convertToBytes(company1.getLogo()))
-                    .placeholder(R.drawable.ic_logo_blank)
+                    .asBitmap()
                     .into(mImageView);
 
             Log.d(TAG, company1.getLogo());
@@ -72,10 +70,18 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         mRecCoupon.setHasFixedSize(true);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(this));
 
-        CouponTemplateClientAdapter adapter = new CouponTemplateClientAdapter(this, company1.getCoupon());
+        CouponTemplateClientAdapter adapter = new CouponTemplateClientAdapter(this, company1);
         mRecCoupon.setAdapter(adapter);
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void initCollapsingToolbar() {
 

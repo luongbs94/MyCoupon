@@ -19,11 +19,9 @@ import com.ln.api.SaveData;
 import com.ln.app.ItemClickSupport;
 import com.ln.app.MainApplication;
 import com.ln.model.Company1;
-import com.ln.model.CouponTemplate;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.customer.CouponCompanyOfClientActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -42,8 +40,6 @@ public class CouponFragment extends Fragment {
     private View mView;
     private LinearLayout mLnLayout;
     private RecyclerView mRecCoupon;
-    private List<CouponTemplate> mListCoupon = new ArrayList<>();
-    private String TAG = getClass().getSimpleName();
 
     private SwipeRefreshLayout swipeContainer;
 
@@ -91,7 +87,7 @@ public class CouponFragment extends Fragment {
         mLnLayout = (LinearLayout) mView.findViewById(R.id.ln_fragment_coupon);
 
 
-        CompanyAdapter adapter = new CompanyAdapter(getActivity(), SaveData.listCompany);
+        CompanyAdapter adapter = new CompanyAdapter(getActivity(), SaveData.listCompanyCustomer);
         mRecCoupon.setAdapter(adapter);
 
         ItemClickSupport.addTo(mRecCoupon).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -114,7 +110,7 @@ public class CouponFragment extends Fragment {
 
     private void getCompanyByUserId() {
 
-        Call<List<Company1>> call3 = MainApplication.apiService.getCompaniesByUserId(SaveData.USER_ID);
+        Call<List<Company1>> call3 = mApiServices.getCompaniesByUserId(SaveData.USER_ID);
         call3.enqueue(new Callback<List<Company1>>() {
 
             @Override
@@ -122,10 +118,10 @@ public class CouponFragment extends Fragment {
                                    Response<List<Company1>> arg1) {
                 List<Company1> templates = arg1.body();
 //                System.out.println(templates.size());
-                SaveData.listCompany = templates;
+                SaveData.listCompanyCustomer = templates;
 
                 swipeContainer.setRefreshing(false);
-                CompanyAdapter adapter = new CompanyAdapter(getActivity(), SaveData.listCompany);
+                CompanyAdapter adapter = new CompanyAdapter(getActivity(), SaveData.listCompanyCustomer);
                 mRecCoupon.setAdapter(adapter);
 
             }
@@ -144,7 +140,7 @@ public class CouponFragment extends Fragment {
 
         Gson gson = new Gson();
 
-        String data = gson.toJson(SaveData.listCompany);
+        String data = gson.toJson(SaveData.listCompanyCustomer);
         MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
         MainApplication.editor.commit();
     }

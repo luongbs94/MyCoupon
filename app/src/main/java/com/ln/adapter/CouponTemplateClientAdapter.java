@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ln.app.MainApplication;
+import com.ln.model.Company1;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
@@ -17,17 +18,19 @@ import java.util.List;
 
 /**
  * Created by Nhahv on 5/21/2016.
- *<></>
+ * <></>
  */
 
 public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemplateClientAdapter.ViewHolder> {
 
     private List<Coupon> mListCoupon;
     private Context mContext;
+    private Company1 mCompany1;
 
-    public CouponTemplateClientAdapter(Context context, List<Coupon> coupons) {
+    public CouponTemplateClientAdapter(Context context, Company1 company) {
         mContext = context;
-        mListCoupon = coupons;
+        mListCoupon = company.getCoupon();
+        mCompany1 = company;
     }
 
     @Override
@@ -48,8 +51,12 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
             String duration = item.getDuration() + "";
             holder.couponDate.setText(duration);
 
-            if (item.getUser_image_link() != null){
-                Glide.with(mContext).load(MainApplication.convertToBytes(item.getCoupon_template_id())).into(holder.mImgLogo);
+            if (mCompany1.getLogo() != null) {
+                Glide.with(mContext).load(MainApplication
+                        .convertToBytes(mCompany1.getLogo()))
+                        .asBitmap()
+                        .into(holder.mImgLogo);
+
             }
 
         }

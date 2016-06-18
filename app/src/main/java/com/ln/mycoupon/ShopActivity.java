@@ -29,7 +29,7 @@ public class ShopActivity extends AppCompatActivity {
         setContentView(R.layout.layout_shop_activity);
 
         int position = getIntent().getExtras().getInt("position");
-        company1 = SaveData.listCompany.get(position);
+        company1 = SaveData.listCompanyCustomer.get(position);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

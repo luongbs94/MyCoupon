@@ -47,7 +47,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
             if (item.getLogo() != null) {
                 Glide.with(mContext).load(MainApplication.convertToBytes(item.getLogo()))
                         .asBitmap()
-                        .placeholder(R.drawable.ic_profile)
+                        .placeholder(R.drawable.ic_logo_blank)
                         .into(holder.mImgLogo);
             }
         }

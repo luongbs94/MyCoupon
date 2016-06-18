@@ -149,9 +149,9 @@ public class MainApplication extends MultiDexApplication {
 
 
     public static String getCompanyName(String company_id) {
-        for (int i = 0; i < SaveData.listCompany.size(); i++) {
+        for (int i = 0; i < SaveData.listCompanyCustomer.size(); i++) {
 
-            Company1 company1 = SaveData.listCompany.get(i);
+            Company1 company1 = SaveData.listCompanyCustomer.get(i);
 
             Log.d("Coupon", company1.getCompany_id());
             if (company_id.equals(company1.getCompany_id())) {
