@@ -85,5 +85,7 @@
     <string name="coupon_of">Coupon\\</string>
     <string name="login_fails">Tài khoản hoặc mật khẩu không đúng</string>
     <string name="login_google_fails">Đăng nhập google không thành công</string>
+    <string name="google_login">google</string>
+
 
 </resources>

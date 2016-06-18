@@ -25,7 +25,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -39,7 +38,6 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
-import com.ln.model.InformationAccount;
 import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -51,6 +49,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 3/30/16.
+ * login shop
  */
 public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
@@ -60,10 +59,9 @@ public class ShopLoginActivity extends AppCompatActivity
     private MaterialEditText username, password;
     private LoveCouponAPI apiService;
     private String TAG = getClass().getSimpleName();
-    private GoogleSignInOptions mInOptions;
     private GoogleApiClient mGoogleApiClient;
 
-    private SignInButton mBtnGooglePlus;
+    private Button mBtnGooglePlus;
     private CallbackManager mCallbackManager;
     private AccessTokenTracker mAccessTokenTracker;
     private AccessToken mAccessToken;
@@ -75,6 +73,7 @@ public class ShopLoginActivity extends AppCompatActivity
     //login with google
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +85,8 @@ public class ShopLoginActivity extends AppCompatActivity
         apiService = MainApplication.getAPI();
 
 
-        //AIzaSyBLJK1uGLj_okcAwZz4gL1rPhaRwJAmvg4
-        mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        //56:CE:70:45:DA:93:5A:92:02:D8:45:C3:58:4E:10:36:09:24:42:C4
+        GoogleSignInOptions   mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
@@ -96,6 +95,9 @@ public class ShopLoginActivity extends AppCompatActivity
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
                 .build();
+
+
+        Log.d(TAG, getString(R.string.default_web_client_id));
 
         // key login google
         mAuth = FirebaseAuth.getInstance();
@@ -132,8 +134,8 @@ public class ShopLoginActivity extends AppCompatActivity
         mBtnLoginFacebook.setReadPermissions("public_profile");
         mBtnLoginFacebook.setReadPermissions("email");
 
-        mBtnGooglePlus = (SignInButton) findViewById(R.id.btn_google);
-        mBtnGooglePlus.setScopes(mInOptions.getScopeArray());
+        mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
+
 
         mLinearLayout = (LinearLayout) findViewById(R.id.linear_login_shop);
     }
@@ -149,11 +151,7 @@ public class ShopLoginActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
-//            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-//            handleSignInResult(result);
-//        }
-
+//
         if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -169,19 +167,6 @@ public class ShopLoginActivity extends AppCompatActivity
         }
 
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void handleSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-            GoogleSignInAccount accountGoogle = result.getSignInAccount();
-            InformationAccount account = new InformationAccount();
-            account.setId(accountGoogle.getId());
-            account.setDisplayName(accountGoogle.getDisplayName());
-            account.setEmail(accountGoogle.getEmail());
-            account.setPhotoUrl(accountGoogle.getPhotoUrl().toString());
-            account.setIdToken(accountGoogle.getIdToken());
-            username.setText(account.getDisplayName());
-        }
     }
 
     private void getCompanyProfile(final String user, final String pass) {
@@ -280,19 +265,6 @@ public class ShopLoginActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-//        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-//        if (opr.isDone()) {
-//            GoogleSignInResult result = opr.get();
-//            handleSignInResult(result);
-//        } else {
-//            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-//                @Override
-//                public void onResult(GoogleSignInResult googleSignInResult) {
-//                    handleSignInResult(googleSignInResult);
-//                }
-//            });
-//        }
-
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -356,9 +328,6 @@ public class ShopLoginActivity extends AppCompatActivity
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             getSnackBar("Authentication failed.");
@@ -366,6 +335,7 @@ public class ShopLoginActivity extends AppCompatActivity
                         // ...
                     }
                 });
+
     }
 
     @Override
