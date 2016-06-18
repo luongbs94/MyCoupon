@@ -19,6 +19,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * A simple {@link Fragment} subclass.
+ * <></>
  */
 public class PreviewImagesFragment extends Fragment {
 

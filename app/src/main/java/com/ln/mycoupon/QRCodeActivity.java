@@ -25,14 +25,14 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/13/16.
- *
+ * <></>
  */
 public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
 
     private TextView myTextView;
     private QRCodeReaderView mydecoderview;
-    LoveCouponAPI apiService;
-    String TAG = "Coupon";
+    private LoveCouponAPI apiService;
+    private String TAG = "Coupon";
 
 
     @Override
@@ -94,7 +94,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
 
         int id = item.getItemId();
 
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             finish();
         }
 
@@ -102,7 +102,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
     }
 
 
-    public void getCoupon(final String coupon_id){
+    private void getCoupon(final String coupon_id) {
         Call<List<Coupon>> call = apiService.getCoupon(coupon_id);
 
         call.enqueue(new Callback<List<Coupon>>() {
@@ -112,9 +112,9 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
                                    Response<List<Coupon>> arg1) {
                 List<Coupon> templates = arg1.body();
 
-                if(templates.size() >0){
+                if (templates.size() > 0) {
                     Coupon coupon = templates.get(0);
-                    if(coupon.getUser_id() != null){
+                    if (coupon.getUser_id() != null) {
                         MaterialDialog dialog = new MaterialDialog.Builder(QRCodeActivity.this)
                                 .title("Coupon")
                                 .content("Coupon đã được sử dụng")
@@ -130,11 +130,11 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
                                 .show();
 
 
-                    }else{
+                    } else {
                         updateCoupon(coupon_id, SaveData.USER_ID, coupon.getDuration());
                     }
 
-                }else{
+                } else {
 
                     MaterialDialog dialog = new MaterialDialog.Builder(QRCodeActivity.this)
                             .title("Coupon")
@@ -150,9 +150,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
                             })
 
                             .show();
-
                 }
-
             }
 
             @Override
@@ -166,11 +164,10 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         });
     }
 
-    public void updateCoupon(String coupon_id, String user_id, int duration){
+    private void updateCoupon(String coupon_id, String user_id, int duration) {
         Coupon template = new Coupon();
         template.setCoupon_id(coupon_id);
         template.setUser_id(user_id);
-
 
 
         Call<List<Company1>> call2 = apiService.updateUserCoupon(template);
@@ -195,7 +192,6 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
 
             @Override
             public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
-                // TODO Auto-generated method stub
                 Toast.makeText(QRCodeActivity.this, "Not found", Toast.LENGTH_LONG).show();
 
             }

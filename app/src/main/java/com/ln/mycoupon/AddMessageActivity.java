@@ -47,6 +47,7 @@ import static com.ln.app.MainApplication.getRandomString;
 
 /**
  * Created by luongnguyen on 4/7/16.
+ * <></>
  */
 public class AddMessageActivity extends AppCompatActivity {
 

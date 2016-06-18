@@ -27,11 +27,11 @@ public class TestQRCode extends AppCompatActivity {
 
     private ImageView qrCodeImageview;
     private String QRcode;
-    public final static int WIDTH = 500;
+    private final static int WIDTH = 500;
     private LoveCouponAPI apiService;
     private final String TAG = "Coupon";
     private String value, coupon_template_id;
-    int duration;
+    private int duration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +74,9 @@ public class TestQRCode extends AppCompatActivity {
 
     }
 
-    public void generateQRCode(final String text) {
+    private void generateQRCode(final String text) {
 
         addCoupon(text);
-
 
         Thread t = new Thread(new Runnable() {
             public void run() {
@@ -114,7 +113,7 @@ public class TestQRCode extends AppCompatActivity {
 
     }
 
-    Bitmap encodeAsBitmap(String str) throws WriterException {
+    private Bitmap encodeAsBitmap(String str) throws WriterException {
         BitMatrix result;
         try {
             result = new MultiFormatWriter().encode(str,
@@ -150,7 +149,7 @@ public class TestQRCode extends AppCompatActivity {
     }
 
 
-    public void addCoupon(final String coupon_id) {
+    private void addCoupon(final String coupon_id) {
         Coupon template = new Coupon();
         template.setCompany_id(SaveData.company.company_id + "");
         template.setCoupon_id(coupon_id);

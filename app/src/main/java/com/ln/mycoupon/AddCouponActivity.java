@@ -26,18 +26,17 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/2/16.
- *
  */
 public class AddCouponActivity extends AppCompatActivity {
 
-    ArrayList<String> list = new ArrayList<>();
+    private ArrayList<String> list = new ArrayList<>();
 
-    MaterialEditText money, content;
-    CardView saveCoupon;
-    Spinner spinner;
-    LoveCouponAPI apiService;
-    String TAG = "Coupon";
-    LinearLayout layoutView;
+    private MaterialEditText money, content;
+    private CardView saveCoupon;
+    private Spinner spinner;
+    private LoveCouponAPI apiService;
+    private String TAG = "Coupon";
+    private LinearLayout layoutView;
 
 
     @Override

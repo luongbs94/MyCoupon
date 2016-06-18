@@ -32,6 +32,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 4/8/16.
+ * <></>
  */
 public class CouponFragment extends Fragment {
 

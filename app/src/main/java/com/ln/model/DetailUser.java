@@ -2,6 +2,7 @@ package com.ln.model;
 
 /**
  * Created by Nhahv on 6/17/2016.
+ * <></>
  */
 
 public class DetailUser {

@@ -2,7 +2,7 @@ package com.ln.model;
 
 /**
  * Created by Nhahv on 5/13/2016.
- *
+ *<></>
  */
 public class InformationAccount {
 

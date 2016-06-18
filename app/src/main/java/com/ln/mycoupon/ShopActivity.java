@@ -16,12 +16,12 @@ import com.ln.model.Company1;
 
 /**
  * Created by luongnguyen on 4/8/16.
- *
+ * <></>
  */
 public class ShopActivity extends AppCompatActivity {
 
-    Company1 company1;
-    ListView listView;
+    private Company1 company1;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,5 @@ public class ShopActivity extends AppCompatActivity {
                         .show();
             }
         });
-
-
     }
 }

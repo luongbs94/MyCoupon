@@ -35,6 +35,7 @@ public class PreviewImagesActivity extends AppCompatActivity {
     }
 
     private void initGetData() {
+
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra(MainApplication.DATA);
         if (bundle != null) {
@@ -63,7 +64,7 @@ public class PreviewImagesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -73,7 +74,7 @@ public class PreviewImagesActivity extends AppCompatActivity {
 
         private List<String> mListStringImages = new ArrayList<>();
 
-        public PreviewAdapter(FragmentManager fm) {
+        PreviewAdapter(FragmentManager fm) {
             super(fm);
         }
 

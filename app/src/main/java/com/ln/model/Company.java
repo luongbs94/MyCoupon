@@ -2,6 +2,7 @@ package com.ln.model;
 
 /**
  * Created by luongnguyen on 4/1/16.
+ * <></>
  */
 public class Company {
 

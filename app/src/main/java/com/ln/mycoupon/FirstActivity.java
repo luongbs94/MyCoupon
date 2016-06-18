@@ -1,6 +1,5 @@
 package com.ln.mycoupon;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +36,6 @@ public class FirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_first);
 
-
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         MainApplication.HEIGHT = displaymetrics.heightPixels;
@@ -62,13 +60,11 @@ public class FirstActivity extends AppCompatActivity {
         }
 
 
-
         Date now = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z'('Z')'", Locale.getDefault());
-//Convert the date from the local timezone to UTC timezone
+        //Convert the date from the local timezone to UTC timezone
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateFormateInUTC = formatter.format(now);
-
 
         // Date now = new Date();
         Log.d(TAG, dateFormateInUTC);
@@ -76,6 +72,7 @@ public class FirstActivity extends AppCompatActivity {
 
 
     private void initViews() {
+
         setTitle(R.string.banla);
 
         mBtnShop = (Button) findViewById(R.id.shop);
@@ -96,18 +93,6 @@ public class FirstActivity extends AppCompatActivity {
         Intent intent = new Intent(FirstActivity.this, CustomerLoginActivity.class);
         startActivity(intent);
     }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
 
     private class Events implements View.OnClickListener {
         @Override
