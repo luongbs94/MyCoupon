@@ -2,7 +2,7 @@ package com.ln.api;
 
 /**
  * Created by luongnguyen on 4/1/16.
- *<></>
+ * <></>
  */
 
 import com.ln.model.Company;
@@ -101,4 +101,6 @@ public interface LoveCouponAPI {
     Call<ResponseBody> upload(@Part("upload") RequestBody description,
                               @Part MultipartBody.Part file);
 
+    @GET("/is_username_avaiable")
+    Call<Integer> isExists(@Query("company_id") String company_id, @Query("username") String username);
 }

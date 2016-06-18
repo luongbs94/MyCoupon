@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -27,7 +28,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.ln.api.LoveCouponAPI;
@@ -53,19 +53,19 @@ import retrofit2.Response;
 public class SettingFragment extends Fragment {
 
     private static final String TAG = "SettingFragment";
-    private EditText addressCompany, user1, pass1, user2, pass2;
+    private EditText mEdtNameCompany, mEdtAddress, mEdtUser1, mEdtPassword1, mEdtUser2, mEdtPassword2;
     private CheckBox checkBox, checkBox1;
-    private EditText nameCompany;
     private CardView mCardView;
     private LoveCouponAPI mLoveCouponAPI;
     private CircleImageView mImgLogo;
     private TextView mTxtNameCompany, mTxtAddress;
+    private LinearLayout mLinearLayout;
 
     private Uri mFileUri;
 
     private FloatingActionButton mFabDoneSave;
     private CheckBox mChbShowPass;
-    private LinearLayout mLinearLayout;
+    private boolean isAccountExists = true;
 
 
     @Override
@@ -107,21 +107,21 @@ public class SettingFragment extends Fragment {
             mFabDoneSave.setVisibility(View.GONE);
         }
 
-        nameCompany = (EditText) v.findViewById(R.id.name_company);
-        addressCompany = (EditText) v.findViewById(R.id.address_company);
-        user1 = (EditText) v.findViewById(R.id.username1);
-        pass1 = (EditText) v.findViewById(R.id.password1);
-        pass2 = (EditText) v.findViewById(R.id.password2);
+        mEdtNameCompany = (EditText) v.findViewById(R.id.name_company);
+        mEdtAddress = (EditText) v.findViewById(R.id.address_company);
+        mEdtUser1 = (EditText) v.findViewById(R.id.username1);
+        mEdtPassword1 = (EditText) v.findViewById(R.id.password1);
+        mEdtPassword2 = (EditText) v.findViewById(R.id.password2);
 
-        user2 = (EditText) v.findViewById(R.id.username2);
+        mEdtUser2 = (EditText) v.findViewById(R.id.username2);
 
         checkBox = (CheckBox) v.findViewById(R.id.check_admin);
         checkBox1 = (CheckBox) v.findViewById(R.id.check_admin2);
 
         mCardView = (CardView) v.findViewById(R.id.cardview1);
-        mImgLogo = (CircleImageView) v.findViewById(R.id.img_logo_company);
-        mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_company);
-        mTxtAddress = (TextView) v.findViewById(R.id.txt_address_company);
+        mImgLogo = (CircleImageView) v.findViewById(R.id.img_logo_nav);
+        mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_nav);
+        mTxtAddress = (TextView) v.findViewById(R.id.txt_email_nav);
 
 
     }
@@ -137,12 +137,12 @@ public class SettingFragment extends Fragment {
         Company company = SaveData.company;
 
         if (company.name != null) {
-            nameCompany.setText(company.name);
+            mEdtNameCompany.setText(company.name);
             mTxtNameCompany.setText(company.getName());
         }
 
         if (company.address != null) {
-            addressCompany.setText(company.address);
+            mEdtAddress.setText(company.address);
             mTxtAddress.setText(company.getAddress());
         }
 
@@ -157,19 +157,19 @@ public class SettingFragment extends Fragment {
 
 
         if (company.user1 != null) {
-            user1.setText(company.user1);
+            mEdtUser1.setText(company.user1);
         }
 
         if (company.user2 != null) {
-            user2.setText(company.user2);
+            mEdtUser2.setText(company.user2);
         }
 
         if (company.pass1 != null) {
-            pass1.setText(company.pass1);
+            mEdtPassword1.setText(company.pass1);
         }
 
         if (company.pass2 != null) {
-            pass2.setText(company.pass2);
+            mEdtPassword2.setText(company.pass2);
         }
 
         if (company.user1_admin != null) {
@@ -193,11 +193,14 @@ public class SettingFragment extends Fragment {
 
         mCardView.setOnClickListener(new Events());
         mImgLogo.setOnClickListener(new Events());
-        nameCompany.addTextChangedListener(new Events());
-        addressCompany.addTextChangedListener(new Events());
+        mEdtNameCompany.addTextChangedListener(new Events());
+        mEdtAddress.addTextChangedListener(new Events());
 
         mFabDoneSave.setOnClickListener(new Events());
         mChbShowPass.setOnCheckedChangeListener(new Events());
+
+        mEdtUser1.addTextChangedListener(new Events());
+        mEdtUser2.addTextChangedListener(new Events());
     }
 
 
@@ -264,6 +267,25 @@ public class SettingFragment extends Fragment {
         }
     }
 
+    private boolean isExistsAccount(String company_id, String username) {
+
+        Call<Integer> call = mLoveCouponAPI.isExists(company_id, username);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                int integer = response.body();
+                if (integer == 0) {
+                    isAccountExists = false;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d(TAG, "isExists " + t.toString());
+            }
+        });
+        return isAccountExists;
+    }
 
     private class Events implements View.OnClickListener, TextWatcher, CompoundButton.OnCheckedChangeListener {
 
@@ -336,8 +358,8 @@ public class SettingFragment extends Fragment {
 
             Company company = SaveData.company;
 
-            company.setName(nameCompany.getText().toString());
-            company.setAddress(nameCompany.getText().toString());
+            company.setName(mEdtNameCompany.getText().toString());
+            company.setAddress(mEdtNameCompany.getText().toString());
 
             String logo = MainApplication.convertToBitmap(mImgLogo);
             logo = MainApplication.FIRST_BASE64 + logo;
@@ -370,27 +392,62 @@ public class SettingFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (nameCompany.isFocused()) {
+
+            if (mEdtNameCompany.isFocused()) {
                 mTxtNameCompany.setText(editable.toString());
-            } else {
+            } else if (mEdtAddress.isFocused()) {
                 mTxtAddress.setText(editable.toString());
+            } else if (mEdtUser1.isFocused()) {
+                onClickUser1();
+            } else if (mEdtUser2.isFocused()) {
+                onClickUser2();
             }
         }
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                pass1.setTransformationMethod(null);
-                pass2.setTransformationMethod(null);
+                mEdtPassword1.setTransformationMethod(null);
+                mEdtPassword2.setTransformationMethod(null);
             } else {
-                pass1.setTransformationMethod(new PasswordTransformationMethod());
-                pass2.setTransformationMethod(new PasswordTransformationMethod());
+                mEdtPassword1.setTransformationMethod(new PasswordTransformationMethod());
+                mEdtPassword2.setTransformationMethod(new PasswordTransformationMethod());
+            }
+        }
+    }
+
+    private void onClickUser1() {
+
+        Company company = SaveData.company;
+        String strUser1 = mEdtUser1.getText().toString().trim();
+        String strUser2 = mEdtUser2.getText().toString().trim();
+        if (strUser1.equals(strUser2)) {
+            getShowMessage(getString(R.string.user1OtherUser2));
+        } else {
+            isAccountExists = true;
+            if (isExistsAccount(company.getUser_id(), strUser1)) {
+                getShowMessage(getString(R.string.account_exists));
+            }
+        }
+    }
+
+    private void onClickUser2() {
+
+        Company company = SaveData.company;
+        String strUser1 = mEdtUser1.getText().toString().trim();
+        String strUser2 = mEdtUser2.getText().toString().trim();
+        if (strUser1.equals(strUser2)) {
+            getShowMessage(getString(R.string.user2OtherUser1));
+        } else {
+            isAccountExists = true;
+            if (isExistsAccount(company.getUser_id(), strUser2)) {
+                getShowMessage(getString(R.string.account_exists));
             }
         }
     }
 
     private void getShowMessage(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        Snackbar.make(mLinearLayout, s, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
     }
 
 }
