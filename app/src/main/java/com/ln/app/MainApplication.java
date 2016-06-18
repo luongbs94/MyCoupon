@@ -23,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by luongnguyen on 4/1/16.
- *<></>
+ * <></>
  */
 public class MainApplication extends MultiDexApplication {
 
@@ -32,6 +32,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String LIST_IMAGES = "LIST_IMAGES";
 
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
+
 
 
     public static LoveCouponAPI apiService;
@@ -60,7 +61,9 @@ public class MainApplication extends MultiDexApplication {
     public static final int WIDTH_IMAGES = 450;
 
 
-    // information user
+    // information user FACEBOOK
+    public static final String FACEBOOK_PROFILE = "public_profile";
+    public static final String FACEBOOK_EMAIL = "email";
     public static DetailUser sDetailUser;
     public static final String IMAGE_FACEBOOK = "https://graph.facebook.com/";
     public static final String IMAGE_FACEBOOK_END = "/picture?type=large";
@@ -74,20 +77,19 @@ public class MainApplication extends MultiDexApplication {
     public static int sIdCompany;
 
 
-
     public static final String FILE_URI = "file_uri";
     public static final int GOOGLE_SIGN_IN = 100;
     public static final String FIRST_BASE64 = "data:image/jpeg;base64,";
     public static final String VALUE = "VALUE";
     public static final String DURATION = "DURATION";
 
-    public static final String COUPON_TEMpLATE_ID = "COUPON_TEMpLATE_ID" ;
+    public static final String COUPON_TEMpLATE_ID = "COUPON_TEMpLATE_ID";
 
 
     // size screen
 
-    public static  int WIDTH ;
-    public static int HEIGHT;
+    public static float WIDTH_SCREEN;
+    public static float HEIGHT_SCREEN;
 
     @Override
     public void onCreate() {
@@ -116,6 +118,7 @@ public class MainApplication extends MultiDexApplication {
 
         sharedPreferences = getSharedPreferences(SHAREDPRE, 4);
         editor = sharedPreferences.edit();
+
 
     }
 

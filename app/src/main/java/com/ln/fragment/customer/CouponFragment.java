@@ -62,7 +62,6 @@ public class CouponFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-
         mView = inflater.inflate(R.layout.fragment_company_of_client, container, false);
 
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
@@ -83,7 +82,6 @@ public class CouponFragment extends Fragment {
 
         return mView;
     }
-
 
 
     private void initViews() {
@@ -135,7 +133,6 @@ public class CouponFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
                 swipeContainer.setRefreshing(false);
-
             }
         });
 

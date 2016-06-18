@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 
@@ -36,12 +37,8 @@ public class FirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_first);
 
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        MainApplication.HEIGHT = displaymetrics.heightPixels;
-        MainApplication.WIDTH = displaymetrics.widthPixels;
 
-
+        getSizeScreen();
         initViews();
 
         addEvents();
@@ -72,7 +69,6 @@ public class FirstActivity extends AppCompatActivity {
 
 
     private void initViews() {
-
         setTitle(R.string.banla);
 
         mBtnShop = (Button) findViewById(R.id.shop);
@@ -92,6 +88,18 @@ public class FirstActivity extends AppCompatActivity {
     private void onClickLoginCustomer() {
         Intent intent = new Intent(FirstActivity.this, CustomerLoginActivity.class);
         startActivity(intent);
+    }
+
+    private void getSizeScreen() {
+
+        // get size screen android
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+
+        float density = getResources().getDisplayMetrics().density;
+        MainApplication.HEIGHT_SCREEN = outMetrics.heightPixels / density;
+        MainApplication.WIDTH_SCREEN = outMetrics.widthPixels / density;
     }
 
     private class Events implements View.OnClickListener {

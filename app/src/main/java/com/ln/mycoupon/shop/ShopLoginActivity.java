@@ -38,6 +38,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
+import com.ln.model.DetailUser;
 import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -73,20 +74,19 @@ public class ShopLoginActivity extends AppCompatActivity
     //login with google
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login);
-        setTitle(R.string.login);
 
+        getSupportActionBar().setTitle(R.string.login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         apiService = MainApplication.getAPI();
 
-
         //56:CE:70:45:DA:93:5A:92:02:D8:45:C3:58:4E:10:36:09:24:42:C4
-        GoogleSignInOptions   mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
@@ -97,8 +97,6 @@ public class ShopLoginActivity extends AppCompatActivity
                 .build();
 
 
-        Log.d(TAG, getString(R.string.default_web_client_id));
-
         // key login google
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -106,14 +104,12 @@ public class ShopLoginActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
-                    ;
+//                    MainApplication.sDetailUser = new DetailUser(user)
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid() + " - " + user.getEmail());
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
 
@@ -123,20 +119,19 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void initViews() {
 
-        mCallbackManager = CallbackManager.Factory.create();
 
         mBtnLogin = (Button) findViewById(R.id.btn_login);
         username = (MaterialEditText) findViewById(R.id.username);
         password = (MaterialEditText) findViewById(R.id.password);
 
+        mCallbackManager = CallbackManager.Factory.create();
         mBtnLoginFacebook = (LoginButton) findViewById(R.id.btn_login_facebook);
-        mBtnLoginFacebook.setReadPermissions("user_friends");
-        mBtnLoginFacebook.setReadPermissions("public_profile");
-        mBtnLoginFacebook.setReadPermissions("email");
+
+        if (mBtnLoginFacebook != null) {
+            mBtnLoginFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL);
+        }
 
         mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
-
-
         mLinearLayout = (LinearLayout) findViewById(R.id.linear_login_shop);
     }
 
@@ -151,22 +146,21 @@ public class ShopLoginActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//
+
         if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                loginGoogle(account);
             } else {
-                // Google Sign In failed, update UI appropriately
-                // ...
-
+                // login fails
                 getSnackBar(getString(R.string.login_google_fails));
             }
+        } else {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
 
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void getCompanyProfile(final String user, final String pass) {
@@ -312,30 +306,30 @@ public class ShopLoginActivity extends AppCompatActivity
         if (mAccessToken != null) {
 //            mStatusTextView.setText(mAccessToken.getUserId() + "");
             Log.i("Tagsss", mAccessToken.getUserId() + "");
-
+        }
+        if (mProfile != null) {
+            Log.i("Tagsss", mProfile.getId() + "");
         }
     }
 
     // integrator login google save state google login
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void loginGoogle(GoogleSignInAccount acct) {
 
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        // init detailUser
+        Log.d(TAG, "id google:" + acct.getId());
+        MainApplication.sDetailUser = new DetailUser(acct.getId(), acct.getEmail());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
                         if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Log.e(TAG, "signInWithCredential", task.getException());
                             getSnackBar("Authentication failed.");
                         }
-                        // ...
                     }
                 });
-
     }
 
     @Override
@@ -348,21 +342,21 @@ public class ShopLoginActivity extends AppCompatActivity
     private class Events implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-
             switch (view.getId()) {
                 case R.id.btn_login:
-                    onClickLogin(view);
+                    onClickLogin();
                     break;
                 case R.id.btn_login_facebook:
                     onClickLoginFacebook();
                     break;
                 case R.id.btn_google:
+                default:
                     onClickGooglePlus();
                     break;
             }
         }
 
-        private void onClickLogin(View view) {
+        private void onClickLogin() {
 
             String str_user = username.getText().toString();
             String str_password = password.getText().toString();
@@ -383,40 +377,23 @@ public class ShopLoginActivity extends AppCompatActivity
         private void onClickLoginFacebook() {
             mBtnLoginFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
-                private ProfileTracker mProfileTracker;
-
                 @Override
                 public void onSuccess(LoginResult loginResult) {
 
-                    if (Profile.getCurrentProfile() == null) {
-                        mProfileTracker = new ProfileTracker() {
-                            @Override
-                            protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
-                                Log.d(TAG, profile2.getFirstName());
-                                Log.d(TAG, profile2.getId());
-                                Log.d(TAG, profile2.getName());
-                                Log.d(TAG, profile2.getLinkUri() + "");
-                                getCompanyProfileSocial(profile2.getId());
-                                mProfileTracker.stopTracking();
-
-                            }
-                        };
-                        // no need to call startTracking() on mProfileTracker
-                        // because it is called by its constructor, internally.
-                    } else {
-                        Profile profile = Profile.getCurrentProfile();
-                        Log.v(TAG, profile.getFirstName());
-                    }
+                    mProfile = Profile.getCurrentProfile();
+                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
+                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
                 }
 
                 @Override
                 public void onCancel() {
+                    Log.d(TAG, "FACEBOOK - onCancel");
                 }
 
                 @Override
                 public void onError(FacebookException error) {
+                    Log.d(TAG, "FACEBOOK - onError");
                 }
-
             });
         }
     }

@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.ln.app.MainApplication;
@@ -18,12 +17,8 @@ import java.util.List;
 
 public class PreviewImagesActivity extends AppCompatActivity {
 
-    private ViewPager mViewPager;
     private int mPosition;
     private List<String> mListImages = new ArrayList<>();
-
-    private String TAG = getClass().getSimpleName();
-    private PreviewAdapter mPreviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +36,6 @@ public class PreviewImagesActivity extends AppCompatActivity {
         if (bundle != null) {
             mPosition = bundle.getInt(MainApplication.POSITION);
             mListImages = (List<String>) bundle.getSerializable(MainApplication.LIST_IMAGES);
-            for (String string : mListImages) {
-                Log.d(TAG, string);
-            }
         }
     }
 
@@ -53,13 +45,14 @@ public class PreviewImagesActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.show_images);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        mViewPager = (ViewPager) findViewById(R.id.preview_pager);
-        mPreviewAdapter = new PreviewAdapter(getSupportFragmentManager());
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.preview_pager);
+        PreviewAdapter mPreviewAdapter = new PreviewAdapter(getSupportFragmentManager());
         mPreviewAdapter.setListImages(mListImages);
-        mViewPager.setAdapter(mPreviewAdapter);
-        mPreviewAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(mPosition);
+
+        if (mViewPager != null) {
+            mViewPager.setAdapter(mPreviewAdapter);
+            mViewPager.setCurrentItem(mPosition);
+        }
     }
 
     @Override
