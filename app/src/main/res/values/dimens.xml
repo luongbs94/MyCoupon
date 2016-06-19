@@ -8,7 +8,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_size_middle">14sp</dimen>
     <dimen name="detail_backdrop_height">256dp</dimen>
-    <dimen name="size_15sp">13sp</dimen>
+    <dimen name="size_15sp">15sp</dimen>
     <dimen name="size_8">8dp</dimen>
     <dimen name="size_30sp">25sp</dimen>
     <dimen name="size_18sp">18sp</dimen>
@@ -36,6 +36,7 @@
     <dimen name="size_250">250dp</dimen>
     <dimen name="size_200">200dp</dimen>
     <dimen name="size_100">100dp</dimen>
+    <dimen name="size_17sp">17sp</dimen>
 
 
 </resources>

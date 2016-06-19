@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
+apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion 23
@@ -62,5 +65,5 @@ dependencies {
 
 }
 
-apply plugin: 'com.google.gms.google-services'
+
 

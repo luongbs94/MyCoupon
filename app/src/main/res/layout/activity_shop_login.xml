@@ -46,20 +46,23 @@
             android:textColor="@color/white"
             android:textSize="@dimen/size_15sp" />
 
-        <com.facebook.login.widget.LoginButton
+        <Button
             android:id="@+id/btn_login_facebook"
-            style="@style/StyleFacebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            fb:login_text="FACEBOOK" />
+            android:background="@color/facebook"
+            android:text="@string/face_login"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size_15sp" />
 
         <Button
             android:id="@+id/btn_google"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/ic_bk_google"
+            android:background="@color/google"
+            android:text="@string/google_login"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/size_15sp" />

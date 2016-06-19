@@ -16,8 +16,8 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -40,6 +40,7 @@ import com.ln.model.User;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,8 +49,9 @@ import retrofit2.Response;
 
 public class CustomerLoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String PERMISSION = "publish_actions";
     // create login facebook
-    private LoginButton mBtnFacebook;
+    private Button mBtnFacebook;
 
     private CallbackManager mCallbackManager;
     private AccessTokenTracker mAccessTokenTracker;
@@ -79,10 +81,37 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
     private void initViews() {
 
         mCallbackManager = CallbackManager.Factory.create();
-        mBtnFacebook = (LoginButton) findViewById(R.id.btn_facebook_customer);
-        if (mBtnFacebook != null) {
-            mBtnFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL);
-        }
+
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                mAccessToken = AccessToken.getCurrentAccessToken();
+                if (mAccessToken != null) {
+                    Log.d(TAG, mAccessToken.getUserId());
+                    //10205539341392320
+                    getCompanyByUserId(mAccessToken.getUserId());
+
+                    //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
+//                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
+                    updateUserToken("10205539341392320", MainApplication.getDeviceToken(), "android");
+                }
+
+                mProfile = Profile.getCurrentProfile();
+                if (mProfile != null) {
+                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
+                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+                }
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+            }
+        });
+        mBtnFacebook = (Button) findViewById(R.id.btn_facebook_customer);
 
         // google
         mBtnGoogle = (Button) findViewById(R.id.btn_google_customer);
@@ -146,7 +175,6 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
         // init detailUser
         Log.d(TAG, "id google:" + account.getId());
         MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail());
-
 
 
         getCompanyByUserId(account.getId());
@@ -321,35 +349,9 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
 
         private void onClickLoginFaceBook() {
-            mBtnFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    mAccessToken = AccessToken.getCurrentAccessToken();
-                    if (mAccessToken != null) {
-                        Log.d(TAG, mAccessToken.getUserId());
-                        //10205539341392320
-                        getCompanyByUserId(mAccessToken.getUserId());
-
-                        //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
-//                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
-                        updateUserToken("10205539341392320", MainApplication.getDeviceToken(), "android");
-                    }
-
-                    mProfile = Profile.getCurrentProfile();
-                    if (mProfile != null) {
-                        MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
-                        Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
-                    }
-                }
-
-                @Override
-                public void onCancel() {
-                }
-
-                @Override
-                public void onError(FacebookException error) {
-                }
-            });
+            LoginManager.getInstance().logInWithPublishPermissions(
+                    CustomerLoginActivity.this,
+                    Collections.singleton(PERMISSION));
         }
     }
 }

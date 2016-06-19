@@ -18,8 +18,8 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -42,6 +42,7 @@ import com.ln.model.DetailUser;
 import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -55,8 +56,10 @@ import retrofit2.Response;
 public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String PERMISSION = "publish_actions";
+
     private Button mBtnLogin;
-    private LoginButton mBtnLoginFacebook;
+    private Button mBtnLoginFacebook;
     private MaterialEditText username, password;
     private LoveCouponAPI apiService;
     private String TAG = getClass().getSimpleName();
@@ -125,11 +128,28 @@ public class ShopLoginActivity extends AppCompatActivity
         password = (MaterialEditText) findViewById(R.id.password);
 
         mCallbackManager = CallbackManager.Factory.create();
-        mBtnLoginFacebook = (LoginButton) findViewById(R.id.btn_login_facebook);
 
-        if (mBtnLoginFacebook != null) {
-            mBtnLoginFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL);
-        }
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                mProfile = Profile.getCurrentProfile();
+                MainApplication.sShopDetail = new DetailUser(mProfile.getId(), mProfile.getName());
+                Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "FACEBOOK - onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "FACEBOOK - onError");
+            }
+        });
+
+
+        mBtnLoginFacebook = (Button) findViewById(R.id.btn_login_facebook);
 
         mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
         mLinearLayout = (LinearLayout) findViewById(R.id.linear_login_shop);
@@ -375,26 +395,10 @@ public class ShopLoginActivity extends AppCompatActivity
         }
 
         private void onClickLoginFacebook() {
-            mBtnLoginFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-
-                    mProfile = Profile.getCurrentProfile();
-                    MainApplication.sShopDetail = new DetailUser(mProfile.getId(), mProfile.getName());
-                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
-                }
-
-                @Override
-                public void onCancel() {
-                    Log.d(TAG, "FACEBOOK - onCancel");
-                }
-
-                @Override
-                public void onError(FacebookException error) {
-                    Log.d(TAG, "FACEBOOK - onError");
-                }
-            });
+            LoginManager.getInstance().logInWithPublishPermissions(
+                    ShopLoginActivity.this,
+                    Arrays.asList(PERMISSION));
         }
     }
 }

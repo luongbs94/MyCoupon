@@ -85,7 +85,7 @@
     <string name="coupon_of">Coupon\\</string>
     <string name="login_fails">Tài khoản hoặc mật khẩu không đúng</string>
     <string name="login_google_fails">Đăng nhập google không thành công</string>
-    <string name="google_login">google</string>
+    <string name="google_login">google+</string>
     <string name="user1OtherUser2">Tài khoản 1 phải khác với tài khoản 2</string>
     <string name="account_exists">Tài khoản đã tồn tại! Bạn hãy nhập tài tài khoản mới!</string>
     <string name="user2OtherUser1">Tài khoản 2 phải khác với tài khoản 1! bạn hãy nhập tài khoản mới!</string>
