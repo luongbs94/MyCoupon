@@ -406,6 +406,10 @@ public class SettingFragment extends Fragment {
                 onClickUser1();
             } else if (mEdtUser2.isFocused()) {
                 onClickUser2();
+            } else if (mEdtPassword1.isFocused()) {
+                onClickPassword1();
+            } else if (mEdtPassword2.isFocused()) {
+                onClickPassword2();
             }
         }
 
@@ -423,10 +427,14 @@ public class SettingFragment extends Fragment {
 
     private void onClickUser1() {
 
-        validateUser(mEdtUser1, mEdtUser2, mInputUser1, mInputPassword1);
+        validateUser(mEdtUser1, mEdtUser2, mEdtPassword1, mInputUser1, mInputPassword1);
     }
 
-    private void validateUser(EditText editText, EditText editText2, TextInputLayout textInputLayout, TextInputLayout password) {
+    private void onClickUser2() {
+        validateUser(mEdtUser2, mEdtUser1, mEdtPassword2, mInputUser2, mInputPassword2);
+    }
+
+    private void validateUser(EditText editText, EditText editText2, EditText edtPassword, TextInputLayout textInputLayout, TextInputLayout password) {
 
         Company company = SaveData.company;
 
@@ -440,8 +448,10 @@ public class SettingFragment extends Fragment {
             requestFocus(editText);
         } else {
             textInputLayout.setErrorEnabled(false);
-            if (!text.isEmpty()) {
+            if (!text.isEmpty() && edtPassword.getText().toString().trim().isEmpty()) {
                 password.setError(getString(R.string.enter_password));
+            } else {
+                password.setErrorEnabled(false);
             }
         }
 
@@ -454,9 +464,21 @@ public class SettingFragment extends Fragment {
         }
     }
 
-    private void onClickUser2() {
+    private void onClickPassword1() {
+        validatePassword(mEdtUser1, mEdtPassword1, mInputPassword1);
+    }
 
-        validateUser(mEdtUser2, mEdtUser1, mInputUser2, mInputPassword2);
+    private void onClickPassword2() {
+        validatePassword(mEdtUser2, mEdtPassword2, mInputPassword2);
+    }
+
+    private void validatePassword(EditText user, EditText password, TextInputLayout inputPassword) {
+        if (!user.getText().toString().trim().isEmpty() && password.getText().toString().trim().isEmpty()) {
+            inputPassword.setError(getString(R.string.enter_password));
+            requestFocus(password);
+        } else {
+            inputPassword.setErrorEnabled(false);
+        }
     }
 
     private void getShowMessage(String s) {
