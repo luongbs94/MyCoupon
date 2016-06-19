@@ -170,7 +170,8 @@
                     android:id="@+id/chb_show_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="@dimen/size_16"
+                    android:layout_marginRight="@dimen/size_16"
                     android:text="@string/show_password"
                     android:textSize="@dimen/size_18sp" />
 

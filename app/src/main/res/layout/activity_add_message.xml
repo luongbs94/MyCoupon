@@ -9,7 +9,6 @@
     android:layout_marginTop="20dp"
     android:orientation="vertical">
 
-
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/title"
         android:layout_width="match_parent"
@@ -34,7 +33,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
         android:text="@string/date"
-        android:textSize="18dp" />
+        android:textSize="@dimen/size_18sp" />
 
 
     <com.rengwuxian.materialedittext.MaterialEditText
@@ -44,13 +43,19 @@
         android:hint="@string/link"
         android:textColor="@drawable/text_color" />
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rec_select_images"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="@dimen/size_100"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:dividerHeight="4dp"
+        android:fastScrollEnabled="true"
+        android:focusable="true"
+        android:layoutAnimation="@anim/list_anim"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="horizontal"
+        android:visibility="gone" />
 
 
     <ImageView
@@ -76,9 +81,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="sans-serif-medium"
             android:padding="10dp"
-            android:text="TẠO TIN"
+            android:text="@string/create_news"
+            android:textAllCaps="true"
             android:textColor="@color/white" />
 
     </android.support.v7.widget.CardView>

@@ -1,16 +1,15 @@
 package com.ln.mycoupon;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,8 +31,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -43,8 +45,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.ln.app.MainApplication.getRandomString;
-
 /**
  * Created by luongnguyen on 4/7/16.
  * <></>
@@ -53,39 +53,38 @@ public class AddMessageActivity extends AppCompatActivity {
 
     private String TAG = getClass().getSimpleName();
 
-    private MaterialEditText title, content, link;
+    private MaterialEditText mTxtTitle, mTxtContent, mTxtLink;
     private CardView addMessage;
     private LinearLayout layoutView;
     private ImageView mImgSelectImages;
-    private RecyclerView mRvSelectImages, mRvShow;
-
+    private RecyclerView mRecyclerViewImages;
 
     private static final int mSelectNumber = 9;
     private static final int mMode = 1;
     private static final boolean isShow = true;
     private static final boolean isPreview = true;
     private static final boolean isCrop = false;
-    private boolean isUpload;
 
-    private String idNews, imagesLink;
-
-    private ArrayList<ItemImage> mImages = new ArrayList<>();
+    private List<ItemImage> mListImagesSelected = new ArrayList<>();
+    private List<String> mListStrImages = new ArrayList<>();
     private SelectedImageAdapter mSelectedImageAdapter;
 
     private LoveCouponAPI mApiService;
     private LoveCouponAPI apiService;
 
-    private File mImageDir;
+    private boolean mIsShowRecyclerView;
+
+    private String mLinkImageNews;
+
+    private ProgressDialog mProgressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_add_message);
+        setContentView(R.layout.activity_add_message);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mImageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "MyCoupon");
-        Log.d(TAG, "imageDir" + mImageDir.getAbsolutePath());
 
         apiService = MainApplication.getAPI();
         mApiService = MainApplication.getAPI1();
@@ -93,26 +92,27 @@ public class AddMessageActivity extends AppCompatActivity {
         initViews();
 
         addEvents();
-
-
     }
 
     private void initViews() {
-        title = (MaterialEditText) findViewById(R.id.title);
-        content = (MaterialEditText) findViewById(R.id.content);
-        link = (MaterialEditText) findViewById(R.id.link);
+
+        mTxtTitle = (MaterialEditText) findViewById(R.id.title);
+        mTxtContent = (MaterialEditText) findViewById(R.id.content);
+        mTxtLink = (MaterialEditText) findViewById(R.id.link);
         layoutView = (LinearLayout) findViewById(R.id.layout_add_message);
         addMessage = (CardView) findViewById(R.id.card_view_add_messages);
         mImgSelectImages = (ImageView) findViewById(R.id.img_selected_images);
 
-        mRvSelectImages = (RecyclerView) findViewById(R.id.rec_select_images);
-        mRvSelectImages.setLayoutManager(new GridLayoutManager(this, 3));
+        mRecyclerViewImages = (RecyclerView) findViewById(R.id.rec_select_images);
 
-        mSelectedImageAdapter = new SelectedImageAdapter(getApplicationContext(), mImages);
-        mRvSelectImages.setAdapter(mSelectedImageAdapter);
 
-        idNews = MainApplication.getRandomString(15);
-        imagesLink = MainApplication.getRandomString(40);
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerViewImages.setLayoutManager(manager);
+        mRecyclerViewImages.setHasFixedSize(true);
+
+        mSelectedImageAdapter = new SelectedImageAdapter(this, mListImagesSelected);
+        mRecyclerViewImages.setAdapter(mSelectedImageAdapter);
+
     }
 
 
@@ -129,11 +129,18 @@ public class AddMessageActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
+        int id = item.getItemId();
+
+        switch (id) {
             case R.id.menu_add:
-                onClickAddMessages(layoutView);
+                onClickAddMessages();
+                return true;
+            case android.R.id.home:
+                Intent intent = new Intent();
+                setResult(3, intent);
+                finish();
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -141,6 +148,9 @@ public class AddMessageActivity extends AppCompatActivity {
     }
 
     private void addNews(final String title, final String content, final String link) {
+
+        String idNews = MainApplication.getRandomString(15);
+
         Message template = new Message();
 
         template.setMessage_id(idNews);
@@ -148,26 +158,25 @@ public class AddMessageActivity extends AppCompatActivity {
         template.setLink(link);
         template.setTitle(title);
         template.setCompany_id(SaveData.company.company_id + "");
-        if (mImages.size() > 0) {
-            template.setImages_link(imagesLink);
+        if (mLinkImageNews != null) {
+            template.setImages_link(mLinkImageNews);
         }
-
         //template.created_date= new Date();
 
         Call<Message> call2 = apiService.addMessage(template);
         call2.enqueue(new Callback<Message>() {
 
             @Override
-            public void onResponse(Call<Message> arg0,
-                                   Response<Message> arg1) {
+            public void onResponse(Call<Message> arg0, Response<Message> arg1) {
 
-                Snackbar.make(layoutView, R.string.add_message_success, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                getSnackBar(getString(R.string.add_message_success));
+                mTxtTitle.setText("");
+                mTxtContent.setText("");
+                mTxtLink.setText("");
+                mListImagesSelected.clear();
+                mSelectedImageAdapter.notifyDataSetChanged();
 
-                AddMessageActivity.this.title.setText("");
-                AddMessageActivity.this.content.setText("");
-                AddMessageActivity.this.link.setText("");
-
+                hideProgressDialog();
             }
 
             @Override
@@ -180,32 +189,50 @@ public class AddMessageActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            Intent intent = new Intent();
-            setResult(3, intent);
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == ImageSelectorActivity.REQUEST_IMAGE) {
             List<String> images = (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity.REQUEST_OUTPUT);
 
             for (String s : images) {
-                Log.d(TAG, createFile(s));
-                mImages.add(new ItemImage(createFile(s), idNews));
+                if (!isExists(s)) {
+                    mListStrImages.add(s);
+                    ItemImage itemImage = new ItemImage(createFile(s));
+                    mListImagesSelected.add(itemImage);
+                    mIsShowRecyclerView = true;
+                } else {
+                    getSnackBar(getString(R.string.images_chose_is_exists));
+                }
+            }
+
+            if (mIsShowRecyclerView) {
+                mRecyclerViewImages.setVisibility(View.VISIBLE);
             }
 
             mSelectedImageAdapter.notifyDataSetChanged();
-            isUpload = false;
+        }
+    }
+
+    private boolean isExists(String s) {
+        for (String itemImage : mListStrImages) {
+            if (itemImage.equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setTitle("Đang tạo message");
+            mProgressDialog.setMessage("Running...");
+        }
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 
@@ -214,7 +241,7 @@ public class AddMessageActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.card_view_add_messages:
-                    onClickAddMessages(v);
+                    onClickAddMessages();
                     break;
                 case R.id.img_selected_images:
                     onClickSelectImages();
@@ -227,43 +254,51 @@ public class AddMessageActivity extends AppCompatActivity {
         }
     }
 
-    private void onClickAddMessages(View view) {
+    private void onClickAddMessages() {
 
-        if (!isUpload) {
+        String str_title = mTxtTitle.getText().toString();
+        String str_content = mTxtContent.getText().toString();
+        String str_link = mTxtLink.getText().toString();
+        if (str_title.length() > 0 && str_content.length() > 0 && str_link.length() > 0) {
+            showProgressDialog();
+            for (ItemImage itemImage : mListImagesSelected) {
+                String str = itemImage.getPath().substring(itemImage.getPath().lastIndexOf("/") + 1);
+                String url = MainApplication.URL_UPDATE_IMAGE + "/upload/" + str;
+                if (mLinkImageNews != null && mLinkImageNews.length() > 0) {
+                    mLinkImageNews += ";" + url;
+                } else {
+                    mLinkImageNews = url;
+                }
 
-            String linkCompany = getRandomString(12);
-            String str_title = title.getText().toString();
-            String str_content = content.getText().toString();
-            String str_link = link.getText().toString();
-            if (str_title.length() > 0 && str_content.length() > 0 && str_link.length() > 0) {
-                addNews(str_title, str_content, str_link);
-            } else {
-                getSnackBar(getString(R.string.not_fill_login));
+                Log.d(TAG, "linkImages : " + url);
             }
 
-            for (ItemImage itemImage : mImages) {
-                uploadFile(itemImage.getImages());
+            for (ItemImage itemImage : mListImagesSelected) {
+                uploadFile(itemImage.getPath());
             }
 
-            isUpload = true;
+            addNews(str_title, str_content, str_link);
+
+        } else {
+            getSnackBar(getString(R.string.not_fill_login));
         }
+
     }
 
-    private String convertBase64(String path) {
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 8;
-        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-
-        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
-        Bitmap resized = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES, height, true);
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        String title = Base64.encodeToString(byteArray, Base64.NO_WRAP);
-        return title;
-    }
+//    private String convertBase64(String path) {
+//
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = 8;
+//        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+//
+//        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
+//        Bitmap resized = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES, height, true);
+//
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        byte[] byteArray = stream.toByteArray();
+//        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
+//    }
 
     private String createFile(String path) {
 
@@ -275,10 +310,10 @@ public class AddMessageActivity extends AppCompatActivity {
         Bitmap resized = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES, height, true);
 
         String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));
-        Log.d(TAG, path);
 
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.getDefault()).format(new Date());
 
-        File resizedFile = new File(this.getCacheDir(), nameImages + ".png");
+        File resizedFile = new File(this.getCacheDir(), nameImages + "_" + timeStamp + ".png");
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -303,7 +338,8 @@ public class AddMessageActivity extends AppCompatActivity {
     private void uploadFile(String path) {
 
         File file = new File(path);
-        Log.d(TAG, file.getName());
+        Log.d(TAG, "file name : " + file.getName());
+
         // create RequestBody instance from file
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -325,7 +361,7 @@ public class AddMessageActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call,
                                    Response<ResponseBody> response) {
 
-                Log.d(TAG, response.message());
+                Log.d(TAG, "response" + response.message());
             }
 
             @Override
@@ -336,7 +372,6 @@ public class AddMessageActivity extends AppCompatActivity {
     }
 
     private void getSnackBar(String s) {
-        Snackbar.make(layoutView, s, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        Snackbar.make(layoutView, s, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 }

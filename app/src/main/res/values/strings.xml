@@ -89,6 +89,8 @@
     <string name="user1OtherUser2">Tài khoản 1 phải khác với tài khoản 2</string>
     <string name="account_exists">Tài khoản đã tồn tại! Bạn hãy nhập tài tài khoản mới!</string>
     <string name="user2OtherUser1">Tài khoản 2 phải khác với tài khoản 1! bạn hãy nhập tài khoản mới!</string>
+    <string name="create_news">TẠO TIN</string>
+    <string name="images_chose_is_exists">Ảnh bạn vừa chọn đã có trong danh sách những bức ảnh đã được chọn!</string>
 
 
 </resources>

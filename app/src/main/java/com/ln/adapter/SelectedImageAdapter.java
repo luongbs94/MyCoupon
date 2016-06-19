@@ -13,20 +13,20 @@ import com.ln.mycoupon.R;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Nhahv on 5/11/2016.
- *<></>
+ * <></>
  */
 public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<ItemImage> mListImages = new ArrayList<>();
+    private List<ItemImage> mListImages = new ArrayList<>();
 
-    public SelectedImageAdapter(Context mContext, ArrayList<ItemImage> mListImages) {
+    public SelectedImageAdapter(Context mContext, List<ItemImage> mListImages) {
         this.mContext = mContext;
         this.mListImages = mListImages;
-        notifyDataSetChanged();
     }
 
 
@@ -36,16 +36,19 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        final int index = position;
         Glide.with(mContext)
-                .load(new File(mListImages.get(position).getImages()))
+                .load(new File(mListImages.get(position).getPath()))
                 .centerCrop()
+                .fitCenter()
                 .into(holder.mImages);
 
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListImages.remove(position);
+                mListImages.remove(index);
                 notifyDataSetChanged();
             }
         });

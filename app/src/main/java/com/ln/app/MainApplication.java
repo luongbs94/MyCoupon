@@ -68,7 +68,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String IMAGE_FACEBOOK = "https://graph.facebook.com/";
     public static final String IMAGE_FACEBOOK_END = "/picture?type=large";
 
-    private static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
+    public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
 
     // login with // STOPSHIP: 6/18/2016
     public static DetailUser sShopDetail;
