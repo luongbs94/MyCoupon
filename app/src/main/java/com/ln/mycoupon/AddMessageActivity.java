@@ -282,7 +282,6 @@ public class AddMessageActivity extends AppCompatActivity {
         } else {
             getSnackBar(getString(R.string.not_fill_login));
         }
-
     }
 
 //    private String convertBase64(String path) {

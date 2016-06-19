@@ -91,6 +91,9 @@
     <string name="user2OtherUser1">Tài khoản 2 phải khác với tài khoản 1! bạn hãy nhập tài khoản mới!</string>
     <string name="create_news">TẠO TIN</string>
     <string name="images_chose_is_exists">Ảnh bạn vừa chọn đã có trong danh sách những bức ảnh đã được chọn!</string>
+    <string name="username2">Username 2</string>
+    <string name="user_error">Bạn hãy nhập username!</string>
+    <string name="enter_password">Password không được để trống!</string>
 
 
 </resources>

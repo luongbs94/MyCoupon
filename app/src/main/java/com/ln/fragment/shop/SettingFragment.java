@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -23,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -52,20 +54,26 @@ import retrofit2.Response;
  */
 public class SettingFragment extends Fragment {
 
-    private static final String TAG = "SettingFragment";
-    private EditText mEdtNameCompany, mEdtAddress, mEdtUser1, mEdtPassword1, mEdtUser2, mEdtPassword2;
-    private CheckBox checkBox, checkBox1;
-    private CardView mCardView;
     private LoveCouponAPI mLoveCouponAPI;
+
+    private String TAG = getClass().getSimpleName();
+
+    private TextInputLayout mInputUser1, mInputUser2, mInputPassword1, mInputPassword2;
+    private EditText mEdtNameCompany, mEdtAddress, mEdtPassword1, mEdtUser2, mEdtPassword2;
+    private CheckBox checkBox, checkBox1;
+    private EditText mEdtUser1;
+    private CardView mCardView;
     private CircleImageView mImgLogo;
     private TextView mTxtNameCompany, mTxtAddress;
+    private CheckBox mChbShowPass;
     private LinearLayout mLinearLayout;
+    private FloatingActionButton mFabDoneSave;
 
     private Uri mFileUri;
 
-    private FloatingActionButton mFabDoneSave;
-    private CheckBox mChbShowPass;
-    private boolean isAccountExists = true;
+    private static final String IMAGE_DIRECTORY_NAME = "MyCoupon";
+    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
+    private static final int SELECT_PICTURE = 1;
 
 
     @Override
@@ -82,6 +90,12 @@ public class SettingFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(MainApplication.FILE_URI, mFileUri);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,7 +103,6 @@ public class SettingFragment extends Fragment {
         mLoveCouponAPI = MainApplication.getAPI();
 
         initViews(v);
-//        initCollapsingToolBar();
         init();
         addEvents();
         return v;
@@ -111,11 +124,11 @@ public class SettingFragment extends Fragment {
         mEdtAddress = (EditText) v.findViewById(R.id.address_company);
         mEdtUser1 = (EditText) v.findViewById(R.id.username1);
         mEdtPassword1 = (EditText) v.findViewById(R.id.password1);
-        mEdtPassword2 = (EditText) v.findViewById(R.id.password2);
 
         mEdtUser2 = (EditText) v.findViewById(R.id.username2);
+        mEdtPassword2 = (EditText) v.findViewById(R.id.password2);
 
-        checkBox = (CheckBox) v.findViewById(R.id.check_admin);
+        checkBox = (CheckBox) v.findViewById(R.id.check_admin1);
         checkBox1 = (CheckBox) v.findViewById(R.id.check_admin2);
 
         mCardView = (CardView) v.findViewById(R.id.cardview1);
@@ -123,14 +136,12 @@ public class SettingFragment extends Fragment {
         mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_nav);
         mTxtAddress = (TextView) v.findViewById(R.id.txt_email_nav);
 
-
+        mInputUser1 = (TextInputLayout) v.findViewById(R.id.input_user1);
+        mInputUser2 = (TextInputLayout) v.findViewById(R.id.input_user2);
+        mInputPassword1 = (TextInputLayout) v.findViewById(R.id.input_password1);
+        mInputPassword2 = (TextInputLayout) v.findViewById(R.id.input_password2);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(MainApplication.FILE_URI, mFileUri);
-    }
 
     private void init() {
 
@@ -201,6 +212,9 @@ public class SettingFragment extends Fragment {
 
         mEdtUser1.addTextChangedListener(new Events());
         mEdtUser2.addTextChangedListener(new Events());
+
+        mEdtPassword1.addTextChangedListener(new Events());
+        mEdtPassword2.addTextChangedListener(new Events());
     }
 
 
@@ -208,16 +222,12 @@ public class SettingFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == getActivity().RESULT_OK) {
-
-            if (requestCode == SELECT_PICTURE) {
-                previewCapturedImage(data.getData().getPath());
-            } else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
-
-                Log.d(TAG, mFileUri.getPath());
-                previewCapturedImage(mFileUri.getPath());
-            }
-        } else if (resultCode == getActivity().RESULT_CANCELED) {
+        if (requestCode == SELECT_PICTURE) {
+            previewCapturedImage(data.getData().getPath());
+        } else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
+            Log.d(TAG, mFileUri.getPath());
+            previewCapturedImage(mFileUri.getPath());
+        } else {
             getShowMessage("User cancelled image capture");
         }
 
@@ -228,31 +238,27 @@ public class SettingFragment extends Fragment {
                 hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    private Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
+    private Uri getOutputMediaFileUri() {
+        return Uri.fromFile(getOutputMediaFile());
     }
 
-    private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
-    private static final int MEDIA_TYPE_IMAGE = 1;
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
-    private static final int SELECT_PICTURE = 1;
+    private static File getOutputMediaFile() {
 
-    private static File getOutputMediaFile(int type) {
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                IMAGE_DIRECTORY_NAME);
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), IMAGE_DIRECTORY_NAME);
 
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create " + IMAGE_DIRECTORY_NAME + " directory");
+                Log.d("SettingFragment", "Oops! Failed create " + IMAGE_DIRECTORY_NAME);
                 return null;
             }
         }
 
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.getDefault()).format(new Date());
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss",
+                Locale.getDefault()).format(new Date());
 
-        return new File(mediaStorageDir.getPath() +
-                File.separator + "IMG_" + timeStamp + ".jpg");
+        return new File(mediaStorageDir.getPath() + File.separator
+                + "IMG_" + timeStamp + ".jpg");
     }
 
 
@@ -260,6 +266,7 @@ public class SettingFragment extends Fragment {
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 8;
+            options.inJustDecodeBounds = true;
             Bitmap bitmap = BitmapFactory.decodeFile(path, options);
             mImgLogo.setImageBitmap(bitmap);
         } catch (NullPointerException e) {
@@ -267,16 +274,14 @@ public class SettingFragment extends Fragment {
         }
     }
 
-    private boolean isExistsAccount(String company_id, String username) {
+    private int isExistsAccount1(String company_id, String username) {
 
+        final int[] result = new int[1];
         Call<Integer> call = mLoveCouponAPI.isExists(company_id, username);
         call.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
-                int integer = response.body();
-                if (integer == 0) {
-                    isAccountExists = false;
-                }
+                result[0] = response.body();
             }
 
             @Override
@@ -284,8 +289,9 @@ public class SettingFragment extends Fragment {
                 Log.d(TAG, "isExists " + t.toString());
             }
         });
-        return isAccountExists;
+        return result[0];
     }
+
 
     private class Events implements View.OnClickListener, TextWatcher, CompoundButton.OnCheckedChangeListener {
 
@@ -309,7 +315,7 @@ public class SettingFragment extends Fragment {
         private void onClickOpenCamera() {
             if (isDriverSupportCamera()) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                mFileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+                mFileUri = getOutputMediaFileUri();
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
                 startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
             } else {
@@ -342,9 +348,8 @@ public class SettingFragment extends Fragment {
                             onClickOpenCamera();
                             break;
                         case R.id.menu_gallery:
-                            onClickOpenGallery();
-                            break;
                         default:
+                            onClickOpenGallery();
                             break;
                     }
                     return false;
@@ -418,32 +423,40 @@ public class SettingFragment extends Fragment {
 
     private void onClickUser1() {
 
+        validateUser(mEdtUser1, mEdtUser2, mInputUser1, mInputPassword1);
+    }
+
+    private void validateUser(EditText editText, EditText editText2, TextInputLayout textInputLayout, TextInputLayout password) {
+
         Company company = SaveData.company;
-        String strUser1 = mEdtUser1.getText().toString().trim();
-        String strUser2 = mEdtUser2.getText().toString().trim();
-        if (strUser1.equals(strUser2)) {
-            getShowMessage(getString(R.string.user1OtherUser2));
+
+        String text = editText.getText().toString().trim();
+        String text2 = editText2.getText().toString().trim();
+        if (text.equals(text2)) {
+            textInputLayout.setError(getString(R.string.user1OtherUser2));
+            requestFocus(editText);
+        } else if (isExistsAccount1(company.getUser_id(), text) == 1) {
+            textInputLayout.setError(getString(R.string.account_exists));
+            requestFocus(editText);
         } else {
-            isAccountExists = true;
-            if (isExistsAccount(company.getUser_id(), strUser1)) {
-                getShowMessage(getString(R.string.account_exists));
+            textInputLayout.setErrorEnabled(false);
+            if (!text.isEmpty()) {
+                password.setError(getString(R.string.enter_password));
             }
+        }
+
+    }
+
+    private void requestFocus(View view) {
+
+        if (view.requestFocus()) {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
 
     private void onClickUser2() {
 
-        Company company = SaveData.company;
-        String strUser1 = mEdtUser1.getText().toString().trim();
-        String strUser2 = mEdtUser2.getText().toString().trim();
-        if (strUser1.equals(strUser2)) {
-            getShowMessage(getString(R.string.user2OtherUser1));
-        } else {
-            isAccountExists = true;
-            if (isExistsAccount(company.getUser_id(), strUser2)) {
-                getShowMessage(getString(R.string.account_exists));
-            }
-        }
+        validateUser(mEdtUser2, mEdtUser1, mInputUser2, mInputPassword2);
     }
 
     private void getShowMessage(String s) {
