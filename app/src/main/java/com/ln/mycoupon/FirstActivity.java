@@ -17,7 +17,6 @@ import com.ln.model.Company;
 import com.ln.model.Company1;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
-import com.ln.mycoupon.shop.ShopMainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,7 +36,6 @@ public class FirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
-
         getSizeScreen();
         initViews();
 
@@ -47,8 +45,7 @@ public class FirstActivity extends AppCompatActivity {
 
             String data = MainApplication.sharedPreferences.getString(MainApplication.SHOP_DATA, "");
             SaveData.company = gson.fromJson(data, Company.class);
-            Intent intent = new Intent(FirstActivity.this, ShopMainActivity.class);
-            startActivity(intent);
+            onClickLoginShop();
         } else if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINCLIENT, false)) {
             String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
             SaveData.listCompanyCustomer = gson.fromJson(data, new TypeToken<List<Company1>>() {
@@ -56,21 +53,20 @@ public class FirstActivity extends AppCompatActivity {
             onClickLoginCustomer();
         }
 
-
         Date now = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z'('Z')'", Locale.getDefault());
         //Convert the date from the local timezone to UTC timezone
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String dateFormateInUTC = formatter.format(now);
+        String dateFormatInUTC = formatter.format(now);
 
         // Date now = new Date();
-        Log.d(TAG, dateFormateInUTC);
+        Log.d(TAG, dateFormatInUTC);
     }
 
 
     private void initViews() {
-        setTitle(R.string.banla);
 
+        setTitle(R.string.banla);
         mBtnShop = (Button) findViewById(R.id.shop);
         mBtnCustomer = (Button) findViewById(R.id.customer);
     }

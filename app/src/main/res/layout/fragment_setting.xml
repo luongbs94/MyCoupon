@@ -19,10 +19,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <include layout="@layout/layout_user_1" />
-
-            <include layout="@layout/layout_user_2" />
-
             <LinearLayout
                 android:id="@+id/linear_information"
                 android:layout_width="match_parent"
@@ -54,6 +50,12 @@
                     android:paddingTop="@dimen/size_12dp"
                     android:textColor="@drawable/text_color"
                     android:textSize="@dimen/size_18sp" />
+
+
+                <include layout="@layout/layout_user_1" />
+
+                <include layout="@layout/layout_user_2" />
+
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/cardview1"

@@ -8,6 +8,7 @@ package com.ln.model;
 public class DetailUser {
 
     private String id, name;
+    private String picture;
 
     public DetailUser(String id) {
         this.id = id;
@@ -16,6 +17,12 @@ public class DetailUser {
     public DetailUser(String id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public DetailUser(String id, String name, String picture) {
+        this.id = id;
+        this.name = name;
+        this.picture = picture;
     }
 
     public String getId() {
@@ -32,5 +39,13 @@ public class DetailUser {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

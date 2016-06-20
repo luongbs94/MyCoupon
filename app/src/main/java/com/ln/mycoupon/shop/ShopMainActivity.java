@@ -37,10 +37,11 @@ public class ShopMainActivity extends AppCompatActivity
     private String TAG = getClass().getSimpleName();
 
     private int currentPosition = 0;
+    private static String sTitle;
 
     private FloatingActionButton mFbButton;
-    private ImageView mImageLogo;
-    private TextView mTxtNameCompany, mTxtAddress;
+    private DrawerLayout mDrawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +61,10 @@ public class ShopMainActivity extends AppCompatActivity
         }
 
 
+        sTitle = getString(R.string.my_coupon);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle(sTitle);
 
         mFbButton = (FloatingActionButton) findViewById(R.id.fab);
         mFbButton.setOnClickListener(new View.OnClickListener() {
@@ -77,53 +80,55 @@ public class ShopMainActivity extends AppCompatActivity
                         Intent intent1 = new Intent(ShopMainActivity.this, AddMessageActivity.class);
                         startActivityForResult(intent1, 3);
                         break;
-                    case 2:
-
+                    default:
                         break;
                 }
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
-        View headView = navigationView.getHeaderView(0);
-        mImageLogo = (ImageView) headView.findViewById(R.id.img_logo_nav);
-        mTxtNameCompany = (TextView) headView.findViewById(R.id.txt_name_nav);
-        mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
+        if (navigationView != null) {
 
-        if (company != null && company.getLogo() != null) {
-            Glide.with(this).load(MainApplication
-                    .convertToBytes(company.getLogo()))
-                    .into(mImageLogo);
-            Log.d(TAG, company.getLogo());
-        }
-        if (company != null && company.getName() != null) {
-            mTxtNameCompany.setText(company.getName());
-        }
-        if (company != null && company.getAddress() != null) {
-            mTxtAddress.setText(company.getAddress());
+            navigationView.setNavigationItemSelectedListener(this);
+            View headView = navigationView.getHeaderView(0);
+            ImageView mImageLogo = (ImageView) headView.findViewById(R.id.img_logo_nav);
+            TextView mTxtNameCompany = (TextView) headView.findViewById(R.id.txt_name_nav);
+            TextView mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
+
+            if (company != null && company.getLogo() != null) {
+                Glide.with(this).load(MainApplication
+                        .convertToBytes(company.getLogo()))
+                        .placeholder(R.drawable.ic_logo_blank)
+                        .into(mImageLogo);
+                Log.d(TAG, company.getLogo());
+            }
+            if (company != null && company.getName() != null) {
+                mTxtNameCompany.setText(company.getName());
+            }
+            if (company != null && company.getAddress() != null) {
+                mTxtAddress.setText(company.getAddress());
+            }
         }
 
         if (!MainApplication.sIsAdmin) {
             mFbButton.setVisibility(View.GONE);
         }
         startFragment(new CouponFragment());
-
     }
 
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             finish();
         }
@@ -139,31 +144,27 @@ public class ShopMainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_coupon:
                 currentPosition = 0;
-                setTitle(getString(R.string.my_coupon));
+                sTitle = getString(R.string.my_coupon);
                 fragment = new CouponFragment();
                 break;
             case R.id.nav_new:
                 currentPosition = 1;
-                setTitle(getString(R.string.news));
+                sTitle = getString(R.string.news);
                 fragment = new NewsFragment();
                 break;
             case R.id.nav_history:
-                currentPosition = 2;
-                setTitle(getString(R.string.history));
+
+                sTitle = getString(R.string.history);
                 fragment = new HistoryFragment();
                 break;
             case R.id.nav_manage:
-                currentPosition = 2;
-                mFbButton.setVisibility(View.GONE);
-                setTitle(getString(R.string.setting));
+                sTitle = getString(R.string.setting);
                 fragment = new SettingFragment();
                 break;
             case R.id.menu_share:
-                setTitle(getString(R.string.love_coupon));
-                mFbButton.setVisibility(View.GONE);
+                sTitle = getString(R.string.love_coupon);
                 fragment = new ShareFragment();
                 break;
-
             case R.id.logout:
                 MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
                 MainApplication.editor.commit();
@@ -171,7 +172,6 @@ public class ShopMainActivity extends AppCompatActivity
                 finish();
                 SaveData.company = null;
                 MainApplication.sIsAdmin = false;
-
                 break;
             default:
                 break;
@@ -180,18 +180,17 @@ public class ShopMainActivity extends AppCompatActivity
         if (MainApplication.sIsAdmin) {
             if (id == R.id.nav_coupon || id == R.id.nav_new) {
                 mFbButton.setVisibility(View.VISIBLE);
-            } else if (R.id.nav_history == id || R.id.nav_manage == id || R.id.nav_view == id) {
+            } else if (R.id.nav_history == id || R.id.nav_manage == id || R.id.nav_view == id || id == R.id.menu_share) {
                 mFbButton.setVisibility(View.GONE);
             }
-        } else {
+        } else if (!MainApplication.sIsAdmin) {
             mFbButton.setVisibility(View.GONE);
         }
 
+        setTitle(sTitle);
         startFragment(fragment);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

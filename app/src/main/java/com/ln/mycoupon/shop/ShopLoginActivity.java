@@ -42,7 +42,7 @@ import com.ln.model.DetailUser;
 import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -88,14 +88,13 @@ public class ShopLoginActivity extends AppCompatActivity
 
         apiService = MainApplication.getAPI();
 
-        //56:CE:70:45:DA:93:5A:92:02:D8:45:C3:58:4E:10:36:09:24:42:C4
         GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
                 .build();
 
@@ -133,7 +132,10 @@ public class ShopLoginActivity extends AppCompatActivity
             @Override
             public void onSuccess(LoginResult loginResult) {
                 mProfile = Profile.getCurrentProfile();
-                MainApplication.sShopDetail = new DetailUser(mProfile.getId(), mProfile.getName());
+                String picture = MainApplication.IMAGE_FACEBOOK + mProfile.getId() + MainApplication.IMAGE_FACEBOOK_END;
+                MainApplication.sShopDetail = new DetailUser(mProfile.getId(), mProfile.getName(), picture);
+
+                getSnackBar(mProfile.getId() + " - " + mProfile.getName());
                 Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
             }
 
@@ -170,7 +172,7 @@ public class ShopLoginActivity extends AppCompatActivity
         if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
+                // Google Sign In was successful, authenticate with Fire base
                 GoogleSignInAccount account = result.getSignInAccount();
                 loginGoogleSuccess(account);
             } else {
@@ -230,10 +232,8 @@ public class ShopLoginActivity extends AppCompatActivity
         Call<List<Company>> call = apiService.getCompanyProfileSocial(user_id);
 
         call.enqueue(new Callback<List<Company>>() {
-
             @Override
-            public void onResponse(Call<List<Company>> arg0,
-                                   Response<List<Company>> arg1) {
+            public void onResponse(Call<List<Company>> arg0, Response<List<Company>> arg1) {
                 List<Company> templates = arg1.body();
 
                 SaveData.company = templates.get(0);
@@ -268,11 +268,6 @@ public class ShopLoginActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionListener + " + connectionResult);
     }
 
 
@@ -360,6 +355,12 @@ public class ShopLoginActivity extends AppCompatActivity
         mAccessTokenTracker.stopTracking();
     }
 
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionListener + " + connectionResult);
+    }
+
     private class Events implements View.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -399,7 +400,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
             LoginManager.getInstance().logInWithPublishPermissions(
                     ShopLoginActivity.this,
-                    Arrays.asList(PERMISSION));
+                    Collections.singletonList(PERMISSION));
         }
     }
 }
