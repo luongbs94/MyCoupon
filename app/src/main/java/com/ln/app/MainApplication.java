@@ -94,6 +94,9 @@ public class MainApplication extends MultiDexApplication {
     public static float WIDTH_SCREEN;
     public static float HEIGHT_SCREEN;
 
+    public static final String ID_NEWS = "idNews";
+    public static final String ID_USER = "idUser";
+
     @Override
     public void onCreate() {
         super.onCreate();

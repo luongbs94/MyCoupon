@@ -105,7 +105,6 @@ public class ShopMainActivity extends AppCompatActivity
             if (company != null && company.getLogo() != null) {
                 Glide.with(this).load(MainApplication
                         .convertToBytes(company.getLogo()))
-                        .placeholder(R.drawable.ic_logo_blank)
                         .into(mImageLogo);
                 Log.d(TAG, company.getLogo());
             }

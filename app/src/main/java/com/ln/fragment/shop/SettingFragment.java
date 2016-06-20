@@ -2,6 +2,7 @@ package com.ln.fragment.shop;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,6 +39,7 @@ import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -220,11 +222,17 @@ public class SettingFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         if (requestCode == SELECT_PICTURE) {
-            previewCapturedImage(data.getData().getPath());
-            Log.d(TAG, "Gallary : " + data.getData().getPath());
+
+            Uri uri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                mImgLogo.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
-            Log.d(TAG, "Camera" + mFileUri.getPath());
             previewCapturedImage(mFileUri.getPath());
         } else {
             getShowMessage("User cancelled image capture");
@@ -262,12 +270,10 @@ public class SettingFragment extends Fragment {
 
     private void previewCapturedImage(String path) {
 
-        String strPath = "/storage/emulated/0/Pictures/MyCoupon/IMG_20062016_182729.jpg";
-        File file = new File(strPath);
-        Log.d(TAG, "File : " + file.getPath());
+        File file2 = new File(path);
+        Log.d(TAG, "File2 : " + file2.getPath());
         Glide.with(this)
-                .load(file)
-                .placeholder(R.drawable.ic_logo_blank)
+                .load(file2)
                 .into(mImgLogo);
     }
 

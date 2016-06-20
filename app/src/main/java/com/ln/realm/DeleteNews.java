@@ -11,22 +11,11 @@ import io.realm.annotations.Required;
 
 public class DeleteNews  extends RealmObject  {
 
-    @PrimaryKey
-    private int id;
-
     @Required
     private String idUser;
 
-    @Required
+    @PrimaryKey
     private String idNews;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getIdUser() {
         return idUser;
