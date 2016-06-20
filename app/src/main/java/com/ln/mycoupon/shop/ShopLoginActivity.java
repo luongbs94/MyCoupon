@@ -172,7 +172,7 @@ public class ShopLoginActivity extends AppCompatActivity
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-                loginGoogle(account);
+                loginGoogleSuccess(account);
             } else {
                 // login fails
                 getSnackBar(getString(R.string.login_google_fails));
@@ -333,11 +333,12 @@ public class ShopLoginActivity extends AppCompatActivity
     }
 
     // integrator login google save state google login
-    private void loginGoogle(GoogleSignInAccount acct) {
+    private void loginGoogleSuccess(GoogleSignInAccount acct) {
 
         // init detailUser
         Log.d(TAG, "id google:" + acct.getId());
         MainApplication.sShopDetail = new DetailUser(acct.getId(), acct.getEmail());
+        getSnackBar("Login google Success " + acct.getId() + " - " + acct.getEmail());
         Log.d(TAG, "url: " + acct.getPhotoUrl());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)

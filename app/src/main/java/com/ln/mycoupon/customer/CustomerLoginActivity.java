@@ -176,6 +176,7 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
         Log.d(TAG, "id google:" + account.getId());
         MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail());
 
+        getSnackBar("Login Google Success " + account.getId() + " - " + account.getEmail());
 
         getCompanyByUserId(account.getId());
         updateUserToken(account.getIdToken(), MainApplication.getDeviceToken(), "android");
@@ -316,9 +317,9 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
 
     public void start() {
-        Intent intent = new Intent(CustomerLoginActivity.this, CustomerMainActivity.class);
-        startActivity(intent);
-        finish();
+//        Intent intent = new Intent(CustomerLoginActivity.this, CustomerMainActivity.class);
+//        startActivity(intent);
+//        finish();
     }
 
     @Override
