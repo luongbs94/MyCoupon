@@ -37,6 +37,7 @@
     <dimen name="size_200">200dp</dimen>
     <dimen name="size_100">100dp</dimen>
     <dimen name="size_17sp">17sp</dimen>
+    <dimen name="size_22sp">22sp</dimen>
 
 
 </resources>

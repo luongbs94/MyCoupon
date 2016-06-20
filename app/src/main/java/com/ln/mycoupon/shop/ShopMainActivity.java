@@ -25,6 +25,7 @@ import com.ln.fragment.shop.CouponFragment;
 import com.ln.fragment.shop.HistoryFragment;
 import com.ln.fragment.shop.NewsFragment;
 import com.ln.fragment.shop.SettingFragment;
+import com.ln.fragment.shop.ShareFragment;
 import com.ln.model.Company;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
@@ -157,12 +158,17 @@ public class ShopMainActivity extends AppCompatActivity
                 setTitle(getString(R.string.setting));
                 fragment = new SettingFragment();
                 break;
+            case R.id.menu_share:
+                setTitle(getString(R.string.love_coupon));
+                mFbButton.setVisibility(View.GONE);
+                fragment = new ShareFragment();
+                break;
+
             case R.id.logout:
                 MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
                 MainApplication.editor.commit();
 
                 finish();
-
                 SaveData.company = null;
                 MainApplication.sIsAdmin = false;
 

@@ -18,6 +18,8 @@ import com.ln.model.DetailUser;
 import java.io.ByteArrayOutputStream;
 import java.util.Random;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -32,7 +34,6 @@ public class MainApplication extends MultiDexApplication {
     public static final String LIST_IMAGES = "LIST_IMAGES";
 
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
-
 
 
     public static LoveCouponAPI apiService;
@@ -121,6 +122,14 @@ public class MainApplication extends MultiDexApplication {
         sharedPreferences = getSharedPreferences(SHAREDPRE, 4);
         editor = sharedPreferences.edit();
 
+
+        // setup realm database
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+                .name(Realm.DEFAULT_REALM_NAME)
+                .schemaVersion(0)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
 
     }
 

@@ -300,10 +300,8 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
         Call<List<User>> call = MainApplication.apiService.updateUserToken(userId, token, device_os);
         call.enqueue(new Callback<List<User>>() {
-
             @Override
-            public void onResponse(Call<List<User>> arg0,
-                                   Response<List<User>> arg1) {
+            public void onResponse(Call<List<User>> arg0, Response<List<User>> arg1) {
 
                 MainApplication.setIsAddToken(true);
             }
@@ -317,19 +315,14 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
 
     public void start() {
-//        Intent intent = new Intent(CustomerLoginActivity.this, CustomerMainActivity.class);
-//        startActivity(intent);
-//        finish();
+        Intent intent = new Intent(CustomerLoginActivity.this, CustomerMainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
-
-    private void onClickLoginGoogle() {
-        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
     }
 
 
@@ -348,11 +341,16 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
             }
         }
 
-
         private void onClickLoginFaceBook() {
             LoginManager.getInstance().logInWithPublishPermissions(
                     CustomerLoginActivity.this,
                     Collections.singleton(PERMISSION));
         }
+
+        private void onClickLoginGoogle() {
+            Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
+        }
+
     }
 }

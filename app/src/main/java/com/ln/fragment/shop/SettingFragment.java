@@ -2,8 +2,6 @@ package com.ln.fragment.shop;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -224,13 +222,13 @@ public class SettingFragment extends Fragment {
 
         if (requestCode == SELECT_PICTURE) {
             previewCapturedImage(data.getData().getPath());
+            Log.d(TAG, "Gallary : " + data.getData().getPath());
         } else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
-            Log.d(TAG, mFileUri.getPath());
+            Log.d(TAG, "Camera" + mFileUri.getPath());
             previewCapturedImage(mFileUri.getPath());
         } else {
             getShowMessage("User cancelled image capture");
         }
-
     }
 
     private boolean isDriverSupportCamera() {
@@ -263,15 +261,14 @@ public class SettingFragment extends Fragment {
 
 
     private void previewCapturedImage(String path) {
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 8;
-            options.inJustDecodeBounds = true;
-            Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-            mImgLogo.setImageBitmap(bitmap);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+
+        String strPath = "/storage/emulated/0/Pictures/MyCoupon/IMG_20062016_182729.jpg";
+        File file = new File(strPath);
+        Log.d(TAG, "File : " + file.getPath());
+        Glide.with(this)
+                .load(file)
+                .placeholder(R.drawable.ic_logo_blank)
+                .into(mImgLogo);
     }
 
     private int isExistsAccount1(String company_id, String username) {
@@ -301,7 +298,7 @@ public class SettingFragment extends Fragment {
                 case R.id.cardview1:
                     onClickSaveCompany();
                     break;
-                case R.id.img_logo_company:
+                case R.id.img_logo_nav:
                     onClickChangeLogo(mImgLogo);
                     break;
                 case R.id.fab_done:
@@ -348,11 +345,12 @@ public class SettingFragment extends Fragment {
                             onClickOpenCamera();
                             break;
                         case R.id.menu_gallery:
-                        default:
                             onClickOpenGallery();
                             break;
+                        default:
+                            break;
                     }
-                    return false;
+                    return true;
                 }
             });
             popupMenu.show();
@@ -449,6 +447,7 @@ public class SettingFragment extends Fragment {
         } else {
             textInputLayout.setErrorEnabled(false);
             if (!text.isEmpty() && edtPassword.getText().toString().trim().isEmpty()) {
+                password.setErrorEnabled(true);
                 password.setError(getString(R.string.enter_password));
             } else {
                 password.setErrorEnabled(false);
@@ -474,6 +473,7 @@ public class SettingFragment extends Fragment {
 
     private void validatePassword(EditText user, EditText password, TextInputLayout inputPassword) {
         if (!user.getText().toString().trim().isEmpty() && password.getText().toString().trim().isEmpty()) {
+            inputPassword.setErrorEnabled(true);
             inputPassword.setError(getString(R.string.enter_password));
             requestFocus(password);
         } else {

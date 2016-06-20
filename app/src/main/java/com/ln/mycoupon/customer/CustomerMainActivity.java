@@ -12,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,9 +20,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.NewsFragment2;
-import com.ln.mycoupon.FirstActivity;
+import com.ln.fragment.customer.CouponFragment;
+import com.ln.fragment.shop.ShareFragment;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
 
@@ -31,19 +30,21 @@ public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = getClass().getSimpleName();
-    private int currentPosition = 0;
-    private Toolbar toolbar;
-    private FloatingActionButton mFabButton;
+    private static String sTitle;
 
+    private FloatingActionButton mFabButton;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
 
+        sTitle = getString(R.string.my_coupon);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(sTitle);
 
         mFabButton = (FloatingActionButton) findViewById(R.id.fab);
         mFabButton.setOnClickListener(new View.OnClickListener() {
@@ -55,10 +56,10 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -72,7 +73,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
         if (SaveData.USER_ID != null) {
             String url = MainApplication.IMAGE_FACEBOOK + SaveData.USER_ID + MainApplication.IMAGE_FACEBOOK_END;
-            Glide.with(this).load(url).into(imageView);
+            Glide.with(this).load(url).placeholder(R.drawable.ic_logo_blank).into(imageView);
         }
         if (MainApplication.sDetailUser != null) {
             txt.setText(MainApplication.sDetailUser.getName());
@@ -82,78 +83,60 @@ public class CustomerMainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
-
-
-    @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             finish();
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
-        if (id == R.id.nav_coupon) {
-            currentPosition = 0;
-            setTitle("My Coupon");
-            startFragment(new CouponFragment());
-            mFabButton.setVisibility(View.VISIBLE);
+        Fragment fragment = new CouponFragment();
+        switch (id) {
+            case R.id.nav_coupon:
+                sTitle = getString(R.string.my_coupon);
+                fragment = new CouponFragment();
+                break;
+            case R.id.nav_new:
+                sTitle = getString(R.string.news);
+                fragment = new NewsFragment2();
+                break;
+            case R.id.menu_share:
+                sTitle = getString(R.string.love_coupon);
+                fragment = new ShareFragment();
+                break;
+            case R.id.logout:
+            default:
+//                Intent intent = new Intent(this, FirstActivity.class);
+//                startActivity(intent);
 
-        } else if (id == R.id.nav_new) {
-            currentPosition = 1;
-            setTitle("Tin mới");
-            mFabButton.setVisibility(View.GONE);
-            startFragment(new NewsFragment2());
-
-
-        } else if (id == R.id.logout) {
-
-            Intent intent = new Intent(this, FirstActivity.class);
-            startActivity(intent);
-
-            MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
-            MainApplication.editor.commit();
-
-            finish();
+                MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
+                MainApplication.editor.commit();
+                finish();
+                break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (id == R.id.nav_coupon) {
+            mFabButton.setVisibility(View.VISIBLE);
+        } else if (id == R.id.nav_new || id == R.id.menu_share || id == R.id.logout) {
+            mFabButton.setVisibility(View.GONE);
+        }
+        startFragment(fragment);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void startFragment(Fragment fragment) {
+
         String backStateName = fragment.getClass().getName();
         String fragmentTag = backStateName;
-
         FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
 

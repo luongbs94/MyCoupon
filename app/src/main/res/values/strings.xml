@@ -94,6 +94,12 @@
     <string name="username2">Username 2</string>
     <string name="user_error">Bạn hãy nhập username!</string>
     <string name="enter_password">Password không được để trống!</string>
+    <string name="title_share">We are like you, love coupon and promotion news.</string>
+    <string name="contact">Contact Out Team:</string>
+    <string name="support">support@lovecoupon.com</string>
+    <string name="web">www.lovecoupon.com</string>
+    <string name="please_question">Please contact us if you have any question?</string>
+    <string name="love_coupon">Love Coupon</string>
 
 
 </resources>
