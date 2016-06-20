@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ln.adapter.NewsAdapter;
+import com.ln.adapter.NewsShopAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Message;
@@ -91,7 +91,7 @@ public class NewsFragment extends Fragment {
                 mListNews = arg1.body();
 
                 Log.d(TAG, mListNews.size() + "");
-                NewsAdapter adapter = new NewsAdapter(getActivity(), mListNews);
+                NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), mListNews);
                 mRecNews.setAdapter(adapter);
                 swipeContainer.setRefreshing(false);
 

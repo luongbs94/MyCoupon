@@ -17,16 +17,16 @@ import java.util.List;
 
 /**
  * Created by luongnguyen on 4/6/16.
- *
+ * <></>
  */
 
-public class Message2Adapter extends BaseAdapter {
+public class NewsCustomerAdapter extends BaseAdapter {
 
     private List<Message> mListMessage;
     private LayoutInflater mInflater = null;
 
 
-    public Message2Adapter(Context context, List<Message> apps) {
+    public NewsCustomerAdapter(Context context, List<Message> apps) {
         mInflater = LayoutInflater.from(context);
         this.mListMessage = apps;
 

@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -21,11 +20,8 @@
             android:layoutAnimation="@anim/list_anim"
             android:listSelector="@android:color/transparent"
             android:padding="12.0dip"
-            android:scrollbars="none"
-            />
+            android:scrollbars="none" />
 
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

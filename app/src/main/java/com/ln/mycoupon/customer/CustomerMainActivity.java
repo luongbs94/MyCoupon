@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.fragment.NewsFragment2;
+import com.ln.fragment.NewsCustomerFragment;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.mycoupon.QRCodeActivity;
@@ -106,7 +106,7 @@ public class CustomerMainActivity extends AppCompatActivity
                 break;
             case R.id.nav_new:
                 sTitle = getString(R.string.news);
-                fragment = new NewsFragment2();
+                fragment = new NewsCustomerFragment();
                 break;
             case R.id.menu_share:
                 sTitle = getString(R.string.love_coupon);
