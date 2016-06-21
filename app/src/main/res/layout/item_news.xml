@@ -173,7 +173,7 @@
             <ImageView
                 android:id="@+id/img_like_newx"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/size_12"
                 android:layout_marginStart="@dimen/size_12"
                 android:contentDescription="@null"
@@ -197,7 +197,7 @@
             <ImageView
                 android:id="@+id/img_share_newx"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/size_12"
                 android:layout_marginStart="@dimen/size_12"
                 android:contentDescription="@null"
@@ -221,7 +221,7 @@
             <ImageView
                 android:id="@+id/img_delete_news"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/size_12"
                 android:layout_marginStart="@dimen/size_12"
                 android:contentDescription="@null"

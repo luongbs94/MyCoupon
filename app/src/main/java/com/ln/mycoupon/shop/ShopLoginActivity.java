@@ -385,7 +385,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
             if (str_user.length() > 0 && str_password.length() > 0) {
                 getCompanyProfile(str_user, str_password);
-
+                MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_NORMAL;
             } else {
                 getSnackBar(getString(R.string.not_fill_login));
             }
@@ -394,6 +394,7 @@ public class ShopLoginActivity extends AppCompatActivity
         private void onClickGooglePlus() {
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
+            MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_GOOGLE;
         }
 
         private void onClickLoginFacebook() {
@@ -401,6 +402,7 @@ public class ShopLoginActivity extends AppCompatActivity
             LoginManager.getInstance().logInWithPublishPermissions(
                     ShopLoginActivity.this,
                     Collections.singletonList(PERMISSION));
+            MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
         }
     }
 }

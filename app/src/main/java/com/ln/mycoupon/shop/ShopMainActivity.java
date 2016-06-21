@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.fragment.shop.CouponFragment;
@@ -169,8 +171,18 @@ public class ShopMainActivity extends AppCompatActivity
                 MainApplication.editor.commit();
 
                 finish();
-                SaveData.company = null;
+                if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_NORMAL) {
+                    SaveData.company = null;
+                } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_FACEBOOK) {
+                    LoginManager.getInstance().logOut();
+                    MainApplication.sShopDetail = null;
+                } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_GOOGLE) {
+
+                    FirebaseAuth.getInstance().signOut();
+                    MainApplication.sShopDetail = null;
+                }
                 MainApplication.sIsAdmin = false;
+
                 break;
             default:
                 break;

@@ -18,6 +18,8 @@ import com.ln.app.MainApplication;
 import com.ln.model.Message;
 import com.ln.model.NewsOfUser;
 import com.ln.mycoupon.R;
+import com.ln.realm.LikeNews;
+import com.ln.realm.RealmController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +42,14 @@ public class NewsCustomerFragment extends Fragment {
     private List<NewsOfUser> mListNewsOfUser = new ArrayList<>();
     private SwipeRefreshLayout mSwipeContainer;
 
+    private RealmController mRealm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         apiService = MainApplication.getAPI();
+        mRealm = RealmController.with(this);
     }
 
     @Nullable
@@ -91,10 +95,19 @@ public class NewsCustomerFragment extends Fragment {
                     mListNewsOfUser.add(new NewsOfUser(message, false));
                 }
 
+                List<LikeNews> listLike = mRealm.getListLike();
+
+                for (LikeNews likeNews : listLike) {
+                    for (NewsOfUser newsOfUser : mListNewsOfUser) {
+                        if (newsOfUser.getMessage_id().equals(likeNews.getIdNews())) {
+                            newsOfUser.setLike(true);
+                        }
+                    }
+                }
 
                 Log.d(TAG, mListNews.size() + "");
 
-                NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), mListNews);
+                NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), mListNewsOfUser);
                 mRecyclerNews.setAdapter(adapter);
                 mSwipeContainer.setRefreshing(false);
             }

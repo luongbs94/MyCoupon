@@ -14,6 +14,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company1;
 import com.ln.model.DetailUser;
+import com.ln.realm.RealmController;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Random;
@@ -97,6 +98,15 @@ public class MainApplication extends MultiDexApplication {
     public static final String ID_NEWS = "idNews";
     public static final String ID_USER = "idUser";
 
+    public static RealmController mRealmController;
+
+
+    // login shop
+    public static final int TYPE_NORMAL = 1;
+    public static final int TYPE_FACEBOOK = 2;
+    public static final int TYPE_GOOGLE = 3;
+    public static int TYPE_LOGIN_SHOP = TYPE_NORMAL;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -133,6 +143,8 @@ public class MainApplication extends MultiDexApplication {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
+
+        mRealmController = RealmController.with(this);
 
     }
 

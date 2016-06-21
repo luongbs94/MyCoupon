@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import com.ln.app.MainApplication;
 import com.ln.model.DetailUser;
 
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -107,27 +109,23 @@ public class RealmController {
 
     // find all like news by id
     public RealmResults<LikeNews> findAllLikeNewsById(String idNews) {
-        realm.beginTransaction();
-        RealmResults<LikeNews> listLikeNews = realm.where(LikeNews.class)
+
+        return realm.where(LikeNews.class)
                 .equalTo(MainApplication.ID_NEWS, idNews).findAll();
-        realm.commitTransaction();
-        return listLikeNews;
     }
 
     // find all delete news by id
     public RealmResults<DeleteNews> findAllDeleteIdById(String idNews) {
-        realm.beginTransaction();
-        RealmResults<DeleteNews> listDeleteNews = realm.where(DeleteNews.class)
+
+        return realm.where(DeleteNews.class)
                 .equalTo(MainApplication.ID_NEWS, idNews).findAll();
-        realm.commitTransaction();
-        return listDeleteNews;
     }
 
     // delete all like news
     public void deleteAllLikeNews() {
 
         realm.beginTransaction();
-        RealmResults<LikeNews> listLikeNewses = getListLikeNews();
+        RealmResults<LikeNews> listLikeNewses = getLikeNews();
         if (!listLikeNewses.isEmpty()) {
             for (LikeNews likeNews : listLikeNewses) {
                 likeNews.deleteFromRealm();
@@ -137,7 +135,11 @@ public class RealmController {
     }
 
     // find all like news
-    public RealmResults<LikeNews> getListLikeNews() {
+    public RealmResults<LikeNews> getLikeNews() {
+        return realm.where(LikeNews.class).findAll();
+    }
+
+    public List<LikeNews> getListLike() {
         return realm.where(LikeNews.class).findAll();
     }
 
@@ -160,6 +162,10 @@ public class RealmController {
         return realm.where(DeleteNews.class).findAll();
     }
 
+
+    public LikeNews getLikeNewsById(String idNews) {
+        return realm.where(LikeNews.class).equalTo(MainApplication.ID_NEWS, idNews).findFirst();
+    }
 
     public void deleteAll() {
         realm.beginTransaction();
