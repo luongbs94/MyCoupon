@@ -8,11 +8,10 @@ import java.util.List;
  */
 public class Company1 {
 
-    private String name;
-    private String address;
-    private String logo;
     private String company_id;
-    private String created_date;
+    private String logo;
+    private String address;
+    private String name;
     private List<Coupon> coupon;
 
     public String getCompany_id() {

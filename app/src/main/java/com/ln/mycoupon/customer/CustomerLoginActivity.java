@@ -269,10 +269,9 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
         call3.enqueue(new Callback<List<Company1>>() {
 
             @Override
-            public void onResponse(Call<List<Company1>> arg0,
-                                   Response<List<Company1>> arg1) {
-                List<Company1> templates = arg1.body();
+            public void onResponse(Call<List<Company1>> arg0, Response<List<Company1>> arg1) {
 
+                List<Company1> templates = arg1.body();
                 if (templates == null) {
                     SaveData.listCompanyCustomer = new ArrayList<>();
                 } else {

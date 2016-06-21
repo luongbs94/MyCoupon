@@ -1,18 +1,24 @@
 package com.ln.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
+import com.ln.model.Company1;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
 import com.ln.views.MyTextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,75 +26,119 @@ import java.util.List;
  * <></>
  */
 
-public class NewsCustomerAdapter extends BaseAdapter {
+public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapter.ViewHolder> {
 
-    private List<Message> mListMessage;
-    private LayoutInflater mInflater = null;
+    private List<Message> mListNews;
+    private Context mContext;
 
-
-    public NewsCustomerAdapter(Context context, List<Message> apps) {
-        mInflater = LayoutInflater.from(context);
-        this.mListMessage = apps;
+    public NewsCustomerAdapter(Context context, List<Message> listNews) {
+        mContext = context;
+        mListNews = listNews;
 
     }
 
     @Override
-    public int getCount() {
-        return mListMessage.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(LayoutInflater.from(mContext)
+                .inflate(R.layout.item_news, parent, false));
     }
 
     @Override
-    public Object getItem(int position) {
-        return mListMessage.get(position);
-    }
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        Message news = mListNews.get(position);
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_news, null);
-            holder = new ViewHolder();
-            holder.appIcon = (ImageView) convertView
-                    .findViewById(R.id.app_icon);
-            holder.company_name = (TextView) convertView
-                    .findViewById(R.id.txt_company_name_news);
-//            holder.date = (MyTextView) convertView
-//                    .findViewById(R.id.date);
-            holder.title = (TextView) convertView
-                    .findViewById(R.id.txt_title_news);
-            holder.content = (MyTextView) convertView
-                    .findViewById(R.id.txt_content_news);
-            holder.link = (TextView) convertView
-                    .findViewById(R.id.txt_link_news);
 
-            convertView.setTag(holder);
+        Company1 company = SaveData.getCompany(news.getCompany_id());
+        if (company != null) {
+            holder.mTxtCompanyName.setText(company.getName());
+            if (company.getLogo() != null) {
+                Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
+                        .asBitmap()
+                        .into(holder.mImgLogo);
+            }
+        }
+
+        holder.mTxtTile.setText(news.getTitle());
+        holder.mTxtContent.setText(news.getContent());
+        holder.mTxtLink.setText(news.getLink());
+
+        String strImages = news.getImages_link();
+        if (strImages != null) {
+            List<String> listImages = new ArrayList<>();
+
+            String[] listStrImages = strImages.split(";");
+            listImages.addAll(Arrays.asList(listStrImages));
+            GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
+            holder.mRecyclerView.setAdapter(gridAdapter);
+            holder.mRecyclerView.setVisibility(View.VISIBLE);
+
         } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        final Message item = (Message) getItem(position);
+            holder.mRecyclerView.setVisibility(View.GONE);
 
-        if (item != null) {
-
-            holder.company_name.setText(" " + MainApplication.getCompanyName(item.getCompany_id()));
-            holder.title.setText(item.getTitle() + "");
-            holder.content.setText(item.getContent() + "");
-            holder.link.setText(item.getLink() + "");
         }
-        return convertView;
+
+        holder.mImgLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (holder.mImgLike.getDrawable().equals(mContext.getResources().getDrawable(R.drawable.ic_heart))) {
+//                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+//                } else {
+//                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
+//                }
+                holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+
+            }
+        });
+
+        holder.mImgShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return mListNews.size();
     }
 
 
-    private class ViewHolder {
-        ImageView appIcon;
-        TextView company_name;
-        MyTextView date;
-        TextView title;
-        MyTextView content;
-        TextView link;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView mImgLogo, mImgLike, mImgShare, mImgDelete;
+        private TextView mTxtTile, mTxtLink;
+        private RecyclerView mRecyclerView;
+
+        MyTextView mTxtTime, mTxtContent;
+        TextView mTxtCompanyName;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            mImgLogo = (ImageView) itemView.findViewById(R.id.img_logo_news);
+            mImgLike = (ImageView) itemView.findViewById(R.id.img_like_newx);
+            mImgShare = (ImageView) itemView.findViewById(R.id.img_share_newx);
+            mImgDelete = (ImageView) itemView.findViewById(R.id.img_delete_news);
+
+            mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_news);
+            mTxtTime = (MyTextView) itemView.findViewById(R.id.txt_date_news);
+            mTxtTile = (TextView) itemView.findViewById(R.id.txt_title_news);
+            mTxtContent = (MyTextView) itemView.findViewById(R.id.txt_content_news);
+            mTxtLink = (TextView) itemView.findViewById(R.id.txt_link_news);
+            mRecyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
+
+            LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            mRecyclerView.setLayoutManager(manager);
+        }
     }
 }

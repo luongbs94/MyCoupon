@@ -39,7 +39,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_news, parent, false));
+        return new ViewHolder(LayoutInflater.from(mContext)
+                .inflate(R.layout.item_news, parent, false));
     }
 
     @Override

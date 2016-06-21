@@ -4,11 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.ln.adapter.NewsCustomerAdapter;
 import com.ln.api.LoveCouponAPI;
@@ -33,7 +34,7 @@ public class NewsCustomerFragment extends Fragment {
     private LoveCouponAPI apiService;
     private String TAG = getClass().getSimpleName();
 
-    private ListView mListView;
+    private RecyclerView mRecyclerNews;
     private List<Message> mListNews = new ArrayList<>();
     private SwipeRefreshLayout mSwipeContainer;
 
@@ -49,9 +50,11 @@ public class NewsCustomerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.layout_news2, container, false);
+        View view = inflater.inflate(R.layout.fragment_customer_news, container, false);
 
-        mListView = (ListView) view.findViewById(R.id.recycler_view);
+        mRecyclerNews = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerNews.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerNews.setHasFixedSize(true);
 
         mSwipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
 
@@ -84,7 +87,8 @@ public class NewsCustomerFragment extends Fragment {
                 Log.d(TAG, mListNews.size() + "");
 
                 NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), mListNews);
-                mListView.setAdapter(adapter);
+//                mListView.setAdapter(adapter);
+                mRecyclerNews.setAdapter(adapter);
                 mSwipeContainer.setRefreshing(false);
             }
 

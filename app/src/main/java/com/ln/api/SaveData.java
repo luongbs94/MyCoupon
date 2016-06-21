@@ -27,4 +27,15 @@ public class SaveData {
     public static String web_token = "";
     public static String USER_ID = "";
 
+    public static Company1 getCompany(String idCompany) {
+
+        for (Company1 company : listCompanyCustomer) {
+            if (company.getCompany_id().equals(idCompany)) {
+                return company;
+            }
+        }
+
+        return null;
+    }
+
 }
