@@ -16,6 +16,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Message;
+import com.ln.model.NewsOfUser;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class NewsCustomerFragment extends Fragment {
 
     private RecyclerView mRecyclerNews;
     private List<Message> mListNews = new ArrayList<>();
+    private List<NewsOfUser> mListNewsOfUser = new ArrayList<>();
     private SwipeRefreshLayout mSwipeContainer;
 
 
@@ -76,18 +78,23 @@ public class NewsCustomerFragment extends Fragment {
 
     public void getMessage() {
 
-        mListNews = new ArrayList<>();
+        mListNews.clear();
+        mListNewsOfUser.clear();
         Call<List<Message>> call = apiService.getNewsByUserId(SaveData.USER_ID);
         call.enqueue(new Callback<List<Message>>() {
 
             @Override
             public void onResponse(Call<List<Message>> arg0, Response<List<Message>> arg1) {
-                mListNews = arg1.body();
 
+                mListNews = arg1.body();
+                for (Message message : mListNews) {
+                    mListNewsOfUser.add(new NewsOfUser(message, false));
+                }
+
+                
                 Log.d(TAG, mListNews.size() + "");
 
                 NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), mListNews);
-//                mListView.setAdapter(adapter);
                 mRecyclerNews.setAdapter(adapter);
                 mSwipeContainer.setRefreshing(false);
             }
