@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 import com.ln.app.MainApplication;
 import com.ln.model.DetailUser;
 
-import java.util.List;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -125,7 +123,7 @@ public class RealmController {
     public void deleteAllLikeNews() {
 
         realm.beginTransaction();
-        RealmResults<LikeNews> listLikeNewses = getLikeNews();
+        RealmResults<LikeNews> listLikeNewses = getListLikeNews();
         if (!listLikeNewses.isEmpty()) {
             for (LikeNews likeNews : listLikeNewses) {
                 likeNews.deleteFromRealm();
@@ -135,11 +133,7 @@ public class RealmController {
     }
 
     // find all like news
-    public RealmResults<LikeNews> getLikeNews() {
-        return realm.where(LikeNews.class).findAll();
-    }
-
-    public List<LikeNews> getListLike() {
+    public RealmResults<LikeNews> getListLikeNews() {
         return realm.where(LikeNews.class).findAll();
     }
 

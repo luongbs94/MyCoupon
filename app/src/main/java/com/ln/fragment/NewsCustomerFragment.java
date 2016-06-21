@@ -18,6 +18,7 @@ import com.ln.app.MainApplication;
 import com.ln.model.Message;
 import com.ln.model.NewsOfUser;
 import com.ln.mycoupon.R;
+import com.ln.realm.DeleteNews;
 import com.ln.realm.LikeNews;
 import com.ln.realm.RealmController;
 
@@ -95,12 +96,31 @@ public class NewsCustomerFragment extends Fragment {
                     mListNewsOfUser.add(new NewsOfUser(message, false));
                 }
 
-                List<LikeNews> listLike = mRealm.getListLike();
+                // set like news
+                List<LikeNews> listLike = mRealm.getListLikeNews();
 
                 for (LikeNews likeNews : listLike) {
                     for (NewsOfUser newsOfUser : mListNewsOfUser) {
                         if (newsOfUser.getMessage_id().equals(likeNews.getIdNews())) {
                             newsOfUser.setLike(true);
+                        }
+                    }
+                }
+
+                //set delete news
+                List<DeleteNews> listDeleteNews = mRealm.getListDeleteNews();
+                for (DeleteNews deleteNews : listDeleteNews) {
+                    for (NewsOfUser newsOfUser : mListNewsOfUser) {
+                        if (newsOfUser.getMessage_id().equals(deleteNews.getIdNews())) {
+                            newsOfUser.setDelete(true);
+                        }
+                    }
+
+                    int size = mListNewsOfUser.size() - 1;
+
+                    for (int i = size; i >= 0; i--) {
+                        if (mListNewsOfUser.get(i).getMessage_id().equals(deleteNews.getIdNews())) {
+                            mListNewsOfUser.remove(i);
                         }
                     }
                 }

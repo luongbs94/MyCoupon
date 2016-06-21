@@ -44,7 +44,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final NewsOfUser news = mListNews.get(position);
 
@@ -87,16 +87,14 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                 if (news.isLike()) {
                     holder.mImgLike.setImageResource(R.drawable.ic_heart);
                     news.setLike(false);
-                    notifyDataSetChanged();
-
                     MainApplication.mRealmController.deleteLikeNewsById(news.getMessage_id());
+
 
                 } else {
                     holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
                     news.setLike(true);
-                    notifyDataSetChanged();
-
                     MainApplication.mRealmController.addLikeNewsByIdNews(news.getMessage_id());
+
                 }
             }
         });
@@ -111,7 +109,9 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id());
+                mListNews.remove(position);
+                notifyDataSetChanged();
             }
         });
 

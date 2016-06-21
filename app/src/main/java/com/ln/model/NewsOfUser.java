@@ -7,6 +7,7 @@ package com.ln.model;
 public class NewsOfUser extends Message {
 
     private boolean isLike;
+    private boolean isDelete;
 
 
     public NewsOfUser(Message message, boolean isLike) {
@@ -29,5 +30,13 @@ public class NewsOfUser extends Message {
 
     public void setLike(boolean like) {
         isLike = like;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 }
