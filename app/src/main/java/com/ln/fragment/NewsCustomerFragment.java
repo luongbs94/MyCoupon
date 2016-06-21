@@ -91,7 +91,7 @@ public class NewsCustomerFragment extends Fragment {
                     mListNewsOfUser.add(new NewsOfUser(message, false));
                 }
 
-                
+
                 Log.d(TAG, mListNews.size() + "");
 
                 NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), mListNews);

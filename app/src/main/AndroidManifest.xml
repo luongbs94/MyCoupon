@@ -58,14 +58,6 @@
             android:name=".AddCouponActivity"
             android:label="@string/add_coupon"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ShopActivity"
-            android:label="@string/shop"
-            android:theme="@style/Base.Theme.DesignDemo">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".customer.CustomerMainActivity" />
-        </activity>
 
         <activity
             android:name=".AddMessageActivity"
