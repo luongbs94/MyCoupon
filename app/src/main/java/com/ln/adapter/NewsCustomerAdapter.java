@@ -44,9 +44,10 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final NewsOfUser news = mListNews.get(position);
+        final int positionNews = position;
 
         Company1 company = SaveData.getCompany(news.getCompany_id());
         if (company != null) {
@@ -110,7 +111,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             @Override
             public void onClick(View v) {
                 MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id());
-                mListNews.remove(position);
+                mListNews.remove(positionNews);
                 notifyDataSetChanged();
             }
         });

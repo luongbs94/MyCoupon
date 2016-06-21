@@ -3,6 +3,7 @@ package com.ln.adapter;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by Nhahv on 5/21/2016.
  * adapter connect news fragments
@@ -29,7 +34,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
     private Context mContext;
     private List<Message> mListNews;
-
 
     public NewsShopAdapter(Context context, List<Message> listNews) {
         mContext = context;
@@ -46,7 +50,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        Message news = mListNews.get(position);
+        final Message news = mListNews.get(position);
+        final int positionNews = position;
 
         Company company = SaveData.company;
         if (company != null) {
@@ -103,6 +108,20 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Call<Integer> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
+                call.enqueue(new Callback<Integer>() {
+                    @Override
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        mListNews.remove(positionNews);
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Integer> call, Throwable t) {
+                        Log.d("", "Delete : News fails");
+                    }
+                });
 
             }
         });
