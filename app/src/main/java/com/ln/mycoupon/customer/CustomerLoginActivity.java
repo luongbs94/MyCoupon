@@ -49,17 +49,18 @@ import retrofit2.Response;
 
 public class CustomerLoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+    private final String TAG = getClass().getSimpleName();
+
     private static final String PERMISSION = "publish_actions";
+
     // create login facebook
     private Button mBtnFacebook;
-
     private CallbackManager mCallbackManager;
     private AccessTokenTracker mAccessTokenTracker;
     private AccessToken mAccessToken;
     private Profile mProfile;
-    private ProfileTracker mProfileTracker;
 
-    private final String TAG = getClass().getSimpleName();
+    private ProfileTracker mProfileTracker;
 
     private Gson gson = new Gson();
 
@@ -85,21 +86,22 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                mAccessToken = AccessToken.getCurrentAccessToken();
-                if (mAccessToken != null) {
-                    Log.d(TAG, mAccessToken.getUserId());
+
+                mProfile = Profile.getCurrentProfile();
+                if (mProfile != null) {
+                    String url = MainApplication.IMAGE_FACEBOOK + mProfile.getId() + MainApplication.IMAGE_FACEBOOK_END;
+                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName(), url);
+                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+
                     //10205539341392320
-                    getCompanyByUserId(mAccessToken.getUserId());
+                    getCompanyByUserId(mProfile.getId());
 
                     //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
 //                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
                     updateUserToken("10205539341392320", MainApplication.getDeviceToken(), "android");
-                }
 
-                mProfile = Profile.getCurrentProfile();
-                if (mProfile != null) {
-                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
-                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+                    MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_FACEBOOK;
+
                 }
             }
 
@@ -162,6 +164,7 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 loginGoogleSuccess(account);
+
             } else {
                 // login fails
                 getSnackBar(getString(R.string.login_google_fails));
@@ -174,7 +177,13 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
     private void loginGoogleSuccess(GoogleSignInAccount account) {
         // init detailUser
         Log.d(TAG, "id google:" + account.getId());
-        MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail());
+        if (account.getPhotoUrl() != null) {
+            MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail(), account.getPhotoUrl().toString());
+        } else {
+            MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail());
+        }
+
+        MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
 
         getSnackBar("Login Google Success " + account.getId() + " - " + account.getEmail());
 
@@ -207,15 +216,15 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
     private void initDataFacebook() {
 
-        mAccessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-
-                mAccessToken = currentAccessToken;
-            }
-        };
-
-        mAccessToken = AccessToken.getCurrentAccessToken();
+//        mAccessTokenTracker = new AccessTokenTracker() {
+//            @Override
+//            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+//
+//                mAccessToken = currentAccessToken;
+//            }
+//        };
+//
+//        mAccessToken = AccessToken.getCurrentAccessToken();
 
         mProfileTracker = new ProfileTracker() {
             @Override
@@ -227,23 +236,17 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
         mProfile = Profile.getCurrentProfile();
 
-        if (mAccessToken != null) {
-            Log.i(TAG, mAccessToken.getUserId() + "");
-            getCompanyByUserId(mAccessToken.getUserId());
-            updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
-
-        }
-
-        if (mProfile != null) {
-            MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
-            Log.d(TAG, mProfile.getName() + " - " + mProfile.getId());
-        }
+//        if (mProfile != null) {
+//            MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
+//            Log.d(TAG, mProfile.getName() + " - " + mProfile.getId());
+//            getCompanyByUserId(mProfile.getId());
+//            updateUserToken(mProfile.getId(), MainApplication.getDeviceToken(), "android");
+//        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAccessTokenTracker.stopTracking();
         mProfileTracker.stopTracking();
     }
 
@@ -264,7 +267,6 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
     private void getCompanyByUserId(final String userId) {
 
-//        Call<List<Company1>> call3 = MainApplication.apiService1.getCompaniesByUserId(userId);
         Call<List<Company1>> call3 = MainApplication.apiService.getCompaniesByUserId(userId);
         call3.enqueue(new Callback<List<Company1>>() {
 
@@ -321,7 +323,7 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        getSnackBar(getString(R.string.login_google_fails));
     }
 
 
@@ -333,9 +335,8 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
                     onClickLoginFaceBook();
                     break;
                 case R.id.btn_google_customer:
-                    onClickLoginGoogle();
-                    break;
                 default:
+                    onClickLoginGoogle();
                     break;
             }
         }

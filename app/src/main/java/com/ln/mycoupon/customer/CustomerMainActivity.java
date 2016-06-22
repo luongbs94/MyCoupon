@@ -19,11 +19,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.ln.api.SaveData;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ln.app.MainApplication;
 import com.ln.fragment.NewsCustomerFragment;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.shop.ShareFragment;
+import com.ln.model.DetailUser;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
 
@@ -35,6 +37,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
     private FloatingActionButton mFabButton;
     private DrawerLayout mDrawerLayout;
+    private boolean isShowMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,14 +77,42 @@ public class CustomerMainActivity extends AppCompatActivity
         TextView txt = (TextView) headerView.findViewById(R.id.txt_name_customer_nav);
 
 
-        if (SaveData.USER_ID != null) {
-            String url = MainApplication.IMAGE_FACEBOOK + SaveData.USER_ID + MainApplication.IMAGE_FACEBOOK_END;
-            Glide.with(this).load(url).placeholder(R.drawable.ic_logo_blank).into(imageView);
-        }
-        if (MainApplication.sDetailUser != null) {
-            txt.setText(MainApplication.sDetailUser.getName());
-        }
         startFragment(new CouponFragment());
+
+        if (MainApplication.sDetailUser != null) {
+
+            DetailUser detailUser = MainApplication.sDetailUser;
+            if (detailUser.getPicture() != null) {
+
+                Glide.with(this).load(detailUser.getPicture()).into(imageView);
+            }
+            if (detailUser.getName() != null) {
+                txt.setText(MainApplication.sDetailUser.getName());
+            }
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (isShowMenu) {
+            getMenuInflater().inflate(R.menu.menu_shop_main, menu);
+            return true;
+        } else {
+            return super.onCreateOptionsMenu(menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_all_news:
+                return true;
+            case R.id.menu_delete_news:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
 
@@ -124,11 +155,23 @@ public class CustomerMainActivity extends AppCompatActivity
             default:
 //                Intent intent = new Intent(this, FirstActivity.class);
 //                startActivity(intent);
+                if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_FACEBOOK) {
+                    LoginManager.getInstance().logOut();
+                } else if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_GOOGLE) {
+                    FirebaseAuth.getInstance().signOut();
+                }
 
+                MainApplication.sDetailUser = null;
                 MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
                 MainApplication.editor.commit();
                 finish();
                 break;
+        }
+
+        if (id == R.id.nav_new) {
+            isShowMenu = true;
+        } else {
+            isShowMenu = false;
         }
 
         if (id == R.id.nav_coupon) {

@@ -59,7 +59,7 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String PATH = "path";
 
-    // size images firebase
+    // size images fire base
     public static final int WIDTH_IMAGES = 450;
 
 
@@ -106,6 +106,8 @@ public class MainApplication extends MultiDexApplication {
     public static final int TYPE_FACEBOOK = 2;
     public static final int TYPE_GOOGLE = 3;
     public static int TYPE_LOGIN_SHOP = TYPE_NORMAL;
+    public static int TYPE_LOGIN_CUSTOMER = TYPE_FACEBOOK;
+
 
     @Override
     public void onCreate() {
@@ -150,8 +152,7 @@ public class MainApplication extends MultiDexApplication {
     }
 
     public static String getDeviceToken() {
-        String token = sharedPreferences.getString(DEVICE_TOKEN, "a");
-        return token;
+        return sharedPreferences.getString(DEVICE_TOKEN, "a");
     }
 
     public static boolean isAddToken() {

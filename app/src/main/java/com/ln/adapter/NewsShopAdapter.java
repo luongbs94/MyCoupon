@@ -1,6 +1,7 @@
 package com.ln.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
@@ -109,46 +112,41 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Call<List<Integer>> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
-                call.enqueue(new Callback<List<Integer>>() {
-                    @Override
-                    public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                        mListNews.remove(positionNews);
-                        notifyDataSetChanged();
-                        getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_success));
 
-                        Log.d("NewsShopAdapter", "Delete : News Success");
-                    }
+                MaterialDialog.Builder dialog = new MaterialDialog.Builder(mContext);
+                dialog.content(R.string.delete_news)
+                        .positiveText(R.string.agree)
+                        .negativeText(R.string.disagree)
+                        .positiveColor(mContext.getResources().getColor(R.color.title_bg))
+                        .negativeColor(mContext.getResources().getColor(R.color.title_bg))
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                Call<List<Integer>> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
+                                call.enqueue(new Callback<List<Integer>>() {
+                                    @Override
+                                    public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
+                                        mListNews.remove(positionNews);
+                                        notifyDataSetChanged();
+                                        getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_success));
 
-                    @Override
-                    public void onFailure(Call<List<Integer>> call, Throwable t) {
-                        Log.d("NewsShopAdapter", "Delete : News fails");
-                    }
-                });
-//
-//                MaterialDialog.Builder dialog = new MaterialDialog.Builder(mContext);
-//                dialog.content(R.string.delete_news)
-//                        .positiveText(R.string.agree)
-//                        .negativeText(R.string.disagree)
-//                        .positiveColor(mContext.getResources().getColor(R.color.title_bg))
-//                        .negativeColor(mContext.getResources().getColor(R.color.title_bg))
-//                        .show();
-//
-//                dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-//                    @Override
-//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//
-//                    }
-//                });
-//
-//                dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
-//                    @Override
-//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                        dialog.dismiss();
-//                    }
-//                });
+                                        Log.d("NewsShopAdapter", "Delete : News Success");
+                                    }
 
-
+                                    @Override
+                                    public void onFailure(Call<List<Integer>> call, Throwable t) {
+                                        Log.d("NewsShopAdapter", "Delete : News fails");
+                                    }
+                                });
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
             }
         });
 
