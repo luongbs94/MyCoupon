@@ -91,7 +91,7 @@ public class CouponFragment extends Fragment {
 
         mListCoupon.clear();
 
-        int idCompany;
+        String idCompany;
         if (SaveData.company == null) {
             idCompany = MainApplication.sIdCompany;
         } else {

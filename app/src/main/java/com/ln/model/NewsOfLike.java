@@ -4,13 +4,13 @@ package com.ln.model;
  * Created by Nhahv on 6/21/2016.
  * <></>
  */
-public class NewsOfUser extends Message {
+public class NewsOfLike extends Message {
 
     private boolean isLike;
     private boolean isDelete;
 
 
-    public NewsOfUser(Message message, boolean isLike) {
+    public NewsOfLike(Message message, boolean isLike) {
         setMessage_id(message.getMessage_id());
         setContent(message.getContent());
         setLike(isLike);

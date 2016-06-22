@@ -39,7 +39,6 @@ public class NewsFragment extends Fragment {
 
 
     public NewsFragment() {
-
     }
 
     @Override
@@ -81,7 +80,7 @@ public class NewsFragment extends Fragment {
 
     private void getNewsByCompanyId() {
 
-        mListNews = new ArrayList<>();
+        mListNews.clear();
         Call<List<Message>> call = mApiServices.getNewsByCompanyId(7);
         call.enqueue(new Callback<List<Message>>() {
 
@@ -89,6 +88,7 @@ public class NewsFragment extends Fragment {
             public void onResponse(Call<List<Message>> arg0,
                                    Response<List<Message>> arg1) {
                 mListNews = arg1.body();
+
 
                 Log.d(TAG, mListNews.size() + "");
                 NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), mListNews);

@@ -8,7 +8,7 @@ public class Company {
 
     public String name, address, logo, created_date,
             user_id, user1, pass1, user2, pass2, user2_admin, user1_admin;
-    public int company_id;
+    public String company_id;
 
     public String getName() {
         return name;
@@ -94,11 +94,11 @@ public class Company {
         this.user1_admin = user1_admin;
     }
 
-    public int getCompany_id() {
+    public String getCompany_id() {
         return company_id;
     }
 
-    public void setCompany_id(int company_id) {
+    public void setCompany_id(String company_id) {
         this.company_id = company_id;
     }
 

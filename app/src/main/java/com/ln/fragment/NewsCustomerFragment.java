@@ -16,7 +16,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Message;
-import com.ln.model.NewsOfUser;
+import com.ln.model.NewsOfLike;
 import com.ln.mycoupon.R;
 import com.ln.realm.DeleteNews;
 import com.ln.realm.LikeNews;
@@ -40,7 +40,7 @@ public class NewsCustomerFragment extends Fragment {
 
     private RecyclerView mRecyclerNews;
     private List<Message> mListNews = new ArrayList<>();
-    private List<NewsOfUser> mListNewsOfUser = new ArrayList<>();
+    private List<NewsOfLike> mListNewsOfLike = new ArrayList<>();
     private SwipeRefreshLayout mSwipeContainer;
 
     private RealmController mRealm;
@@ -84,7 +84,7 @@ public class NewsCustomerFragment extends Fragment {
     public void getMessage() {
 
         mListNews.clear();
-        mListNewsOfUser.clear();
+        mListNewsOfLike.clear();
         Call<List<Message>> call = apiService.getNewsByUserId(SaveData.USER_ID);
         call.enqueue(new Callback<List<Message>>() {
 
@@ -93,41 +93,48 @@ public class NewsCustomerFragment extends Fragment {
 
                 mListNews = arg1.body();
                 for (Message message : mListNews) {
-                    mListNewsOfUser.add(new NewsOfUser(message, false));
+                    mListNewsOfLike.add(new NewsOfLike(message, false));
                 }
 
                 // set like news
                 List<LikeNews> listLike = mRealm.getListLikeNews();
 
                 for (LikeNews likeNews : listLike) {
-                    for (NewsOfUser newsOfUser : mListNewsOfUser) {
-                        if (newsOfUser.getMessage_id().equals(likeNews.getIdNews())) {
-                            newsOfUser.setLike(true);
+
+                    Log.d(TAG, "Like : " + likeNews.getIdNews()
+                            + " - " + likeNews.getIdUser()
+                            + " - " + MainApplication.sDetailUser.getId());
+                    for (NewsOfLike newsOfLike : mListNewsOfLike) {
+                        if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
+                                && likeNews.getIdNews().equals(MainApplication.sDetailUser.getId())) {
+                            newsOfLike.setLike(true);
                         }
                     }
                 }
 
+
                 //set delete news
                 List<DeleteNews> listDeleteNews = mRealm.getListDeleteNews();
                 for (DeleteNews deleteNews : listDeleteNews) {
-                    for (NewsOfUser newsOfUser : mListNewsOfUser) {
-                        if (newsOfUser.getMessage_id().equals(deleteNews.getIdNews())) {
-                            newsOfUser.setDelete(true);
+                    for (NewsOfLike newsOfLike : mListNewsOfLike) {
+                        if (newsOfLike.getMessage_id().equals(deleteNews.getIdNews())
+                                && deleteNews.getIdNews().equals(MainApplication.sDetailUser.getId())) {
+                            newsOfLike.setDelete(true);
                         }
                     }
 
-                    int size = mListNewsOfUser.size() - 1;
+                    int size = mListNewsOfLike.size() - 1;
 
                     for (int i = size; i >= 0; i--) {
-                        if (mListNewsOfUser.get(i).getMessage_id().equals(deleteNews.getIdNews())) {
-                            mListNewsOfUser.remove(i);
+                        if (mListNewsOfLike.get(i).getMessage_id().equals(deleteNews.getIdNews())) {
+                            mListNewsOfLike.remove(i);
                         }
                     }
                 }
 
                 Log.d(TAG, mListNews.size() + "");
 
-                NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), mListNewsOfUser);
+                NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), mListNewsOfLike);
                 mRecyclerNews.setAdapter(adapter);
                 mSwipeContainer.setRefreshing(false);
             }

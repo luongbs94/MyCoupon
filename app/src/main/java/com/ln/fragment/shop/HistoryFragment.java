@@ -14,30 +14,27 @@ import com.ln.mycoupon.R;
 
 /**
  * Created by luongnguyen on 4/14/16.
+ * <></>
  */
 public class HistoryFragment extends Fragment {
-
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private CreateFragment createFragment;
-    private UseFragment useFragment;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_history, container, false);
-        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+
+        ViewPager viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) v.findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         return v;
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        createFragment = new CreateFragment();
-        useFragment = new UseFragment();
+        CreateFragment createFragment = new CreateFragment();
+        UseFragment useFragment = new UseFragment();
         adapter.addFragment(createFragment, getString(R.string.create));
         adapter.addFragment(useFragment, getString(R.string.use));
         viewPager.setAdapter(adapter);

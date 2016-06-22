@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company1;
-import com.ln.model.NewsOfUser;
+import com.ln.model.NewsOfLike;
 import com.ln.mycoupon.R;
 import com.ln.views.MyTextView;
 
@@ -31,10 +31,10 @@ import java.util.List;
 
 public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapter.ViewHolder> {
 
-    private List<NewsOfUser> mListNews;
+    private List<NewsOfLike> mListNews;
     private Context mContext;
 
-    public NewsCustomerAdapter(Context context, List<NewsOfUser> listNews) {
+    public NewsCustomerAdapter(Context context, List<NewsOfLike> listNews) {
         mContext = context;
         mListNews = listNews;
 
@@ -49,7 +49,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final NewsOfUser news = mListNews.get(position);
+        final NewsOfLike news = mListNews.get(position);
         final int positionNews = position;
 
         Company1 company = SaveData.getCompany(news.getCompany_id());

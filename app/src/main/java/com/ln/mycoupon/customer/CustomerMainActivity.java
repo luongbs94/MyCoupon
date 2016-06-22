@@ -97,7 +97,7 @@ public class CustomerMainActivity extends AppCompatActivity
             getMenuInflater().inflate(R.menu.menu_shop_main, menu);
             return true;
         } else {
-            return super.onCreateOptionsMenu(menu);
+            return false;
         }
     }
 
@@ -146,8 +146,6 @@ public class CustomerMainActivity extends AppCompatActivity
                 break;
             case R.id.logout:
             default:
-//                Intent intent = new Intent(this, FirstActivity.class);
-//                startActivity(intent);
                 if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_FACEBOOK) {
                     LoginManager.getInstance().logOut();
                 } else if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_GOOGLE) {

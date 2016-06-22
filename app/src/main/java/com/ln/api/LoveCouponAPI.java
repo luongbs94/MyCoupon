@@ -33,7 +33,7 @@ public interface LoveCouponAPI {
     Call<List<CouponTemplate>> getCouponTemplatesByCompanyId(@Query("company_id") int id);
 
     @GET("/get_coupon_template_by_company_id")
-    Call<List<CouponTemplate>> getCouponTemplates(@Header("Authorization") String authorization, @Query("company_id") int id);
+    Call<List<CouponTemplate>> getCouponTemplates(@Header("Authorization") String authorization, @Query("company_id") String id);
 
     @GET("/get_news_by_company_id")
     Call<List<Message>> getNewsByCompanyId(@Query("company_id") int id);
