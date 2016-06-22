@@ -41,7 +41,6 @@ public class NewsCustomerFragment extends Fragment {
     private String TAG = getClass().getSimpleName();
 
     private RecyclerView mRecyclerNews;
-    private List<Message> mListNews = new ArrayList<>();
     private List<NewsOfLike> mListNewsOfLike = new ArrayList<>();
     private SwipeRefreshLayout mSwipeContainer;
 
@@ -87,7 +86,6 @@ public class NewsCustomerFragment extends Fragment {
 
     public void getMessage() {
 
-        mListNews.clear();
         mListNewsOfLike.clear();
         Call<List<Message>> call = apiService.getNewsByUserId(SaveData.USER_ID);
         call.enqueue(new Callback<List<Message>>() {
@@ -95,7 +93,7 @@ public class NewsCustomerFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Message>> arg0, Response<List<Message>> arg1) {
 
-                mListNews = arg1.body();
+                List<Message> mListNews = arg1.body();
                 for (Message message : mListNews) {
                     mListNewsOfLike.add(new NewsOfLike(message, false));
                 }
@@ -105,9 +103,6 @@ public class NewsCustomerFragment extends Fragment {
 
                 for (LikeNews likeNews : listLike) {
 
-                    Log.d(TAG, "Like : " + likeNews.getIdNews()
-                            + " - " + likeNews.getIdUser()
-                            + " - " + MainApplication.sDetailUser.getId());
                     for (NewsOfLike newsOfLike : mListNewsOfLike) {
                         if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
                                 && likeNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
@@ -115,7 +110,6 @@ public class NewsCustomerFragment extends Fragment {
                         }
                     }
                 }
-
 
                 //set delete news
                 List<DeleteNews> listDeleteNews = mRealm.getListDeleteNews();

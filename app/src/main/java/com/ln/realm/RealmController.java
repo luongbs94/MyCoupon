@@ -169,8 +169,8 @@ public class RealmController {
     public void addShopLikeNewsByIdNews(String idNews) {
 
         realm.beginTransaction();
-        LikeNews likeNews = realm.createObject(LikeNews.class);
-        likeNews.setIdUser(SaveData.company.getCompany_id() + "");
+        ShopLikeNews likeNews = realm.createObject(ShopLikeNews.class);
+        likeNews.setIdCompany(SaveData.company.getCompany_id());
         likeNews.setIdNews(idNews);
         realm.commitTransaction();
     }
@@ -193,7 +193,7 @@ public class RealmController {
     public void deleteAllShopLikeNews() {
         realm.beginTransaction();
 
-        RealmResults<ShopLikeNews> likeNewses = getListShopLiekNews();
+        RealmResults<ShopLikeNews> likeNewses = getListShopLikeNews();
         if (!likeNewses.isEmpty()) {
             for (ShopLikeNews shopLikeNews : likeNewses) {
                 shopLikeNews.deleteFromRealm();
@@ -206,7 +206,7 @@ public class RealmController {
         return realm.where(ShopLikeNews.class).equalTo(MainApplication.ID_NEWS, idNews).findAll();
     }
 
-    private RealmResults<ShopLikeNews> getListShopLiekNews() {
+    public RealmResults<ShopLikeNews> getListShopLikeNews() {
         return realm.where(ShopLikeNews.class).findAll();
     }
 

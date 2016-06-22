@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
-import com.ln.model.Message;
+import com.ln.model.NewsOfLike;
 import com.ln.mycoupon.R;
 import com.ln.views.MyTextView;
 
@@ -37,9 +37,9 @@ import retrofit2.Response;
 public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Message> mListNews;
+    private List<NewsOfLike> mListNews;
 
-    public NewsShopAdapter(Context context, List<Message> listNews) {
+    public NewsShopAdapter(Context context, List<NewsOfLike> listNews) {
         mContext = context;
         mListNews = listNews;
     }
@@ -54,7 +54,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final Message news = mListNews.get(position);
+        final NewsOfLike news = mListNews.get(position);
         final int positionNews = position;
 
         Company company = SaveData.company;
@@ -88,16 +88,22 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         }
 
-
+        if (news.isLike()) {
+            holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+        }
         holder.mImgLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (holder.mImgLike.getDrawable().equals(mContext.getResources().getDrawable(R.drawable.ic_heart))) {
-//                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
-//                } else {
-//                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
-//                }
-                holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+                if (news.isLike()) {
+                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
+                    news.setLike(false);
+                    MainApplication.mRealmController.deleteShopLikeNewsByIdNews(news.getMessage_id());
+
+                } else {
+                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+                    news.setLike(true);
+                    MainApplication.mRealmController.addShopLikeNewsByIdNews(news.getMessage_id());
+                }
 
             }
         });

@@ -12,9 +12,13 @@ import android.view.ViewGroup;
 
 import com.ln.adapter.NewsShopAdapter;
 import com.ln.api.LoveCouponAPI;
+import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Message;
+import com.ln.model.NewsOfLike;
 import com.ln.mycoupon.R;
+import com.ln.realm.RealmController;
+import com.ln.realm.ShopLikeNews;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +37,11 @@ public class NewsFragment extends Fragment {
 
     private View mView;
     private RecyclerView mRecNews;
-    private List<Message> mListNews = new ArrayList<>();
     private String TAG = getClass().getSimpleName();
     private SwipeRefreshLayout swipeContainer;
+    private List<NewsOfLike> mListNewsOfLike = new ArrayList<>();
 
+    private RealmController mRealm;
 
     public NewsFragment() {
     }
@@ -45,6 +50,7 @@ public class NewsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
+        mRealm = MainApplication.mRealmController;
     }
 
     @Override
@@ -80,18 +86,32 @@ public class NewsFragment extends Fragment {
 
     private void getNewsByCompanyId() {
 
-        mListNews.clear();
         Call<List<Message>> call = mApiServices.getNewsByCompanyId(7);
         call.enqueue(new Callback<List<Message>>() {
 
             @Override
             public void onResponse(Call<List<Message>> arg0,
                                    Response<List<Message>> arg1) {
-                mListNews = arg1.body();
+                List<Message> mListNews = arg1.body();
 
+                for (Message message : mListNews) {
+                    mListNewsOfLike.add(new NewsOfLike(message, false));
+                }
+
+                // set like news
+                List<ShopLikeNews> listLike = mRealm.getListShopLikeNews();
+
+                for (ShopLikeNews likeNews : listLike) {
+                    for (NewsOfLike newsOfLike : mListNewsOfLike) {
+                        if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
+                                && likeNews.getIdCompany().equals(SaveData.company.getCompany_id())) {
+                            newsOfLike.setLike(true);
+                        }
+                    }
+                }
 
                 Log.d(TAG, mListNews.size() + "");
-                NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), mListNews);
+                NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), mListNewsOfLike);
                 mRecNews.setAdapter(adapter);
                 swipeContainer.setRefreshing(false);
 
