@@ -110,7 +110,7 @@ public class NewsCustomerFragment extends Fragment {
                             + " - " + MainApplication.sDetailUser.getId());
                     for (NewsOfLike newsOfLike : mListNewsOfLike) {
                         if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
-                                && likeNews.getIdNews().equals(MainApplication.sDetailUser.getId())) {
+                                && likeNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
                             newsOfLike.setLike(true);
                         }
                     }
