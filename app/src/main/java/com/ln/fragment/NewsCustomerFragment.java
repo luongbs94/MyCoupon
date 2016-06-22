@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -78,6 +80,8 @@ public class NewsCustomerFragment extends Fragment {
                 android.R.color.holo_red_light);
 
         getMessage();
+
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -138,5 +142,11 @@ public class NewsCustomerFragment extends Fragment {
                 mSwipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_test2, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

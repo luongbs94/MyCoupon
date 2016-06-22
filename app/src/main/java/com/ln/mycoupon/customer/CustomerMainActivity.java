@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,9 +43,11 @@ public class CustomerMainActivity extends AppCompatActivity
 
         sTitle = getString(R.string.my_coupon);
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(sTitle);
+
 
         mFabButton = (FloatingActionButton) findViewById(R.id.fab);
         mFabButton.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +93,11 @@ public class CustomerMainActivity extends AppCompatActivity
         } else {
             finish();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

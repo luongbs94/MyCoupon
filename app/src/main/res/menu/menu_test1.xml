@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/menu_add"
+        android:orderInCategory="100"
+        android:title="@string/add"
+
+
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_delete"
+        android:orderInCategory="100"
+        android:title="@string/add"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_abc"
+        android:orderInCategory="100"
+        android:title="Test thu the nao"
+        app:showAsAction="never" />
+</menu>

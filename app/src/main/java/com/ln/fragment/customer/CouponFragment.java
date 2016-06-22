@@ -8,6 +8,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -76,6 +78,8 @@ public class CouponFragment extends Fragment {
                 android.R.color.holo_red_light);
 
         initViews();
+
+        setHasOptionsMenu(true);
 
         return mView;
     }
@@ -149,5 +153,11 @@ public class CouponFragment extends Fragment {
         String data = gson.toJson(SaveData.listCompanyCustomer);
         MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
         MainApplication.editor.commit();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_test1, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }
