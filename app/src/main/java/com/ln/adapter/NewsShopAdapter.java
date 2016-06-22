@@ -109,10 +109,10 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Call<Integer> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
-                call.enqueue(new Callback<Integer>() {
+                Call<List<Integer>> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
+                call.enqueue(new Callback<List<Integer>>() {
                     @Override
-                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
                         mListNews.remove(positionNews);
                         notifyDataSetChanged();
                         getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_success));
@@ -121,7 +121,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                     }
 
                     @Override
-                    public void onFailure(Call<Integer> call, Throwable t) {
+                    public void onFailure(Call<List<Integer>> call, Throwable t) {
                         Log.d("NewsShopAdapter", "Delete : News fails");
                     }
                 });
