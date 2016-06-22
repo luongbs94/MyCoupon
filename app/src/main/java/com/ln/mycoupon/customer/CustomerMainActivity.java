@@ -46,9 +46,11 @@ public class CustomerMainActivity extends AppCompatActivity
 
         sTitle = getString(R.string.my_coupon);
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(sTitle);
+
 
         mFabButton = (FloatingActionButton) findViewById(R.id.fab);
         mFabButton.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +125,7 @@ public class CustomerMainActivity extends AppCompatActivity
             finish();
         }
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
