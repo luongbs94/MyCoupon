@@ -85,6 +85,14 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
+                mProfile = Profile.getCurrentProfile();
+                if (mProfile != null) {
+                    String url = MainApplication.IMAGE_FACEBOOK + mProfile.getId() + MainApplication.IMAGE_FACEBOOK_END;
+                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName(), url);
+                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+                }
+
                 mAccessToken = AccessToken.getCurrentAccessToken();
                 if (mAccessToken != null) {
                     Log.d(TAG, mAccessToken.getUserId());
@@ -99,12 +107,7 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
                     MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_FACEBOOK;
                 }
 
-                mProfile = Profile.getCurrentProfile();
-                if (mProfile != null) {
-                    String url = MainApplication.IMAGE_FACEBOOK + mProfile.getId() + MainApplication.IMAGE_FACEBOOK_END;
-                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName(), url);
-                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
-                }
+
             }
 
             @Override
