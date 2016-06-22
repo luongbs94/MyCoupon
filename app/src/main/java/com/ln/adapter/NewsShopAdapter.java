@@ -1,6 +1,7 @@
 package com.ln.adapter;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -108,20 +109,45 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Call<Integer> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
                 call.enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
                         mListNews.remove(positionNews);
                         notifyDataSetChanged();
+                        getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_success));
+
+                        Log.d("NewsShopAdapter", "Delete : News Success");
                     }
 
                     @Override
                     public void onFailure(Call<Integer> call, Throwable t) {
-                        Log.d("", "Delete : News fails");
+                        Log.d("NewsShopAdapter", "Delete : News fails");
                     }
                 });
+//
+//                MaterialDialog.Builder dialog = new MaterialDialog.Builder(mContext);
+//                dialog.content(R.string.delete_news)
+//                        .positiveText(R.string.agree)
+//                        .negativeText(R.string.disagree)
+//                        .positiveColor(mContext.getResources().getColor(R.color.title_bg))
+//                        .negativeColor(mContext.getResources().getColor(R.color.title_bg))
+//                        .show();
+//
+//                dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//
+//                    }
+//                });
+//
+//                dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+
 
             }
         });
@@ -161,5 +187,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(manager);
         }
+    }
+
+    private void getSnackBar(View view, String messages) {
+        Snackbar.make(view, messages, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 }

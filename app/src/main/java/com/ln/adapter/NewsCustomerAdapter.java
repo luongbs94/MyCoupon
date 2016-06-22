@@ -1,6 +1,7 @@
 package com.ln.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
@@ -110,9 +113,32 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id());
-                mListNews.remove(positionNews);
-                notifyDataSetChanged();
+
+                MaterialDialog.Builder dialog = new MaterialDialog.Builder(mContext);
+                dialog.content(R.string.delete_news)
+                        .positiveText(R.string.agree)
+                        .negativeText(R.string.disagree)
+                        .positiveColor(mContext.getResources().getColor(R.color.title_bg))
+                        .negativeColor(mContext.getResources().getColor(R.color.title_bg))
+                        .show();
+
+                dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id());
+                        mListNews.remove(positionNews);
+                        notifyDataSetChanged();
+                    }
+                });
+
+                dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                });
+
+
             }
         });
 
