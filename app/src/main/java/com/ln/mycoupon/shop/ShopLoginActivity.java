@@ -132,11 +132,21 @@ public class ShopLoginActivity extends AppCompatActivity
             @Override
             public void onSuccess(LoginResult loginResult) {
                 mProfile = Profile.getCurrentProfile();
-                String picture = MainApplication.IMAGE_FACEBOOK + mProfile.getId() + MainApplication.IMAGE_FACEBOOK_END;
-                MainApplication.sShopDetail = new DetailUser(mProfile.getId(), mProfile.getName(), picture);
+                if (mProfile != null) {
+                    String picture = MainApplication.IMAGE_FACEBOOK + mProfile.getId() + MainApplication.IMAGE_FACEBOOK_END;
+                    MainApplication.sShopDetail = new DetailUser(mProfile.getId(), mProfile.getName(), picture);
 
-                getSnackBar(mProfile.getId() + " - " + mProfile.getName());
-                Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+                    getSnackBar(mProfile.getId() + " - " + mProfile.getName());
+                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+                }
+
+                mAccessToken = AccessToken.getCurrentAccessToken();
+                if (mAccessToken != null) {
+                    Log.d(TAG, mAccessToken.getUserId());
+
+                    MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_FACEBOOK;
+                }
+
             }
 
             @Override

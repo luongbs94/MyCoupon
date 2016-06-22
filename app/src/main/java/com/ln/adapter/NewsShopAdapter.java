@@ -109,6 +109,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Log.d("NewsShopAdapter", news.getMessage_id());
                 Call<Integer> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
                 call.enqueue(new Callback<Integer>() {
                     @Override

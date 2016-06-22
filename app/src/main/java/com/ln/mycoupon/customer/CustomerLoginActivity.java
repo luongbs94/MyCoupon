@@ -88,17 +88,21 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
                 mAccessToken = AccessToken.getCurrentAccessToken();
                 if (mAccessToken != null) {
                     Log.d(TAG, mAccessToken.getUserId());
+
                     //10205539341392320
                     getCompanyByUserId(mAccessToken.getUserId());
 
                     //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
 //                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
                     updateUserToken("10205539341392320", MainApplication.getDeviceToken(), "android");
+
+                    MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_FACEBOOK;
                 }
 
                 mProfile = Profile.getCurrentProfile();
                 if (mProfile != null) {
-                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
+                    String url = MainApplication.IMAGE_FACEBOOK + mProfile.getId() + MainApplication.IMAGE_FACEBOOK_END;
+                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName(), url);
                     Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
                 }
             }
@@ -162,6 +166,7 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 loginGoogleSuccess(account);
+
             } else {
                 // login fails
                 getSnackBar(getString(R.string.login_google_fails));
@@ -174,7 +179,16 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
     private void loginGoogleSuccess(GoogleSignInAccount account) {
         // init detailUser
         Log.d(TAG, "id google:" + account.getId());
-        MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail());
+        if (account.getPhotoUrl() != null) {
+            MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail(), account.getPhotoUrl().toString());
+        } else {
+            MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail());
+        }
+
+        Log.d(TAG, "Picture: " + account.getPhotoUrl());
+        Log.d(TAG, "Picture: " + account.getPhotoUrl().toString());
+
+        MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
 
         getSnackBar("Login Google Success " + account.getId() + " - " + account.getEmail());
 
@@ -321,7 +335,7 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        getSnackBar(getString(R.string.login_google_fails));
     }
 
 
@@ -333,9 +347,8 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
                     onClickLoginFaceBook();
                     break;
                 case R.id.btn_google_customer:
-                    onClickLoginGoogle();
-                    break;
                 default:
+                    onClickLoginGoogle();
                     break;
             }
         }

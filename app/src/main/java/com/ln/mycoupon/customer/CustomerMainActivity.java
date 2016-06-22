@@ -12,12 +12,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.fragment.NewsCustomerFragment;
@@ -72,13 +75,31 @@ public class CustomerMainActivity extends AppCompatActivity
 
 
         if (SaveData.USER_ID != null) {
-            String url = MainApplication.IMAGE_FACEBOOK + SaveData.USER_ID + MainApplication.IMAGE_FACEBOOK_END;
-            Glide.with(this).load(url).placeholder(R.drawable.ic_logo_blank).into(imageView);
-        }
-        if (MainApplication.sDetailUser != null) {
+
+            Glide.with(this).load(MainApplication.sDetailUser.getPicture()).placeholder(R.drawable.ic_logo_blank).into(imageView);
             txt.setText(MainApplication.sDetailUser.getName());
         }
+
         startFragment(new CouponFragment());
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_shop_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_all_news:
+                return true;
+            case R.id.menu_delete_news:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
 
@@ -116,7 +137,12 @@ public class CustomerMainActivity extends AppCompatActivity
             default:
 //                Intent intent = new Intent(this, FirstActivity.class);
 //                startActivity(intent);
-
+                if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_FACEBOOK) {
+                    LoginManager.getInstance().logOut();
+                } else if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_GOOGLE) {
+                    FirebaseAuth.getInstance().signOut();
+                }
+                MainApplication.sDetailUser = null;
                 MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
                 MainApplication.editor.commit();
                 finish();
