@@ -146,7 +146,6 @@ public class ShopLoginActivity extends AppCompatActivity
 
                     MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_FACEBOOK;
                 }
-
             }
 
             @Override

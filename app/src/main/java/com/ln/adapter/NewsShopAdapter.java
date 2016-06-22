@@ -119,36 +119,34 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                         .negativeText(R.string.disagree)
                         .positiveColor(mContext.getResources().getColor(R.color.title_bg))
                         .negativeColor(mContext.getResources().getColor(R.color.title_bg))
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                Call<List<Integer>> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
+                                call.enqueue(new Callback<List<Integer>>() {
+                                    @Override
+                                    public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
+                                        mListNews.remove(positionNews);
+                                        notifyDataSetChanged();
+                                        getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_success));
+
+                                        Log.d("NewsShopAdapter", "Delete : News Success");
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<List<Integer>> call, Throwable t) {
+                                        Log.d("NewsShopAdapter", "Delete : News fails");
+                                    }
+                                });
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        })
                         .show();
-
-                dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Call<List<Integer>> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
-                        call.enqueue(new Callback<List<Integer>>() {
-                            @Override
-                            public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                                mListNews.remove(positionNews);
-                                notifyDataSetChanged();
-                                getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_success));
-
-                                Log.d("NewsShopAdapter", "Delete : News Success");
-                            }
-
-                            @Override
-                            public void onFailure(Call<List<Integer>> call, Throwable t) {
-                                Log.d("NewsShopAdapter", "Delete : News fails");
-                            }
-                        });
-                    }
-                });
-
-                dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                });
             }
         });
 
