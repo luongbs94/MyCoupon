@@ -10,12 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ln.adapter.NewsCustomerAdapter;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Message;
 import com.ln.model.NewsOfLike;
@@ -45,6 +45,7 @@ public class NewsCustomerFragment extends Fragment {
     private SwipeRefreshLayout mSwipeContainer;
 
     private RealmController mRealm;
+    private NewsCustomerAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class NewsCustomerFragment extends Fragment {
     public void getMessage() {
 
         mListNewsOfLike.clear();
-        Call<List<Message>> call = apiService.getNewsByUserId(SaveData.USER_ID);
+        Call<List<Message>> call = apiService.getNewsByUserId(MainApplication.sDetailUser.getId());
         call.enqueue(new Callback<List<Message>>() {
 
             @Override
@@ -132,7 +133,7 @@ public class NewsCustomerFragment extends Fragment {
 
                 Log.d(TAG, mListNews.size() + "");
 
-                NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(),
+                adapter = new NewsCustomerAdapter(getActivity(),
                         mListNewsOfLike, NewsCustomerFragment.this);
                 mRecyclerNews.setAdapter(adapter);
                 mSwipeContainer.setRefreshing(false);
@@ -148,7 +149,31 @@ public class NewsCustomerFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_test2, menu);
+        inflater.inflate(R.menu.menu_news_customer, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_all_news:
+                return true;
+            case R.id.menu_near_news:
+                return true;
+            case R.id.menu_like_news:
+                return true;
+            case R.id.menu_delete_news:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        getMessage();
+//        Log.d(TAG, "onAttach" + " - onAttach");
+//    }
 }

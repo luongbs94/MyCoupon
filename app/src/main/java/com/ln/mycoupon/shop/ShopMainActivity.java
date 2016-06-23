@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.fragment.shop.CouponFragment;
@@ -26,6 +27,7 @@ import com.ln.fragment.shop.HistoryFragment;
 import com.ln.fragment.shop.NewsFragment;
 import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.ShareFragment;
+import com.ln.interfaces.OnClickLogoutGoogle;
 import com.ln.model.Company;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
@@ -42,6 +44,7 @@ public class ShopMainActivity extends AppCompatActivity
     private FloatingActionButton mFbButton;
     private DrawerLayout mDrawerLayout;
 
+    private OnClickLogoutGoogle mOnClickLogoutGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,13 +168,22 @@ public class ShopMainActivity extends AppCompatActivity
                 fragment = new ShareFragment();
                 break;
             case R.id.logout:
-                MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
+                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
                 MainApplication.editor.commit();
 
                 finish();
-                if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_NORMAL) {
+                if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_GOOGLE) {
                     SaveData.company = null;
-                } else {
+                } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_FACEBOOK) {
+                    LoginManager.getInstance().logOut();
+                    MainApplication.sShopDetail = null;
+                } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_NORMAL) {
+                    mOnClickLogoutGoogle = new OnClickLogoutGoogle() {
+                        @Override
+                        public void onClickLogout() {
+                            new ShopLoginActivity().onClickLogoutGoogle();
+                        }
+                    };
                     MainApplication.sShopDetail = null;
                 }
                 MainApplication.sIsAdmin = false;
@@ -212,4 +224,5 @@ public class ShopMainActivity extends AppCompatActivity
             ft.commit();
         }
     }
+
 }

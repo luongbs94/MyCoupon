@@ -23,6 +23,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
@@ -105,7 +107,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG, "onError - ");
+                Log.d(TAG, "onError - " + error.getMessage() + " - " + error.toString());
             }
         });
         mBtnFacebook = (Button) findViewById(R.id.btn_facebook_customer);
@@ -133,6 +135,13 @@ public class CustomerLoginActivity extends AppCompatActivity
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mProfile = null;
+        mAccessToken = null;
     }
 
     private void addEvents() {
@@ -194,8 +203,8 @@ public class CustomerLoginActivity extends AppCompatActivity
                 SaveData.USER_ID = userId;
 
                 String data = gson.toJson(SaveData.listCompanyCustomer);
-                MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, false);
-                MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, true);
+                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
+                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
                 MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
                 MainApplication.editor.commit();
 
@@ -262,5 +271,16 @@ public class CustomerLoginActivity extends AppCompatActivity
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
         }
+    }
+
+    public void onClickLogout() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        Log.d(TAG, "Logout Google ");
+                    }
+                });
     }
 }

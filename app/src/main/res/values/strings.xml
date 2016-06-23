@@ -111,6 +111,9 @@
 
     <string name="face_image">https://graph.facebook.com/</string>
     <string name="face_image_end">/picture?type=large</string>
+    <string name="like_news">Like News</string>
+    <string name="news_delete">Delete News</string>
+    <string name="near_news">News Near</string>
 
 
 </resources>

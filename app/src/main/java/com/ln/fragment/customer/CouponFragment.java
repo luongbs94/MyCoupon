@@ -101,8 +101,6 @@ public class CouponFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), CouponCompanyOfClientActivity.class);
                 intent.putExtra("position", position);
                 startActivity(intent);
-
-
             }
         });
     }
@@ -123,7 +121,6 @@ public class CouponFragment extends Fragment {
             public void onResponse(Call<List<Company1>> arg0,
                                    Response<List<Company1>> arg1) {
                 List<Company1> templates = arg1.body();
-//                System.out.println(templates.size());
                 if (templates != null) {
                     SaveData.listCompanyCustomer = templates;
                 } else {

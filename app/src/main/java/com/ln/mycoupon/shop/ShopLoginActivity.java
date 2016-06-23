@@ -24,6 +24,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
@@ -151,6 +153,13 @@ public class ShopLoginActivity extends AppCompatActivity
 
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        mProfile = null;
+        mAccessToken = null;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -185,11 +194,10 @@ public class ShopLoginActivity extends AppCompatActivity
                 Gson gson = new Gson();
 
                 String data = gson.toJson(SaveData.company);
-                MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, true);
-                MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
+                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, true);
+                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
                 MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
                 MainApplication.editor.commit();
-
 
                 Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
@@ -213,7 +221,6 @@ public class ShopLoginActivity extends AppCompatActivity
 
 
         Call<List<Company>> call = apiService.getCompanyProfileSocial(user_id);
-
         call.enqueue(new Callback<List<Company>>() {
             @Override
             public void onResponse(Call<List<Company>> arg0, Response<List<Company>> arg1) {
@@ -224,8 +231,8 @@ public class ShopLoginActivity extends AppCompatActivity
                 Gson gson = new Gson();
 
                 String data = gson.toJson(SaveData.company);
-                MainApplication.editor.putBoolean(MainApplication.LOGINSHOP, true);
-                MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
+                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, true);
+                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
                 MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
                 MainApplication.editor.commit();
 
@@ -267,6 +274,17 @@ public class ShopLoginActivity extends AppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionListener + " + connectionResult);
+    }
+
+    public void onClickLogoutGoogle() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        Log.d(TAG, "Logout Google ");
+                    }
+                });
     }
 
     private class Events implements View.OnClickListener {

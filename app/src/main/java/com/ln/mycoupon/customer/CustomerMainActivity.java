@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
 import com.ln.app.MainApplication;
 import com.ln.fragment.NewsCustomerFragment;
 import com.ln.fragment.customer.CouponFragment;
@@ -121,8 +122,15 @@ public class CustomerMainActivity extends AppCompatActivity
                 break;
             case R.id.logout:
             default:
+
+                if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_FACEBOOK) {
+                    LoginManager.getInstance().logOut();
+                } else if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_GOOGLE) {
+                    new CustomerLoginActivity().onClickLogout();
+                }
+
                 MainApplication.sDetailUser = null;
-                MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
+                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
                 MainApplication.editor.commit();
                 finish();
                 break;

@@ -17,6 +17,7 @@ import com.ln.model.Company;
 import com.ln.model.Company1;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
+import com.ln.mycoupon.shop.ShopMainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,15 +39,15 @@ public class FirstActivity extends AppCompatActivity {
 
         getSizeScreen();
         initViews();
-
         addEvents();
 
-        if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINSHOP, false)) {
+        if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGIN_SHOP, false)) {
 
             String data = MainApplication.sharedPreferences.getString(MainApplication.SHOP_DATA, "");
             SaveData.company = gson.fromJson(data, Company.class);
-            onClickLoginShop();
-        } else if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGINCLIENT, false)) {
+
+            startActivity(new Intent(FirstActivity.this, ShopMainActivity.class));
+        } else if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGIN_CLIENT, false)) {
             String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
             SaveData.listCompanyCustomer = gson.fromJson(data, new TypeToken<List<Company1>>() {
             }.getType());

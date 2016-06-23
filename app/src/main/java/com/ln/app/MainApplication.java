@@ -35,42 +35,41 @@ public class MainApplication extends MultiDexApplication {
     public static final String LIST_IMAGES = "LIST_IMAGES";
 
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
-
     // apis normal
     public static LoveCouponAPI apiService;
+
     // api use upload images
     public static LoveCouponAPI apiService1;
-
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String PUSH_NOTIFICATION = "pushNotification";
     public static final String DEVICE_TOKEN = "deviceToken";
     public static final String BOOL_ADD_TOKEN = "addToken";
-    public static final String SHAREDPRE = "sharePre";
+    public static final String SHARED_PREFERENCE = "sharePre";
+    public static final String LOGIN_CLIENT = "loginclient";
 
-    public static final String LOGINCLIENT = "loginclient";
     public static final String CLIENT_DATA = "client_data";
-    public static final String LOGINSHOP = "loginshop";
+    public static final String LOGIN_SHOP = "loginshop";
     public static final String SHOP_DATA = "shop_data";
-
-
     public static SharedPreferences sharedPreferences;
+
+
     public static SharedPreferences.Editor editor;
-
-
     public static final String PATH = "path";
+
 
     // size images fire base
     public static final int WIDTH_IMAGES = 450;
 
-
     // information user FACEBOOK
     public static final String FACEBOOK_PROFILE = "public_profile";
+
+
     public static final String FACEBOOK_EMAIL = "email";
     public static DetailUser sDetailUser;
-    public static final String FACEBOOK_IMAGE = "https://graph.facebook.com/";
-    public static final String FACEBOOK_IMAGE_END = "/picture?type=large";
 
+    private static final String URL_GET_POST = "http://188.166.179.187:3000";
     public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
 
     // login with // STOPSHIP: 6/18/2016
@@ -102,7 +101,7 @@ public class MainApplication extends MultiDexApplication {
     public static RealmController mRealmController;
 
 
-    // login shop
+    // TYPE LOGIN SHOP OR LOGIN CUSTOMER
     public static final int TYPE_NORMAL = 1;
     public static final int TYPE_FACEBOOK = 2;
     public static final int TYPE_GOOGLE = 3;
@@ -118,7 +117,7 @@ public class MainApplication extends MultiDexApplication {
         AppEventsLogger.activateApp(this);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://188.166.179.187:3000")
+                .baseUrl(URL_GET_POST)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -132,7 +131,7 @@ public class MainApplication extends MultiDexApplication {
 
         apiService1 = retrofit1.create(LoveCouponAPI.class);
 
-        sharedPreferences = getSharedPreferences(SHAREDPRE, 4);
+        sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, 4);
         editor = sharedPreferences.edit();
 
 
