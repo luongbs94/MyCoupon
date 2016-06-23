@@ -15,6 +15,7 @@ public class LikeNews extends RealmObject {
     @Required
     private String idUser;
 
+    @Required
     @PrimaryKey
     private String idNews;
 

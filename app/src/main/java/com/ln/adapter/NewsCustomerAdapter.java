@@ -1,7 +1,9 @@
 package com.ln.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company1;
@@ -33,10 +37,13 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
     private List<NewsOfLike> mListNews;
     private Context mContext;
+    private ShareDialog mShareDialog;
 
-    public NewsCustomerAdapter(Context context, List<NewsOfLike> listNews) {
+
+    public NewsCustomerAdapter(Context context, List<NewsOfLike> listNews, Fragment fragment) {
         mContext = context;
         mListNews = listNews;
+        mShareDialog = new ShareDialog(fragment);
 
     }
 
@@ -107,6 +114,16 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             @Override
             public void onClick(View v) {
 
+                Uri uri = Uri.parse("http://188.166.179.187:3001/upload/ImageSelector_20160616_223027_19062016_010851.png");
+                ShareLinkContent content = new ShareLinkContent.Builder()
+                        .setContentUrl(Uri.parse("https://google.com"))
+                        .setContentTitle(news.getTitle())
+                        .setContentDescription(news.getContent())
+                        .setImageUrl(uri)
+                        .build();
+
+
+                mShareDialog.show(content);
             }
         });
 

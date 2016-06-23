@@ -106,6 +106,8 @@
     <string name="delete_news_success">Bạn đã xóa tin mới thành công!</string>
     <string name="all_news">All News</string>
     <string name="history_news">Delete News</string>
+    <string name="share_love_coupon">Một ứng dụng thật là tiện lợi cho các của hàng!</string>
+    <string name="description_love_coupon">Chúng tôi làm mọi thư  đều free!</string>
 
 
 </resources>

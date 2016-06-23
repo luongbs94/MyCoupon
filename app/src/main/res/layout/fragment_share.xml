@@ -37,6 +37,7 @@
         </FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_share"
             style="@style/FloatingActionButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,6 +75,7 @@
                 android:textSize="@dimen/size_15sp" />
 
             <ImageView
+                android:id="@+id/image_email"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_span="1"
@@ -97,6 +99,7 @@
                 android:textSize="@dimen/size_15sp" />
 
             <ImageView
+                android:id="@+id/image_web"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

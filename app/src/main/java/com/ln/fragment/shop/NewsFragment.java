@@ -111,7 +111,7 @@ public class NewsFragment extends Fragment {
                 }
 
                 Log.d(TAG, mListNews.size() + "");
-                NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), mListNewsOfLike);
+                NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), mListNewsOfLike, NewsFragment.this);
                 mRecNews.setAdapter(adapter);
                 swipeContainer.setRefreshing(false);
 

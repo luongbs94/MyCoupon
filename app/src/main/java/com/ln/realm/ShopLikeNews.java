@@ -10,8 +10,10 @@ import io.realm.annotations.Required;
  */
 public class ShopLikeNews extends RealmObject {
 
+    @Required
     @PrimaryKey
     private String idNews;
+    
     @Required
     private String idCompany;
 
