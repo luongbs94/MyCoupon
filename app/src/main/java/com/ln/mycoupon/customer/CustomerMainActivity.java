@@ -12,15 +12,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.facebook.login.LoginManager;
-import com.google.firebase.auth.FirebaseAuth;
 import com.ln.app.MainApplication;
 import com.ln.fragment.NewsCustomerFragment;
 import com.ln.fragment.customer.CouponFragment;
@@ -37,7 +34,6 @@ public class CustomerMainActivity extends AppCompatActivity
 
     private FloatingActionButton mFabButton;
     private DrawerLayout mDrawerLayout;
-    private boolean isShowMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,29 +90,6 @@ public class CustomerMainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (isShowMenu) {
-            getMenuInflater().inflate(R.menu.menu_shop_main, menu);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_all_news:
-                return true;
-            case R.id.menu_delete_news:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
-
-    @Override
     public void onBackPressed() {
 
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -125,7 +98,6 @@ public class CustomerMainActivity extends AppCompatActivity
             finish();
         }
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -149,23 +121,11 @@ public class CustomerMainActivity extends AppCompatActivity
                 break;
             case R.id.logout:
             default:
-                if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_FACEBOOK) {
-                    LoginManager.getInstance().logOut();
-                } else if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_GOOGLE) {
-                    FirebaseAuth.getInstance().signOut();
-                }
-
                 MainApplication.sDetailUser = null;
                 MainApplication.editor.putBoolean(MainApplication.LOGINCLIENT, false);
                 MainApplication.editor.commit();
                 finish();
                 break;
-        }
-
-        if (id == R.id.nav_new) {
-            isShowMenu = true;
-        } else {
-            isShowMenu = false;
         }
 
         if (id == R.id.nav_coupon) {

@@ -12,12 +12,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.Profile;
-import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -26,13 +24,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
@@ -42,7 +33,7 @@ import com.ln.model.DetailUser;
 import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -56,64 +47,25 @@ import retrofit2.Response;
 public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String PERMISSION = "publish_actions";
+    private String TAG = getClass().getSimpleName();
 
     private Button mBtnLogin;
     private Button mBtnLoginFacebook;
-    private MaterialEditText username, password;
+    private MaterialEditText mEdtUsername, mEdtPassword;
     private LoveCouponAPI apiService;
-    private String TAG = getClass().getSimpleName();
     private GoogleApiClient mGoogleApiClient;
 
     private Button mBtnGooglePlus;
     private CallbackManager mCallbackManager;
-    private AccessTokenTracker mAccessTokenTracker;
     private AccessToken mAccessToken;
-    private ProfileTracker mProfileTracker;
     private Profile mProfile;
 
     private LinearLayout mLinearLayout;
-
-    //login with google
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_login);
-
-        getSupportActionBar().setTitle(R.string.login);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        apiService = MainApplication.getAPI();
-
-        GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
-                .build();
-
-
-        // key login google
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-//                    MainApplication.sDetailUser = new DetailUser(user)
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid() + " - " + user.getEmail());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-            }
-        };
 
         initViews();
         addEvents();
@@ -121,20 +73,29 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void initViews() {
 
+        apiService = MainApplication.getAPI();
+
+        getSupportActionBar().setTitle(R.string.login);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mBtnLogin = (Button) findViewById(R.id.btn_login);
-        username = (MaterialEditText) findViewById(R.id.username);
-        password = (MaterialEditText) findViewById(R.id.password);
+        mEdtUsername = (MaterialEditText) findViewById(R.id.username);
+        mEdtPassword = (MaterialEditText) findViewById(R.id.password);
 
+        /* ================== START FACEBOOK ==================*/
         mCallbackManager = CallbackManager.Factory.create();
-
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+
             @Override
             public void onSuccess(LoginResult loginResult) {
                 mProfile = Profile.getCurrentProfile();
                 if (mProfile != null) {
-                    String picture = MainApplication.FACEBOOK_IMAGE + mProfile.getId() + MainApplication.FACEBOOK_IMAGE_END;
-                    MainApplication.sShopDetail = new DetailUser(mProfile.getId(), mProfile.getName(), picture);
+                    String picture = getString(R.string.face_image)
+                            + mProfile.getId()
+                            + getString(R.string.face_image_end);
+
+                    MainApplication.sShopDetail =
+                            new DetailUser(mProfile.getId(), mProfile.getName(), picture);
 
                     getSnackBar(mProfile.getId() + " - " + mProfile.getName());
                     Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
@@ -142,9 +103,8 @@ public class ShopLoginActivity extends AppCompatActivity
 
                 mAccessToken = AccessToken.getCurrentAccessToken();
                 if (mAccessToken != null) {
-                    Log.d(TAG, mAccessToken.getUserId());
-
-                    MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_FACEBOOK;
+                    MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
+                    MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
                 }
             }
 
@@ -161,9 +121,25 @@ public class ShopLoginActivity extends AppCompatActivity
 
 
         mBtnLoginFacebook = (Button) findViewById(R.id.btn_login_facebook);
+        mLinearLayout = (LinearLayout) findViewById(R.id.linear_login_shop);
+
+        /* ===================== END FACEBOOK ====================*/
+
+        /*=============== START GOOGLE ===========*/
+
+        GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
+                .build();
 
         mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
-        mLinearLayout = (LinearLayout) findViewById(R.id.linear_login_shop);
+        /* ===================== END GOOGLE ==================*/
+
     }
 
     private void addEvents() {
@@ -181,11 +157,9 @@ public class ShopLoginActivity extends AppCompatActivity
         if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Fire base
                 GoogleSignInAccount account = result.getSignInAccount();
                 loginGoogleSuccess(account);
             } else {
-                // login fails
                 getSnackBar(getString(R.string.login_google_fails));
             }
         } else {
@@ -279,91 +253,16 @@ public class ShopLoginActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        initDataFacebook();
-    }
-
-    // integrator login facebook save state facebook login
-    private void initDataFacebook() {
-
-        mAccessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(
-                    AccessToken oldAccessToken,
-                    AccessToken currentAccessToken) {
-
-                mAccessToken = currentAccessToken;
-
-            }
-        };
-
-        mAccessToken = AccessToken.getCurrentAccessToken();
-
-        mProfileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(
-                    Profile oldProfile, Profile currentProfile) {
-                mProfile = currentProfile;
-            }
-        };
-
-        mProfile = Profile.getCurrentProfile();
-
-        if (mAccessToken != null) {
-//            mStatusTextView.setText(mAccessToken.getUserId() + "");
-            Log.i("Tagsss", mAccessToken.getUserId() + "");
-        }
-        if (mProfile != null) {
-            Log.i("Tagsss", mProfile.getId() + "");
-        }
-    }
-
     // integrator login google save state google login
-    private void loginGoogleSuccess(GoogleSignInAccount acct) {
+    private void loginGoogleSuccess(GoogleSignInAccount account) {
 
-        // init detailUser
-        Log.d(TAG, "id google:" + acct.getId());
-        MainApplication.sShopDetail = new DetailUser(acct.getId(), acct.getEmail());
-        getSnackBar("Login google Success " + acct.getId() + " - " + acct.getEmail());
-        Log.d(TAG, "url: " + acct.getPhotoUrl());
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.e(TAG, "signInWithCredential", task.getException());
-                            getSnackBar("Authentication failed.");
-                        }
-                    }
-                });
+        MainApplication.sShopDetail = new DetailUser(account.getId(), account.getEmail(), "", account.getIdToken());
+        if (account.getPhotoUrl() != null) {
+            MainApplication.sShopDetail.setPicture(account.getPhotoUrl().toString());
+        }
+        getSnackBar("Login Google Success " + account.getId() + " - " + account.getEmail());
+        MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_GOOGLE;
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mProfileTracker.stopTracking();
-        mAccessTokenTracker.stopTracking();
-    }
-
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -389,8 +288,8 @@ public class ShopLoginActivity extends AppCompatActivity
 
         private void onClickLogin() {
 
-            String str_user = username.getText().toString();
-            String str_password = password.getText().toString();
+            String str_user = mEdtUsername.getText().toString();
+            String str_password = mEdtPassword.getText().toString();
 
             if (str_user.length() > 0 && str_password.length() > 0) {
                 getCompanyProfile(str_user, str_password);
@@ -403,15 +302,12 @@ public class ShopLoginActivity extends AppCompatActivity
         private void onClickGooglePlus() {
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
-            MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_GOOGLE;
         }
 
         private void onClickLoginFacebook() {
-
-            LoginManager.getInstance().logInWithPublishPermissions(
+            LoginManager.getInstance().logInWithReadPermissions(
                     ShopLoginActivity.this,
-                    Collections.singletonList(PERMISSION));
-            MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
+                    Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
         }
     }
 }
