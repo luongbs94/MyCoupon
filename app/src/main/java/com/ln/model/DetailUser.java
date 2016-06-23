@@ -9,6 +9,7 @@ public class DetailUser {
 
     private String id, name;
     private String picture;
+    private String accessToken;
 
     public DetailUser(String id) {
         this.id = id;
@@ -23,6 +24,13 @@ public class DetailUser {
         this.id = id;
         this.name = name;
         this.picture = picture;
+    }
+
+    public DetailUser(String id, String name, String picture, String accessToken) {
+        this.id = id;
+        this.name = name;
+        this.picture = picture;
+        this.accessToken = accessToken;
     }
 
     public String getId() {
@@ -47,5 +55,13 @@ public class DetailUser {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

@@ -1,6 +1,7 @@
 package com.ln.mycoupon.customer;
 
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -40,7 +41,7 @@ import com.ln.model.User;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -51,20 +52,14 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
     private final String TAG = getClass().getSimpleName();
 
-    private static final String PERMISSION = "publish_actions";
-
     // create login facebook
     private Button mBtnFacebook;
     private CallbackManager mCallbackManager;
-    private AccessTokenTracker mAccessTokenTracker;
     private AccessToken mAccessToken;
     private Profile mProfile;
 
-    private ProfileTracker mProfileTracker;
-
     private Gson gson = new Gson();
 
-    // create login google
     private Button mBtnGoogle;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
@@ -89,11 +84,10 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
 
                 mProfile = Profile.getCurrentProfile();
                 if (mProfile != null) {
-                    String url = MainApplication.IMAGE_FACEBOOK + mProfile.getId() + MainApplication.IMAGE_FACEBOOK_END;
+                    String url = getString(R.string.face_image) + mProfile.getId() + getString(R.string.face_image_end);
                     MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName(), url);
                     Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
 
-                    //10205539341392320
                     getCompanyByUserId(mProfile.getId());
 
                     //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
@@ -103,14 +97,22 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
                     MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_FACEBOOK;
 
                 }
+
+                mAccessToken = AccessToken.getCurrentAccessToken();
+                if (mAccessToken != null) {
+                    MainApplication.sDetailUser.setAccessToken(mAccessToken.getToken());
+                    Log.d(TAG, "Token - " + mAccessToken.getToken());
+                }
             }
 
             @Override
             public void onCancel() {
+                Log.d(TAG, "onCancel - ");
             }
 
             @Override
             public void onError(FacebookException error) {
+                Log.d(TAG, "onError - ");
             }
         });
         mBtnFacebook = (Button) findViewById(R.id.btn_facebook_customer);
@@ -210,38 +212,6 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
     @Override
     protected void onResume() {
         super.onResume();
-
-        initDataFacebook();
-    }
-
-    private void initDataFacebook() {
-
-//        mAccessTokenTracker = new AccessTokenTracker() {
-//            @Override
-//            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-//
-//                mAccessToken = currentAccessToken;
-//            }
-//        };
-//
-//        mAccessToken = AccessToken.getCurrentAccessToken();
-
-        mProfileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-
-                mProfile = currentProfile;
-            }
-        };
-
-        mProfile = Profile.getCurrentProfile();
-
-//        if (mProfile != null) {
-//            MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName());
-//            Log.d(TAG, mProfile.getName() + " - " + mProfile.getId());
-//            getCompanyByUserId(mProfile.getId());
-//            updateUserToken(mProfile.getId(), MainApplication.getDeviceToken(), "android");
-//        }
     }
 
     @Override
@@ -342,9 +312,9 @@ public class CustomerLoginActivity extends AppCompatActivity implements GoogleAp
         }
 
         private void onClickLoginFaceBook() {
-            LoginManager.getInstance().logInWithPublishPermissions(
+            LoginManager.getInstance().logInWithReadPermissions(
                     CustomerLoginActivity.this,
-                    Collections.singleton(PERMISSION));
+                    Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
         }
 
         private void onClickLoginGoogle() {

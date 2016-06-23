@@ -109,5 +109,8 @@
     <string name="share_love_coupon">Một ứng dụng thật là tiện lợi cho các của hàng!</string>
     <string name="description_love_coupon">Chúng tôi làm mọi thư  đều free!</string>
 
+    <string name="face_image">https://graph.facebook.com/</string>
+    <string name="face_image_end">/picture?type=large</string>
+
 
 </resources>

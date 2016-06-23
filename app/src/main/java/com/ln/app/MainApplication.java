@@ -36,8 +36,9 @@ public class MainApplication extends MultiDexApplication {
 
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
 
-
+    // apis normal
     public static LoveCouponAPI apiService;
+    // api use upload images
     public static LoveCouponAPI apiService1;
 
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
@@ -67,8 +68,8 @@ public class MainApplication extends MultiDexApplication {
     public static final String FACEBOOK_PROFILE = "public_profile";
     public static final String FACEBOOK_EMAIL = "email";
     public static DetailUser sDetailUser;
-    public static final String IMAGE_FACEBOOK = "https://graph.facebook.com/";
-    public static final String IMAGE_FACEBOOK_END = "/picture?type=large";
+    public static final String FACEBOOK_IMAGE = "https://graph.facebook.com/";
+    public static final String FACEBOOK_IMAGE_END = "/picture?type=large";
 
     public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
 

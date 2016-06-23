@@ -133,7 +133,7 @@ public class ShopLoginActivity extends AppCompatActivity
             public void onSuccess(LoginResult loginResult) {
                 mProfile = Profile.getCurrentProfile();
                 if (mProfile != null) {
-                    String picture = MainApplication.IMAGE_FACEBOOK + mProfile.getId() + MainApplication.IMAGE_FACEBOOK_END;
+                    String picture = MainApplication.FACEBOOK_IMAGE + mProfile.getId() + MainApplication.FACEBOOK_IMAGE_END;
                     MainApplication.sShopDetail = new DetailUser(mProfile.getId(), mProfile.getName(), picture);
 
                     getSnackBar(mProfile.getId() + " - " + mProfile.getName());
