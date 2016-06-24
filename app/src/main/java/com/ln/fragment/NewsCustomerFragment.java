@@ -2,6 +2,7 @@ package com.ln.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -157,12 +158,16 @@ public class NewsCustomerFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_all_news:
+                getSnackBar(getString(R.string.all_news));
                 return true;
             case R.id.menu_near_news:
+                getSnackBar(getString(R.string.near_news));
                 return true;
             case R.id.menu_like_news:
+                getSnackBar(getString(R.string.like_news));
                 return true;
             case R.id.menu_delete_news:
+                getSnackBar(getString(R.string.news_delete));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -176,4 +181,8 @@ public class NewsCustomerFragment extends Fragment {
 //        getMessage();
 //        Log.d(TAG, "onAttach" + " - onAttach");
 //    }
+
+    private void getSnackBar(String s) {
+        Snackbar.make(mRecyclerNews, s, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
 }
