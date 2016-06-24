@@ -33,6 +33,7 @@ import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.interfaces.OnClickLogoutGoogle;
 import com.ln.model.Company;
+import com.ln.model.DetailUser;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.FirstActivity;
@@ -48,8 +49,6 @@ public class ShopMainActivity extends AppCompatActivity
 
     private FloatingActionButton mFbButton;
     private DrawerLayout mDrawerLayout;
-
-    private OnClickLogoutGoogle mOnClickLogoutGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,18 +109,30 @@ public class ShopMainActivity extends AppCompatActivity
             TextView mTxtNameCompany = (TextView) headView.findViewById(R.id.txt_name_nav);
             TextView mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
-            if (company != null && company.getLogo() != null) {
-                Glide.with(this).load(MainApplication
-                        .convertToBytes(company.getLogo()))
-                        .into(mImageLogo);
-                Log.d(TAG, company.getLogo());
+            if (company != null) {
+
+                DetailUser detailUser = MainApplication.sShopDetail;
+                if (company.getLogo() != null) {
+                    Glide.with(this).load(MainApplication
+                            .convertToBytes(company.getLogo()))
+                            .into(mImageLogo);
+                    Log.d(TAG, company.getLogo());
+                } else if (company.getLogo() == null && detailUser != null && detailUser.getPicture() != null) {
+                    Glide.with(this).load(detailUser.getPicture())
+                            .into(mImageLogo);
+                }
+
+                if (company.getName() != null) {
+                    mTxtNameCompany.setText(company.getName());
+                } else if (detailUser != null && detailUser.getName() != null) {
+                    mTxtNameCompany.setText(detailUser.getName());
+                }
+                if (company.getAddress() != null) {
+                    mTxtAddress.setText(company.getAddress());
+                }
             }
-            if (company != null && company.getName() != null) {
-                mTxtNameCompany.setText(company.getName());
-            }
-            if (company != null && company.getAddress() != null) {
-                mTxtAddress.setText(company.getAddress());
-            }
+
+
         }
 
         if (!MainApplication.sIsAdmin) {
@@ -136,7 +147,7 @@ public class ShopMainActivity extends AppCompatActivity
 
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
             dialog.content(R.string.exit_alert)
                     .positiveText(R.string.agree)
@@ -203,7 +214,7 @@ public class ShopMainActivity extends AppCompatActivity
                     LoginManager.getInstance().logOut();
                     MainApplication.sShopDetail = null;
                 } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_NORMAL) {
-                    mOnClickLogoutGoogle = new OnClickLogoutGoogle() {
+                    OnClickLogoutGoogle mOnClickLogoutGoogle = new OnClickLogoutGoogle() {
                         @Override
                         public void onClickLogout() {
                             new ShopLoginActivity().onClickLogoutGoogle();
@@ -217,8 +228,6 @@ public class ShopMainActivity extends AppCompatActivity
                 startActivity(intent);
 
                 finish();
-
-
                 break;
             default:
                 break;
@@ -255,5 +264,4 @@ public class ShopMainActivity extends AppCompatActivity
             ft.commit();
         }
     }
-
 }

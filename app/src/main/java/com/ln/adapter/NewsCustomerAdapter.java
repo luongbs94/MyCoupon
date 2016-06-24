@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -92,7 +93,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
         }
 
-        holder.mImgLike.setOnClickListener(new View.OnClickListener() {
+        holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (news.isLike()) {
@@ -110,7 +111,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             }
         });
 
-        holder.mImgShare.setOnClickListener(new View.OnClickListener() {
+        holder.mLinearShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -127,7 +128,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             }
         });
 
-        holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
+        holder.mLinearDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -173,8 +174,9 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         private TextView mTxtTile, mTxtLink;
         private RecyclerView mRecyclerView;
 
-        MyTextView mTxtTime, mTxtContent;
-        TextView mTxtCompanyName;
+        private MyTextView mTxtTime, mTxtContent;
+        private TextView mTxtCompanyName;
+        private LinearLayout mLinearLike, mLinearShare, mLinearDelete;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -193,6 +195,10 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(manager);
+
+            mLinearLike = (LinearLayout) itemView.findViewById(R.id.linear_like);
+            mLinearShare = (LinearLayout) itemView.findViewById(R.id.linear_share);
+            mLinearDelete = (LinearLayout) itemView.findViewById(R.id.linear_delete);
         }
     }
 }

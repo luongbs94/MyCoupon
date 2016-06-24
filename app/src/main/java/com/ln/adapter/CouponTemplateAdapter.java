@@ -67,7 +67,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
                 holder.mTxtNameCoupon.setText(company.getName());
                 Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
                         .asBitmap()
-                        .placeholder(R.drawable.ic_profile)
+                        .placeholder(R.drawable.ic_logo_blank)
                         .into(holder.mImgLogo);
             }
             holder.mTxtPriceCoupon.setText(itemCoupon.getValue());

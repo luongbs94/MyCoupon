@@ -11,15 +11,6 @@ public class DetailUser {
     private String picture;
     private String accessToken;
 
-    public DetailUser(String id) {
-        this.id = id;
-    }
-
-    public DetailUser(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public DetailUser(String id, String name, String picture) {
         this.id = id;
         this.name = name;

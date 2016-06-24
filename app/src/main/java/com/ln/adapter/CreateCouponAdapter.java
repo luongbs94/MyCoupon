@@ -44,7 +44,7 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
         Coupon coupon = mListCoupons.get(position);
         Company company = SaveData.company;
         Glide.with(mContext).load(coupon.getUser_image_link())
-                .placeholder(R.drawable.ic_logo)
+                .placeholder(R.drawable.ic_logo_blank)
                 .into(holder.mImgLogo);
 
         holder.mTxtCompanyName.setText(company.getName());

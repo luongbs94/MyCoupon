@@ -47,6 +47,7 @@ import retrofit2.Response;
  * Created by luongnguyen on 3/30/16.
  * login shop
  */
+
 public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -69,6 +70,7 @@ public class ShopLoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_login);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         initViews();
@@ -94,14 +96,7 @@ public class ShopLoginActivity extends AppCompatActivity
             public void onSuccess(LoginResult loginResult) {
                 mProfile = Profile.getCurrentProfile();
                 mAccessToken = AccessToken.getCurrentAccessToken();
-                if (mAccessToken != null) {
-                    try {
-                        MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
 
-                    } catch (Exception e) {
-
-                    }
-                }
                 if (mProfile != null) {
                     String picture = getString(R.string.face_image)
                             + mProfile.getId()
@@ -110,14 +105,29 @@ public class ShopLoginActivity extends AppCompatActivity
                     MainApplication.sShopDetail =
                             new DetailUser(mProfile.getId(), mProfile.getName(), picture);
 
-                    getSnackBar(mProfile.getId() + " - " + mProfile.getName());
-                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+                    if (mAccessToken != null) {
+                        MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
+                    }
+
+                    getSnackBar("Login Success");
+                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName() + mProfile.getLinkUri());
                     getCompanyProfileSocial(mProfile.getId());
                 } else {
+                    if (mAccessToken != null) {
+                        try {
+                            String picture = getString(R.string.face_image)
+                                    + mAccessToken.getUserId()
+                                    + getString(R.string.face_image_end);
 
-                    try {
-                        getCompanyProfileSocial(mAccessToken.getUserId());
-                    } catch (Exception e) {
+                            MainApplication.sShopDetail =
+                                    new DetailUser(mAccessToken.getUserId(), "", picture);
+
+                            MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
+                            getCompanyProfileSocial(mAccessToken.getUserId());
+                            Log.d(TAG, mProfile.getId() + " - " + mProfile.getName() + mProfile.getLinkUri());
+                        } catch (NullPointerException e) {
+                            Log.d(TAG, "Login Facebook  Fails");
+                        }
                     }
                 }
             }
@@ -280,7 +290,8 @@ public class ShopLoginActivity extends AppCompatActivity
         if (account.getPhotoUrl() != null) {
             MainApplication.sShopDetail.setPicture(account.getPhotoUrl().toString());
         }
-        getSnackBar("Login Google Success " + account.getId() + " - " + account.getEmail());
+        getSnackBar("Login Google Success ");
+        Log.d(TAG, "Login Google " + account.getId() + " - " + account.getEmail());
         MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_GOOGLE;
     }
 

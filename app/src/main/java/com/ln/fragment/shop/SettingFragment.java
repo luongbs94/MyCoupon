@@ -162,7 +162,7 @@ public class SettingFragment extends Fragment {
 
             Glide.with(getActivity()).load(MainApplication.convertToBytes(logo))
                     .asBitmap()
-                    .placeholder(R.drawable.ic_profile)
+                    .placeholder(R.drawable.ic_logo_blank)
                     .into(mImgLogo);
         }
 

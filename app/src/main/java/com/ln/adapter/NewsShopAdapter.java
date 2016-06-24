@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -69,7 +70,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             if (company.getLogo() != null) {
                 Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
                         .asBitmap()
-                        .placeholder(R.drawable.ic_profile)
+                        .placeholder(R.drawable.ic_logo_blank)
                         .into(holder.mImgLogo);
             }
         }
@@ -97,7 +98,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         if (news.isLike()) {
             holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
         }
-        holder.mImgLike.setOnClickListener(new View.OnClickListener() {
+        holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (news.isLike()) {
@@ -114,7 +115,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             }
         });
 
-        holder.mImgShare.setOnClickListener(new View.OnClickListener() {
+        holder.mLinearShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -130,7 +131,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             }
         });
 
-        holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
+        holder.mLinearDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -170,9 +171,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                         .show();
             }
         });
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -185,8 +184,10 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         private TextView mTxtTile, mTxtLink;
         private RecyclerView mRecyclerView;
 
-        MyTextView mTxtTime, mTxtContent;
-        TextView mTxtCompanyName;
+        private MyTextView mTxtTime, mTxtContent;
+        private TextView mTxtCompanyName;
+
+        private LinearLayout mLinearLike, mLinearShare, mLinearDelete;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -205,6 +206,10 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(manager);
+
+            mLinearLike = (LinearLayout) itemView.findViewById(R.id.linear_like);
+            mLinearShare = (LinearLayout) itemView.findViewById(R.id.linear_share);
+            mLinearDelete = (LinearLayout) itemView.findViewById(R.id.linear_delete);
         }
     }
 
