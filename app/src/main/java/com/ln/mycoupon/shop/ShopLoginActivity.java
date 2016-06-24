@@ -108,6 +108,9 @@ public class ShopLoginActivity extends AppCompatActivity
                     MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
                     MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
                 }
+
+                getCompanyProfileSocial(mProfile.getId());
+
             }
 
             @Override
