@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
@@ -198,6 +199,7 @@ public class ShopMainActivity extends AppCompatActivity
                 if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_GOOGLE) {
                     SaveData.company = null;
                 } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_FACEBOOK) {
+                    FacebookSdk.sdkInitialize(getApplicationContext());
                     LoginManager.getInstance().logOut();
                     MainApplication.sShopDetail = null;
                 } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_NORMAL) {

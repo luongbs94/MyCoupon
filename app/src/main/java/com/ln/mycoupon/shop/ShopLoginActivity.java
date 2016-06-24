@@ -15,6 +15,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -68,6 +69,7 @@ public class ShopLoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_login);
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         initViews();
         addEvents();
@@ -116,12 +118,8 @@ public class ShopLoginActivity extends AppCompatActivity
                     try {
                         getCompanyProfileSocial(mAccessToken.getUserId());
                     } catch (Exception e) {
-
                     }
-
                 }
-
-
             }
 
             @Override
@@ -171,6 +169,7 @@ public class ShopLoginActivity extends AppCompatActivity
         super.onStop();
         mProfile = null;
         mAccessToken = null;
+        LoginManager.getInstance().logOut();
     }
 
     @Override

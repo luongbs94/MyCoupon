@@ -26,10 +26,12 @@ import com.ln.app.MainApplication;
 import com.ln.fragment.NewsCustomerFragment;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.shop.ShareFragment;
+import com.ln.interfaces.OnClickLogoutGoogle;
 import com.ln.model.DetailUser;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
+import com.ln.mycoupon.shop.ShopLoginActivity;
 
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,6 +41,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
     private FloatingActionButton mFabButton;
     private DrawerLayout mDrawerLayout;
+    public static OnClickLogoutGoogle mOnClickLogoutGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +153,12 @@ public class CustomerMainActivity extends AppCompatActivity
                 if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_FACEBOOK) {
                     LoginManager.getInstance().logOut();
                 } else if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_GOOGLE) {
-                    new CustomerLoginActivity().onClickLogout();
+                    mOnClickLogoutGoogle = new OnClickLogoutGoogle() {
+                        @Override
+                        public void onClickLogout() {
+                            new ShopLoginActivity().onClickLogoutGoogle();
+                        }
+                    };
                 }
 
                 MainApplication.sDetailUser = null;

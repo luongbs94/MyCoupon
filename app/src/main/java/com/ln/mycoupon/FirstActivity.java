@@ -47,7 +47,7 @@ public class FirstActivity extends AppCompatActivity {
             SaveData.company = gson.fromJson(data, Company.class);
 
             startActivity(new Intent(FirstActivity.this, ShopMainActivity.class));
-            finish();
+//            finish();
         } else if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGIN_CLIENT, false)) {
             String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
             SaveData.listCompanyCustomer = gson.fromJson(data, new TypeToken<List<Company1>>() {
@@ -81,13 +81,13 @@ public class FirstActivity extends AppCompatActivity {
     private void onClickLoginShop() {
         Intent intent = new Intent(FirstActivity.this, ShopLoginActivity.class);
         startActivity(intent);
-        finish();
+//        finish();
     }
 
     private void onClickLoginCustomer() {
         Intent intent = new Intent(FirstActivity.this, CustomerLoginActivity.class);
         startActivity(intent);
-        finish();
+//        finish();
     }
 
     private void getSizeScreen() {

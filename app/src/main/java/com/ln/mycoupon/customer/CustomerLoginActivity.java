@@ -14,6 +14,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -28,6 +29,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
+import com.ln.interfaces.OnClickLogoutGoogle;
 import com.ln.model.Company1;
 import com.ln.model.DetailUser;
 import com.ln.model.User;
@@ -42,7 +44,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CustomerLoginActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener {
+        implements GoogleApiClient.OnConnectionFailedListener, OnClickLogoutGoogle {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -61,6 +63,7 @@ public class CustomerLoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_login);
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         initViews();
         addEvents();
@@ -79,21 +82,17 @@ public class CustomerLoginActivity extends AppCompatActivity
 
                 mProfile = Profile.getCurrentProfile();
                 mAccessToken = AccessToken.getCurrentAccessToken();
-                if (mAccessToken != null) {
-                    try{
-                        MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
-
-                    }catch (Exception e){
-
-                    }
-                    Log.d(TAG, "Token - " + mAccessToken.getToken());
-                }
-
 
                 if (mProfile != null) {
+
                     String url = getString(R.string.face_image) + mProfile.getId() + getString(R.string.face_image_end);
                     MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName(), url);
                     Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+
+                    if (mAccessToken != null) {
+//                        MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
+                        Log.d(TAG, "Token - " + mAccessToken.getToken());
+                    }
 
                     //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
 //                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
@@ -103,14 +102,18 @@ public class CustomerLoginActivity extends AppCompatActivity
 
                     getCompanyByUserId(mProfile.getId());
 
-                }else{
-                    try{
-                        getCompanyByUserId(mAccessToken.getUserId());
-                    }catch (Exception e){
-
+                } else {
+                    try {
+                        if (mAccessToken != null) {
+                            String url = getString(R.string.face_image) + mAccessToken.getUserId() + getString(R.string.face_image_end);
+                            MainApplication.sDetailUser = new DetailUser(mAccessToken.getUserId(), "", url, mAccessToken.getToken());
+                            Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+                            getCompanyByUserId(mAccessToken.getUserId());
+                        }
+                    } catch (NullPointerException e) {
+                        Log.d(TAG, e.toString());
                     }
                 }
-
             }
 
             @Override
@@ -192,6 +195,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         getCompanyByUserId(account.getId());
         updateUserToken(account.getIdToken(), MainApplication.getDeviceToken(), "android");
         MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
+
     }
 
     private void getSnackBar(String string) {
@@ -261,6 +265,20 @@ public class CustomerLoginActivity extends AppCompatActivity
         getSnackBar(getString(R.string.login_google_fails));
     }
 
+    @Override
+    public void onClickLogout() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        Log.d(TAG, "Logout Google ");
+                    }
+                });
+
+//        Auth.GoogleSignInApi.signOut()
+    }
+
 
     private class Events implements View.OnClickListener {
         @Override
@@ -288,7 +306,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         }
     }
 
-    public void onClickLogout() {
+    public void onClickLogoutGoogle() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
 

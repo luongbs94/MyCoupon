@@ -177,13 +177,6 @@ public class NewsCustomerFragment extends Fragment {
 
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        getMessage();
-//        Log.d(TAG, "onAttach" + " - onAttach");
-//    }
-
     private void getSnackBar(String s) {
         Snackbar.make(mRecyclerNews, s, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
