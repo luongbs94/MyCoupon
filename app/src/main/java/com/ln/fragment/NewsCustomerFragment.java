@@ -80,6 +80,8 @@ public class NewsCustomerFragment extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
+        mSwipeContainer.setRefreshing(true);
+
         getMessage();
 
         setHasOptionsMenu(true);

@@ -78,26 +78,39 @@ public class CustomerLoginActivity extends AppCompatActivity
             public void onSuccess(LoginResult loginResult) {
 
                 mProfile = Profile.getCurrentProfile();
+                mAccessToken = AccessToken.getCurrentAccessToken();
+                if (mAccessToken != null) {
+                    try{
+                        MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
+
+                    }catch (Exception e){
+
+                    }
+                    Log.d(TAG, "Token - " + mAccessToken.getToken());
+                }
+
+
                 if (mProfile != null) {
                     String url = getString(R.string.face_image) + mProfile.getId() + getString(R.string.face_image_end);
                     MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName(), url);
                     Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
 
-                    getCompanyByUserId(mProfile.getId());
-
                     //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
 //                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
-                    updateUserToken("10205539341392320", MainApplication.getDeviceToken(), "android");
+                    updateUserToken(mProfile.getId(), MainApplication.getDeviceToken(), "android");
 
                     MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_FACEBOOK;
 
+                    getCompanyByUserId(mProfile.getId());
+
+                }else{
+                    try{
+                        getCompanyByUserId(mAccessToken.getUserId());
+                    }catch (Exception e){
+
+                    }
                 }
 
-                mAccessToken = AccessToken.getCurrentAccessToken();
-                if (mAccessToken != null) {
-                    MainApplication.sDetailUser.setAccessToken(mAccessToken.getToken());
-                    Log.d(TAG, "Token - " + mAccessToken.getToken());
-                }
             }
 
             @Override
@@ -209,6 +222,8 @@ public class CustomerLoginActivity extends AppCompatActivity
                 MainApplication.editor.commit();
 
                 start();
+
+
             }
 
             @Override
