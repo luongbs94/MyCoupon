@@ -101,6 +101,8 @@
     <string name="please_question">Please contact us if you have any question?</string>
     <string name="love_coupon">Love Coupon</string>
     <string name="delete_news">Bạn có muốn xóa tin mới này không?</string>
+    <string name="exit_alert">Bạn có muốn thoát ứng dụng không?</string>
+
     <string name="agree">Agree</string>
     <string name="disagree">Disagree</string>
     <string name="delete_news_success">Bạn đã xóa tin mới thành công!</string>

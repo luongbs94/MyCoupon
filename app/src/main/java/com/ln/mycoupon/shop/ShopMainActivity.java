@@ -2,6 +2,7 @@ package com.ln.mycoupon.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
 import com.ln.api.SaveData;
@@ -31,6 +34,7 @@ import com.ln.interfaces.OnClickLogoutGoogle;
 import com.ln.model.Company;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
+import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
 
 public class ShopMainActivity extends AppCompatActivity
@@ -131,8 +135,28 @@ public class ShopMainActivity extends AppCompatActivity
 
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            finish();
+        }else{
+            MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
+            dialog.content(R.string.exit_alert)
+                    .positiveText(R.string.agree)
+                    .negativeText(R.string.disagree)
+                    .positiveColor(getResources().getColor(R.color.title_bg))
+                    .negativeColor(getResources().getColor(R.color.title_bg))
+                    .show();
+
+            dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    finish();
+                }
+            });
+
+            dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    dialog.dismiss();
+                }
+            });
         }
     }
 
@@ -171,7 +195,6 @@ public class ShopMainActivity extends AppCompatActivity
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
                 MainApplication.editor.commit();
 
-                finish();
                 if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_GOOGLE) {
                     SaveData.company = null;
                 } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_FACEBOOK) {
@@ -187,6 +210,12 @@ public class ShopMainActivity extends AppCompatActivity
                     MainApplication.sShopDetail = null;
                 }
                 MainApplication.sIsAdmin = false;
+
+                Intent intent = new Intent(this, FirstActivity.class);
+                startActivity(intent);
+
+                finish();
+
 
                 break;
             default:

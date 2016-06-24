@@ -91,6 +91,15 @@ public class ShopLoginActivity extends AppCompatActivity
             @Override
             public void onSuccess(LoginResult loginResult) {
                 mProfile = Profile.getCurrentProfile();
+                mAccessToken = AccessToken.getCurrentAccessToken();
+                if (mAccessToken != null) {
+                    try {
+                        MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
+
+                    } catch (Exception e) {
+
+                    }
+                }
                 if (mProfile != null) {
                     String picture = getString(R.string.face_image)
                             + mProfile.getId()
@@ -101,15 +110,17 @@ public class ShopLoginActivity extends AppCompatActivity
 
                     getSnackBar(mProfile.getId() + " - " + mProfile.getName());
                     Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+                    getCompanyProfileSocial(mProfile.getId());
+                } else {
+
+                    try {
+                        getCompanyProfileSocial(mAccessToken.getUserId());
+                    } catch (Exception e) {
+
+                    }
+
                 }
 
-                mAccessToken = AccessToken.getCurrentAccessToken();
-                if (mAccessToken != null) {
-                    MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
-                    MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
-                }
-
-                getCompanyProfileSocial(mProfile.getId());
 
             }
 

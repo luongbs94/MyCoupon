@@ -152,9 +152,4 @@ public class CouponFragment extends Fragment {
         MainApplication.editor.commit();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_test1, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 }
