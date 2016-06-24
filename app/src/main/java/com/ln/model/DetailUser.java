@@ -11,6 +11,9 @@ public class DetailUser {
     private String picture;
     private String accessToken;
 
+    public DetailUser() {
+    }
+
     public DetailUser(String id, String name, String picture) {
         this.id = id;
         this.name = name;

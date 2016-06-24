@@ -11,11 +11,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -53,6 +55,8 @@ public class CustomerLoginActivity extends AppCompatActivity
     private CallbackManager mCallbackManager;
     private AccessToken mAccessToken;
     private Profile mProfile;
+    private AccessTokenTracker mTokenTracker;
+    private ProfileTracker mProfileTracker;
 
     private Gson gson = new Gson();
 
@@ -63,6 +67,7 @@ public class CustomerLoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_login);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         initViews();
@@ -71,48 +76,67 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private void initViews() {
 
-
         getSupportActionBar().setTitle(R.string.login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                mProfile = Profile.getCurrentProfile();
-                mAccessToken = AccessToken.getCurrentAccessToken();
+                if (Profile.getCurrentProfile() == null) {
+                    mProfileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
+                            Log.d(TAG, "Profile2 " + newProfile.getId());
+                            mProfile = newProfile;
+                            mProfileTracker.stopTracking();
+                        }
+                    };
+                } else {
+                    mProfile = Profile.getCurrentProfile();
+                    Log.d(TAG, "Profile " + mProfile.getId());
+
+                }
+
+                if (AccessToken.getCurrentAccessToken() == null) {
+                    mTokenTracker = new AccessTokenTracker() {
+                        @Override
+                        protected void onCurrentAccessTokenChanged(AccessToken old, AccessToken news) {
+                            mAccessToken = news;
+                            mTokenTracker.stopTracking();
+                        }
+                    };
+                } else {
+                    mAccessToken = AccessToken.getCurrentAccessToken();
+                    Log.d(TAG, "mAccessToken " + mAccessToken.getUserId());
+                    Log.d(TAG, "mAccessToken " + mAccessToken.getToken());
+                }
+
+
+                Log.d(TAG, "Profile3 " + mProfile.getId());
+                LoginManager.getInstance().logOut();
+
+                DetailUser detailUser = new DetailUser();
 
                 if (mProfile != null) {
-
                     String url = getString(R.string.face_image) + mProfile.getId() + getString(R.string.face_image_end);
-                    MainApplication.sDetailUser = new DetailUser(mProfile.getId(), mProfile.getName(), url);
-                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
+                    detailUser.setPicture(url);
+                    detailUser.setId(mProfile.getId());
+                    detailUser.setName(mProfile.getName());
+                }
+                if (mAccessToken != null) {
+                    String url = getString(R.string.face_image) + mAccessToken.getUserId() + getString(R.string.face_image_end);
+                    detailUser.setPicture(url);
+                    detailUser.setAccessToken(mAccessToken.getToken());
+                    detailUser.setId(mAccessToken.getUserId());
+                }
 
-                    if (mAccessToken != null) {
-//                        MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
-                        Log.d(TAG, "Token - " + mAccessToken.getToken());
-                    }
-
-                    //   if(MainApplication.isAddToken() == false && MainApplication.getDeviceToken().length() > 5){
-//                        updateUserToken(mAccessToken.getUserId(), MainApplication.getDeviceToken(), "android");
-                    updateUserToken(mProfile.getId(), MainApplication.getDeviceToken(), "android");
-
-                    MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_FACEBOOK;
-
-                    getCompanyByUserId(mProfile.getId());
-
-                } else {
-                    try {
-                        if (mAccessToken != null) {
-                            String url = getString(R.string.face_image) + mAccessToken.getUserId() + getString(R.string.face_image_end);
-                            MainApplication.sDetailUser = new DetailUser(mAccessToken.getUserId(), "", url, mAccessToken.getToken());
-                            Log.d(TAG, mProfile.getId() + " - " + mProfile.getName());
-                            getCompanyByUserId(mAccessToken.getUserId());
-                        }
-                    } catch (NullPointerException e) {
-                        Log.d(TAG, e.toString());
-                    }
+                if (detailUser.getId() != null) {
+                    MainApplication.sDetailUser = detailUser;
+                    getCompanyByUserId(detailUser.getId());
+                    LoginManager.getInstance().logOut();
                 }
             }
 
@@ -153,13 +177,6 @@ public class CustomerLoginActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mProfile = null;
-        mAccessToken = null;
-    }
-
     private void addEvents() {
         mBtnFacebook.setOnClickListener(new Events());
         mBtnGoogle.setOnClickListener(new Events());
@@ -168,6 +185,10 @@ public class CustomerLoginActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (mCallbackManager.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
         if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -179,8 +200,6 @@ public class CustomerLoginActivity extends AppCompatActivity
             } else {
                 getSnackBar(getString(R.string.login_google_fails));
             }
-        } else {
-            mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -226,8 +245,6 @@ public class CustomerLoginActivity extends AppCompatActivity
                 MainApplication.editor.commit();
 
                 start();
-
-
             }
 
             @Override

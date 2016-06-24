@@ -12,11 +12,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -65,6 +67,8 @@ public class ShopLoginActivity extends AppCompatActivity
     private Profile mProfile;
 
     private LinearLayout mLinearLayout;
+    private ProfileTracker mProfileTracker;
+    private AccessTokenTracker mTokenTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,42 +98,62 @@ public class ShopLoginActivity extends AppCompatActivity
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-                mProfile = Profile.getCurrentProfile();
-                mAccessToken = AccessToken.getCurrentAccessToken();
+
+
+                if (Profile.getCurrentProfile() == null) {
+                    mProfileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
+                            Log.d(TAG, "Profile2 " + newProfile.getId());
+                            mProfile = newProfile;
+                            mProfileTracker.stopTracking();
+                        }
+                    };
+                } else {
+                    mProfile = Profile.getCurrentProfile();
+                    Log.d(TAG, "Profile " + mProfile.getId());
+
+                }
+
+                if (AccessToken.getCurrentAccessToken() == null) {
+                    mTokenTracker = new AccessTokenTracker() {
+                        @Override
+                        protected void onCurrentAccessTokenChanged(AccessToken old, AccessToken news) {
+                            mAccessToken = news;
+                            mTokenTracker.stopTracking();
+                        }
+                    };
+                } else {
+                    mAccessToken = AccessToken.getCurrentAccessToken();
+                    Log.d(TAG, "mAccessToken " + mAccessToken.getUserId());
+                    Log.d(TAG, "mAccessToken " + mAccessToken.getToken());
+                }
+
+
+                Log.d(TAG, "Profile3 " + mProfile.getId());
+                LoginManager.getInstance().logOut();
+
+                DetailUser detailUser = new DetailUser();
 
                 if (mProfile != null) {
-                    String picture = getString(R.string.face_image)
-                            + mProfile.getId()
-                            + getString(R.string.face_image_end);
-
-                    MainApplication.sShopDetail =
-                            new DetailUser(mProfile.getId(), mProfile.getName(), picture);
-
-                    if (mAccessToken != null) {
-                        MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
-                    }
-
-                    getSnackBar("Login Success");
-                    Log.d(TAG, mProfile.getId() + " - " + mProfile.getName() + mProfile.getLinkUri());
-                    getCompanyProfileSocial(mProfile.getId());
-                } else {
-                    if (mAccessToken != null) {
-                        try {
-                            String picture = getString(R.string.face_image)
-                                    + mAccessToken.getUserId()
-                                    + getString(R.string.face_image_end);
-
-                            MainApplication.sShopDetail =
-                                    new DetailUser(mAccessToken.getUserId(), "", picture);
-
-                            MainApplication.sShopDetail.setAccessToken(mAccessToken.getToken());
-                            getCompanyProfileSocial(mAccessToken.getUserId());
-                            Log.d(TAG, mProfile.getId() + " - " + mProfile.getName() + mProfile.getLinkUri());
-                        } catch (NullPointerException e) {
-                            Log.d(TAG, "Login Facebook  Fails");
-                        }
-                    }
+                    String url = getString(R.string.face_image) + mProfile.getId() + getString(R.string.face_image_end);
+                    detailUser.setPicture(url);
+                    detailUser.setId(mProfile.getId());
+                    detailUser.setName(mProfile.getName());
                 }
+                if (mAccessToken != null) {
+                    String url = getString(R.string.face_image) + mAccessToken.getUserId() + getString(R.string.face_image_end);
+                    detailUser.setPicture(url);
+                    detailUser.setAccessToken(mAccessToken.getToken());
+                    detailUser.setId(mAccessToken.getUserId());
+                }
+
+                if (detailUser.getId() != null) {
+                    MainApplication.sShopDetail = detailUser;
+                    getCompanyProfileSocial(mProfile.getId());
+                    LoginManager.getInstance().logOut();
+                }
+
             }
 
             @Override
@@ -171,15 +195,6 @@ public class ShopLoginActivity extends AppCompatActivity
         mBtnLogin.setOnClickListener(new Events());
         mBtnGooglePlus.setOnClickListener(new Events());
         mBtnLoginFacebook.setOnClickListener(new Events());
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mProfile = null;
-        mAccessToken = null;
-        LoginManager.getInstance().logOut();
     }
 
     @Override
