@@ -23,7 +23,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
 import com.ln.app.MainApplication;
-import com.ln.fragment.NewsCustomerFragment;
+import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.interfaces.OnClickLogoutGoogle;

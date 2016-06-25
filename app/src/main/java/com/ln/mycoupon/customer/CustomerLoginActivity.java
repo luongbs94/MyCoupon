@@ -10,16 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
-import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -31,14 +29,12 @@ import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.interfaces.OnClickLogoutGoogle;
 import com.ln.model.Company1;
 import com.ln.model.DetailUser;
 import com.ln.model.User;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,17 +42,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CustomerLoginActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener, OnClickLogoutGoogle {
+        implements GoogleApiClient.OnConnectionFailedListener {
 
     private final String TAG = getClass().getSimpleName();
 
     // FACEBOOK
-    private Button mBtnFacebook;
+    private LoginButton mBtnFacebook;
     private CallbackManager mCallbackManager;
-    private AccessToken mAccessToken;
-    private Profile mProfile;
-    private AccessTokenTracker mTokenTracker;
-    private ProfileTracker mProfileTracker;
 
     private Gson gson = new Gson();
 
@@ -80,59 +72,41 @@ public class CustomerLoginActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCallbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+
+        mBtnFacebook = (LoginButton) findViewById(R.id.btn_facebook_customer);
+        if (mBtnFacebook != null) {
+            mBtnFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE,
+                    MainApplication.FACEBOOK_EMAIL);
+        }
+
+        mBtnFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                if (Profile.getCurrentProfile() == null) {
-                    mProfileTracker = new ProfileTracker() {
-                        @Override
-                        protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
-                            Log.d(TAG, "Profile2 " + newProfile.getId());
-                            mProfile = newProfile;
-                            mProfileTracker.stopTracking();
-                        }
-                    };
-                } else {
-                    mProfile = Profile.getCurrentProfile();
-                    Log.d(TAG, "Profile " + mProfile.getId());
-
-                }
-
-                if (AccessToken.getCurrentAccessToken() == null) {
-                    mTokenTracker = new AccessTokenTracker() {
-                        @Override
-                        protected void onCurrentAccessTokenChanged(AccessToken old, AccessToken news) {
-                            mAccessToken = news;
-                            mTokenTracker.stopTracking();
-                        }
-                    };
-                } else {
-                    mAccessToken = AccessToken.getCurrentAccessToken();
-                    Log.d(TAG, "mAccessToken " + mAccessToken.getUserId());
-                    Log.d(TAG, "mAccessToken " + mAccessToken.getToken());
-                }
+                Profile mProfile = Profile.getCurrentProfile();
+                String id = loginResult.getAccessToken().getUserId();
+                String token = loginResult.getAccessToken().getToken();
 
 
-                Log.d(TAG, "Profile3 " + mProfile.getId());
-                LoginManager.getInstance().logOut();
-
+                String url = null;
                 DetailUser detailUser = new DetailUser();
+                if (id != null) {
+                    detailUser.setId(id);
+                    url = getString(R.string.face_image) + id + getString(R.string.face_image_end);
 
-                if (mProfile != null) {
-                    String url = getString(R.string.face_image) + mProfile.getId() + getString(R.string.face_image_end);
-                    detailUser.setPicture(url);
-                    detailUser.setId(mProfile.getId());
+                }
+                if (token != null) {
+                    detailUser.setAccessToken(token);
+                    Log.d(TAG, "mProfile " + id + " - " + token);
+                }
+
+                if (mProfile.getName() != null) {
                     detailUser.setName(mProfile.getName());
                 }
-                if (mAccessToken != null) {
-                    String url = getString(R.string.face_image) + mAccessToken.getUserId() + getString(R.string.face_image_end);
+                if (url != null) {
                     detailUser.setPicture(url);
-                    detailUser.setAccessToken(mAccessToken.getToken());
-                    detailUser.setId(mAccessToken.getUserId());
                 }
-
                 if (detailUser.getId() != null) {
                     MainApplication.sDetailUser = detailUser;
                     getCompanyByUserId(detailUser.getId());
@@ -142,15 +116,14 @@ public class CustomerLoginActivity extends AppCompatActivity
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "onCancel - ");
+                Log.d(TAG, "FACEBOOK - onCancel");
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG, "onError - " + error.getMessage() + " - " + error.toString());
+                Log.d(TAG, "FACEBOOK - onError");
             }
         });
-        mBtnFacebook = (Button) findViewById(R.id.btn_facebook_customer);
 
      /* ============== START GOOGLE ===============*/
         mBtnGoogle = (Button) findViewById(R.id.btn_google_customer);
@@ -178,7 +151,6 @@ public class CustomerLoginActivity extends AppCompatActivity
     }
 
     private void addEvents() {
-        mBtnFacebook.setOnClickListener(new Events());
         mBtnGoogle.setOnClickListener(new Events());
     }
 
@@ -215,6 +187,14 @@ public class CustomerLoginActivity extends AppCompatActivity
         updateUserToken(account.getIdToken(), MainApplication.getDeviceToken(), "android");
         MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
 
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        Log.d(TAG, "Logout Google " + status.toString());
+                    }
+                });
     }
 
     private void getSnackBar(String string) {
@@ -282,40 +262,19 @@ public class CustomerLoginActivity extends AppCompatActivity
         getSnackBar(getString(R.string.login_google_fails));
     }
 
-    @Override
-    public void onClickLogout() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        Log.d(TAG, "Logout Google ");
-                    }
-                });
-
-//        Auth.GoogleSignInApi.signOut()
-    }
-
-
     private class Events implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.btn_facebook_customer:
-                    onClickLoginFaceBook();
-                    break;
+
                 case R.id.btn_google_customer:
-                default:
                     onClickLoginGoogle();
+                    break;
+                default:
                     break;
             }
         }
 
-        private void onClickLoginFaceBook() {
-            LoginManager.getInstance().logInWithReadPermissions(
-                    CustomerLoginActivity.this,
-                    Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
-        }
 
         private void onClickLoginGoogle() {
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -323,14 +282,4 @@ public class CustomerLoginActivity extends AppCompatActivity
         }
     }
 
-    public void onClickLogoutGoogle() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        Log.d(TAG, "Logout Google ");
-                    }
-                });
-    }
 }

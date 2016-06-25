@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.ln.app.MainApplication;
-import com.ln.fragment.PreviewImagesFragment;
+import com.ln.fragment.shop.PreviewImagesFragment;
 
 import java.util.ArrayList;
 import java.util.List;

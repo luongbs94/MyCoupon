@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/black_images"
     android:gravity="center_vertical"
-    tools:context="com.ln.fragment.PreviewImagesFragment">
+    tools:context="com.ln.fragment.shop.PreviewImagesFragment">
 
     <ImageView
         android:id="@+id/image_preview"

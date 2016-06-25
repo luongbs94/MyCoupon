@@ -22,8 +22,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.fragment.shop.CouponFragment;
@@ -31,7 +29,6 @@ import com.ln.fragment.shop.HistoryFragment;
 import com.ln.fragment.shop.NewsFragment;
 import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.ShareFragment;
-import com.ln.interfaces.OnClickLogoutGoogle;
 import com.ln.model.Company;
 import com.ln.model.DetailUser;
 import com.ln.mycoupon.AddCouponActivity;
@@ -207,19 +204,9 @@ public class ShopMainActivity extends AppCompatActivity
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
                 MainApplication.editor.commit();
 
-                if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_GOOGLE) {
+                if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_NORMAL) {
                     SaveData.company = null;
-                } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_FACEBOOK) {
-                    FacebookSdk.sdkInitialize(getApplicationContext());
-                    LoginManager.getInstance().logOut();
-                    MainApplication.sShopDetail = null;
-                } else if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_NORMAL) {
-                    OnClickLogoutGoogle mOnClickLogoutGoogle = new OnClickLogoutGoogle() {
-                        @Override
-                        public void onClickLogout() {
-                            new ShopLoginActivity().onClickLogoutGoogle();
-                        }
-                    };
+                } else {
                     MainApplication.sShopDetail = null;
                 }
                 MainApplication.sIsAdmin = false;

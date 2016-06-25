@@ -67,6 +67,7 @@ public class MainApplication extends MultiDexApplication {
 
 
     public static final String FACEBOOK_EMAIL = "email";
+    public static final String FACEBOOK_USER_FRIENDS = "user_friends";
     public static DetailUser sDetailUser;
 
     private static final String URL_GET_POST = "http://188.166.179.187:3000";
@@ -144,7 +145,6 @@ public class MainApplication extends MultiDexApplication {
         Realm.setDefaultConfiguration(realmConfiguration);
 
         mRealmController = RealmController.with(this);
-
     }
 
     public static SharedPreferences getSharedPreferences() {

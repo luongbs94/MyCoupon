@@ -45,8 +45,9 @@
             android:textColor="@color/white"
             android:textSize="@dimen/size_15sp" />
 
-        <Button
+        <com.facebook.login.widget.LoginButton
             android:id="@+id/btn_login_facebook"
+            style="@style/StyleFacebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

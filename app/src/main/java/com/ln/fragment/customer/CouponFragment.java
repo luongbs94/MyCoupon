@@ -8,8 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -78,9 +76,7 @@ public class CouponFragment extends Fragment {
                 android.R.color.holo_red_light);
 
         initViews();
-
         setHasOptionsMenu(true);
-
         return mView;
     }
 
@@ -90,7 +86,6 @@ public class CouponFragment extends Fragment {
         mRecCoupon = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLnLayout = (LinearLayout) mView.findViewById(R.id.ln_fragment_coupon);
-
 
         CompanyAdapter adapter = new CompanyAdapter(getActivity(), SaveData.listCompanyCustomer);
         mRecCoupon.setAdapter(adapter);
@@ -113,7 +108,6 @@ public class CouponFragment extends Fragment {
 
     private void getCompanyByUserId() {
 
-
         Call<List<Company1>> call3 = mApiServices.getCompaniesByUserId(SaveData.USER_ID);
         call3.enqueue(new Callback<List<Company1>>() {
 
@@ -130,7 +124,6 @@ public class CouponFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
                 CompanyAdapter adapter = new CompanyAdapter(getActivity(), SaveData.listCompanyCustomer);
                 mRecCoupon.setAdapter(adapter);
-
             }
 
             @Override

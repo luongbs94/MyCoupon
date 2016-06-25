@@ -1,4 +1,4 @@
-package com.ln.fragment;
+package com.ln.fragment.shop;
 
 
 import android.graphics.Bitmap;

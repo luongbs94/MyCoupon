@@ -1,4 +1,4 @@
-package com.ln.fragment;
+package com.ln.fragment.customer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
