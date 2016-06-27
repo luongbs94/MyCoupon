@@ -101,9 +101,12 @@ public class CustomerLoginActivity extends AppCompatActivity
                     Log.d(TAG, "mProfile " + id + " - " + token);
                 }
 
-                if (mProfile.getName() != null) {
-                    detailUser.setName(mProfile.getName());
+                if (mProfile != null) {
+                    if (mProfile.getName() != null) {
+                        detailUser.setName(mProfile.getName());
+                    }
                 }
+
                 if (url != null) {
                     detailUser.setPicture(url);
                 }

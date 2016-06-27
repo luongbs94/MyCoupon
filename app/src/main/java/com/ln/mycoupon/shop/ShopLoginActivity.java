@@ -139,18 +139,36 @@ public class ShopLoginActivity extends AppCompatActivity
                     detailUser.setAccessToken(token);
                 }
 
-                if (mProfile.getName() != null) {
-                    detailUser.setName(mProfile.getName());
+                if(mProfile != null){
+                    if (mProfile.getName() != null) {
+                        detailUser.setName(mProfile.getName());
+                    }
                 }
+
                 if (url != null) {
                     detailUser.setPicture(url);
                 }
 
-                if (detailUser.getId() != null) {
-                    MainApplication.sShopDetail = detailUser;
-                    getCompanyProfileSocial(mProfile.getId());
-                    LoginManager.getInstance().logOut();
+                try{
+                    if(mProfile != null){
+                        if (detailUser.getId() != null) {
+                            MainApplication.sShopDetail = detailUser;
+                            getCompanyProfileSocial(mProfile.getId());
+                            LoginManager.getInstance().logOut();
+                        }
+                    }else{
+                        if (detailUser.getId() != null) {
+                            MainApplication.sShopDetail = detailUser;
+                            getCompanyProfileSocial(id);
+                            LoginManager.getInstance().logOut();
+                        }
+                    }
+
+                }catch (Exception e){
+
                 }
+
+
             }
 
             @Override
