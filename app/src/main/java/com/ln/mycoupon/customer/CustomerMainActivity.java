@@ -176,6 +176,7 @@ public class CustomerMainActivity extends AppCompatActivity
             mFabButton.setVisibility(View.GONE);
         }
         startFragment(fragment);
+        getSupportActionBar().setTitle(sTitle);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

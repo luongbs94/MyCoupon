@@ -139,7 +139,7 @@ public class ShopLoginActivity extends AppCompatActivity
                     detailUser.setAccessToken(token);
                 }
 
-                if (mProfile.getName() != null) {
+                if (mProfile != null && mProfile.getName() != null) {
                     detailUser.setName(mProfile.getName());
                 }
                 if (url != null) {
