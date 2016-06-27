@@ -17,7 +17,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -35,6 +34,7 @@ import com.ln.model.User;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,7 +47,7 @@ public class CustomerLoginActivity extends AppCompatActivity
     private final String TAG = getClass().getSimpleName();
 
     // FACEBOOK
-    private LoginButton mBtnFacebook;
+    private Button mBtnFacebook;
     private CallbackManager mCallbackManager;
 
     private Gson gson = new Gson();
@@ -73,13 +73,13 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         mCallbackManager = CallbackManager.Factory.create();
 
-        mBtnFacebook = (LoginButton) findViewById(R.id.btn_facebook_customer);
-        if (mBtnFacebook != null) {
-            mBtnFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE,
-                    MainApplication.FACEBOOK_EMAIL);
-        }
+        mBtnFacebook = (Button) findViewById(R.id.btn_facebook_customer);
+//        if (mBtnFacebook != null) {
+//            mBtnFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE,
+//                    MainApplication.FACEBOOK_EMAIL);
+//        }
 
-        mBtnFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
                     @Override
                     public void onSuccess(LoginResult loginResult) {
@@ -107,11 +107,16 @@ public class CustomerLoginActivity extends AppCompatActivity
 
                         if (url != null) {
                             detailUser.setPicture(url);
-                        }
-                        if (detailUser.getId() != null) {
-                            MainApplication.sDetailUser = detailUser;
-                            getCompanyByUserId(detailUser.getId());
-                            LoginManager.getInstance().logOut();
+                            if (detailUser.getId() != null) {
+                                try {
+                                    MainApplication.sDetailUser = detailUser;
+                                    getCompanyByUserId(detailUser.getId());
+                                    LoginManager.getInstance().logOut();
+
+                                } catch (NullPointerException e) {
+                                    Log.d(TAG, "Login Facebook Error");
+                                }
+                            }
                         }
                     }
 
@@ -165,6 +170,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private void addEvents() {
         mBtnGoogle.setOnClickListener(new Events());
+        mBtnFacebook.setOnClickListener(new Events());
     }
 
     @Override
@@ -279,13 +285,20 @@ public class CustomerLoginActivity extends AppCompatActivity
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-
+                case R.id.btn_facebook_customer:
+                    onClickLoginFacebook();
+                    break;
                 case R.id.btn_google_customer:
                     onClickLoginGoogle();
                     break;
                 default:
                     break;
             }
+        }
+
+        private void onClickLoginFacebook() {
+            LoginManager.getInstance().logInWithReadPermissions(CustomerLoginActivity.this,
+                    Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
         }
 
 
