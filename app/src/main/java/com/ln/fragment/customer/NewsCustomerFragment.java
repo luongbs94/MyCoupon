@@ -98,7 +98,7 @@ public class NewsCustomerFragment extends Fragment {
 
     public void getMessage() {
 
-        mListNewsOfLike.clear();
+        final List<NewsOfLike> newsOfLikeList = new ArrayList<>();
         Call<List<Message>> call = apiService.getNewsByUserId(MainApplication.sDetailUser.getId());
         call.enqueue(new Callback<List<Message>>() {
 
@@ -107,7 +107,7 @@ public class NewsCustomerFragment extends Fragment {
 
                 List<Message> mListNews = arg1.body();
                 for (Message message : mListNews) {
-                    mListNewsOfLike.add(new NewsOfLike(message, false));
+                    newsOfLikeList.add(new NewsOfLike(message, false));
                 }
 
                 // set like news
@@ -118,7 +118,7 @@ public class NewsCustomerFragment extends Fragment {
 
                 for (LikeNews likeNews : listLike) {
 
-                    for (NewsOfLike newsOfLike : mListNewsOfLike) {
+                    for (NewsOfLike newsOfLike : newsOfLikeList) {
                         if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
                                 && likeNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
                             newsOfLike.setLike(true);
@@ -129,22 +129,25 @@ public class NewsCustomerFragment extends Fragment {
                 //set delete news
 
                 for (DeleteNews deleteNews : listDeleteNews) {
-                    for (NewsOfLike newsOfLike : mListNewsOfLike) {
+                    for (NewsOfLike newsOfLike : newsOfLikeList) {
                         if (newsOfLike.getMessage_id().equals(deleteNews.getIdNews())
                                 && deleteNews.getIdNews().equals(MainApplication.sDetailUser.getId())) {
                             newsOfLike.setDelete(true);
                         }
                     }
 
-                    int size = mListNewsOfLike.size() - 1;
+                    int size = newsOfLikeList.size() - 1;
 
                     for (int i = size; i >= 0; i--) {
-                        if (mListNewsOfLike.get(i).getMessage_id().equals(deleteNews.getIdNews())) {
-                            mListNewsOfLike.remove(i);
+                        if (newsOfLikeList.get(i).getMessage_id().equals(deleteNews.getIdNews())) {
+                            newsOfLikeList.remove(i);
                         }
                     }
                 }
 
+
+                mListNewsOfLike.clear();
+                mListNewsOfLike.addAll(newsOfLikeList);
                 NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(),
                         mListNewsOfLike, NewsCustomerFragment.this);
                 mRecyclerNews.setAdapter(adapter);
@@ -197,6 +200,8 @@ public class NewsCustomerFragment extends Fragment {
     }
 
     private void likeNews() {
+
+
 
         List<LikeNews> listLike = mRealm.getListLikeNews();
         List<NewsOfLike> listNews = new ArrayList<>();
