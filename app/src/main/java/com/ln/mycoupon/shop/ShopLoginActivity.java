@@ -18,7 +18,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -36,6 +35,7 @@ import com.ln.model.DetailUser;
 import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -53,7 +53,7 @@ public class ShopLoginActivity extends AppCompatActivity
     private String TAG = getClass().getSimpleName();
 
     private Button mBtnLogin;
-    private LoginButton mBtnLoginFacebook;
+    private Button mBtnLoginFacebook;
     private MaterialEditText mEdtUsername, mEdtPassword;
     private LoveCouponAPI apiService;
     private GoogleApiClient mGoogleApiClient;
@@ -90,11 +90,11 @@ public class ShopLoginActivity extends AppCompatActivity
 
         /* ================== START FACEBOOK ==================*/
 
-        mBtnLoginFacebook = (LoginButton) findViewById(R.id.btn_login_facebook);
-        if (mBtnLoginFacebook != null) {
-            mBtnLoginFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE,
-                    MainApplication.FACEBOOK_EMAIL);
-        }
+        mBtnLoginFacebook = (Button) findViewById(R.id.btn_login_facebook);
+//        if (mBtnLoginFacebook != null) {
+//            mBtnLoginFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE,
+//                    MainApplication.FACEBOOK_EMAIL);
+//        }
 
 
         mLinearLayout = (LinearLayout) findViewById(R.id.linear_login_shop);
@@ -116,7 +116,7 @@ public class ShopLoginActivity extends AppCompatActivity
         mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
         /* ===================== END GOOGLE ==================*/
 
-        mBtnLoginFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -138,8 +138,7 @@ public class ShopLoginActivity extends AppCompatActivity
                 if (token != null) {
                     detailUser.setAccessToken(token);
                 }
-
-                if(mProfile != null){
+                if (mProfile != null) {
                     if (mProfile.getName() != null) {
                         detailUser.setName(mProfile.getName());
                     }
@@ -149,14 +148,14 @@ public class ShopLoginActivity extends AppCompatActivity
                     detailUser.setPicture(url);
                 }
 
-                try{
-                    if(mProfile != null){
+                try {
+                    if (mProfile != null) {
                         if (detailUser.getId() != null) {
                             MainApplication.sShopDetail = detailUser;
                             getCompanyProfileSocial(mProfile.getId());
                             LoginManager.getInstance().logOut();
                         }
-                    }else{
+                    } else {
                         if (detailUser.getId() != null) {
                             MainApplication.sShopDetail = detailUser;
                             getCompanyProfileSocial(id);
@@ -164,8 +163,8 @@ public class ShopLoginActivity extends AppCompatActivity
                         }
                     }
 
-                }catch (Exception e){
-
+                } catch (NullPointerException e) {
+                    Log.d(TAG, "Login Facebook  error");
                 }
 
 
@@ -189,6 +188,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
         mBtnLogin.setOnClickListener(new Events());
         mBtnGooglePlus.setOnClickListener(new Events());
+        mBtnLoginFacebook.setOnClickListener(new Events());
     }
 
     @Override
@@ -328,9 +328,13 @@ public class ShopLoginActivity extends AppCompatActivity
                 case R.id.btn_login:
                     onClickLogin();
                     break;
+                case R.id.btn_login_facebook:
+                    onClickLoginFacebook();
+                    break;
                 case R.id.btn_google:
-                default:
                     onClickGooglePlus();
+                    break;
+                default:
                     break;
             }
         }
@@ -351,6 +355,11 @@ public class ShopLoginActivity extends AppCompatActivity
         private void onClickGooglePlus() {
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
+        }
+
+        private void onClickLoginFacebook() {
+            LoginManager.getInstance().logInWithReadPermissions(ShopLoginActivity.this,
+                    Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
         }
 
     }

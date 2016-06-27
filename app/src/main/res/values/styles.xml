@@ -43,7 +43,7 @@
     <style name="StyleFacebook">
         <item name="android:textSize">@dimen/size_15sp</item>
         <item name="android:text">FACEBOOK</item>
-        <item name="android:background">#3461A4</item>
+        <item name="android:background">@drawable/btn_facebook</item>
         <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">@dimen/size_15</item>
         <item name="android:textAllCaps">true</item>
