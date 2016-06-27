@@ -81,52 +81,57 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         mBtnFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
-            @Override
-            public void onSuccess(LoginResult loginResult) {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
 
-                Profile mProfile = Profile.getCurrentProfile();
-                String id = loginResult.getAccessToken().getUserId();
-                String token = loginResult.getAccessToken().getToken();
+                        Profile mProfile = Profile.getCurrentProfile();
+                        String id = loginResult.getAccessToken().getUserId();
+                        String token = loginResult.getAccessToken().getToken();
 
 
-                String url = null;
-                DetailUser detailUser = new DetailUser();
-                if (id != null) {
-                    detailUser.setId(id);
-                    url = getString(R.string.face_image) + id + getString(R.string.face_image_end);
+                        String url = null;
+                        DetailUser detailUser = new DetailUser();
+                        if (id != null) {
+                            detailUser.setId(id);
+                            url = getString(R.string.face_image) + id + getString(R.string.face_image_end);
 
+                        }
+                        if (token != null) {
+                            detailUser.setAccessToken(token);
+                            Log.d(TAG, "mProfile " + id + " - " + token);
+                        }
+
+                        if (mProfile != null && mProfile.getName() != null) {
+                            detailUser.setName(mProfile.getName());
+                        }
+
+                        if (url != null) {
+                            detailUser.setPicture(url);
+                        }
+                        if (detailUser.getId() != null) {
+                            MainApplication.sDetailUser = detailUser;
+                            getCompanyByUserId(detailUser.getId());
+                            LoginManager.getInstance().logOut();
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d(TAG, "FACEBOOK - onCancel");
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Log.d(TAG, "FACEBOOK - onError");
+                    }
                 }
-                if (token != null) {
-                    detailUser.setAccessToken(token);
-                    Log.d(TAG, "mProfile " + id + " - " + token);
-                }
 
-                if (mProfile != null && mProfile.getName() != null) {
-                    detailUser.setName(mProfile.getName());
-                }
-                if (url != null) {
-                    detailUser.setPicture(url);
-                }
-                if (detailUser.getId() != null) {
-                    MainApplication.sDetailUser = detailUser;
-                    getCompanyByUserId(detailUser.getId());
-                    LoginManager.getInstance().logOut();
-                }
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "FACEBOOK - onCancel");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d(TAG, "FACEBOOK - onError");
-            }
-        });
+        );
 
      /* ============== START GOOGLE ===============*/
-        mBtnGoogle = (Button) findViewById(R.id.btn_google_customer);
+        mBtnGoogle = (Button)
+
+                findViewById(R.id.btn_google_customer);
 
         GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -134,9 +139,17 @@ public class CustomerLoginActivity extends AppCompatActivity
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
-                .build();
+                .
+
+                        enableAutoManage(this, this)
+
+                .
+
+                        addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
+
+                .
+
+                        build();
 
         /* ================ END GOOGLE ================*/
     }
