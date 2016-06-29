@@ -32,11 +32,10 @@ public class ConnectivityReceiver extends BroadcastReceiver {
 
     public static boolean isConnect() {
 
-        ConnectivityManager cm = (ConnectivityManager) MainApplication.getIntance()
+        ConnectivityManager cm = (ConnectivityManager) MainApplication.getInstance()
                 .getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
-
 
 }

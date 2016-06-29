@@ -116,6 +116,7 @@
     <string name="like_news">Like News</string>
     <string name="news_delete">Delete News</string>
     <string name="near_news">News Near</string>
+    <string name="connect_network">Chế độ ngoại tuyến!</string>
 
 
 </resources>

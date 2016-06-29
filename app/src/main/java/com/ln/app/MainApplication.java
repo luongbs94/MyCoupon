@@ -12,6 +12,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
+import com.ln.broadcast.ConnectivityReceiver;
+import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.model.Company1;
 import com.ln.model.DetailUser;
 import com.ln.realm.RealmController;
@@ -30,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MainApplication extends MultiDexApplication {
 
-    private static MainApplication mIntances;
+    private static MainApplication mInstances;
 
     public static final String POSITION = "POSITION";
     public static final String DATA = "DATA";
@@ -116,6 +118,7 @@ public class MainApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        mInstances = this;
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
@@ -228,7 +231,12 @@ public class MainApplication extends MultiDexApplication {
         return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
 
-    public static synchronized MainApplication getIntance() {
-        return mIntances;
+    /* net word*/
+    public static synchronized MainApplication getInstance() {
+        return mInstances;
+    }
+
+    public void setConnectivityListener(ConnectivityReceiverListener listener){
+        ConnectivityReceiver.mListener = listener;
     }
 }

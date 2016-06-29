@@ -68,7 +68,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private void initViews() {
 
-        getSupportActionBar().setTitle(R.string.login);
+        setTitle(R.string.login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCallbackManager = CallbackManager.Factory.create();

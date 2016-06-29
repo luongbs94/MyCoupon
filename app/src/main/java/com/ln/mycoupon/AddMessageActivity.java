@@ -305,8 +305,9 @@ public class AddMessageActivity extends AppCompatActivity {
         options.inSampleSize = 8;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
-        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
-        Bitmap resized = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES, height, true);
+//        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
+        int height = MainApplication.WIDTH_IMAGES;
+        Bitmap resized = Bitmap.createScaledBitmap(bitmap, height, height, true);
 
         String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));
 

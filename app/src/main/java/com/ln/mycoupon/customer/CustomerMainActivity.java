@@ -23,6 +23,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
 import com.ln.app.MainApplication;
+import com.ln.broadcast.ConnectivityReceiver;
+import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.shop.ShareFragment;
@@ -34,22 +36,22 @@ import com.ln.mycoupon.R;
 import com.ln.mycoupon.shop.ShopLoginActivity;
 
 public class CustomerMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiverListener {
 
-    private final String TAG = getClass().getSimpleName();
     private static String sTitle;
 
     private FloatingActionButton mFabButton;
     private DrawerLayout mDrawerLayout;
     public static OnClickLogoutGoogle mOnClickLogoutGoogle;
+    private TextView mTxtConnectNetwork;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
 
-        sTitle = getString(R.string.my_coupon);
 
+        sTitle = getString(R.string.my_coupon);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -95,6 +97,9 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         }
 
+
+        mTxtConnectNetwork = (TextView) findViewById(R.id.txt_network);
+        checkNetwork();
     }
 
     @Override
@@ -188,11 +193,39 @@ public class CustomerMainActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
 
-        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) { //fragment not in back stack, create it.
+        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
             FragmentTransaction ft = manager.beginTransaction();
             ft.replace(R.id.content_main, fragment, fragmentTag);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.commit();
         }
+    }
+
+
+    /* ============ Check network ==============*/
+    @Override
+    public void onNetworkConnectChange(boolean isConnect) {
+
+    }
+
+    private void checkNetwork() {
+        boolean isNetWork = ConnectivityReceiver.isConnect();
+        showConnectNetWork(isNetWork);
+    }
+
+    private void showConnectNetWork(boolean isNetWork) {
+        if (mTxtConnectNetwork != null) {
+            if (isNetWork) {
+                mTxtConnectNetwork.setVisibility(View.GONE);
+            } else {
+                mTxtConnectNetwork.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainApplication.getInstance().setConnectivityListener(this);
     }
 }

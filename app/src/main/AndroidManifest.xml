@@ -129,11 +129,17 @@
         <activity
             android:name="com.yongchun.library.view.ImageCropActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PreviewImagesActivity"
+        <activity android:name=".PreviewImagesActivity" />
 
-            />
+        <!-- CHECK NETWORK         -->
 
-
+            <receiver
+                android:enabled="true"
+                android:name="com.ln.broadcast.ConnectivityReceiver">
+                <intent-filter>
+                    <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                </intent-filter>
+            </receiver>
     </application>
 
 </manifest>
