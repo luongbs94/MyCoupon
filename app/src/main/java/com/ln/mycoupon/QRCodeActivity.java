@@ -59,8 +59,6 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         myTextView.setText(text);
         mydecoderview.getCameraManager().stopPreview();
         getCoupon(text);
-
-
     }
 
 

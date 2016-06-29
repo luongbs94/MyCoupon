@@ -60,7 +60,7 @@ public class MainApplication extends MultiDexApplication {
 
 
     // size images fire base
-    public static final int WIDTH_IMAGES = 450;
+    public static final int WIDTH_IMAGES = 150;
 
     // information user FACEBOOK
     public static final String FACEBOOK_PROFILE = "public_profile";
