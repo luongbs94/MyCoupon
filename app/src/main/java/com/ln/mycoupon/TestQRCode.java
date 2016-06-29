@@ -27,7 +27,7 @@ public class TestQRCode extends AppCompatActivity {
 
     private ImageView qrCodeImageview;
     private String QRcode;
-    private final static int WIDTH = 500;
+    private final static int WIDTH = 300;
     private LoveCouponAPI apiService;
     private final String TAG = "Coupon";
     private String value, coupon_template_id;
@@ -41,7 +41,7 @@ public class TestQRCode extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        value = getIntent().getExtras().getString("value");
+        value = getIntent().getExtras().getString(MainApplication.VALUE);
         duration = getIntent().getExtras().getInt(MainApplication.DURATION);
         coupon_template_id = getIntent().getExtras().getString("coupon_template_id");
 
@@ -84,7 +84,7 @@ public class TestQRCode extends AppCompatActivity {
 
                 try {
                     synchronized (this) {
-                        wait(1);
+                        //   wait(1);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -102,7 +102,7 @@ public class TestQRCode extends AppCompatActivity {
                         });
 
                     }
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -132,7 +132,7 @@ public class TestQRCode extends AppCompatActivity {
             }
         }
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        bitmap.setPixels(pixels, 0, 500, 0, 0, w, h);
+        bitmap.setPixels(pixels, 0, 300, 0, 0, w, h);
         return bitmap;
     } /// end of this method
 

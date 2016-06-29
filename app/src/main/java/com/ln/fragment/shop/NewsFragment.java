@@ -86,13 +86,21 @@ public class NewsFragment extends Fragment {
 
     private void getNewsByCompanyId() {
 
-        Call<List<Message>> call = mApiServices.getNewsByCompanyId(7);
+        String idCompany;
+        if (SaveData.company == null) {
+            idCompany = MainApplication.sIdCompany;
+        } else {
+            idCompany = SaveData.company.getCompany_id();
+        }
+
+        Call<List<Message>> call = mApiServices.getNewsByCompanyId(idCompany);
         call.enqueue(new Callback<List<Message>>() {
 
             @Override
             public void onResponse(Call<List<Message>> arg0,
                                    Response<List<Message>> arg1) {
                 List<Message> mListNews = arg1.body();
+                mListNewsOfLike = new ArrayList<NewsOfLike>();
 
                 for (Message message : mListNews) {
                     mListNewsOfLike.add(new NewsOfLike(message, false));
