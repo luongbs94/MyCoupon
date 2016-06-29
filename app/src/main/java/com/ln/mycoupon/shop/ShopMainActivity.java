@@ -29,6 +29,7 @@ import com.ln.fragment.shop.HistoryFragment;
 import com.ln.fragment.shop.NewsFragment;
 import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.ShareFragment;
+import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.model.DetailUser;
 import com.ln.mycoupon.AddCouponActivity;
@@ -37,7 +38,7 @@ import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
 
 public class ShopMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnClickSetInformation {
 
     private String TAG = getClass().getSimpleName();
 
@@ -46,6 +47,9 @@ public class ShopMainActivity extends AppCompatActivity
 
     private FloatingActionButton mFbButton;
     private DrawerLayout mDrawerLayout;
+
+    private static ImageView mImageLogo;
+    private static TextView mTxtNameCompany, mTxtAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +62,10 @@ public class ShopMainActivity extends AppCompatActivity
         if (company != null) {
 
             if (company.getUser_id() != null
-                    || (company.getUser1_admin() != null && company.getUser1_admin().equals("1"))
-                    || (company.getUser2_admin() != null && company.getUser2_admin().equals("1"))) {
+                    || (company.getUser1_admin() != null
+                    && company.getUser1_admin().equals("1"))
+                    || (company.getUser2_admin() != null
+                    && company.getUser2_admin().equals("1"))) {
                 MainApplication.sIsAdmin = true;
             }
         }
@@ -98,39 +104,47 @@ public class ShopMainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        if (navigationView != null) {
 
-            navigationView.setNavigationItemSelectedListener(this);
-            View headView = navigationView.getHeaderView(0);
-            ImageView mImageLogo = (ImageView) headView.findViewById(R.id.img_logo_nav);
-            TextView mTxtNameCompany = (TextView) headView.findViewById(R.id.txt_name_nav);
-            TextView mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headView = navigationView.getHeaderView(0);
+        mImageLogo = (ImageView) headView.findViewById(R.id.img_logo_nav);
+        mTxtNameCompany = (TextView) headView.findViewById(R.id.txt_name_nav);
+        mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
-            if (company != null) {
+        if (company != null) {
 
-                DetailUser detailUser = MainApplication.sShopDetail;
-                if (company.getLogo() != null) {
-                    Glide.with(this).load(MainApplication
-                            .convertToBytes(company.getLogo()))
-                            .into(mImageLogo);
-                    Log.d(TAG, company.getLogo());
-                } else if (company.getLogo() == null && detailUser != null && detailUser.getPicture() != null) {
-                    Glide.with(this).load(detailUser.getPicture())
-                            .into(mImageLogo);
-                }
+            DetailUser detailUser = MainApplication.sShopDetail;
+            if (company.getLogo_link() != null) {
+                Glide.with(this).load(company.getLogo_link())
+                        .placeholder(R.drawable.ic_logo_blank)
+                        .into(mImageLogo);
+                Log.d(TAG, "Logo " + company.getLogo_link());
 
-                if (company.getName() != null) {
-                    mTxtNameCompany.setText(company.getName());
-                } else if (detailUser != null && detailUser.getName() != null) {
-                    mTxtNameCompany.setText(detailUser.getName());
-                }
-                if (company.getAddress() != null) {
-                    mTxtAddress.setText(company.getAddress());
-                }
+            } else if (company.getLogo() != null) {
+                Glide.with(this).load(MainApplication
+                        .convertToBytes(company.getLogo()))
+                        .asBitmap()
+                        .placeholder(R.drawable.ic_logo_blank)
+                        .into(mImageLogo);
+                Log.d(TAG, "Logo " + MainApplication.getStringNoBase64(company.getLogo()));
+            } else if (company.getLogo_link() == null && company.getLogo() == null
+                    && detailUser.getPicture() != null) {
+                Glide.with(this).load(detailUser.getPicture())
+                        .placeholder(R.drawable.ic_logo_blank)
+                        .into(mImageLogo);
+                Log.d(TAG, "Logo " + detailUser.getPicture());
             }
 
-
+            if (company.getName() != null) {
+                mTxtNameCompany.setText(company.getName());
+            } else if (detailUser != null && detailUser.getName() != null) {
+                mTxtNameCompany.setText(detailUser.getName());
+            }
+            if (company.getAddress() != null) {
+                mTxtAddress.setText(company.getAddress());
+            }
         }
+
 
         if (!MainApplication.sIsAdmin) {
             mFbButton.setVisibility(View.GONE);
@@ -195,6 +209,7 @@ public class ShopMainActivity extends AppCompatActivity
             case R.id.nav_manage:
                 sTitle = getString(R.string.setting);
                 fragment = new SettingFragment();
+                SettingFragment.setListener(this);
                 break;
             case R.id.menu_share:
                 sTitle = getString(R.string.love_coupon);
@@ -249,6 +264,23 @@ public class ShopMainActivity extends AppCompatActivity
             ft.replace(R.id.content_main, fragment, fragmentTag);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.commit();
+        }
+    }
+
+
+    @Override
+    public void onClickSetInformation(String logo, String name, String address) {
+        if (mImageLogo != null) {
+            Glide.with(this).load(MainApplication.convertToBytes(logo))
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_logo_blank).into(mImageLogo);
+        }
+
+        if (mTxtNameCompany != null) {
+            mTxtNameCompany.setText(name);
+        }
+        if (mTxtAddress != null) {
+            mTxtAddress.setText(address);
         }
     }
 }

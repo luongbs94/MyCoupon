@@ -10,15 +10,10 @@ import android.widget.ImageView;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.model.Company1;
 import com.ln.model.DetailUser;
-import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
 
 import java.io.ByteArrayOutputStream;
@@ -34,6 +29,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * <></>
  */
 public class MainApplication extends MultiDexApplication {
+
+    private static MainApplication mIntances;
 
     public static final String POSITION = "POSITION";
     public static final String DATA = "DATA";
@@ -141,9 +138,6 @@ public class MainApplication extends MultiDexApplication {
         editor = sharedPreferences.edit();
 
 
-
-
-
         // setup realm database
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .name(Realm.DEFAULT_REALM_NAME)
@@ -214,6 +208,12 @@ public class MainApplication extends MultiDexApplication {
         return Base64.decode(path, Base64.NO_WRAP);
     }
 
+    public static byte[] convertToByte(String path) {
+
+        return Base64.decode(path, Base64.NO_WRAP);
+    }
+
+
     public static String getStringNoBase64(String path) {
         return path.substring(path.indexOf(",") + 1);
     }
@@ -228,4 +228,7 @@ public class MainApplication extends MultiDexApplication {
         return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
 
+    public static synchronized MainApplication getIntance() {
+        return mIntances;
+    }
 }

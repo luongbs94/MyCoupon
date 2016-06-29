@@ -10,6 +10,8 @@ public class Company {
             user_id, user1, pass1, user2, pass2, user2_admin, user1_admin;
     public String company_id;
 
+    private String logo_link;
+
     public String getName() {
         return name;
     }
@@ -104,6 +106,14 @@ public class Company {
 
     public String getLogo() {
         return logo;
+    }
+
+    public String getLogo_link() {
+        return logo_link;
+    }
+
+    public void setLogo_link(String logo_link) {
+        this.logo_link = logo_link;
     }
 }
 

@@ -34,6 +34,7 @@ import com.bumptech.glide.Glide;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
+import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
@@ -75,11 +76,16 @@ public class SettingFragment extends Fragment {
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private static final int SELECT_PICTURE = 1;
 
+    private static OnClickSetInformation mListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLoveCouponAPI = MainApplication.getAPI();
+    }
+
+    public static void setListener(OnClickSetInformation listener) {
+        mListener = listener;
     }
 
     @Override
@@ -365,20 +371,27 @@ public class SettingFragment extends Fragment {
 
         private void onClickSaveCompany() {
 
-            Company company = SaveData.company;
-
-            company.setName(mEdtNameCompany.getText().toString());
-            company.setAddress(mEdtNameCompany.getText().toString());
-
+            final String name = mEdtNameCompany.getText().toString();
+            final String address = mEdtNameCompany.getText().toString();
             String logo = MainApplication.convertToBitmap(mImgLogo);
             logo = MainApplication.FIRST_BASE64 + logo;
 
+            Company company = SaveData.company;
+
+            company.setName(name);
+            company.setAddress(address);
             company.setLogo(logo);
+
             Call<Company> call = mLoveCouponAPI.updateCompany(company);
+            final String finalLogo = logo;
             call.enqueue(new Callback<Company>() {
                 @Override
                 public void onResponse(Call<Company> call, Response<Company> response) {
                     Log.d(TAG, "Success");
+                    if (mListener != null) {
+                        mListener.onClickSetInformation(finalLogo, name, address);
+                    }
+
                 }
 
                 @Override

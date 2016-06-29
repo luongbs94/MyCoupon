@@ -8,6 +8,7 @@ public class Coupon {
             user_social, user_image_link;
     private int duration;
 
+
     public String getCreated_date() {
         return created_date;
     }
@@ -87,6 +88,8 @@ public class Coupon {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
+
 }
 
 
