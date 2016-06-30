@@ -25,6 +25,7 @@ import com.facebook.login.LoginManager;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
+import com.ln.fragment.customer.MoreNewsFragment;
 import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.shop.ShareFragment;
@@ -147,6 +148,10 @@ public class CustomerMainActivity extends AppCompatActivity
             case R.id.nav_new:
                 sTitle = getString(R.string.news);
                 fragment = new NewsCustomerFragment();
+                break;
+            case R.id.nav_new_more:
+                sTitle = getString(R.string.news_more);
+                fragment = new MoreNewsFragment();
                 break;
             case R.id.menu_share:
                 sTitle = getString(R.string.love_coupon);

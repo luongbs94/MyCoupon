@@ -2,8 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/size_8"
-    android:layout_marginRight="@dimen/size_8"
     android:background="@drawable/card_background_white"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -52,14 +50,7 @@
             android:textSize="@dimen/size_30sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txt_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/description"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="?android:textColorSecondary"
-            android:textSize="@dimen/size_18sp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -67,45 +58,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_qr_code"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corner"
-            android:padding="10dp"
-            android:text="@string/qr_code"
-            android:textColor="@color/white"
-            android:textSize="@dimen/size_15sp" />
 
-        <TableRow
+        <TextView
+            android:id="@+id/txt_time"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal">
+            android:layout_gravity="bottom"
+            android:layout_marginTop="20dp"
+            android:gravity="bottom"
+            android:paddingLeft="@dimen/size_3"
+            android:paddingRight="@dimen/size_3"
+            android:text="@string/txt_time_coupon"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="?android:textColorSecondary" />
 
-            <TextView
-                android:id="@+id/txt_time"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:gravity="bottom"
-                android:paddingLeft="@dimen/size_3"
-                android:paddingRight="@dimen/size_3"
-                android:text="@string/txt_time_coupon"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="?android:textColorSecondary" />
-
-            <ImageView
-                android:id="@+id/image_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:contentDescription="@null"
-                android:paddingLeft="@dimen/size_3"
-                android:paddingRight="@dimen/size_3"
-                android:src="@drawable/ic_more_vertical" />
-        </TableRow>
     </LinearLayout>
 
 </LinearLayout>

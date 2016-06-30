@@ -1,15 +1,26 @@
 package com.ln.model;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Nhahv on 5/21/2016.
- *<></>
+ * <></>
  */
-public class CouponTemplate {
+public class CouponTemplate extends RealmObject {
 
-    private String coupon_template_id, content,
-            created_date, company_id, value;
+    @PrimaryKey
+    private String coupon_template_id;
+    private String content;
+
+    private String created_date;
+
+    private String company_id;
+
+    private String value;
 
     private int duration;
+
     public CouponTemplate() {
     }
 

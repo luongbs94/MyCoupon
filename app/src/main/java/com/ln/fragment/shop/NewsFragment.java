@@ -42,6 +42,7 @@ public class NewsFragment extends Fragment {
     private List<NewsOfLike> mListNewsOfLike = new ArrayList<>();
 
     private RealmController mRealm;
+    private NewsShopAdapter adapter;
 
     public NewsFragment() {
     }
@@ -84,6 +85,36 @@ public class NewsFragment extends Fragment {
         mRecNews.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+    private void getNewsMessages() {
+
+        List<Message> mListNews = mRealm.getListMessages();
+        List<NewsOfLike> newsOfLikeList = new ArrayList<>();
+
+
+        for (Message message : mListNews) {
+            newsOfLikeList.add(new NewsOfLike(message, false));
+        }
+
+        // set like news
+        List<ShopLikeNews> listLike = mRealm.getListShopLikeNews();
+
+        for (ShopLikeNews likeNews : listLike) {
+            for (NewsOfLike newsOfLike : newsOfLikeList) {
+                if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
+                        && likeNews.getIdCompany().equals(SaveData.company.getCompany_id())) {
+                    newsOfLike.setLike(true);
+                }
+            }
+        }
+        mListNewsOfLike.clear();
+        mListNewsOfLike.addAll(newsOfLikeList);
+
+        Log.d(TAG, "Size : " + mListNewsOfLike.size());
+        adapter = new NewsShopAdapter(getActivity(), mListNewsOfLike, NewsFragment.this);
+        mRecNews.setAdapter(adapter);
+
+    }
+
     private void getNewsByCompanyId() {
 
         String idCompany;
@@ -100,7 +131,7 @@ public class NewsFragment extends Fragment {
             public void onResponse(Call<List<Message>> arg0,
                                    Response<List<Message>> arg1) {
                 List<Message> mListNews = arg1.body();
-                mListNewsOfLike = new ArrayList<NewsOfLike>();
+                mListNewsOfLike = new ArrayList<>();
 
                 for (Message message : mListNews) {
                     mListNewsOfLike.add(new NewsOfLike(message, false));
@@ -119,7 +150,7 @@ public class NewsFragment extends Fragment {
                 }
 
                 Log.d(TAG, mListNews.size() + "");
-                NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), mListNewsOfLike, NewsFragment.this);
+                adapter = new NewsShopAdapter(getActivity(), mListNewsOfLike, NewsFragment.this);
                 mRecNews.setAdapter(adapter);
                 swipeContainer.setRefreshing(false);
 

@@ -35,7 +35,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_coupon, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_coupon_customer, parent, false);
         return new ViewHolder(view);
     }
 
