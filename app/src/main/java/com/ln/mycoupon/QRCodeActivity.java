@@ -166,6 +166,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         Coupon template = new Coupon();
         template.setCoupon_id(coupon_id);
         template.setUser_id(user_id);
+        template.setDuration(duration);
 
 
         Call<List<Company1>> call2 = apiService.updateUserCoupon(template);
@@ -182,7 +183,9 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
                             @Override
                             public void onClick(MaterialDialog dialog, DialogAction which) {
                                 dialog.dismiss();
+                                SaveData.updateCoupon = true;
                                 QRCodeActivity.this.finish();
+
                             }
                         })
                         .show();

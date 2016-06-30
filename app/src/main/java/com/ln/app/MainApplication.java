@@ -20,7 +20,10 @@ import com.ln.model.DetailUser;
 import com.ln.realm.RealmController;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -256,5 +259,23 @@ public class MainApplication extends MultiDexApplication {
 
     public static LoveCouponAPI getApiService2() {
         return apiService2;
+    }
+
+
+
+    public static long dayLeft(Date created_date, int duration) {
+        Calendar last_cal = Calendar.getInstance();
+        last_cal.setTime(created_date);
+        last_cal.add(Calendar.DAY_OF_YEAR, duration);
+        Date last_date = last_cal.getTime();
+
+        long diff = last_date.getTime() - new Date().getTime();
+        long dayLeft = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+
+        if (dayLeft < 0) {
+            dayLeft = 0;
+        }
+
+        return dayLeft;
     }
 }

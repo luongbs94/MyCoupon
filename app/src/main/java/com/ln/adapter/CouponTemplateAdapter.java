@@ -25,10 +25,8 @@ import com.ln.mycoupon.TestQRCode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,7 +71,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
             holder.mTxtPriceCoupon.setText(itemCoupon.getValue());
 
             Date date = convertStringToDate(itemCoupon.getCreated_date());
-            String dayLeft = dayLeft(date, itemCoupon.getDuration()) + "";
+            String dayLeft = MainApplication.dayLeft(date, itemCoupon.getDuration()) + "";
             String day = dayLeft + " ngày";
             holder.mTxtTimeCoupon.setText(day);
             holder.mTxtDescription.setText(itemCoupon.getContent());
@@ -153,21 +151,6 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
         return mListCoupon.size();
     }
 
-    private long dayLeft(Date created_date, int duration) {
-        Calendar last_cal = Calendar.getInstance();
-        last_cal.setTime(created_date);
-        last_cal.add(Calendar.DAY_OF_YEAR, duration);
-        Date last_date = last_cal.getTime();
-
-        long diff = last_date.getTime() - new Date().getTime();
-        long dayLeft = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-
-        if (dayLeft < 0) {
-            dayLeft = 0;
-        }
-
-        return dayLeft;
-    }
 
     private Date convertStringToDate(String date) {
 

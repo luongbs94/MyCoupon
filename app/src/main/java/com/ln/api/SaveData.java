@@ -14,6 +14,7 @@ public class SaveData {
     public static Company company;
 
     public static List<Company1> listCompanyCustomer;
+    public static boolean updateCoupon = false;
 
 
     public static Company getCompany() {

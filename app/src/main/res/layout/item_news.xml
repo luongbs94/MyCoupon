@@ -68,7 +68,7 @@
                         android:layout_width="13dp"
                         android:layout_height="13dp"
                         android:contentDescription="@null"
-                        android:src="@mipmap/personal" />
+                        android:src="@mipmap/time" />
 
                     <com.ln.views.MyTextView
                         android:id="@+id/txt_date_news"

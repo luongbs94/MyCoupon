@@ -14,6 +14,7 @@ import com.ln.model.Company1;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -48,8 +49,12 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
                 holder.couponName.setText(item.getValue());
             }
 
-            String duration = item.getDuration() + "";
-            holder.couponDate.setText(duration);
+            SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+
+            holder.couponDate.setText(fmt.format(item.getCreated_date()));
+
+            String dayLeft = MainApplication.dayLeft(item.getCreated_date(), item.getDuration()) + "";
+            holder.dayLeft.setText(dayLeft + " days");
 
             if (mCompany1.getLogo() != null) {
                 Glide.with(mContext).load(MainApplication
@@ -70,7 +75,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView mImgLogo;
-        private TextView couponName, couponDate;
+        private TextView couponName, couponDate, dayLeft;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -78,6 +83,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
             mImgLogo = (ImageView) itemView.findViewById(R.id.app_icon);
             couponName = (TextView) itemView.findViewById(R.id.coupon_name);
             couponDate = (TextView) itemView.findViewById(R.id.coupon_date);
+            dayLeft = (TextView) itemView.findViewById(R.id.dayLeft);
 
         }
     }

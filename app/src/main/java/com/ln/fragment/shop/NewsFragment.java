@@ -100,7 +100,7 @@ public class NewsFragment extends Fragment {
             public void onResponse(Call<List<Message>> arg0,
                                    Response<List<Message>> arg1) {
                 List<Message> mListNews = arg1.body();
-                mListNewsOfLike = new ArrayList<NewsOfLike>();
+                mListNewsOfLike = new ArrayList<>();
 
                 for (Message message : mListNews) {
                     mListNewsOfLike.add(new NewsOfLike(message, false));

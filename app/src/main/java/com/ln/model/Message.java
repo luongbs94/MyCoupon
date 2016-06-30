@@ -1,20 +1,23 @@
 package com.ln.model;
 
+import java.util.Date;
+
 /**
  * Created by luongnguyen on 4/6/16.
  *<></>
  */
 public class Message {
 
-    private String message_id, content, created_date,
-            company_id, last_date, title, link,
+    private String message_id, content,
+            company_id, title, link,
             images_link, logo, name;
 
+    Date last_date, created_date;
     public Message() {
     }
 
-    public Message(String message_id, String content, String created_date,
-                   String company_id, String last_date, String title, String link,
+    public Message(String message_id, String content, Date created_date,
+                   String company_id, Date last_date, String title, String link,
                    String images_link, String logo, String name) {
         this.message_id = message_id;
         this.content = content;
@@ -77,11 +80,11 @@ public class Message {
         this.images_link = images_link;
     }
 
-    public String getLast_date() {
+    public Date getLast_date() {
         return last_date;
     }
 
-    public void setLast_date(String last_date) {
+    public void setLast_date(Date last_date) {
         this.last_date = last_date;
     }
 
@@ -101,11 +104,11 @@ public class Message {
         this.name = name;
     }
 
-    public String getCreated_date() {
+    public Date getCreated_date() {
         return created_date;
     }
 
-    public void setCreated_date(String created_date) {
+    public void setCreated_date(Date created_date) {
         this.created_date = created_date;
     }
 }
