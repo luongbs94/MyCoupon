@@ -6,11 +6,22 @@ package com.ln.model;
  */
 public class Company {
 
-    public String name, address, logo, created_date,
-            user_id, user1, pass1, user2, pass2, user2_admin, user1_admin;
     public String company_id;
-
+    public String name;
+    public String address;
+    public String logo;
+    public String created_date;
+    public String user_id;
+    public String user1;
+    public String pass1;
+    public String user1_admin;
+    public String user2;
+    public String pass2;
+    public String user2_admin;
+    private String ip;
     private String logo_link;
+    private String city;
+    private String country_name;
 
     public String getName() {
         return name;

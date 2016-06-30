@@ -24,7 +24,6 @@ public class ShareFragment extends Fragment {
 
 
     public ShareFragment() {
-        // Required empty public constructor
     }
 
 

@@ -3,6 +3,7 @@
     android:id="@+id/linear_login_shop"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ic_love_coupon"
     android:orientation="horizontal"
     android:weightSum="5">
 

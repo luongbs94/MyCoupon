@@ -47,13 +47,6 @@ public class NewsCustomerFragment extends Fragment {
 
     private RealmController mRealm;
 
-
-    private static final int TYPE_LOAD_ALL = 0;
-    private static final int TYPE_LOAD_LIKE = 1;
-    private static final int TYPE_LOAD_DELETE = 2;
-    private static final int TYPE_LOAD_NEAR = 3;
-    private static int TYPE_NEWS = TYPE_LOAD_ALL;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +141,8 @@ public class NewsCustomerFragment extends Fragment {
 
                 mListNewsOfLike.clear();
                 mListNewsOfLike.addAll(newsOfLikeList);
+
+                Log.d(TAG, "Size : " + mListNewsOfLike.size());
                 NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(),
                         mListNewsOfLike, NewsCustomerFragment.this);
                 mRecyclerNews.setAdapter(adapter);
@@ -173,34 +168,26 @@ public class NewsCustomerFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_all_news:
                 getSnackBar(getString(R.string.all_news));
-                TYPE_NEWS = TYPE_LOAD_ALL;
                 getMessage();
                 return true;
             case R.id.menu_near_news:
                 getSnackBar(getString(R.string.near_news));
-                TYPE_NEWS = TYPE_LOAD_NEAR;
-//                getMessage();
                 return true;
             case R.id.menu_like_news:
-                TYPE_NEWS = TYPE_LOAD_LIKE;
                 getSnackBar(getString(R.string.like_news));
                 likeNews();
                 return true;
             case R.id.menu_delete_news:
                 getSnackBar(getString(R.string.news_delete));
-                TYPE_NEWS = TYPE_LOAD_DELETE;
-//                getMessage();
                 deleteNews();
                 return true;
             default:
                 getMessage();
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     private void likeNews() {
-
 
 
         List<LikeNews> listLike = mRealm.getListLikeNews();

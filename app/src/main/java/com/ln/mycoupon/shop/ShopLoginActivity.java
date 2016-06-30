@@ -30,7 +30,9 @@ import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
+import com.ln.model.CityOfUser;
 import com.ln.model.Company;
+import com.ln.model.CompanyLocation;
 import com.ln.model.DetailUser;
 import com.ln.mycoupon.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -38,6 +40,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,6 +65,11 @@ public class ShopLoginActivity extends AppCompatActivity
     private CallbackManager mCallbackManager;
 
     private LinearLayout mLinearLayout;
+    private LoveCouponAPI mCouponAPI;
+    private LoveCouponAPI mCouponAPI2;
+
+    private CompanyLocation mCompanyLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +77,9 @@ public class ShopLoginActivity extends AppCompatActivity
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         mCallbackManager = CallbackManager.Factory.create();
+
+        mCouponAPI = MainApplication.getAPI();
+        mCouponAPI2 = MainApplication.getApiService2();
 
         setContentView(R.layout.activity_shop_login);
 
@@ -152,7 +163,7 @@ public class ShopLoginActivity extends AppCompatActivity
                     if (mProfile != null) {
                         if (detailUser.getId() != null) {
                             MainApplication.sShopDetail = detailUser;
-                            getCompanyProfileSocial(mProfile.getId());
+                            getCompanyProfileSocial(detailUser.getId());
                             LoginManager.getInstance().logOut();
                         }
                     } else {
@@ -232,6 +243,9 @@ public class ShopLoginActivity extends AppCompatActivity
                 MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
                 MainApplication.editor.commit();
 
+                getCityOfUser();
+
+
                 Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
                 finish();
@@ -268,6 +282,10 @@ public class ShopLoginActivity extends AppCompatActivity
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
                 MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
                 MainApplication.editor.commit();
+
+                // check location company
+                getCityOfUser();
+
 
                 Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
                 startActivity(intent);
@@ -363,5 +381,54 @@ public class ShopLoginActivity extends AppCompatActivity
         }
 
     }
+
+    private void updateCompanyLocation() {
+        Call<ResponseBody> call = mCouponAPI.updateCompanyLocation(mCompanyLocation);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d(TAG, "updateCompanyLocation Success : ");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "updateCompanyLocation Error : " + t.toString());
+            }
+        });
+
+    }
+
+
+    private void getCityOfUser() {
+        Call<CityOfUser> call = mCouponAPI2.getCityOfUser();
+        call.enqueue(new Callback<CityOfUser>() {
+            @Override
+            public void onResponse(Call<CityOfUser> call, Response<CityOfUser> response) {
+                if (response.body() != null) {
+                    MainApplication.cityOfCompany = response.body();
+
+                    Log.d(TAG, "City : " + MainApplication.cityOfCompany.getCity());
+                    if (SaveData.company != null) {
+                        mCompanyLocation = new CompanyLocation(SaveData.company.getCompany_id(),
+                                MainApplication.cityOfCompany.getCity(),
+                                MainApplication.cityOfCompany.getCountry_name());
+
+                        updateCompanyLocation();
+                    }
+
+                }
+                Log.d(TAG, "City : " + "Khong co du lieu");
+
+            }
+
+            @Override
+            public void onFailure(Call<CityOfUser> call, Throwable t) {
+
+                Log.d(TAG, "City Error : " + t.toString());
+            }
+        });
+
+    }
+
 }
 

@@ -5,8 +5,10 @@ package com.ln.api;
  * <></>
  */
 
+import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.Company1;
+import com.ln.model.CompanyLocation;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.Message;
@@ -106,4 +108,10 @@ public interface LoveCouponAPI {
 
     @POST("/deleteMessage")
     Call<List<Integer>> deleteMessage(@Body String message_id);
+
+    @GET("/json")
+    Call<CityOfUser> getCityOfUser();
+
+    @POST("/updateCompanyLocation")
+    Call<ResponseBody> updateCompanyLocation(@Body CompanyLocation companyLocation);
 }

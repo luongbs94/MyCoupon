@@ -14,6 +14,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
+import com.ln.model.CityOfUser;
 import com.ln.model.Company1;
 import com.ln.model.DetailUser;
 import com.ln.realm.RealmController;
@@ -39,11 +40,15 @@ public class MainApplication extends MultiDexApplication {
     public static final String LIST_IMAGES = "LIST_IMAGES";
 
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
+
+
     // apis normal
     public static LoveCouponAPI apiService;
-
     // api use upload images
     public static LoveCouponAPI apiService1;
+    public static LoveCouponAPI apiService2;
+
+
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
 
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
@@ -76,6 +81,7 @@ public class MainApplication extends MultiDexApplication {
 
     private static final String URL_GET_POST = "http://188.166.179.187:3000";
     public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
+    public static final String URL_GET_CITY = "http://freegeoip.net";
 
     // login with // STOPSHIP: 6/18/2016
     public static DetailUser sShopDetail;
@@ -114,6 +120,9 @@ public class MainApplication extends MultiDexApplication {
     public static int TYPE_LOGIN_CUSTOMER = TYPE_FACEBOOK;
 
 
+    public static CityOfUser cityOfUser;
+    public static CityOfUser cityOfCompany;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -133,9 +142,14 @@ public class MainApplication extends MultiDexApplication {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        apiService = retrofit.create(LoveCouponAPI.class);
+        Retrofit retrofit2 = new Retrofit.Builder()
+                .baseUrl(URL_GET_CITY)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
+        apiService = retrofit.create(LoveCouponAPI.class);
         apiService1 = retrofit1.create(LoveCouponAPI.class);
+        apiService2 = retrofit2.create(LoveCouponAPI.class);
 
         sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, 4);
         editor = sharedPreferences.edit();
@@ -236,7 +250,11 @@ public class MainApplication extends MultiDexApplication {
         return mInstances;
     }
 
-    public void setConnectivityListener(ConnectivityReceiverListener listener){
+    public void setConnectivityListener(ConnectivityReceiverListener listener) {
         ConnectivityReceiver.mListener = listener;
+    }
+
+    public static LoveCouponAPI getApiService2() {
+        return apiService2;
     }
 }

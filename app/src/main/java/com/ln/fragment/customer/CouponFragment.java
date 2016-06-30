@@ -144,5 +144,4 @@ public class CouponFragment extends Fragment {
         MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
         MainApplication.editor.commit();
     }
-
 }

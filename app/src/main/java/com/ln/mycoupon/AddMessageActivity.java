@@ -284,20 +284,6 @@ public class AddMessageActivity extends AppCompatActivity {
         }
     }
 
-//    private String convertBase64(String path) {
-//
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inSampleSize = 8;
-//        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-//
-//        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
-//        Bitmap resized = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES, height, true);
-//
-//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        byte[] byteArray = stream.toByteArray();
-//        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
-//    }
 
     private String createFile(String path) {
 
@@ -305,8 +291,7 @@ public class AddMessageActivity extends AppCompatActivity {
         options.inSampleSize = 8;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
-//        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
-        int height = MainApplication.WIDTH_IMAGES;
+        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
         Bitmap resized = Bitmap.createScaledBitmap(bitmap, height, height, true);
 
         String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));

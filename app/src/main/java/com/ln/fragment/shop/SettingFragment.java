@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -13,14 +12,11 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -39,11 +35,7 @@ import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,8 +64,6 @@ public class SettingFragment extends Fragment {
 
     private Uri mFileUri;
 
-    private static final String IMAGE_DIRECTORY_NAME = "MyCoupon";
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private static final int SELECT_PICTURE = 1;
 
     private static OnClickSetInformation mListener;
@@ -86,20 +76,6 @@ public class SettingFragment extends Fragment {
 
     public static void setListener(OnClickSetInformation listener) {
         mListener = listener;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            mFileUri = savedInstanceState.getParcelable(MainApplication.FILE_URI);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(MainApplication.FILE_URI, mFileUri);
     }
 
     @Nullable
@@ -172,7 +148,6 @@ public class SettingFragment extends Fragment {
                     .into(mImgLogo);
         }
 
-
         if (company.user1 != null) {
             mEdtUser1.setText(company.user1);
         }
@@ -234,12 +209,13 @@ public class SettingFragment extends Fragment {
             Uri uri = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-                mImgLogo.setImageBitmap(bitmap);
+
+                Bitmap resize = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES,
+                        MainApplication.WIDTH_IMAGES, true);
+                mImgLogo.setImageBitmap(resize);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
-            previewCapturedImage(mFileUri.getPath());
         } else {
             getShowMessage("User cancelled image capture");
         }
@@ -248,39 +224,6 @@ public class SettingFragment extends Fragment {
     private boolean isDriverSupportCamera() {
         return getActivity().getApplicationContext().getPackageManager().
                 hasSystemFeature(PackageManager.FEATURE_CAMERA);
-    }
-
-    private Uri getOutputMediaFileUri() {
-        return Uri.fromFile(getOutputMediaFile());
-    }
-
-    private static File getOutputMediaFile() {
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), IMAGE_DIRECTORY_NAME);
-
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("SettingFragment", "Oops! Failed create " + IMAGE_DIRECTORY_NAME);
-                return null;
-            }
-        }
-
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss",
-                Locale.getDefault()).format(new Date());
-
-        return new File(mediaStorageDir.getPath() + File.separator
-                + "IMG_" + timeStamp + ".jpg");
-    }
-
-
-    private void previewCapturedImage(String path) {
-
-        File file2 = new File(path);
-        Log.d(TAG, "File2 : " + file2.getPath());
-        Glide.with(this)
-                .load(file2)
-                .into(mImgLogo);
     }
 
     private int isExistsAccount1(String company_id, String username) {
@@ -311,24 +254,13 @@ public class SettingFragment extends Fragment {
                     onClickSaveCompany();
                     break;
                 case R.id.img_logo_nav:
-                    onClickChangeLogo(mImgLogo);
+                    onClickOpenGallery();
                     break;
                 case R.id.fab_done:
                     onClickSaveCompany();
                     break;
                 default:
                     break;
-            }
-        }
-
-        private void onClickOpenCamera() {
-            if (isDriverSupportCamera()) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                mFileUri = getOutputMediaFileUri();
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
-                startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-            } else {
-                getShowMessage("Driver do not Support");
             }
         }
 
@@ -343,31 +275,6 @@ public class SettingFragment extends Fragment {
             }
         }
 
-
-        private void onClickChangeLogo(View view) {
-
-            PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-            final MenuInflater inflater = popupMenu.getMenuInflater();
-            inflater.inflate(R.menu.menu_chose_images, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.menu_camera:
-                            onClickOpenCamera();
-                            break;
-                        case R.id.menu_gallery:
-                            onClickOpenGallery();
-                            break;
-                        default:
-                            break;
-                    }
-                    return true;
-                }
-            });
-            popupMenu.show();
-
-        }
 
         private void onClickSaveCompany() {
 
@@ -388,6 +295,7 @@ public class SettingFragment extends Fragment {
                 @Override
                 public void onResponse(Call<Company> call, Response<Company> response) {
                     Log.d(TAG, "Success");
+                    getShowMessage("Success");
                     if (mListener != null) {
                         mListener.onClickSetInformation(finalLogo, name, address);
                     }
@@ -503,5 +411,4 @@ public class SettingFragment extends Fragment {
     private void getShowMessage(String s) {
         Snackbar.make(mLinearLayout, s, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
     }
-
 }

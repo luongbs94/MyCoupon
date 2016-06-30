@@ -26,8 +26,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
+import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
+import com.ln.model.CityOfUser;
 import com.ln.model.Company1;
 import com.ln.model.DetailUser;
 import com.ln.model.User;
@@ -55,12 +57,17 @@ public class CustomerLoginActivity extends AppCompatActivity
     private Button mBtnGoogle;
     private GoogleApiClient mGoogleApiClient;
 
+    private LoveCouponAPI mCouponAPI;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_login);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
+        mCouponAPI = MainApplication.getApiService2();
+        getCityOfUser();
 
         initViews();
         addEvents();
@@ -306,6 +313,29 @@ public class CustomerLoginActivity extends AppCompatActivity
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
         }
+    }
+
+    private void getCityOfUser() {
+        Call<CityOfUser> call = mCouponAPI.getCityOfUser();
+        call.enqueue(new Callback<CityOfUser>() {
+            @Override
+            public void onResponse(Call<CityOfUser> call, Response<CityOfUser> response) {
+                if (response.body() != null) {
+                    MainApplication.cityOfUser = response.body();
+
+                    Log.d(TAG, "City : " + MainApplication.cityOfUser.getCity());
+                }
+                Log.d(TAG, "City : " + "Khong co du lieu");
+
+            }
+
+            @Override
+            public void onFailure(Call<CityOfUser> call, Throwable t) {
+
+                Log.d(TAG, "City Error : " + t.toString());
+            }
+        });
+
     }
 
 }
