@@ -114,4 +114,7 @@ public interface LoveCouponAPI {
 
     @POST("/updateCompanyLocation")
     Call<ResponseBody> updateCompanyLocation(@Body CompanyLocation companyLocation);
+
+    @GET("/get_news_more_by_user_id")
+    Call<List<Message>> getNewsMoreByUserId(@Query("user_id") String user_id, @Query("city") String city);
 }

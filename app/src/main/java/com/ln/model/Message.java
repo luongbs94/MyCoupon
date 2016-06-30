@@ -1,16 +1,22 @@
 package com.ln.model;
 
 import java.util.Date;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by luongnguyen on 4/6/16.
- *<></>
- */
-public class Message {
+public class Message extends RealmObject {
 
-    private String message_id, content,
-            company_id, title, link,
-            images_link, logo, name;
+    @PrimaryKey
+    private String message_id;
+
+    private String content;
+    private String company_id;
+    private String title;
+    private String link;
+    private String images_link;
+    private String logo;
+    private String logo_link;
+    private String name;
 
     Date last_date, created_date;
     public Message() {
@@ -110,6 +116,30 @@ public class Message {
 
     public void setCreated_date(Date created_date) {
         this.created_date = created_date;
+    }
+
+    public String getLogo_link() {
+        return logo_link;
+    }
+
+    public void setLogo_link(String logo_link) {
+        this.logo_link = logo_link;
+    }
+
+
+    public void setNews(String message_id, String content, Date created_date,
+                        String company_id, Date last_date, String title, String link,
+                        String images_link, String logo, String name) {
+        this.message_id = message_id;
+        this.content = content;
+        this.created_date = created_date;
+        this.company_id = company_id;
+        this.last_date = last_date;
+        this.title = title;
+        this.link = link;
+        this.images_link = images_link;
+        this.logo = logo;
+        this.name = name;
     }
 }
 

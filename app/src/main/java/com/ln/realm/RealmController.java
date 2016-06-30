@@ -3,10 +3,14 @@ package com.ln.realm;
 import android.app.Activity;
 import android.app.Application;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.DetailUser;
+import com.ln.model.Message;
+
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -217,6 +221,52 @@ public class RealmController {
         realm.beginTransaction();
         realm.deleteAll();
         realm.commitTransaction();
+    }
+
+
+    /* ====================== START SAVE NEWS  CUSTOMER =================*/
+
+    public void addCouponTemplate(final Message message) {
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyFromRealm(message);
+                Log.d("RealmController", "Success " + message.getMessage_id());
+            }
+        });
+    }
+
+    public void addListNews(List<Message> listMessage) {
+
+        realm.beginTransaction();
+
+
+        for (Message message : listMessage) {
+            Message message1 = realm.createObject(Message.class);
+            message1.setNews(message.getMessage_id(), message.getContent(),
+                    message.getCreated_date(),
+                    message.getCompany_id(), message.getLast_date(),
+                    message.getTitle(), message.getLink(), message.getImages_link(),
+                    message.getLogo(), message.getName());
+        }
+
+        realm.commitTransaction();
+
+    }
+
+    public void deleteAllMessages() {
+        realm.beginTransaction();
+        RealmResults<Message> listMessages = getListMessages();
+        for (Message message : listMessages) {
+            message.deleteFromRealm();
+        }
+
+        realm.commitTransaction();
+    }
+
+    public RealmResults<Message> getListMessages() {
+        return realm.where(Message.class).findAll();
     }
 
 }

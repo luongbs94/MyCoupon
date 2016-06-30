@@ -89,7 +89,6 @@ public class CouponFragment extends Fragment {
 
     private void getCouponTemplate() {
 
-        mListCoupon.clear();
 
         String idCompany;
         if (SaveData.company == null) {
@@ -105,12 +104,14 @@ public class CouponFragment extends Fragment {
             @Override
             public void onResponse(Call<List<CouponTemplate>> arg0,
                                    Response<List<CouponTemplate>> arg1) {
-                mListCoupon = arg1.body();
+                List<CouponTemplate> listCouponTemplate = arg1.body();
+
+                mListCoupon.clear();
+                mListCoupon.addAll(listCouponTemplate);
 
                 CouponTemplateAdapter adapter = new CouponTemplateAdapter(getActivity(), mListCoupon);
                 mRecCoupon.setAdapter(adapter);
                 swipeContainer.setRefreshing(false);
-
             }
 
             @Override

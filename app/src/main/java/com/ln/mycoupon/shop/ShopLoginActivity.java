@@ -34,7 +34,9 @@ import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.CompanyLocation;
 import com.ln.model.DetailUser;
+import com.ln.model.Message;
 import com.ln.mycoupon.R;
+import com.ln.realm.RealmController;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Arrays;
@@ -69,6 +71,7 @@ public class ShopLoginActivity extends AppCompatActivity
     private LoveCouponAPI mCouponAPI2;
 
     private CompanyLocation mCompanyLocation;
+    private RealmController mRealmController;
 
 
     @Override
@@ -80,6 +83,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
         mCouponAPI = MainApplication.getAPI();
         mCouponAPI2 = MainApplication.getApiService2();
+        mRealmController = MainApplication.mRealmController;
 
         setContentView(R.layout.activity_shop_login);
 
@@ -191,7 +195,6 @@ public class ShopLoginActivity extends AppCompatActivity
                 Log.d(TAG, "FACEBOOK - onError");
             }
         });
-
     }
 
 
@@ -244,6 +247,8 @@ public class ShopLoginActivity extends AppCompatActivity
                 MainApplication.editor.commit();
 
                 getCityOfUser();
+
+                getNewsByCompanyId();
 
 
                 Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
@@ -418,7 +423,6 @@ public class ShopLoginActivity extends AppCompatActivity
 
                 }
                 Log.d(TAG, "City : " + "Khong co du lieu");
-
             }
 
             @Override
@@ -427,8 +431,36 @@ public class ShopLoginActivity extends AppCompatActivity
                 Log.d(TAG, "City Error : " + t.toString());
             }
         });
-
     }
 
+    /* =============== Get list coupon of company ==============*/
+    private void getNewsByCompanyId() {
+
+        String idCompany;
+        if (SaveData.company == null) {
+            idCompany = MainApplication.sIdCompany;
+        } else {
+            idCompany = SaveData.company.getCompany_id();
+        }
+
+        Call<List<Message>> call = mCouponAPI.getNewsByCompanyId(idCompany);
+        call.enqueue(new Callback<List<Message>>() {
+
+            @Override
+            public void onResponse(Call<List<Message>> arg0,
+                                   Response<List<Message>> arg1) {
+                List<Message> mListNews = arg1.body();
+
+                mRealmController.deleteAllMessages();
+                mRealmController.addListNews(mListNews);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
+                Log.d(TAG, "Failure");
+            }
+        });
+    }
 }
 

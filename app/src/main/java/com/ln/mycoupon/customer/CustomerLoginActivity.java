@@ -86,7 +86,8 @@ public class CustomerLoginActivity extends AppCompatActivity
 //                    MainApplication.FACEBOOK_EMAIL);
 //        }
 
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+                new FacebookCallback<LoginResult>() {
 
                     @Override
                     public void onSuccess(LoginResult loginResult) {
@@ -335,7 +336,6 @@ public class CustomerLoginActivity extends AppCompatActivity
                 Log.d(TAG, "City Error : " + t.toString());
             }
         });
-
     }
 
 }

@@ -119,5 +119,7 @@
     <string name="connect_network">Chế độ ngoại tuyến!</string>
     <string name="changedate">Change</string>
 
+    <string name="news_more">Tin khác</string>
+
 
 </resources>

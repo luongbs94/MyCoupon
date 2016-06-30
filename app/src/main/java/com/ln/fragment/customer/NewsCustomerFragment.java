@@ -46,6 +46,7 @@ public class NewsCustomerFragment extends Fragment {
     private SwipeRefreshLayout mSwipeContainer;
 
     private RealmController mRealm;
+    private NewsCustomerAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,10 +84,68 @@ public class NewsCustomerFragment extends Fragment {
 
         mSwipeContainer.setRefreshing(true);
 
+//        setListMessages();
         getMessage();
-
         setHasOptionsMenu(true);
         return view;
+    }
+
+
+    private void setListMessages() {
+
+        List<Message> mListNews = mRealm.getListMessages();
+        List<NewsOfLike> newsOfLikeList = new ArrayList<>();
+
+        for (Message message : mListNews) {
+            newsOfLikeList.add(new NewsOfLike(message, false));
+        }
+
+        // set like news
+        List<LikeNews> listLike = mRealm.getListLikeNews();
+        // list delete
+        List<DeleteNews> listDeleteNews = mRealm.getListDeleteNews();
+
+
+        for (LikeNews likeNews : listLike) {
+
+            for (NewsOfLike newsOfLike : newsOfLikeList) {
+                if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
+                        && likeNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
+                    newsOfLike.setLike(true);
+                }
+            }
+        }
+
+        //set delete news
+
+        for (DeleteNews deleteNews : listDeleteNews) {
+            for (NewsOfLike newsOfLike : newsOfLikeList) {
+                if (newsOfLike.getMessage_id().equals(deleteNews.getIdNews())
+                        && deleteNews.getIdNews().equals(MainApplication.sDetailUser.getId())) {
+                    newsOfLike.setDelete(true);
+                }
+            }
+
+            int size = newsOfLikeList.size() - 1;
+
+            for (int i = size; i >= 0; i--) {
+                if (newsOfLikeList.get(i).getMessage_id().equals(deleteNews.getIdNews())) {
+                    newsOfLikeList.remove(i);
+                }
+            }
+        }
+
+
+        mListNewsOfLike.clear();
+        mListNewsOfLike.addAll(newsOfLikeList);
+
+        Log.d(TAG, "Size : " + mListNewsOfLike.size());
+        adapter = new NewsCustomerAdapter(getActivity(),
+                mListNewsOfLike, NewsCustomerFragment.this);
+        mRecyclerNews.setAdapter(adapter);
+        mSwipeContainer.setRefreshing(false);
+
+
     }
 
     public void getMessage() {

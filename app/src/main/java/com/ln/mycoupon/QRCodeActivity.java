@@ -167,6 +167,14 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         template.setCoupon_id(coupon_id);
         template.setUser_id(user_id);
         template.setDuration(duration);
+        try
+        {
+            template.setUser_image_link(MainApplication.sDetailUser.getPicture());
+            template.setUser_name(MainApplication.sDetailUser.getName());
+
+        } catch (Exception e) {
+
+        }
 
 
         Call<List<Company1>> call2 = apiService.updateUserCoupon(template);

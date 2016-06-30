@@ -16,8 +16,9 @@
 
     <TextView
         android:id="@+id/txt_name_nav"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:paddingTop="@dimen/size_8"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/white"
@@ -25,8 +26,9 @@
 
     <TextView
         android:id="@+id/txt_email_nav"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="@dimen/size_15sp" />
 
