@@ -120,6 +120,7 @@
     <string name="changedate">Change</string>
 
     <string name="news_more">Tin khác</string>
+    <string name="no_data_display">Dont have any coupon</string>
 
 
 </resources>

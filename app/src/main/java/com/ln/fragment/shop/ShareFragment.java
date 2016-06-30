@@ -36,6 +36,9 @@ public class ShareFragment extends Fragment {
         initViews(view);
         addEvents();
 
+        setHasOptionsMenu(false);
+
+
         return view;
     }
 

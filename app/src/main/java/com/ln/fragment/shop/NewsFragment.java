@@ -76,6 +76,9 @@ public class NewsFragment extends Fragment {
 
         initViews();
         getNewsByCompanyId();
+
+        setHasOptionsMenu(false);
+
         Log.d(TAG, "onCreate");
         return mView;
     }

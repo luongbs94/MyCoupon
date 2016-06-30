@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/date"
+        android:orderInCategory="100"
+        android:title="10/10/2016"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/calendar"
+        android:orderInCategory="100"
+        android:icon="@drawable/calendar_white"
+        android:title="@string/action_settings"
+        app:showAsAction="always" />
+</menu>
