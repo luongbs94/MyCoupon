@@ -14,6 +14,7 @@ import com.ln.model.Company;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -50,7 +51,9 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
         holder.mTxtCompanyName.setText(company.getName());
         holder.mTxtPrice.setText(coupon.getValue());
 
-        holder.mTxtDate.setText(coupon.getCreated_date());
+        SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+
+        holder.mTxtDate.setText(fmt.format(coupon.getCreated_date()));
     }
 
     @Override

@@ -26,6 +26,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.HEAD;
 
 /**
  * Created by luongnguyen on 4/6/16.
@@ -76,6 +77,10 @@ public class NewsFragment extends Fragment {
 
         initViews();
         setNewsOfCompany();
+//        getNewsByCompanyId();
+
+        setHasOptionsMenu(false);
+
         Log.d(TAG, "onCreate");
         return mView;
     }

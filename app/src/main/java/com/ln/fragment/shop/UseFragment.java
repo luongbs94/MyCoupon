@@ -70,6 +70,9 @@ public class UseFragment extends Fragment {
                 android.R.color.holo_red_light);
 
         initViews();
+
+        setHasOptionsMenu(false);
+
         return mView;
     }
 

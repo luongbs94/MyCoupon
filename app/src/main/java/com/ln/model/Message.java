@@ -1,20 +1,16 @@
 package com.ln.model;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by luongnguyen on 4/6/16.
- * <></>
- */
 public class Message extends RealmObject {
 
     @PrimaryKey
     private String message_id;
     private String content;
-    private String created_date;
     private String company_id;
-    private String last_date;
     private String title;
     private String link;
     private String images_link;
@@ -22,13 +18,15 @@ public class Message extends RealmObject {
     private String logo_link;
     private String name;
 
+    Date last_date, created_date;
+
     public Message() {
     }
 
-    public Message(String message_id, String content, String created_date,
-                   String company_id, String last_date,
-                   String title, String link, String images_link,
-                   String logo, String logo_link, String name) {
+
+    public Message(String message_id, String content, Date created_date,
+                   String company_id, Date last_date, String title, String link,
+                   String images_link, String logo, String logo_link, String name) {
         this.message_id = message_id;
         this.content = content;
         this.created_date = created_date;
@@ -91,11 +89,11 @@ public class Message extends RealmObject {
         this.images_link = images_link;
     }
 
-    public String getLast_date() {
+    public Date getLast_date() {
         return last_date;
     }
 
-    public void setLast_date(String last_date) {
+    public void setLast_date(Date last_date) {
         this.last_date = last_date;
     }
 
@@ -115,11 +113,11 @@ public class Message extends RealmObject {
         this.name = name;
     }
 
-    public String getCreated_date() {
+    public Date getCreated_date() {
         return created_date;
     }
 
-    public void setCreated_date(String created_date) {
+    public void setCreated_date(Date created_date) {
         this.created_date = created_date;
     }
 
@@ -132,10 +130,9 @@ public class Message extends RealmObject {
     }
 
 
-    public void setNews(String message_id, String content, String created_date,
-                        String company_id, String last_date,
-                        String title, String link, String images_link,
-                        String logo, String logo_link, String name) {
+    public void setNews(String message_id, String content, Date created_date,
+                        String company_id, Date last_date, String title, String link,
+                        String images_link, String logo, String logo_link, String name) {
         this.message_id = message_id;
         this.content = content;
         this.created_date = created_date;

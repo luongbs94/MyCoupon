@@ -68,6 +68,10 @@ public class PreviewImagesFragment extends Fragment {
             public void onViewTap(View view, float x, float y) {
             }
         });
+
+        setHasOptionsMenu(false);
+
+
         return mView;
     }
 

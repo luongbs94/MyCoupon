@@ -27,6 +27,7 @@ import com.ln.model.NewsOfLike;
 import com.ln.mycoupon.R;
 import com.ln.views.MyTextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,6 +79,10 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mTxtTile.setText(news.getTitle());
         holder.mTxtContent.setText(news.getContent());
         holder.mTxtLink.setText(news.getLink());
+
+        SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+
+        holder.mTxtTime.setText(fmt.format(news.getCreated_date()));
 
         String strImages = news.getImages_link();
         if (strImages != null) {

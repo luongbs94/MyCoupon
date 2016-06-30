@@ -57,8 +57,8 @@ public class AddCouponActivity extends AppCompatActivity {
                 String str_money = money.getText().toString();
                 String str_content = content.getText().toString();
                 if (str_money.length() > 0 && str_content.length() > 0) {
-                    String text = spinner.getSelectedItem().toString();
-                    int duration = Integer.parseInt(text) * 30;
+                    int  duration = (spinner.getSelectedItemPosition() + 1) * 30;
+                    Log.d("duration", duration + "");
                     postCouponTemplate(str_money, str_content, duration);
                 } else {
                     Snackbar.make(view, R.string.not_fill_login, Snackbar.LENGTH_LONG)
@@ -69,10 +69,18 @@ public class AddCouponActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        list.add("4");
+        list.add("1 month");
+        list.add("2 months");
+        list.add("3 months");
+        list.add("4 months");
+        list.add("5 months");
+        list.add("6 months");
+        list.add("7 months");
+        list.add("8 months");
+        list.add("9 months");
+        list.add("10 months");
+        list.add("11 months");
+        list.add("12 months");
 
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);

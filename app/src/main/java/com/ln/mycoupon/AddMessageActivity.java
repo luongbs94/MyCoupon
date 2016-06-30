@@ -14,9 +14,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.android.datetimepicker.date.DatePickerDialog;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
@@ -31,8 +34,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +54,7 @@ import retrofit2.Response;
  * Created by luongnguyen on 4/7/16.
  * <></>
  */
-public class AddMessageActivity extends AppCompatActivity {
+public class AddMessageActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
 
     private String TAG = getClass().getSimpleName();
 
@@ -78,6 +83,14 @@ public class AddMessageActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressDialog;
 
+    Button changeDate;
+
+    TextView lastDate;
+    private Calendar calendar;
+    private DateFormat dateFormat;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +101,9 @@ public class AddMessageActivity extends AppCompatActivity {
 
         apiService = MainApplication.getAPI();
         mApiService = MainApplication.getAPI1();
+
+        dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
+
 
         initViews();
 
@@ -102,8 +118,18 @@ public class AddMessageActivity extends AppCompatActivity {
         layoutView = (LinearLayout) findViewById(R.id.layout_add_message);
         addMessage = (CardView) findViewById(R.id.card_view_add_messages);
         mImgSelectImages = (ImageView) findViewById(R.id.img_selected_images);
+        changeDate = (Button) findViewById(R.id.change_date);
+        lastDate = (TextView) findViewById(R.id.date_add_message);
+
+
+        calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.MONTH, 1);
+        lastDate.setText(dateFormat.format(calendar.getTime()));
+
 
         mRecyclerViewImages = (RecyclerView) findViewById(R.id.rec_select_images);
+
 
 
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -112,6 +138,24 @@ public class AddMessageActivity extends AppCompatActivity {
 
         mSelectedImageAdapter = new SelectedImageAdapter(this, mListImagesSelected);
         mRecyclerViewImages.setAdapter(mSelectedImageAdapter);
+
+        changeDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DatePickerDialog.newInstance(AddMessageActivity.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(getFragmentManager(), "datePicker");
+
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
+        calendar.set(year, monthOfYear, dayOfMonth);
+
+        lastDate.setText(dateFormat.format(calendar.getTime()));
 
     }
 
@@ -157,6 +201,8 @@ public class AddMessageActivity extends AppCompatActivity {
         template.setContent(content);
         template.setLink(link);
         template.setTitle(title);
+        Log.d("date", calendar.getTime().toString());
+        template.setLast_date(calendar.getTime());
         template.setCompany_id(SaveData.company.company_id + "");
         if (mLinkImageNews != null) {
             template.setImages_link(mLinkImageNews);

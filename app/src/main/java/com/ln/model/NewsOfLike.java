@@ -1,5 +1,7 @@
 package com.ln.model;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -13,9 +15,9 @@ public class NewsOfLike extends RealmObject {
     private String message_id;
 
     private String content;
-    private String created_date;
+    private Date created_date;
     private String company_id;
-    private String last_date;
+    private Date last_date;
     private String title;
     private String link;
     private String images_link;
@@ -86,11 +88,11 @@ public class NewsOfLike extends RealmObject {
         this.content = content;
     }
 
-    public String getCreated_date() {
+    public Date getCreated_date() {
         return created_date;
     }
 
-    public void setCreated_date(String created_date) {
+    public void setCreated_date(Date created_date) {
         this.created_date = created_date;
     }
 
@@ -102,11 +104,11 @@ public class NewsOfLike extends RealmObject {
         this.company_id = company_id;
     }
 
-    public String getLast_date() {
+    public Date getLast_date() {
         return last_date;
     }
 
-    public void setLast_date(String last_date) {
+    public void setLast_date(Date last_date) {
         this.last_date = last_date;
     }
 

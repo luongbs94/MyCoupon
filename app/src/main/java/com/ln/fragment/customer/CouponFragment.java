@@ -135,6 +135,16 @@ public class CouponFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if(SaveData.updateCoupon == true){
+            getCompanyByUserId();
+            SaveData.updateCoupon = false;
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 

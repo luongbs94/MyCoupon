@@ -13,5 +13,8 @@
     <color name="colorTextNews">#009688</color>
     <color name="background_green">#E0F2F1</color>
     <color name="black_images">#df000000</color>
+    <color name="material_grey_400">#ffbdbdbd</color>
+    <color name="deep_steal_700">#ff439891</color>
+
 
 </resources>

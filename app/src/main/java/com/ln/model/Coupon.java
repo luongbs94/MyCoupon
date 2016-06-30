@@ -1,15 +1,19 @@
 package com.ln.model;
 
 
+import java.util.Date;
+
 public class Coupon {
 
     private String coupon_id, user_id, coupon_template_id,
-            created_date, company_id, value, user_name,
+             company_id, value, user_name,
             user_social, user_image_link;
-    private int duration;
+    int duration;
+    Date created_date;
 
 
-    public String getCreated_date() {
+
+    public Date getCreated_date() {
         return created_date;
     }
 
@@ -21,7 +25,7 @@ public class Coupon {
         this.user_id = user_id;
     }
 
-    public void setCreated_date(String created_date) {
+    public void setCreated_date(Date created_date) {
         this.created_date = created_date;
     }
 

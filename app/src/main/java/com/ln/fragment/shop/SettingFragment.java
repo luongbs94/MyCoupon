@@ -87,6 +87,9 @@ public class SettingFragment extends Fragment {
         initViews(v);
         init();
         addEvents();
+
+        setHasOptionsMenu(false);
+
         return v;
     }
 

@@ -27,13 +27,40 @@
         app:met_maxCharacters="150"
         app:met_primaryColor="?colorAccent" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
-        android:text="@string/date"
-        android:textSize="@dimen/size_18sp" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/date"
+            android:textSize="@dimen/size_18sp" />
+
+        <TextView
+            android:id="@+id/date_add_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="1/1/2016"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/size_18sp" />
+
+
+        <Button
+            android:id="@+id/change_date"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="70.0dip"
+            android:layout_height="32.0dip"
+            android:layout_weight="1"
+            android:background="@drawable/bodered_button_background"
+            android:text="@string/changedate"
+            android:textColor="@color/deep_steal_700" />
+    </LinearLayout>
 
 
     <com.rengwuxian.materialedittext.MaterialEditText

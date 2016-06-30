@@ -44,7 +44,13 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     public NewsCustomerAdapter(Context context, List<NewsOfLike> listNews, Fragment fragment) {
         mContext = context;
         mListNews = listNews;
-        mShareDialog = new ShareDialog(fragment);
+        try
+        {
+            mShareDialog = new ShareDialog(fragment);
+
+        }catch (Exception e){
+
+        }
 
     }
 
@@ -124,7 +130,13 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                         .build();
 
 
-                mShareDialog.show(content);
+                try{
+                    mShareDialog.show(content);
+
+                }catch (Exception e){
+
+                }
+
             }
         });
 
