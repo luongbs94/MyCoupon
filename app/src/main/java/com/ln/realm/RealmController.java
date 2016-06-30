@@ -3,12 +3,12 @@ package com.ln.realm;
 import android.app.Activity;
 import android.app.Application;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.DetailUser;
 import com.ln.model.Message;
+import com.ln.model.NewsOfCompany;
 
 import java.util.List;
 
@@ -224,40 +224,74 @@ public class RealmController {
     }
 
 
-    /* ====================== START SAVE NEWS  CUSTOMER =================*/
+    /* ====================== START SAVE NEWS  SHOP =================*/
 
-    public void addCouponTemplate(final Message message) {
+//    public void addNewsOfCompany(NewsOfCompany message) {
+//
+//        realm.beginTransaction();
+//        NewsOfCompany newsOfCompany = realm.createObject(NewsOfCompany.class);
+//        newsOfCompany.setNews(message.getMessage_id(),
+//                message.getContent(), message.getCreated_date(),
+//                message.getCompany_id(), message.getLast_date(),
+//                message.getTitle(), message.getLink(), message.getImages_link());
+//        realm.commitTransaction();
+//
+//    }
 
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyFromRealm(message);
-                Log.d("RealmController", "Success " + message.getMessage_id());
-            }
-        });
-    }
-
-    public void addListNews(List<Message> listMessage) {
+    public void addListNewsOfCompany(List<NewsOfCompany> listMessage) {
 
         realm.beginTransaction();
-
-
-        for (Message message : listMessage) {
-            Message message1 = realm.createObject(Message.class);
-            message1.setNews(message.getMessage_id(), message.getContent(),
-                    message.getCreated_date(),
+        for (NewsOfCompany message : listMessage) {
+            NewsOfCompany newsOfCompany = realm.createObject(NewsOfCompany.class);
+            newsOfCompany.setNews(message.getMessage_id(),
+                    message.getContent(), message.getCreated_date(),
                     message.getCompany_id(), message.getLast_date(),
-                    message.getTitle(), message.getLink(), message.getImages_link(),
-                    message.getLogo(), message.getName());
+                    message.getTitle(), message.getLink(), message.getImages_link());
+        }
+        realm.commitTransaction();
+    }
+
+    public void deleteAllNewsOfCompany() {
+        realm.beginTransaction();
+        RealmResults<NewsOfCompany> listMessages = getListNewsOfCompany();
+        for (NewsOfCompany message : listMessages) {
+            message.deleteFromRealm();
         }
 
+        realm.commitTransaction();
+    }
+
+    public RealmResults<NewsOfCompany> getListNewsOfCompany() {
+        return realm.where(NewsOfCompany.class).findAll();
+    }
+
+       /* ====================== START SAVE NEWS  SHOP =================*/
+
+
+    /* ====================== START SAVE NEWS  CUSTOMER =================*/
+//
+
+
+    //
+    public void addListNewsOfCustomer(List<Message> listMessage) {
+
+        realm.beginTransaction();
+        for (Message message : listMessage) {
+            Message newOfCustomer = realm.createObject(Message.class);
+            newOfCustomer.setNews(message.getMessage_id(),
+                    message.getContent(), message.getCreated_date(),
+                    message.getCompany_id(), message.getLast_date(),
+                    message.getTitle(), message.getLink(), message.getImages_link(),
+                    message.getLogo(), message.getLogo_link(), message.getName());
+        }
         realm.commitTransaction();
 
     }
 
-    public void deleteAllMessages() {
+    //
+    public void deleteAllNewsOfCustomer() {
         realm.beginTransaction();
-        RealmResults<Message> listMessages = getListMessages();
+        RealmResults<Message> listMessages = getListNewsOfCustomer();
         for (Message message : listMessages) {
             message.deleteFromRealm();
         }
@@ -265,8 +299,11 @@ public class RealmController {
         realm.commitTransaction();
     }
 
-    public RealmResults<Message> getListMessages() {
+    public RealmResults<Message> getListNewsOfCustomer() {
         return realm.where(Message.class).findAll();
     }
+
+       /* ====================== START SAVE NEWS  CUSTOMER =================*/
+
 
 }

@@ -34,7 +34,7 @@ import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.CompanyLocation;
 import com.ln.model.DetailUser;
-import com.ln.model.Message;
+import com.ln.model.NewsOfCompany;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -443,22 +443,19 @@ public class ShopLoginActivity extends AppCompatActivity
             idCompany = SaveData.company.getCompany_id();
         }
 
-        Call<List<Message>> call = mCouponAPI.getNewsByCompanyId(idCompany);
-        call.enqueue(new Callback<List<Message>>() {
-
+        Call<List<NewsOfCompany>> call = mCouponAPI.getNewsByCompanyId(idCompany);
+        call.enqueue(new Callback<List<NewsOfCompany>>() {
             @Override
-            public void onResponse(Call<List<Message>> arg0,
-                                   Response<List<Message>> arg1) {
-                List<Message> mListNews = arg1.body();
+            public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
+                List<NewsOfCompany> mListNews = response.body();
 
-                mRealmController.deleteAllMessages();
-                mRealmController.addListNews(mListNews);
-
+                mRealmController.deleteAllNewsOfCompany();
+                mRealmController.addListNewsOfCompany(mListNews);
             }
 
             @Override
-            public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
+            public void onFailure(Call<List<NewsOfCompany>> call, Throwable t) {
+
             }
         });
     }

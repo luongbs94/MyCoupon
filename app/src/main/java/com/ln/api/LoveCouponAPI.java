@@ -12,6 +12,7 @@ import com.ln.model.CompanyLocation;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.Message;
+import com.ln.model.NewsOfCompany;
 import com.ln.model.User;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public interface LoveCouponAPI {
     Call<List<CouponTemplate>> getCouponTemplates(@Header("Authorization") String authorization, @Query("company_id") String id);
 
     @GET("/get_news_by_company_id")
-    Call<List<Message>> getNewsByCompanyId(@Query("company_id") String id);
+    Call<List<NewsOfCompany>> getNewsByCompanyId(@Query("company_id") String id);
 
 
     @GET("/get_company_profile")

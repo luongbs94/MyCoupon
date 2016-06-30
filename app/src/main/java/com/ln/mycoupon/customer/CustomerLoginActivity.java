@@ -32,8 +32,10 @@ import com.ln.app.MainApplication;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company1;
 import com.ln.model.DetailUser;
+import com.ln.model.Message;
 import com.ln.model.User;
 import com.ln.mycoupon.R;
+import com.ln.realm.RealmController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +60,7 @@ public class CustomerLoginActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
 
     private LoveCouponAPI mCouponAPI;
+    private RealmController mRealmController;
 
 
     @Override
@@ -66,7 +69,9 @@ public class CustomerLoginActivity extends AppCompatActivity
         setContentView(R.layout.activity_customer_login);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        mCouponAPI = MainApplication.getApiService2();
+        mCouponAPI = MainApplication.getAPI();
+        mRealmController = MainApplication.mRealmController;
+
         getCityOfUser();
 
         initViews();
@@ -119,6 +124,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                                 try {
                                     MainApplication.sDetailUser = detailUser;
                                     getCompanyByUserId(detailUser.getId());
+
                                     LoginManager.getInstance().logOut();
 
                                 } catch (NullPointerException e) {
@@ -152,17 +158,9 @@ public class CustomerLoginActivity extends AppCompatActivity
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .
-
-                        enableAutoManage(this, this)
-
-                .
-
-                        addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
-
-                .
-
-                        build();
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
+                .build();
 
         /* ================ END GOOGLE ================*/
     }
@@ -214,6 +212,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         updateUserToken(account.getIdToken(), MainApplication.getDeviceToken(), "android");
         MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
 
+
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
 
@@ -250,6 +249,8 @@ public class CustomerLoginActivity extends AppCompatActivity
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
                 MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
                 MainApplication.editor.commit();
+
+                getNewsOfCustomer();
 
                 start();
             }
@@ -327,15 +328,38 @@ public class CustomerLoginActivity extends AppCompatActivity
                     Log.d(TAG, "City : " + MainApplication.cityOfUser.getCity());
                 }
                 Log.d(TAG, "City : " + "Khong co du lieu");
-
             }
 
             @Override
             public void onFailure(Call<CityOfUser> call, Throwable t) {
-
                 Log.d(TAG, "City Error : " + t.toString());
             }
         });
     }
 
+    public void getNewsOfCustomer() {
+
+        if (MainApplication.sDetailUser != null) {
+            Call<List<Message>> call = mCouponAPI.getNewsByUserId(MainApplication.sDetailUser.getId());
+            call.enqueue(new Callback<List<Message>>() {
+
+                @Override
+                public void onResponse(Call<List<Message>> arg0, Response<List<Message>> arg1) {
+
+                    List<Message> mListNews = arg1.body();
+                    if (mListNews != null) {
+                        mRealmController.deleteAllNewsOfCustomer();
+                        mRealmController.addListNewsOfCustomer(mListNews);
+                        Log.d(TAG, "List NewsOfCustomer " + mListNews.size());
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
+                    Log.d(TAG, "Failure");
+                }
+            });
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.ln.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Nhahv on 6/21/2016.
@@ -8,6 +9,7 @@ import io.realm.RealmObject;
  */
 public class NewsOfLike extends RealmObject {
 
+    @PrimaryKey
     private String message_id;
 
     private String content;
@@ -38,6 +40,18 @@ public class NewsOfLike extends RealmObject {
         setLogo(message.getLogo());
         setTitle(message.getTitle());
         setLast_date(message.getLast_date());
+    }
+
+    public NewsOfLike(NewsOfCompany message, boolean isLike) {
+        message_id = message.getMessage_id();
+        content = message.getContent();
+        this.isLike = isLike;
+        company_id = message.getCompany_id();
+        created_date = message.getCreated_date();
+        link = message.getLink();
+        images_link = message.getImages_link();
+        title = message.getTitle();
+        last_date = message.getLast_date();
     }
 
     public boolean isLike() {

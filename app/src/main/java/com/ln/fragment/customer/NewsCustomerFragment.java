@@ -84,8 +84,8 @@ public class NewsCustomerFragment extends Fragment {
 
         mSwipeContainer.setRefreshing(true);
 
-//        setListMessages();
-        getMessage();
+        setListMessages();
+//        getMessage();
         setHasOptionsMenu(true);
         return view;
     }
@@ -93,7 +93,7 @@ public class NewsCustomerFragment extends Fragment {
 
     private void setListMessages() {
 
-        List<Message> mListNews = mRealm.getListMessages();
+        List<Message> mListNews = mRealm.getListNewsOfCustomer();
         List<NewsOfLike> newsOfLikeList = new ArrayList<>();
 
         for (Message message : mListNews) {
@@ -150,61 +150,22 @@ public class NewsCustomerFragment extends Fragment {
 
     public void getMessage() {
 
-        final List<NewsOfLike> newsOfLikeList = new ArrayList<>();
         Call<List<Message>> call = apiService.getNewsByUserId(MainApplication.sDetailUser.getId());
         call.enqueue(new Callback<List<Message>>() {
 
             @Override
             public void onResponse(Call<List<Message>> arg0, Response<List<Message>> arg1) {
 
+
                 List<Message> mListNews = arg1.body();
-                for (Message message : mListNews) {
-                    newsOfLikeList.add(new NewsOfLike(message, false));
+                if (mListNews != null) {
+                    mRealm.deleteAllNewsOfCustomer();
+                    mRealm.addListNewsOfCustomer(mListNews);
+
+                    Log.d(TAG, "NewsOfCustomer " + mListNews.size());
                 }
 
-                // set like news
-                List<LikeNews> listLike = mRealm.getListLikeNews();
-                // list delete
-                List<DeleteNews> listDeleteNews = mRealm.getListDeleteNews();
-
-
-                for (LikeNews likeNews : listLike) {
-
-                    for (NewsOfLike newsOfLike : newsOfLikeList) {
-                        if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
-                                && likeNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
-                            newsOfLike.setLike(true);
-                        }
-                    }
-                }
-
-                //set delete news
-
-                for (DeleteNews deleteNews : listDeleteNews) {
-                    for (NewsOfLike newsOfLike : newsOfLikeList) {
-                        if (newsOfLike.getMessage_id().equals(deleteNews.getIdNews())
-                                && deleteNews.getIdNews().equals(MainApplication.sDetailUser.getId())) {
-                            newsOfLike.setDelete(true);
-                        }
-                    }
-
-                    int size = newsOfLikeList.size() - 1;
-
-                    for (int i = size; i >= 0; i--) {
-                        if (newsOfLikeList.get(i).getMessage_id().equals(deleteNews.getIdNews())) {
-                            newsOfLikeList.remove(i);
-                        }
-                    }
-                }
-
-
-                mListNewsOfLike.clear();
-                mListNewsOfLike.addAll(newsOfLikeList);
-
-                Log.d(TAG, "Size : " + mListNewsOfLike.size());
-                NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(),
-                        mListNewsOfLike, NewsCustomerFragment.this);
-                mRecyclerNews.setAdapter(adapter);
+                setListMessages();
                 mSwipeContainer.setRefreshing(false);
             }
 

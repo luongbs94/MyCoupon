@@ -14,7 +14,7 @@ import com.ln.adapter.NewsShopAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.model.Message;
+import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfLike;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
@@ -75,7 +75,7 @@ public class NewsFragment extends Fragment {
                 android.R.color.holo_red_light);
 
         initViews();
-        getNewsByCompanyId();
+        setNewsOfCompany();
         Log.d(TAG, "onCreate");
         return mView;
     }
@@ -85,13 +85,13 @@ public class NewsFragment extends Fragment {
         mRecNews.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void getNewsMessages() {
+    private void setNewsOfCompany() {
 
-        List<Message> mListNews = mRealm.getListMessages();
+        List<NewsOfCompany> mListNews = mRealm.getListNewsOfCompany();
         List<NewsOfLike> newsOfLikeList = new ArrayList<>();
 
 
-        for (Message message : mListNews) {
+        for (NewsOfCompany message : mListNews) {
             newsOfLikeList.add(new NewsOfLike(message, false));
         }
 
@@ -124,43 +124,46 @@ public class NewsFragment extends Fragment {
             idCompany = SaveData.company.getCompany_id();
         }
 
-        Call<List<Message>> call = mApiServices.getNewsByCompanyId(idCompany);
-        call.enqueue(new Callback<List<Message>>() {
-
+        Call<List<NewsOfCompany>> call = mApiServices.getNewsByCompanyId(idCompany);
+        call.enqueue(new Callback<List<NewsOfCompany>>() {
             @Override
-            public void onResponse(Call<List<Message>> arg0,
-                                   Response<List<Message>> arg1) {
-                List<Message> mListNews = arg1.body();
-                mListNewsOfLike = new ArrayList<>();
+            public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
 
-                for (Message message : mListNews) {
-                    mListNewsOfLike.add(new NewsOfLike(message, false));
-                }
+                List<NewsOfCompany> mListNews = response.body();
 
-                // set like news
-                List<ShopLikeNews> listLike = mRealm.getListShopLikeNews();
+                mRealm.deleteAllNewsOfCompany();
+                mRealm.addListNewsOfCompany(mListNews);
 
-                for (ShopLikeNews likeNews : listLike) {
-                    for (NewsOfLike newsOfLike : mListNewsOfLike) {
-                        if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
-                                && likeNews.getIdCompany().equals(SaveData.company.getCompany_id())) {
-                            newsOfLike.setLike(true);
-                        }
-                    }
-                }
-
-                Log.d(TAG, mListNews.size() + "");
-                adapter = new NewsShopAdapter(getActivity(), mListNewsOfLike, NewsFragment.this);
-                mRecNews.setAdapter(adapter);
+                setNewsOfCompany();
+//                mListNewsOfLike = new ArrayList<>();
+//
+//                for (NewsOfCompany message : mListNews) {
+//                    mListNewsOfLike.add(new NewsOfLike(message, false));
+//                }
+//
+//                // set like news
+//                List<ShopLikeNews> listLike = mRealm.getListShopLikeNews();
+//
+//                for (ShopLikeNews likeNews : listLike) {
+//                    for (NewsOfLike newsOfLike : mListNewsOfLike) {
+//                        if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
+//                                && likeNews.getIdCompany().equals(SaveData.company.getCompany_id())) {
+//                            newsOfLike.setLike(true);
+//                        }
+//                    }
+//                }
+//
+//                Log.d(TAG, mListNews.size() + "");
+//                adapter = new NewsShopAdapter(getActivity(), mListNewsOfLike, NewsFragment.this);
+//                mRecNews.setAdapter(adapter);
                 swipeContainer.setRefreshing(false);
 
             }
 
             @Override
-            public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
+            public void onFailure(Call<List<NewsOfCompany>> call, Throwable t) {
+                Log.d(TAG, "Error " + t.toString());
                 swipeContainer.setRefreshing(false);
-
             }
         });
     }

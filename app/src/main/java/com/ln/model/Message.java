@@ -11,7 +11,6 @@ public class Message extends RealmObject {
 
     @PrimaryKey
     private String message_id;
-
     private String content;
     private String created_date;
     private String company_id;
@@ -27,8 +26,9 @@ public class Message extends RealmObject {
     }
 
     public Message(String message_id, String content, String created_date,
-                   String company_id, String last_date, String title, String link,
-                   String images_link, String logo, String name) {
+                   String company_id, String last_date,
+                   String title, String link, String images_link,
+                   String logo, String logo_link, String name) {
         this.message_id = message_id;
         this.content = content;
         this.created_date = created_date;
@@ -38,6 +38,7 @@ public class Message extends RealmObject {
         this.link = link;
         this.images_link = images_link;
         this.logo = logo;
+        this.logo_link = logo_link;
         this.name = name;
     }
 
@@ -132,8 +133,9 @@ public class Message extends RealmObject {
 
 
     public void setNews(String message_id, String content, String created_date,
-                        String company_id, String last_date, String title, String link,
-                        String images_link, String logo, String name) {
+                        String company_id, String last_date,
+                        String title, String link, String images_link,
+                        String logo, String logo_link, String name) {
         this.message_id = message_id;
         this.content = content;
         this.created_date = created_date;
@@ -143,6 +145,7 @@ public class Message extends RealmObject {
         this.link = link;
         this.images_link = images_link;
         this.logo = logo;
+        this.logo_link = logo_link;
         this.name = name;
     }
 }
