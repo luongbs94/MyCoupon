@@ -18,7 +18,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.ItemClickSupport;
 import com.ln.app.MainApplication;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.customer.CouponCompanyOfClientActivity;
 
@@ -108,29 +108,33 @@ public class CouponFragment extends Fragment {
 
     private void getCompanyByUserId() {
 
-        Call<List<Company1>> call3 = mApiServices.getCompaniesByUserId(SaveData.USER_ID);
-        call3.enqueue(new Callback<List<Company1>>() {
+        if (MainApplication.sDetailUser != null) {
+            Call<List<CompanyOfCustomer>> call3 = mApiServices.getCompaniesByUserId(
+                    MainApplication.sDetailUser.getId());
+            call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
 
-            @Override
-            public void onResponse(Call<List<Company1>> arg0,
-                                   Response<List<Company1>> arg1) {
-                List<Company1> templates = arg1.body();
-                if (templates != null) {
-                    SaveData.listCompanyCustomer = templates;
-                } else {
-                    SaveData.listCompanyCustomer = new ArrayList<>();
+                @Override
+                public void onResponse(Call<List<CompanyOfCustomer>> arg0,
+                                       Response<List<CompanyOfCustomer>> arg1) {
+                    List<CompanyOfCustomer> templates = arg1.body();
+                    if (templates != null) {
+                        SaveData.listCompanyCustomer = templates;
+                    } else {
+                        SaveData.listCompanyCustomer = new ArrayList<>();
+                    }
+
+                    swipeContainer.setRefreshing(false);
+                    CompanyAdapter adapter = new CompanyAdapter(getActivity(), SaveData.listCompanyCustomer);
+                    mRecCoupon.setAdapter(adapter);
                 }
 
-                swipeContainer.setRefreshing(false);
-                CompanyAdapter adapter = new CompanyAdapter(getActivity(), SaveData.listCompanyCustomer);
-                mRecCoupon.setAdapter(adapter);
-            }
+                @Override
+                public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
+                    swipeContainer.setRefreshing(false);
+                }
+            });
+        }
 
-            @Override
-            public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
-                swipeContainer.setRefreshing(false);
-            }
-        });
 
     }
 
@@ -138,7 +142,7 @@ public class CouponFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if(SaveData.updateCoupon == true){
+        if (SaveData.updateCoupon == true) {
             getCompanyByUserId();
             SaveData.updateCoupon = false;
         }

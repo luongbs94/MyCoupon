@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ln.app.MainApplication;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
 
@@ -21,11 +21,11 @@ import java.util.List;
  */
 public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHolder> {
 
-    private List<Company1> listCompany;
+    private List<CompanyOfCustomer> listCompany;
     private Context mContext;
     private String TAG = getClass().getSimpleName();
 
-    public CompanyAdapter(Context context, List<Company1> company) {
+    public CompanyAdapter(Context context, List<CompanyOfCustomer> company) {
         mContext = context;
         listCompany = company;
     }
@@ -39,7 +39,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final Company1 item = listCompany.get(position);
+        final CompanyOfCustomer item = listCompany.get(position);
         if (item != null) {
             holder.companyName.setText(item.getName());
             holder.companyAddress.setText(item.getAddress());

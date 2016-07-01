@@ -7,16 +7,10 @@
         android:id="@+id/menu_all_news"
         android:title="@string/all_news"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/menu_near_news"
-        android:title="@string/near_news"
-        app:showAsAction="never" />
+
     <item
         android:id="@+id/menu_like_news"
         android:title="@string/like_news"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/menu_delete_news"
-        android:title="@string/news_delete"
-        app:showAsAction="never" />
+
 </menu>

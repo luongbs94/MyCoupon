@@ -85,7 +85,6 @@ public class NewsCustomerFragment extends Fragment {
         mSwipeContainer.setRefreshing(true);
 
         setListMessages();
-//        getMessage();
         setHasOptionsMenu(true);
         return view;
     }
@@ -190,25 +189,17 @@ public class NewsCustomerFragment extends Fragment {
                 getSnackBar(getString(R.string.all_news));
                 getMessage();
                 return true;
-            case R.id.menu_near_news:
-                getSnackBar(getString(R.string.near_news));
-                return true;
+
             case R.id.menu_like_news:
                 getSnackBar(getString(R.string.like_news));
                 likeNews();
                 return true;
-            case R.id.menu_delete_news:
-                getSnackBar(getString(R.string.news_delete));
-                deleteNews();
-                return true;
             default:
-                getMessage();
                 return super.onOptionsItemSelected(item);
         }
     }
 
     private void likeNews() {
-
 
         List<LikeNews> listLike = mRealm.getListLikeNews();
         List<NewsOfLike> listNews = new ArrayList<>();
@@ -226,43 +217,6 @@ public class NewsCustomerFragment extends Fragment {
 
         mListNewsOfLike.clear();
         mListNewsOfLike.addAll(listNews);
-
-        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(),
-                mListNewsOfLike, NewsCustomerFragment.this);
-        mRecyclerNews.setAdapter(adapter);
-        mSwipeContainer.setRefreshing(false);
-    }
-
-    private void deleteNews() {
-
-
-        List<LikeNews> listLike = mRealm.getListLikeNews();
-        List<NewsOfLike> listNews = new ArrayList<>();
-
-        for (LikeNews likeNews : listLike) {
-
-            for (NewsOfLike newsOfLike : mListNewsOfLike) {
-                if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
-                        && likeNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
-                    newsOfLike.setLike(true);
-                    listNews.add(newsOfLike);
-                }
-            }
-        }
-
-        mListNewsOfLike.clear();
-
-        List<DeleteNews> listDeleteNews = mRealm.getListDeleteNews();
-
-        for (DeleteNews deleteNews : listDeleteNews) {
-
-            for (NewsOfLike newsOfLike : listNews) {
-                if (newsOfLike.getMessage_id().equals(deleteNews.getIdNews())
-                        && deleteNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
-                    mListNewsOfLike.add(newsOfLike);
-                }
-            }
-        }
 
         NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(),
                 mListNewsOfLike, NewsCustomerFragment.this);

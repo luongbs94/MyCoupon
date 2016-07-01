@@ -14,7 +14,7 @@ import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 
 import java.util.List;
@@ -129,7 +129,10 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
 
 
                     } else {
-                        updateCoupon(coupon_id, SaveData.USER_ID, coupon.getDuration());
+                        if (MainApplication.sDetailUser != null) {
+                            updateCoupon(coupon_id, MainApplication.sDetailUser.getId(),
+                                    coupon.getDuration());
+                        }
                     }
 
                 } else {
@@ -167,8 +170,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         template.setCoupon_id(coupon_id);
         template.setUser_id(user_id);
         template.setDuration(duration);
-        try
-        {
+        try {
             template.setUser_image_link(MainApplication.sDetailUser.getPicture());
             template.setUser_name(MainApplication.sDetailUser.getName());
 
@@ -177,12 +179,12 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         }
 
 
-        Call<List<Company1>> call2 = apiService.updateUserCoupon(template);
-        call2.enqueue(new Callback<List<Company1>>() {
+        Call<List<CompanyOfCustomer>> call2 = apiService.updateUserCoupon(template);
+        call2.enqueue(new Callback<List<CompanyOfCustomer>>() {
 
             @Override
-            public void onResponse(Call<List<Company1>> arg0,
-                                   Response<List<Company1>> arg1) {
+            public void onResponse(Call<List<CompanyOfCustomer>> arg0,
+                                   Response<List<CompanyOfCustomer>> arg1) {
                 MaterialDialog dialog = new MaterialDialog.Builder(QRCodeActivity.this)
                         .title("Coupon")
                         .content("Bạn đã thêm mới một coupon")
@@ -200,7 +202,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
             }
 
             @Override
-            public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
+            public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
                 Toast.makeText(QRCodeActivity.this, "Not found", Toast.LENGTH_LONG).show();
 
             }

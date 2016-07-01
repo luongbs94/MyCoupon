@@ -7,7 +7,7 @@ package com.ln.api;
 
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.CompanyLocation;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
@@ -64,14 +64,14 @@ public interface LoveCouponAPI {
     Call<Coupon> addCoupon(@Body Coupon template);
 
     @GET("/get_companies_by_user_id")
-    Call<List<Company1>> getCompaniesByUserId(@Query("user_id") String id);
+    Call<List<CompanyOfCustomer>> getCompaniesByUserId(@Query("user_id") String id);
 
 
     @GET("/get_news_by_user_id")
     Call<List<Message>> getNewsByUserId(@Query("user_id") String id);
 
     @POST("/update_user_coupon")
-    Call<List<Company1>> updateUserCoupon(@Body Coupon template);
+    Call<List<CompanyOfCustomer>> updateUserCoupon(@Body Coupon template);
 
 
     @GET("/getCoupon")

@@ -1,7 +1,7 @@
 package com.ln.api;
 
 import com.ln.model.Company;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class SaveData {
 
     public static Company company;
 
-    public static List<Company1> listCompanyCustomer;
+    public static List<CompanyOfCustomer> listCompanyCustomer;
     public static boolean updateCoupon = false;
 
 
@@ -28,9 +28,9 @@ public class SaveData {
     public static String web_token = "";
     public static String USER_ID = "";
 
-    public static Company1 getCompany(String idCompany) {
+    public static CompanyOfCustomer getCompany(String idCompany) {
 
-        for (Company1 company : listCompanyCustomer) {
+        for (CompanyOfCustomer company : listCompanyCustomer) {
             if (company.getCompany_id().equals(idCompany)) {
                 return company;
             }

@@ -2,16 +2,21 @@ package com.ln.model;
 
 import java.util.List;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by luongnguyen on 4/8/16.
  * <></>
  */
-public class Company1 {
+public class CompanyOfCustomer extends RealmObject {
 
+    @PrimaryKey
     private String company_id;
     private String logo;
-    private String address;
+    private String logo_link;
     private String name;
+    private String address;
     private List<Coupon> coupon;
 
     public String getCompany_id() {
@@ -54,4 +59,14 @@ public class Company1 {
     public void setCoupon(List<Coupon> coupon) {
         this.coupon = coupon;
     }
+
+    public String getLogo_link() {
+        return logo_link;
+    }
+
+    public void setLogo_link(String logo_link) {
+        this.logo_link = logo_link;
+    }
+
+
 }

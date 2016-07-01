@@ -3,14 +3,24 @@ package com.ln.model;
 
 import java.util.Date;
 
-public class Coupon {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-    private String coupon_id, user_id, coupon_template_id,
-             company_id, value, user_name,
-            user_social, user_image_link;
-    int duration;
-    Date created_date;
+public class Coupon  extends RealmObject{
 
+    @PrimaryKey
+    private String coupon_id;
+    private String user_id;
+    private String coupon_template_id;
+    private Date created_date;
+    private String used_date;
+    private String company_id;
+    private String value;
+    private int duration;
+    private String code;
+    private String user_name;
+    private String user_social;
+    private String user_image_link;
 
 
     public Date getCreated_date() {
@@ -93,7 +103,21 @@ public class Coupon {
         this.duration = duration;
     }
 
+    public String getUsed_date() {
+        return used_date;
+    }
 
+    public void setUsed_date(String used_date) {
+        this.used_date = used_date;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }
 
 

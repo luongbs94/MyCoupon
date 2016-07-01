@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.ln.adapter.CouponTemplateClientAdapter;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
 
 /**
@@ -27,7 +27,7 @@ import com.ln.mycoupon.R;
 public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
     private RecyclerView mRecCoupon;
-    private static Company1 company1;
+    private static CompanyOfCustomer company1;
     private ImageView mImageView;
     private TextView mTxtName;
 
