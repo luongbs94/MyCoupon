@@ -33,6 +33,7 @@ import com.ln.app.MainApplication;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.CompanyLocation;
+import com.ln.model.CouponTemplate;
 import com.ln.model.DetailUser;
 import com.ln.model.NewsOfCompany;
 import com.ln.mycoupon.R;
@@ -248,7 +249,9 @@ public class ShopLoginActivity extends AppCompatActivity
 
                 getCityOfUser();
 
-                getNewsByCompanyId();
+
+                getNewsByCompanyId(); // get list news of company
+                getCouponTemplate(); //  get list coupon template of company
 
 
                 Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
@@ -456,6 +459,43 @@ public class ShopLoginActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<List<NewsOfCompany>> call, Throwable t) {
 
+            }
+        });
+    }
+
+
+    /* ============= GET LIST COUPON TEMPLATE =================*/
+    private void getCouponTemplate() {
+
+        String idCompany;
+        if (SaveData.company == null) {
+            idCompany = MainApplication.sIdCompany;
+        } else {
+            idCompany = SaveData.company.getCompany_id();
+        }
+
+        //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
+        Call<List<CouponTemplate>> call = mCouponAPI.getCouponTemplates("abc", idCompany);
+        call.enqueue(new Callback<List<CouponTemplate>>() {
+
+            @Override
+            public void onResponse(Call<List<CouponTemplate>> arg0,
+                                   Response<List<CouponTemplate>> arg1) {
+                List<CouponTemplate> listCouponTemplate = arg1.body();
+                if (listCouponTemplate != null) {
+                    mRealmController.deleteCouponTemplate();
+                    mRealmController.addListCouponTemplate(listCouponTemplate);
+                    Log.d(TAG, "CouponTemplate  " + listCouponTemplate.size());
+
+                } else {
+                    Log.d(TAG, "CouponTemplate  null");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<CouponTemplate>> arg0, Throwable arg1) {
+                Log.d(TAG, "Failure");
             }
         });
     }

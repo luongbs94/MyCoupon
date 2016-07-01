@@ -12,21 +12,17 @@ public class CouponTemplate extends RealmObject {
     @PrimaryKey
     private String coupon_template_id;
     private String content;
-
     private String created_date;
-
     private String company_id;
-
     private String value;
-
     private int duration;
 
     public CouponTemplate() {
     }
 
-    public CouponTemplate(String coupon_template_id, String content,
-                          int duration, String created_date, String company_id,
-                          String value) {
+    public void setCouponTemplate(String coupon_template_id, String content,
+                                  int duration, String created_date, String company_id,
+                                  String value) {
         this.coupon_template_id = coupon_template_id;
         this.content = content;
         this.duration = duration;

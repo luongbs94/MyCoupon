@@ -18,7 +18,7 @@ public class Message extends RealmObject {
     private String logo_link;
     private String name;
 
-    Date last_date, created_date;
+    private Date last_date, created_date;
 
     public Message() {
     }

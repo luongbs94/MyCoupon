@@ -44,10 +44,10 @@ public class NewsOfLike extends RealmObject {
         setLast_date(message.getLast_date());
     }
 
-    public NewsOfLike(NewsOfCompany message, boolean isLike) {
+    public NewsOfLike(NewsOfCompany message, boolean like) {
         message_id = message.getMessage_id();
         content = message.getContent();
-        this.isLike = isLike;
+        isLike = like;
         company_id = message.getCompany_id();
         created_date = message.getCreated_date();
         link = message.getLink();
