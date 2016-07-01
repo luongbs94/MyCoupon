@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ln.app.MainApplication;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
@@ -26,9 +26,9 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
     private List<Coupon> mListCoupon;
     private Context mContext;
-    private Company1 mCompany1;
+    private CompanyOfCustomer mCompany1;
 
-    public CouponTemplateClientAdapter(Context context, Company1 company) {
+    public CouponTemplateClientAdapter(Context context, CompanyOfCustomer company) {
         mContext = context;
         mListCoupon = company.getCoupon();
         mCompany1 = company;

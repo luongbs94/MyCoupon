@@ -20,7 +20,7 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.NewsOfLike;
 import com.ln.mycoupon.R;
 import com.ln.views.MyTextView;
@@ -66,7 +66,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         final NewsOfLike news = mListNews.get(position);
         final int positionNews = position;
 
-        Company1 company = SaveData.getCompany(news.getCompany_id());
+        CompanyOfCustomer company = SaveData.getCompany(news.getCompany_id());
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
             if (company.getLogo() != null) {

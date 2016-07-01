@@ -14,7 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.User;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.customer.CustomerMainActivity;
@@ -57,7 +57,7 @@ public class FirstActivity extends AppCompatActivity {
             finish();
         } else if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGIN_CLIENT, false)) {
             String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
-            SaveData.listCompanyCustomer = gson.fromJson(data, new TypeToken<List<Company1>>() {
+            SaveData.listCompanyCustomer = gson.fromJson(data, new TypeToken<List<CompanyOfCustomer>>() {
             }.getType());
 
             if (MainApplication.sDetailUser != null) {
@@ -116,13 +116,13 @@ public class FirstActivity extends AppCompatActivity {
 
     private void getCompanyByUserId(final String userId) {
 
-        Call<List<Company1>> call3 = MainApplication.apiService.getCompaniesByUserId(userId);
-        call3.enqueue(new Callback<List<Company1>>() {
+        Call<List<CompanyOfCustomer>> call3 = MainApplication.apiService.getCompaniesByUserId(userId);
+        call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
 
             @Override
-            public void onResponse(Call<List<Company1>> arg0, Response<List<Company1>> arg1) {
+            public void onResponse(Call<List<CompanyOfCustomer>> arg0, Response<List<CompanyOfCustomer>> arg1) {
 
-                List<Company1> templates = arg1.body();
+                List<CompanyOfCustomer> templates = arg1.body();
                 if (templates == null) {
                     SaveData.listCompanyCustomer = new ArrayList<>();
                 } else {
@@ -143,7 +143,7 @@ public class FirstActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
+            public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
             }
         });
     }

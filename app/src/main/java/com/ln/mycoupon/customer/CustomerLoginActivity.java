@@ -30,7 +30,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.CityOfUser;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.DetailUser;
 import com.ln.model.Message;
 import com.ln.model.User;
@@ -229,17 +229,23 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private void getCompanyByUserId(final String userId) {
 
-        Call<List<Company1>> call3 = MainApplication.apiService.getCompaniesByUserId(userId);
-        call3.enqueue(new Callback<List<Company1>>() {
+        Call<List<CompanyOfCustomer>> call3 = MainApplication.apiService.getCompaniesByUserId(userId);
+        call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
 
             @Override
-            public void onResponse(Call<List<Company1>> arg0, Response<List<Company1>> arg1) {
+            public void onResponse(Call<List<CompanyOfCustomer>> arg0, Response<List<CompanyOfCustomer>> arg1) {
 
-                List<Company1> templates = arg1.body();
+                List<CompanyOfCustomer> templates = arg1.body();
                 if (templates == null) {
                     SaveData.listCompanyCustomer = new ArrayList<>();
                 } else {
                     SaveData.listCompanyCustomer = templates;
+                }
+                getNewsOfCustomer();
+
+                if (templates != null) {
+                    mRealmController.deleteListCompanyCustomer();
+                    mRealmController.addListCompanyCustomer(templates);
                 }
 
                 SaveData.USER_ID = userId;
@@ -250,13 +256,12 @@ public class CustomerLoginActivity extends AppCompatActivity
                 MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
                 MainApplication.editor.commit();
 
-                getNewsOfCustomer();
 
                 start();
             }
 
             @Override
-            public void onFailure(Call<List<Company1>> arg0, Throwable arg1) {
+            public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
             }
         });
     }

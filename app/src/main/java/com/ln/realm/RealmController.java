@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.CouponTemplate;
 import com.ln.model.DetailUser;
 import com.ln.model.Message;
@@ -317,4 +318,32 @@ public class RealmController {
         return mRealm.where(CouponTemplate.class).findAll();
     }
 
+    /* =============== END OFFLINE COUPON TEMPLATE OF COMPANY ======*/
+
+    /* ================ START SAVE LIST COMPANY OF CUSTOMER ===========*/
+
+    public void addListCompanyCustomer(List<CompanyOfCustomer> listCompany) {
+
+        mRealm.beginTransaction();
+        for (CompanyOfCustomer companyOfCustomer : listCompany) {
+            CompanyOfCustomer company = companyOfCustomer;
+            mRealm.copyToRealmOrUpdate(company);
+        }
+        mRealm.commitTransaction();
+    }
+
+    public void deleteListCompanyCustomer() {
+
+        mRealm.beginTransaction();
+        List<CompanyOfCustomer> mListCompany = getListCompanyCustomer();
+        for (CompanyOfCustomer company : mListCompany) {
+            company.deleteFromRealm();
+        }
+
+        mRealm.commitTransaction();
+    }
+
+    public RealmResults<CompanyOfCustomer> getListCompanyCustomer() {
+        return mRealm.where(CompanyOfCustomer.class).findAll();
+    }
 }

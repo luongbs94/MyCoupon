@@ -15,7 +15,7 @@ import com.ln.api.SaveData;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.model.CityOfUser;
-import com.ln.model.Company1;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.DetailUser;
 import com.ln.realm.RealmController;
 
@@ -195,7 +195,7 @@ public class MainApplication extends MultiDexApplication {
     public static String getCompanyName(String company_id) {
         for (int i = 0; i < SaveData.listCompanyCustomer.size(); i++) {
 
-            Company1 company1 = SaveData.listCompanyCustomer.get(i);
+            CompanyOfCustomer company1 = SaveData.listCompanyCustomer.get(i);
 
             Log.d("Coupon", company1.getCompany_id());
             if (company_id.equals(company1.getCompany_id())) {
