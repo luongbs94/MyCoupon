@@ -19,6 +19,7 @@ public class CompanyOfCustomer extends RealmObject {
     private String name;
     private String address;
     private RealmList<Coupon> coupon;
+<<<<<<< HEAD
 
     public CompanyOfCustomer() {
     }
@@ -33,6 +34,8 @@ public class CompanyOfCustomer extends RealmObject {
         this.address = address;
         this.coupon = coupon;
     }
+=======
+>>>>>>> 9a11fbc2b5acad86939633c28ed12c71e92d157e
 
     public String getCompany_id() {
         return company_id;
@@ -67,7 +70,7 @@ public class CompanyOfCustomer extends RealmObject {
         this.logo = logo;
     }
 
-    public List<Coupon> getCoupon() {
+    public RealmList<Coupon> getCoupon() {
         return coupon;
     }
 

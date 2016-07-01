@@ -49,7 +49,7 @@ public class CreateFragment extends Fragment  implements DatePickerDialog.OnDate
     private Calendar calendar;
 
     private SwipeRefreshLayout swipeContainer;
-    private Menu menu;
+    private Menu menu1;
     TextView textView;
 
 
@@ -156,7 +156,7 @@ public class CreateFragment extends Fragment  implements DatePickerDialog.OnDate
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
         item.setTitle(fmt.format(date));
-        this.menu = menu;
+        this.menu1 = menu;
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -179,7 +179,7 @@ public class CreateFragment extends Fragment  implements DatePickerDialog.OnDate
     public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
         calendar.set(year, monthOfYear, dayOfMonth);
         utc1 = calendar.getTime().toString();
-        MenuItem item = menu.findItem(R.id.date);
+        MenuItem item = menu1.findItem(R.id.date);
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
         item.setTitle(fmt.format(calendar.getTime()));
