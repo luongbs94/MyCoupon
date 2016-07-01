@@ -45,16 +45,23 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
         final Coupon item = mListCoupon.get(position);
         if (item != null) {
-            if (item.getValue() != null) {
-                holder.couponName.setText(item.getValue());
+
+            try{
+                if (item.getValue() != null) {
+                    holder.couponName.setText(item.getValue());
+                }
+
+                SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+
+                holder.couponDate.setText(fmt.format(item.getCreated_date()));
+
+                String dayLeft = MainApplication.dayLeft(item.getCreated_date(), item.getDuration()) + "";
+                holder.dayLeft.setText(dayLeft + " days");
+
+            }catch (Exception e){
+
             }
 
-            SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-
-            holder.couponDate.setText(fmt.format(item.getCreated_date()));
-
-            String dayLeft = MainApplication.dayLeft(item.getCreated_date(), item.getDuration()) + "";
-            holder.dayLeft.setText(dayLeft + " days");
 
             if (mCompany1.getLogo() != null) {
                 Glide.with(mContext).load(MainApplication
