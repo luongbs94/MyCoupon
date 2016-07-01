@@ -36,6 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MainApplication extends MultiDexApplication {
 
+    public static final String ID_COMPANY = "company_id";
     private static MainApplication mInstances;
 
     public static final String POSITION = "POSITION";
@@ -154,7 +155,7 @@ public class MainApplication extends MultiDexApplication {
         apiService1 = retrofit1.create(LoveCouponAPI.class);
         apiService2 = retrofit2.create(LoveCouponAPI.class);
 
-        sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, 4);
+        sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
 
@@ -260,7 +261,6 @@ public class MainApplication extends MultiDexApplication {
     public static LoveCouponAPI getApiService2() {
         return apiService2;
     }
-
 
 
     public static long dayLeft(Date created_date, int duration) {

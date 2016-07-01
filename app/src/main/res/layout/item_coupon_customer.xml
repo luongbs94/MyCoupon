@@ -27,7 +27,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txt_company_name"
+            android:id="@+id/coupon_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
@@ -38,7 +38,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txt_price_coupon"
+            android:id="@+id/coupon_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -60,7 +60,7 @@
 
 
         <TextView
-            android:id="@+id/txt_time"
+            android:id="@+id/dayLeft"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"

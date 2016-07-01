@@ -1,5 +1,6 @@
 package com.ln.mycoupon.customer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -14,10 +15,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ln.adapter.CouponTemplateClientAdapter;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
+import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
+import com.ln.realm.RealmController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by luongnguyen on 6/7/16.
@@ -26,8 +31,9 @@ import com.ln.mycoupon.R;
  */
 public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
+    private RealmController mRealmController;
     private RecyclerView mRecCoupon;
-    private static CompanyOfCustomer company1;
+    private CompanyOfCustomer mCompanyOfCustomer;
     private ImageView mImageView;
     private TextView mTxtName;
 
@@ -38,13 +44,19 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon_company_client);
 
+        mRealmController = MainApplication.mRealmController;
+
         initViews();
     }
 
     private void initViews() {
 
-        int position = getIntent().getExtras().getInt("position");
-        company1 = SaveData.listCompanyCustomer.get(position);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String idCompany = bundle.getString(MainApplication.ID_COMPANY);
+
+
+        mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,26 +66,25 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.img_logo_customer_nav);
         mTxtName = (TextView) findViewById(R.id.txt_name_customer_nav);
 
-        if (company1.getLogo() != null) {
-            Glide.with(this).load(MainApplication.convertToBytes(company1.getLogo()))
+        if (mCompanyOfCustomer.getLogo() != null) {
+            Glide.with(this).load(MainApplication.convertToBytes(mCompanyOfCustomer.getLogo()))
                     .asBitmap()
                     .into(mImageView);
 
-            Log.d(TAG, company1.getLogo());
+            Log.d(TAG, mCompanyOfCustomer.getLogo());
         }
 
-        if (company1.getName() != null) {
-            mTxtName.setText(company1.getName());
+        if (mCompanyOfCustomer.getName() != null) {
+            mTxtName.setText(mCompanyOfCustomer.getName());
         }
 
         mRecCoupon = (RecyclerView) findViewById(R.id.recycler_view);
         mRecCoupon.setHasFixedSize(true);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(this));
 
-        CouponTemplateClientAdapter adapter = new CouponTemplateClientAdapter(this, company1);
+        CouponTemplateClientAdapter adapter = new CouponTemplateClientAdapter(this, mCompanyOfCustomer);
         mRecCoupon.setAdapter(adapter);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -90,6 +101,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         collapsingToolbar.setTitle(" ");
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.setExpanded(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
@@ -102,11 +114,9 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
                 }
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(getString(R.string.app_name));
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     isShow = false;
                 }
             }

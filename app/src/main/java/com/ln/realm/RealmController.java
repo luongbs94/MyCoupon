@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
+import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.DetailUser;
 import com.ln.model.Message;
@@ -326,8 +327,23 @@ public class RealmController {
 
         mRealm.beginTransaction();
         for (CompanyOfCustomer companyOfCustomer : listCompany) {
-            CompanyOfCustomer company = companyOfCustomer;
-            mRealm.copyToRealmOrUpdate(company);
+            CompanyOfCustomer company = mRealm.createObject(CompanyOfCustomer.class);
+
+            for (Coupon coupon : companyOfCustomer.getCoupon()) {
+                Coupon coupon1 = mRealm.createObject(Coupon.class);
+                coupon1.setCoupon(coupon.getCoupon_id(), coupon.getUser_id(),
+                        coupon.getCoupon_template_id(), coupon.getCreated_date(), coupon.getUsed_date(),
+                        coupon.getCompany_id(), coupon.getValue(), coupon.getDuration(), coupon.getCode(),
+                        coupon.getUser_name(), coupon.getUser_social(), coupon.getUser_image_link());
+
+                company.getCoupon().add(coupon1);
+            }
+
+            company.setCompanyCustomer(companyOfCustomer.getCompany_id(),
+                    companyOfCustomer.getLogo(),
+                    companyOfCustomer.getLogo_link(),
+                    companyOfCustomer.getName(),
+                    companyOfCustomer.getAddress());
         }
         mRealm.commitTransaction();
     }
@@ -340,10 +356,24 @@ public class RealmController {
             company.deleteFromRealm();
         }
 
+        List<Coupon> listCoupon = getListCoupon();
+        for (Coupon coupon : listCoupon) {
+            coupon.deleteFromRealm();
+        }
         mRealm.commitTransaction();
     }
 
     public RealmResults<CompanyOfCustomer> getListCompanyCustomer() {
         return mRealm.where(CompanyOfCustomer.class).findAll();
+    }
+
+    public RealmResults<Coupon> getListCoupon() {
+        return mRealm.where(Coupon.class).findAll();
+    }
+
+
+    public CompanyOfCustomer getCompanyOfCustomer(String idCompany) {
+        return mRealm.where(CompanyOfCustomer.class)
+                .equalTo(MainApplication.ID_COMPANY, idCompany).findFirst();
     }
 }

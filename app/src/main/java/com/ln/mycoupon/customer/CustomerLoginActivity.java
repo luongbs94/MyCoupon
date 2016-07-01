@@ -1,6 +1,7 @@
 package com.ln.mycoupon.customer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -250,12 +251,21 @@ public class CustomerLoginActivity extends AppCompatActivity
 
                 SaveData.USER_ID = userId;
 
+
                 String data = gson.toJson(SaveData.listCompanyCustomer);
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
                 MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
                 MainApplication.editor.commit();
 
+
+                SharedPreferences preferences =
+                        getSharedPreferences(MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean(MainApplication.LOGIN_SHOP, false);
+                editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
+                editor.apply();
 
                 start();
             }
@@ -282,7 +292,6 @@ public class CustomerLoginActivity extends AppCompatActivity
             }
         });
     }
-
 
     public void start() {
         Intent intent = new Intent(CustomerLoginActivity.this, CustomerMainActivity.class);

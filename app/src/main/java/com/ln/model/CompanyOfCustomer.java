@@ -2,6 +2,7 @@ package com.ln.model;
 
 import java.util.List;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -17,7 +18,21 @@ public class CompanyOfCustomer extends RealmObject {
     private String logo_link;
     private String name;
     private String address;
-    private List<Coupon> coupon;
+    private RealmList<Coupon> coupon;
+
+    public CompanyOfCustomer() {
+    }
+
+    public CompanyOfCustomer(String company_id, String logo,
+                             String logo_link, String name,
+                             String address, RealmList<Coupon> coupon) {
+        this.company_id = company_id;
+        this.logo = logo;
+        this.logo_link = logo_link;
+        this.name = name;
+        this.address = address;
+        this.coupon = coupon;
+    }
 
     public String getCompany_id() {
         return company_id;
@@ -56,7 +71,7 @@ public class CompanyOfCustomer extends RealmObject {
         return coupon;
     }
 
-    public void setCoupon(List<Coupon> coupon) {
+    public void setCoupon(RealmList<Coupon> coupon) {
         this.coupon = coupon;
     }
 
@@ -68,5 +83,13 @@ public class CompanyOfCustomer extends RealmObject {
         this.logo_link = logo_link;
     }
 
-
+    public void setCompanyCustomer(String company_id, String logo,
+                                   String logo_link, String name,
+                                   String address) {
+        this.company_id = company_id;
+        this.logo = logo;
+        this.logo_link = logo_link;
+        this.name = name;
+        this.address = address;
+    }
 }

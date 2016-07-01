@@ -26,12 +26,12 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
     private List<Coupon> mListCoupon;
     private Context mContext;
-    private CompanyOfCustomer mCompany1;
+    private CompanyOfCustomer mCompanyOfCustomer;
 
     public CouponTemplateClientAdapter(Context context, CompanyOfCustomer company) {
         mContext = context;
         mListCoupon = company.getCoupon();
-        mCompany1 = company;
+        mCompanyOfCustomer = company;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
             if (item.getValue() != null) {
                 holder.couponName.setText(item.getValue());
             }
-
+//
             SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
             holder.couponDate.setText(fmt.format(item.getCreated_date()));
@@ -56,14 +56,12 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
             String dayLeft = MainApplication.dayLeft(item.getCreated_date(), item.getDuration()) + "";
             holder.dayLeft.setText(dayLeft + " days");
 
-            if (mCompany1.getLogo() != null) {
+            if (mCompanyOfCustomer.getLogo() != null) {
                 Glide.with(mContext).load(MainApplication
-                        .convertToBytes(mCompany1.getLogo()))
+                        .convertToBytes(mCompanyOfCustomer.getLogo()))
                         .asBitmap()
                         .into(holder.mImgLogo);
-
             }
-
         }
     }
 

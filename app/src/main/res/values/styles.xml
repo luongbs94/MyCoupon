@@ -35,8 +35,8 @@
         <item name="android:background">?android:selectableItemBackground</item>
         <item name="android:dropDownSelector">?android:selectableItemBackground</item>
         <item name="android:divider">@null</item>
-        <item name="android:overlapAnchor">true</item>
     </style>
+    <!--<item name="android:overlapAnchor">true</item>-->
 
 
 
