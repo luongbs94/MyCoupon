@@ -133,6 +133,15 @@ public class MainApplication extends MultiDexApplication {
         mInstances = this;
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+//
+//        OkHttpClient httpClient = new OkHttpClient();
+//        httpClient.networkInterceptors().add(new Interceptor() {
+//            @Override
+//            public Response intercept(Chain chain) throws IOException {
+//                Request request = chain.request().newBuilder().addHeader("test", "test").build();
+//                return chain.proceed(request);
+//            }
+//        });
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL_GET_POST)
