@@ -13,16 +13,11 @@ public class ShopLikeNews extends RealmObject {
     @Required
     @PrimaryKey
     private String idNews;
-    
+
     @Required
     private String idCompany;
 
     public ShopLikeNews() {
-    }
-
-    public ShopLikeNews(String idCompany, String idNews) {
-        this.idNews = idNews;
-        this.idCompany = idCompany;
     }
 
     public String getIdNews() {

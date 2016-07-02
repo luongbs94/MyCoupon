@@ -95,7 +95,7 @@ public class AddCouponActivity extends AppCompatActivity {
         template.setContent(content);
         template.setValue(value);
         template.setDuration(duration);
-        template.setCompany_id(SaveData.company.company_id + "");
+        template.setCompany_id(SaveData.company.getCompany_id() + "");
 
 
         //template.created_date= new Date();

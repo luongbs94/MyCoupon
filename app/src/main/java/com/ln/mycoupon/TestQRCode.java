@@ -24,7 +24,6 @@ import retrofit2.Response;
 
 public class TestQRCode extends AppCompatActivity {
 
-
     private ImageView qrCodeImageview;
     private String QRcode;
     private final static int WIDTH = 300;
@@ -151,7 +150,7 @@ public class TestQRCode extends AppCompatActivity {
 
     private void addCoupon(final String coupon_id) {
         Coupon template = new Coupon();
-        template.setCompany_id(SaveData.company.company_id + "");
+        template.setCompany_id(SaveData.company.getCompany_id() + "");
         template.setCoupon_id(coupon_id);
         template.setValue(value);
         template.setCoupon_template_id(coupon_template_id);

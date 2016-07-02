@@ -6,10 +6,11 @@ import android.support.v4.app.Fragment;
 
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
+import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
-import com.ln.model.DetailUser;
+import com.ln.model.AccountOflUser;
 import com.ln.model.Message;
 import com.ln.model.NewsOfCompany;
 
@@ -67,10 +68,10 @@ public class RealmController {
     // add likeNews by id news
     public void addLikeNewsByIdNews(String idNews) {
 
-        DetailUser detailUser = MainApplication.sDetailUser;
+        AccountOflUser accountOflUser = MainApplication.sDetailUser;
         mRealm.beginTransaction();
         LikeNews likeNews = mRealm.createObject(LikeNews.class);
-        likeNews.setIdUser(detailUser.getId());
+        likeNews.setIdUser(accountOflUser.getId());
         likeNews.setIdNews(idNews);
         mRealm.commitTransaction();
     }
@@ -79,10 +80,10 @@ public class RealmController {
     // add DeleteNews by id news
     public void addDeleteNewsByIdNews(String idNews) {
 
-        DetailUser detailUser = MainApplication.sDetailUser;
+        AccountOflUser accountOflUser = MainApplication.sDetailUser;
         mRealm.beginTransaction();
         DeleteNews likeNews = mRealm.createObject(DeleteNews.class);
-        likeNews.setIdUser(detailUser.getId());
+        likeNews.setIdUser(accountOflUser.getId());
         likeNews.setIdNews(idNews);
         mRealm.commitTransaction();
     }
@@ -376,4 +377,63 @@ public class RealmController {
         return mRealm.where(CompanyOfCustomer.class)
                 .equalTo(MainApplication.ID_COMPANY, idCompany).findFirst();
     }
+
+    /* =================== END SAVE COMPANY OF CUSTOMER =============*/
+
+    /* =============== START ACCOUNT LOGIN SHOP =================*/
+
+    public void saveAccountShop(Company company) {
+
+        mRealm.beginTransaction();
+        Company company1 = getAccountShop();
+        if (company1 == null) {
+            Company company2 = mRealm.createObject(Company.class);
+            company2.setCompany(company.getCompany_id(), company.getName(), company.getAddress(),
+                    company.getLogo(), company.getCreated_date(), company.getUser_id(), company.getUser1(),
+                    company.getPass1(), company.getUser1_admin(), company.getUser2(),
+                    company.getPass2(), company.getUser2_admin(), company.getIp(),
+                    company.getLogo_link(), company.getCity(), company.getCountry_name());
+        } else {
+            company1.setCompany(company.getCompany_id(), company.getName(), company.getAddress(),
+                    company.getLogo(), company.getCreated_date(), company.getUser_id(), company.getUser1(),
+                    company.getPass1(), company.getUser1_admin(), company.getUser2(),
+                    company.getPass2(), company.getUser2_admin(), company.getIp(),
+                    company.getLogo_link(), company.getCity(), company.getCountry_name());
+        }
+
+        mRealm.commitTransaction();
+    }
+
+    public Company getAccountShop() {
+        return mRealm.where(Company.class).findFirst();
+    }
+
+    /* =============== END SAVE ACCOUNT SHOP    ==================*/
+
+
+     /* =============== START ACCOUNT LOGIN CUSTOMER =================*/
+
+    public void saveAccountCustomer(AccountOflUser account) {
+
+        mRealm.beginTransaction();
+        AccountOflUser accountOflUser = getAccountCustomer();
+        if (accountOflUser == null) {
+            AccountOflUser accountOflUser1 = mRealm.createObject(AccountOflUser.class);
+            accountOflUser1.setAccountOfUser(account.getId(), account.getName(),
+                    account.getAccessToken(), account.getAccessToken());
+        } else {
+            accountOflUser.setAccountOfUser(account.getId(), account.getName(),
+                    account.getAccessToken(), account.getAccessToken());
+        }
+
+        mRealm.commitTransaction();
+    }
+
+    public AccountOflUser getAccountCustomer() {
+        return mRealm.where(AccountOflUser.class).findFirst();
+    }
+
+    /* =============== END SAVE ACCOUNT CUSTOMER    ==================*/
+
+
 }

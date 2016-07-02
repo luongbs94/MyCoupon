@@ -32,7 +32,7 @@ import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.CityOfUser;
 import com.ln.model.CompanyOfCustomer;
-import com.ln.model.DetailUser;
+import com.ln.model.AccountOflUser;
 import com.ln.model.Message;
 import com.ln.model.User;
 import com.ln.mycoupon.R;
@@ -87,11 +87,6 @@ public class CustomerLoginActivity extends AppCompatActivity
         mCallbackManager = CallbackManager.Factory.create();
 
         mBtnFacebook = (Button) findViewById(R.id.btn_facebook_customer);
-//        if (mBtnFacebook != null) {
-//            mBtnFacebook.setReadPermissions(MainApplication.FACEBOOK_PROFILE,
-//                    MainApplication.FACEBOOK_EMAIL);
-//        }
-
         LoginManager.getInstance().registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {
 
@@ -102,35 +97,35 @@ public class CustomerLoginActivity extends AppCompatActivity
                         String id = loginResult.getAccessToken().getUserId();
                         String token = loginResult.getAccessToken().getToken();
 
-
-                        String url = null;
-                        DetailUser detailUser = new DetailUser();
+                        AccountOflUser accountOflUser = new AccountOflUser();
                         if (id != null) {
-                            detailUser.setId(id);
-                            url = getString(R.string.face_image) + id + getString(R.string.face_image_end);
-
+                            accountOflUser.setId(id);
+                            accountOflUser.setPicture(getString(R.string.face_image)
+                                    + id
+                                    + getString(R.string.face_image_end));
                         }
+
                         if (token != null) {
-                            detailUser.setAccessToken(token);
-                            Log.d(TAG, "mProfile " + id + " - " + token);
+                            accountOflUser.setAccessToken(token);
                         }
 
                         if (mProfile != null && mProfile.getName() != null) {
-                            detailUser.setName(mProfile.getName());
+                            accountOflUser.setName(mProfile.getName());
                         }
 
-                        if (url != null) {
-                            detailUser.setPicture(url);
-                            if (detailUser.getId() != null) {
-                                try {
-                                    MainApplication.sDetailUser = detailUser;
-                                    getCompanyByUserId(detailUser.getId());
+                        if (accountOflUser.getId() != null) {
+                            try {
+                                Log.d(TAG, "mProfile " + accountOflUser.getId() + " - " + token);
+                                MainApplication.sDetailUser = accountOflUser;
+                                getCompanyByUserId(accountOflUser.getId());
+//                                getCompanyByUserId("1665217970367185");
+                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
+                                LoginManager.getInstance().logOut();
+                                MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
+                                Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
 
-                                    LoginManager.getInstance().logOut();
-
-                                } catch (NullPointerException e) {
-                                    Log.d(TAG, "Login Facebook Error");
-                                }
+                            } catch (NullPointerException e) {
+                                Log.d(TAG, "Login Facebook Error");
                             }
                         }
                     }
@@ -149,9 +144,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         );
 
      /* ============== START GOOGLE ===============*/
-        mBtnGoogle = (Button)
-
-                findViewById(R.id.btn_google_customer);
+        mBtnGoogle = (Button) findViewById(R.id.btn_google_customer);
 
         GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -203,12 +196,12 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private void loginGoogleSuccess(GoogleSignInAccount account) {
 
-        MainApplication.sDetailUser = new DetailUser(account.getId(), account.getEmail(), "", account.getIdToken());
+        MainApplication.sDetailUser = new AccountOflUser(account.getId(), account.getEmail(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
             MainApplication.sDetailUser.setPicture(account.getPhotoUrl().toString());
         }
 
-        getSnackBar("Login Google Success " + account.getId() + " - " + account.getEmail());
+        Log.d(TAG, "Login Google Success " + account.getId() + " - " + account.getEmail());
         getCompanyByUserId(account.getId());
         updateUserToken(account.getIdToken(), MainApplication.getDeviceToken(), "android");
         MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
@@ -216,7 +209,6 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
-
                     @Override
                     public void onResult(@NonNull Status status) {
                         Log.d(TAG, "Logout Google " + status.toString());
@@ -228,35 +220,35 @@ public class CustomerLoginActivity extends AppCompatActivity
         Snackbar.make(mBtnFacebook, string, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
-    private void getCompanyByUserId(final String userId) {
+    private void getCompanyByUserId(String userId) {
 
-        Call<List<CompanyOfCustomer>> call3 = MainApplication.apiService.getCompaniesByUserId(userId);
+        Call<List<CompanyOfCustomer>> call3 = mCouponAPI.getCompaniesByUserId(userId);
         call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
 
             @Override
             public void onResponse(Call<List<CompanyOfCustomer>> arg0, Response<List<CompanyOfCustomer>> arg1) {
 
-                List<CompanyOfCustomer> templates = arg1.body();
-                if (templates == null) {
-                    SaveData.listCompanyCustomer = new ArrayList<>();
-                } else {
+                List<CompanyOfCustomer> templates = new ArrayList<>();
+                if (arg1.body() != null) {
                     SaveData.listCompanyCustomer = templates;
-                }
-                getNewsOfCustomer();
-
-                if (templates != null) {
                     mRealmController.deleteListCompanyCustomer();
                     mRealmController.addListCompanyCustomer(templates);
+                } else {
+                    Log.d(TAG, "templates " + "null");
                 }
 
-                SaveData.USER_ID = userId;
+//                getNewsOfCustomer();
 
+                Log.d(TAG, "templates " + templates.size());
 
-                String data = gson.toJson(SaveData.listCompanyCustomer);
-                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
-                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
-                MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
-                MainApplication.editor.commit();
+//                SaveData.USER_ID = userId;
+//
+//
+//                String data = gson.toJson(SaveData.listCompanyCustomer);
+//                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
+//                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
+//                MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
+//                MainApplication.editor.commit();
 
 
                 SharedPreferences preferences =
@@ -272,13 +264,14 @@ public class CustomerLoginActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
+                Log.d(TAG, "Login fails" + arg1.toString());
             }
         });
     }
 
     private void updateUserToken(String userId, String token, String device_os) {
 
-        Call<List<User>> call = MainApplication.apiService.updateUserToken(userId, token, device_os);
+        Call<List<User>> call = mCouponAPI.updateUserToken(userId, token, device_os);
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> arg0, Response<List<User>> arg1) {
@@ -351,29 +344,25 @@ public class CustomerLoginActivity extends AppCompatActivity
         });
     }
 
-    public void getNewsOfCustomer() {
+    public void getNewsOfCustomer(String id) {
 
-        if (MainApplication.sDetailUser != null) {
-            Call<List<Message>> call = mCouponAPI.getNewsByUserId(MainApplication.sDetailUser.getId());
-            call.enqueue(new Callback<List<Message>>() {
+        Call<List<Message>> call = mCouponAPI.getNewsByUserId(id);
+        call.enqueue(new Callback<List<Message>>() {
 
-                @Override
-                public void onResponse(Call<List<Message>> arg0, Response<List<Message>> arg1) {
+            @Override
+            public void onResponse(Call<List<Message>> arg0, Response<List<Message>> arg1) {
 
-                    List<Message> mListNews = arg1.body();
-                    if (mListNews != null) {
-                        mRealmController.deleteAllNewsOfCustomer();
-                        mRealmController.addListNewsOfCustomer(mListNews);
-                        Log.d(TAG, "List NewsOfCustomer " + mListNews.size());
-                    }
-
+                if (arg1.body() != null) {
+                    mRealmController.deleteAllNewsOfCustomer();
+                    mRealmController.addListNewsOfCustomer(arg1.body());
+                    Log.d(TAG, "List NewsOfCustomer " + arg1.body().size());
                 }
+            }
 
-                @Override
-                public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
-                    Log.d(TAG, "Failure");
-                }
-            });
-        }
+            @Override
+            public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
+                Log.d(TAG, "Failure");
+            }
+        });
     }
 }

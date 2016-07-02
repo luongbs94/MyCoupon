@@ -2,7 +2,6 @@ package com.ln.fragment.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -120,11 +119,6 @@ public class CouponFragment extends Fragment {
         Log.d(TAG, "setListCompanyCustomer " + mListCompanyCustomer.size());
     }
 
-    private void getSnackBar(String text) {
-        Snackbar.make(mLnLayout, text, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-    }
-
     private void getCompanyByUserId() {
 
         if (MainApplication.sDetailUser != null) {
@@ -152,26 +146,5 @@ public class CouponFragment extends Fragment {
                 }
             });
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//
-//        if (SaveData.updateCoupon == true) {
-//            getCompanyByUserId();
-//            SaveData.updateCoupon = false;
-//        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-//        Gson gson = new Gson();
-//
-//        String data = gson.toJson(SaveData.listCompanyCustomer);
-//        MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
-//        MainApplication.editor.commit();
     }
 }

@@ -132,13 +132,13 @@ public class SettingFragment extends Fragment {
 
         Company company = SaveData.company;
 
-        if (company.name != null) {
-            mEdtNameCompany.setText(company.name);
+        if (company.getName() != null) {
+            mEdtNameCompany.setText(company.getName());
             mTxtNameCompany.setText(company.getName());
         }
 
-        if (company.address != null) {
-            mEdtAddress.setText(company.address);
+        if (company.getAddress() != null) {
+            mEdtAddress.setText(company.getAddress());
             mTxtAddress.setText(company.getAddress());
         }
 
@@ -151,32 +151,32 @@ public class SettingFragment extends Fragment {
                     .into(mImgLogo);
         }
 
-        if (company.user1 != null) {
-            mEdtUser1.setText(company.user1);
+        if (company.getUser1() != null) {
+            mEdtUser1.setText(company.getUser1());
         }
 
-        if (company.user2 != null) {
-            mEdtUser2.setText(company.user2);
+        if (company.getUser2() != null) {
+            mEdtUser2.setText(company.getUser2());
         }
 
-        if (company.pass1 != null) {
-            mEdtPassword1.setText(company.pass1);
+        if (company.getPass1() != null) {
+            mEdtPassword1.setText(company.getPass1());
         }
 
-        if (company.pass2 != null) {
-            mEdtPassword2.setText(company.pass2);
+        if (company.getPass2() != null) {
+            mEdtPassword2.setText(company.getPass2());
         }
 
-        if (company.user1_admin != null) {
-            if (company.user1_admin.equals("1")) {
+        if (company.getUser1_admin() != null) {
+            if (company.getUser1_admin().equals("1")) {
                 checkBox.setChecked(true);
             } else {
                 checkBox.setChecked(false);
             }
         }
 
-        if (company.user2_admin != null) {
-            if (company.user2_admin.equals("1")) {
+        if (company.getUser2_admin() != null) {
+            if (company.getUser2_admin().equals("1")) {
                 checkBox1.setChecked(true);
             } else {
                 checkBox1.setChecked(false);

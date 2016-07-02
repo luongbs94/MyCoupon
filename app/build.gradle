@@ -60,13 +60,11 @@ dependencies {
     compile 'com.yongchun:com.yongchun.imageselector:1.1.0'
     compile 'com.github.citux:datetimepicker:0.2.0'
 
-
     // google play
     compile 'com.google.android.gms:play-services-auth:9.0.0'
     compile 'com.google.firebase:firebase-core:9.0.0'
     compile 'com.google.android.gms:play-services-appinvite:9.0.0'
     compile 'com.google.firebase:firebase-messaging:9.0.0'
-
 
 }
 

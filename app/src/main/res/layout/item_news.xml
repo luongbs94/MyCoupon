@@ -51,6 +51,7 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:text="@string/name_company"
+                    android:textColor="@color/text_title"
                     android:textSize="@dimen/size_18sp"
                     android:textStyle="bold" />
 
@@ -172,15 +173,24 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <ImageView
+            <!--<ImageView-->
+            <!--android:id="@+id/img_like_newx"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="@dimen/size_12"-->
+            <!--android:layout_marginStart="@dimen/size_12"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:padding="@dimen/size_5"-->
+            <!--android:src="@drawable/ic_heart" />-->
+            <TextView
                 android:id="@+id/img_like_newx"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/size_12"
-                android:layout_marginStart="@dimen/size_12"
-                android:contentDescription="@null"
-                android:padding="@dimen/size_5"
-                android:src="@drawable/ic_heart" />
+                android:layout_marginRight="@dimen/size_12"
+                android:text="@string/heart_like"
+                android:textColor="@color/icon_heart"
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="wrap_content"

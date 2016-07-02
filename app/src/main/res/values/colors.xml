@@ -10,11 +10,14 @@
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="white1">#ffffff</color>
-    <color name="colorTextNews">#009688</color>
+    <color name="colorTextNews">#71ACE5</color>
     <color name="background_green">#E0F2F1</color>
     <color name="black_images">#df000000</color>
     <color name="material_grey_400">#ffbdbdbd</color>
     <color name="deep_steal_700">#ff439891</color>
+    <color name="text_title">#878787</color>
+    <color name="icon_heart">#808080</color>
+    <color name="heart_color">#F44336</color>
 
 
 </resources>

@@ -16,7 +16,7 @@ import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.model.CityOfUser;
 import com.ln.model.CompanyOfCustomer;
-import com.ln.model.DetailUser;
+import com.ln.model.AccountOflUser;
 import com.ln.realm.RealmController;
 
 import java.io.ByteArrayOutputStream;
@@ -37,6 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainApplication extends MultiDexApplication {
 
     public static final String ID_COMPANY = "company_id";
+    public static final String OFF_LINE = "OFF_LINE";
     private static MainApplication mInstances;
 
     public static final String POSITION = "POSITION";
@@ -81,14 +82,14 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String FACEBOOK_EMAIL = "email";
     public static final String FACEBOOK_USER_FRIENDS = "user_friends";
-    public static DetailUser sDetailUser;
+    public static AccountOflUser sDetailUser;
 
     private static final String URL_GET_POST = "http://188.166.179.187:3000";
     public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
     public static final String URL_GET_CITY = "http://freegeoip.net";
 
     // login with // STOPSHIP: 6/18/2016
-    public static DetailUser sShopDetail;
+    public static AccountOflUser sShopDetail;
 
     public static boolean sIsAdmin = false;
 
@@ -103,12 +104,6 @@ public class MainApplication extends MultiDexApplication {
     public static final String DURATION = "DURATION";
 
     public static final String COUPON_TEMpLATE_ID = "COUPON_TEMpLATE_ID";
-
-
-    // size screen
-
-    public static float WIDTH_SCREEN;
-    public static float HEIGHT_SCREEN;
 
     public static final String ID_NEWS = "idNews";
     public static final String ID_USER = "idUser";
@@ -126,6 +121,8 @@ public class MainApplication extends MultiDexApplication {
 
     public static CityOfUser cityOfUser;
     public static CityOfUser cityOfCompany;
+
+    public static final String FONT = "fonts/fontawesome-webfont.ttf";
 
     @Override
     public void onCreate() {
@@ -177,6 +174,7 @@ public class MainApplication extends MultiDexApplication {
         Realm.setDefaultConfiguration(realmConfiguration);
 
         mRealmController = RealmController.with(this);
+
     }
 
     public static SharedPreferences getSharedPreferences() {

@@ -1,23 +1,27 @@
 package com.ln.model;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by luongnguyen on 4/1/16.
  * <></>
  */
-public class Company {
+public class Company extends RealmObject {
 
-    public String company_id;
-    public String name;
-    public String address;
-    public String logo;
-    public String created_date;
-    public String user_id;
-    public String user1;
-    public String pass1;
-    public String user1_admin;
-    public String user2;
-    public String pass2;
-    public String user2_admin;
+    @PrimaryKey
+    private String company_id;
+    private String name;
+    private String address;
+    private String logo;
+    private String created_date;
+    private String user_id;
+    private String user1;
+    private String pass1;
+    private String user1_admin;
+    private String user2;
+    private String pass2;
+    private String user2_admin;
     private String ip;
     private String logo_link;
     private String city;
@@ -126,6 +130,43 @@ public class Company {
     public void setLogo_link(String logo_link) {
         this.logo_link = logo_link;
     }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCountry_name() {
+        return country_name;
+    }
+
+    public void setCompany(String company_id, String name, String address,
+                           String logo, String created_date, String user_id,
+                           String user1, String pass1, String user1_admin,
+                           String user2, String pass2, String user2_admin,
+                           String ip, String logo_link, String city,
+                           String country_name) {
+        this.company_id = company_id;
+        this.name = name;
+        this.address = address;
+        this.logo = logo;
+        this.created_date = created_date;
+        this.user_id = user_id;
+        this.user1 = user1;
+        this.pass1 = pass1;
+        this.user1_admin = user1_admin;
+        this.user2 = user2;
+        this.pass2 = pass2;
+        this.user2_admin = user2_admin;
+        this.ip = ip;
+        this.logo_link = logo_link;
+        this.city = city;
+        this.country_name = country_name;
+    }
+
 }
 
 

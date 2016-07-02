@@ -203,7 +203,7 @@ public class AddMessageActivity extends AppCompatActivity implements DatePickerD
         template.setTitle(title);
         Log.d("date", calendar.getTime().toString());
         template.setLast_date(calendar.getTime());
-        template.setCompany_id(SaveData.company.company_id + "");
+        template.setCompany_id(SaveData.company.getCompany_id() + "");
         if (mLinkImageNews != null) {
             template.setImages_link(mLinkImageNews);
         }

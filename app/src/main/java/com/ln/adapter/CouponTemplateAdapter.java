@@ -56,9 +56,11 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
         final CouponTemplate itemCoupon = mListCoupon.get(position);
+        final int intPosition = position;
+
         if (itemCoupon != null) {
             Company company = SaveData.company;
             if (company != null && company.getLogo() != null) {
@@ -101,7 +103,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.menu_delete:
-                                    deleteCouponTemplate(itemCoupon.getCoupon_template_id(), view, position);
+                                    deleteCouponTemplate(itemCoupon.getCoupon_template_id(), view, intPosition);
                                     break;
                                 default:
                                     break;

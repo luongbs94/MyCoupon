@@ -1,20 +1,15 @@
 package com.ln.mycoupon;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
-import com.ln.model.Company;
-import com.ln.model.CompanyOfCustomer;
 import com.ln.model.User;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.customer.CustomerMainActivity;
@@ -22,7 +17,6 @@ import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.mycoupon.shop.ShopMainActivity;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -44,26 +38,39 @@ public class FirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
-        getSizeScreen();
         initViews();
         addEvents();
 
-        if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGIN_SHOP, false)) {
+        SharedPreferences preferences = getSharedPreferences(
+                MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
 
-            String data = MainApplication.sharedPreferences.getString(MainApplication.SHOP_DATA, "");
-            SaveData.company = gson.fromJson(data, Company.class);
+
+        boolean isShop = preferences.getBoolean(MainApplication.LOGIN_SHOP, false);
+        boolean isCustomer = preferences.getBoolean(MainApplication.LOGIN_CLIENT, false);
+
+        Log.d(TAG, "isShop " + isShop);
+        Log.d(TAG, "isCustomer " + isCustomer);
+
+        if (isShop && !isCustomer) {
+
+//            String data = MainApplication.sharedPreferences.getString(MainApplication.SHOP_DATA, "");
+//            SaveData.company = gson.fromJson(data, Company.class);
 
             startActivity(new Intent(FirstActivity.this, ShopMainActivity.class));
             finish();
-        } else if (MainApplication.sharedPreferences.getBoolean(MainApplication.LOGIN_CLIENT, false)) {
-            String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
-            SaveData.listCompanyCustomer = gson.fromJson(data, new TypeToken<List<CompanyOfCustomer>>() {
-            }.getType());
+        } else if (isCustomer && !isShop) {
+//            String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
+//            SaveData.listCompanyCustomer = gson.fromJson(data, new TypeToken<List<CompanyOfCustomer>>() {
+//            }.getType());
+//
+//            if (MainApplication.sDetailUser != null) {
+//                getCompanyByUserId(MainApplication.sDetailUser.getId());
+//                updateUserToken(MainApplication.sDetailUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
+//            }
 
-            if (MainApplication.sDetailUser != null) {
-                getCompanyByUserId(MainApplication.sDetailUser.getId());
-                updateUserToken(MainApplication.sDetailUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
-            }
+            Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         Date now = new Date();
@@ -101,51 +108,59 @@ public class FirstActivity extends AppCompatActivity {
         finish();
     }
 
-    private void getSizeScreen() {
-
-        // get size screen android
-        Display display = getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics();
-        display.getMetrics(outMetrics);
-
-        float density = getResources().getDisplayMetrics().density;
-        MainApplication.HEIGHT_SCREEN = outMetrics.heightPixels / density;
-        MainApplication.WIDTH_SCREEN = outMetrics.widthPixels / density;
-    }
-
 
     private void getCompanyByUserId(final String userId) {
 
-        Call<List<CompanyOfCustomer>> call3 = MainApplication.apiService.getCompaniesByUserId(userId);
-        call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
+//        Call<List<CompanyOfCustomer>> call3 = MainApplication.apiService.getCompaniesByUserId(userId);
+//        call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
+//
+//            @Override
+//            public void onResponse(Call<List<CompanyOfCustomer>> arg0, Response<List<CompanyOfCustomer>> arg1) {
+//
+//                List<CompanyOfCustomer> templates = arg1.body();
+//                if (templates == null) {
+//                    SaveData.listCompanyCustomer = new ArrayList<>();
+//                } else {
+//                    SaveData.listCompanyCustomer = templates;
+//                }
+//
+////                SaveData.USER_ID = userId;
+////
+////                String data = gson.toJson(SaveData.listCompanyCustomer);
+////                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
+////                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
+////                MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
+////                MainApplication.editor.commit();
+//
+//                SharedPreferences preferences =
+//                        getSharedPreferences(MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
+//
+//                SharedPreferences.Editor editor = preferences.edit();
+//                editor.putBoolean(MainApplication.LOGIN_SHOP, false);
+//                editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
+//                editor.apply();
+//
+//                Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
+//            }
+//        });
+        SharedPreferences preferences =
+                getSharedPreferences(MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
 
-            @Override
-            public void onResponse(Call<List<CompanyOfCustomer>> arg0, Response<List<CompanyOfCustomer>> arg1) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(MainApplication.LOGIN_SHOP, false);
+        editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
+        editor.apply();
 
-                List<CompanyOfCustomer> templates = arg1.body();
-                if (templates == null) {
-                    SaveData.listCompanyCustomer = new ArrayList<>();
-                } else {
-                    SaveData.listCompanyCustomer = templates;
-                }
+        Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
+        startActivity(intent);
+        finish();
 
-                SaveData.USER_ID = userId;
-
-                String data = gson.toJson(SaveData.listCompanyCustomer);
-                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
-                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
-                MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
-                MainApplication.editor.commit();
-
-                Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
-            @Override
-            public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
-            }
-        });
     }
 
     private void updateUserToken(String userId, String token, String device_os) {

@@ -30,7 +30,7 @@ import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.interfaces.OnClickLogoutGoogle;
-import com.ln.model.DetailUser;
+import com.ln.model.AccountOflUser;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
@@ -88,12 +88,12 @@ public class CustomerMainActivity extends AppCompatActivity
 
         if (MainApplication.sDetailUser != null) {
 
-            DetailUser detailUser = MainApplication.sDetailUser;
-            if (detailUser.getPicture() != null) {
+            AccountOflUser accountOflUser = MainApplication.sDetailUser;
+            if (accountOflUser.getPicture() != null) {
 
-                Glide.with(this).load(detailUser.getPicture()).into(imageView);
+                Glide.with(this).load(accountOflUser.getPicture()).into(imageView);
             }
-            if (detailUser.getName() != null) {
+            if (accountOflUser.getName() != null) {
                 txt.setText(MainApplication.sDetailUser.getName());
             }
         }

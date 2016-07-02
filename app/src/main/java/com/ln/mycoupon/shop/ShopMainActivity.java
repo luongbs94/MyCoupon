@@ -31,16 +31,19 @@ import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
-import com.ln.model.DetailUser;
+import com.ln.model.AccountOflUser;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
+import com.ln.realm.RealmController;
 
 public class ShopMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnClickSetInformation {
 
     private String TAG = getClass().getSimpleName();
+
+    private RealmController mRealmController;
 
     private int currentPosition = 0;
     private static String sTitle;
@@ -56,8 +59,9 @@ public class ShopMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_main);
 
+        mRealmController = MainApplication.mRealmController;
 
-        Company company = SaveData.getCompany();
+        Company company = mRealmController.getAccountShop();
 
         if (company != null) {
 
@@ -113,7 +117,7 @@ public class ShopMainActivity extends AppCompatActivity
 
         if (company != null) {
 
-            DetailUser detailUser = MainApplication.sShopDetail;
+            AccountOflUser accountOflUser = MainApplication.sShopDetail;
             if (company.getLogo_link() != null) {
                 Glide.with(this).load(company.getLogo_link())
                         .placeholder(R.drawable.ic_logo_blank)
@@ -127,18 +131,19 @@ public class ShopMainActivity extends AppCompatActivity
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(mImageLogo);
                 Log.d(TAG, "Logo " + MainApplication.getStringNoBase64(company.getLogo()));
-            } else if (company.getLogo_link() == null && company.getLogo() == null
-                    && detailUser.getPicture() != null) {
-                Glide.with(this).load(detailUser.getPicture())
-                        .placeholder(R.drawable.ic_logo_blank)
-                        .into(mImageLogo);
-                Log.d(TAG, "Logo " + detailUser.getPicture());
             }
+//            else if (company.getLogo_link() == null && company.getLogo() == null
+//                    && accountOflUser.getPicture() != null) {
+//                Glide.with(this).load(accountOflUser.getPicture())
+//                .placeholder(R.drawable.ic_logo_blank)
+//                .into(mImageLogo);
+//                Log.d(TAG, "Logo " + accountOflUser.getPicture());
+//            }
 
             if (company.getName() != null) {
                 mTxtNameCompany.setText(company.getName());
-            } else if (detailUser != null && detailUser.getName() != null) {
-                mTxtNameCompany.setText(detailUser.getName());
+            } else if (accountOflUser != null && accountOflUser.getName() != null) {
+                mTxtNameCompany.setText(accountOflUser.getName());
             }
             if (company.getAddress() != null) {
                 mTxtAddress.setText(company.getAddress());
