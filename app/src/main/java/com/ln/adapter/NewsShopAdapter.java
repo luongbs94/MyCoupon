@@ -20,12 +20,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
 import com.ln.mycoupon.R;
-import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
 
 import java.text.SimpleDateFormat;
@@ -66,7 +64,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         final NewsOfCompany news = mListNews.get(position);
         final int positionNews = position;
 
-        Company company = SaveData.company;
+//        Company company = SaveData.company;
+        Company company = MainApplication.mRealmController.getAccountShop();
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
             if (company.getLogo() != null) {
@@ -101,20 +100,25 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         }
 
+//        if (news.isLike()) {
+//            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+//        }
         if (news.isLike()) {
-            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+            holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
         }
+
         holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (news.isLike()) {
-                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
-
+//                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
                     news.setLike(false);
                     MainApplication.mRealmController.deleteShopLikeNewsByIdNews(news.getMessage_id());
 
                 } else {
-                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+//                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
                     news.setLike(true);
                     MainApplication.mRealmController.addShopLikeNewsByIdNews(news.getMessage_id());
                 }
@@ -188,7 +192,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImgLogo, mImgShare, mImgDelete;
-        private IconTextView mImgLike;
+        private ImageView mImgLike;
 
         private TextView mTxtTile, mTxtLink;
         private RecyclerView mRecyclerView;
@@ -202,7 +206,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             super(itemView);
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.img_logo_news);
-            mImgLike = (IconTextView) itemView.findViewById(R.id.img_like_newx);
+            mImgLike = (ImageView) itemView.findViewById(R.id.img_like_newx);
             mImgShare = (ImageView) itemView.findViewById(R.id.img_share_newx);
             mImgDelete = (ImageView) itemView.findViewById(R.id.img_delete_news);
 
