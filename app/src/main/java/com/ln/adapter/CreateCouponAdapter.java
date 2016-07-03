@@ -53,7 +53,7 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
-        holder.mTxtDate.setText(fmt.format(coupon.getCreated_date()));
+//        holder.mTxtDate.setText(fmt.format(coupon.getCreated_date()));
     }
 
     @Override

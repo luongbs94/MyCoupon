@@ -57,9 +57,6 @@ public interface LoveCouponAPI {
     @POST("/addMessage")
     Call<Message> addMessage(@Body Message template);
 
-//    @POST("/deleteMessage")
-//    Call<Message> deleteMessage(@Body Message template);
-
     @POST("/addCoupon")
     Call<Coupon> addCoupon(@Body Coupon template);
 

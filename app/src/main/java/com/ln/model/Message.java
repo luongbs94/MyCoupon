@@ -25,17 +25,12 @@ public class Message extends RealmObject {
     }
 
 
-    //    public Message(String message_id, String content, Date created_date,
-//                   String company_id, Date last_date, String title, String link,
-//                   String images_link, String logo, String logo_link, String name) {
     public Message(String message_id, String content,
                    String company_id, String title, String link,
                    String images_link, String logo, String logo_link, String name) {
         this.message_id = message_id;
         this.content = content;
-//        this.created_date = created_date;
         this.company_id = company_id;
-//        this.last_date = last_date;
         this.title = title;
         this.link = link;
         this.images_link = images_link;
@@ -136,17 +131,12 @@ public class Message extends RealmObject {
         isDelete = delete;
     }
 
-    //    public void setNews(String message_id, String content, Date created_date,
-//                        String company_id, Date last_date, String title, String link,
-//                        String images_link, String logo, String logo_link, String name) {
     public void setNews(String message_id, String content,
                         String company_id, String title, String link,
                         String images_link, String logo, String logo_link, String name) {
         this.message_id = message_id;
         this.content = content;
-//        this.created_date = created_date;
         this.company_id = company_id;
-//        this.last_date = last_date;
         this.title = title;
         this.link = link;
         this.images_link = images_link;

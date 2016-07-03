@@ -24,6 +24,9 @@ public class CompanyOfCustomer extends RealmObject {
     public CompanyOfCustomer(String company_id, String logo,
                              String logo_link, String name,
                              String address, RealmList<Coupon> coupon) {
+//    public CompanyOfCustomer(String company_id, String logo,
+//                             String logo_link, String name,
+//                             String address) {
         this.company_id = company_id;
         this.logo = logo;
         this.logo_link = logo_link;
@@ -65,20 +68,20 @@ public class CompanyOfCustomer extends RealmObject {
         this.logo = logo;
     }
 
-    public RealmList<Coupon> getCoupon() {
-        return coupon;
-    }
-
-    public void setCoupon(RealmList<Coupon> coupon) {
-        this.coupon = coupon;
-    }
-
     public String getLogo_link() {
         return logo_link;
     }
 
     public void setLogo_link(String logo_link) {
         this.logo_link = logo_link;
+    }
+
+    public RealmList<Coupon> getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(RealmList<Coupon> coupon) {
+        this.coupon = coupon;
     }
 
     public void setCompanyCustomer(String company_id, String logo,

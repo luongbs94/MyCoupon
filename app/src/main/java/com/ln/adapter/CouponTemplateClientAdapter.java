@@ -53,10 +53,10 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
                 SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
-                holder.couponDate.setText(fmt.format(item.getCreated_date()));
+//                holder.couponDate.setText(fmt.format(item.getCreated_date()));
 
-                String dayLeft = MainApplication.dayLeft(item.getCreated_date(), item.getDuration()) + "";
-                holder.dayLeft.setText(dayLeft + " days");
+//                String dayLeft = MainApplication.dayLeft(item.getCreated_date(), item.getDuration()) + "";
+//                holder.dayLeft.setText(dayLeft + " days");
 
             }catch (Exception e){
 

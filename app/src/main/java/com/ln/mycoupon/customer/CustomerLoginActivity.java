@@ -1,7 +1,6 @@
 package com.ln.mycoupon.customer;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -116,7 +115,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                             try {
                                 MainApplication.sDetailUser = accountOflUser;
                                 getCompanyByUserId(accountOflUser.getId());
-                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
+//                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
 
                                 LoginManager.getInstance().logOut();
                                 MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
@@ -220,48 +219,27 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private void getCompanyByUserId(final String id) {
 
-        Call<List<CompanyOfCustomer>> call3 = mCouponAPI.getCompaniesByUserId(id);
-        call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
-
+        Call<List<CompanyOfCustomer>> companyOfCustomer = mCouponAPI.getCompaniesByUserId(id);
+        companyOfCustomer.enqueue(new Callback<List<CompanyOfCustomer>>() {
             @Override
-            public void onResponse(Call<List<CompanyOfCustomer>> arg0, Response<List<CompanyOfCustomer>> arg1) {
-
-                if (arg1.body() != null) {
-                    SaveData.listCompanyCustomer = arg1.body();
+            public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
+                if (response.body() != null) {
+                    SaveData.listCompanyCustomer = response.body();
                     mRealmController.deleteListCompanyCustomer();
-                    mRealmController.addListCompanyCustomer(arg1.body());
+                    mRealmController.addListCompanyCustomer(response.body());
+                    Log.d(TAG, "getCompanyByUserId " + response.body().size());
                 } else {
-                    Log.d(TAG, "templates " + "null");
+                    Log.d(TAG, "getCompanyByUserId " + "null");
                 }
 
                 getNewsOfCustomer(id);
-
-                Log.d(TAG, "templates " + arg1.body().size());
-
-//                SaveData.USER_ID = userId;
-//
-//
-//                String data = gson.toJson(SaveData.listCompanyCustomer);
-//                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
-//                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
-//                MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
-//                MainApplication.editor.commit();
-
-
-                SharedPreferences preferences =
-                        getSharedPreferences(MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
-
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(MainApplication.LOGIN_SHOP, false);
-                editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
-                editor.apply();
-
                 start();
+
             }
 
             @Override
-            public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
-                Log.d(TAG, "Login fails" + arg1.toString());
+            public void onFailure(Call<List<CompanyOfCustomer>> call, Throwable t) {
+                Log.d(TAG, "getCompanyByUserId " + "onFailure " + t.toString());
             }
         });
     }

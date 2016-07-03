@@ -323,7 +323,7 @@ public class RealmController {
             for (Coupon coupon : companyOfCustomer.getCoupon()) {
                 Coupon coupon1 = mRealm.createObject(Coupon.class);
                 coupon1.setCoupon(coupon.getCoupon_id(), coupon.getUser_id(),
-                        coupon.getCoupon_template_id(), coupon.getCreated_date(), coupon.getUsed_date(),
+                        coupon.getCoupon_template_id(), coupon.getUsed_date(),
                         coupon.getCompany_id(), coupon.getValue(), coupon.getDuration(), coupon.getCode(),
                         coupon.getUser_name(), coupon.getUser_social(), coupon.getUser_image_link());
 
