@@ -59,10 +59,6 @@ public class RealmController {
         return instance;
     }
 
-    public Realm getmRealm() {
-        return mRealm;
-    }
-
     /*================= START LIKE NEWS USER ================*/
 
     // add likeNews by id news
@@ -221,13 +217,6 @@ public class RealmController {
     /*================== END SHOP LIKE NEWS ====================*/
 
 
-    public void deleteAll() {
-        mRealm.beginTransaction();
-        mRealm.deleteAll();
-        mRealm.commitTransaction();
-    }
-
-
     /* ====================== START SAVE NEWS  SHOP =================*/
 
     public void addListNewsOfCompany(List<NewsOfCompany> listMessage) {
@@ -236,14 +225,14 @@ public class RealmController {
         for (NewsOfCompany message : listMessage) {
             NewsOfCompany newsOfCompany = mRealm.createObject(NewsOfCompany.class);
             newsOfCompany.setNews(message.getMessage_id(),
-                    message.getContent(), message.getCreated_date(),
-                    message.getCompany_id(), message.getLast_date(),
+                    message.getContent(),
+                    message.getCompany_id(),
                     message.getTitle(), message.getLink(), message.getImages_link());
         }
         mRealm.commitTransaction();
     }
 
-    public void deleteAllNewsOfCompany() {
+    public void deleteListNewsOfCompany() {
         mRealm.beginTransaction();
         RealmResults<NewsOfCompany> listMessages = getListNewsOfCompany();
         for (NewsOfCompany message : listMessages) {
@@ -310,8 +299,10 @@ public class RealmController {
     public void deleteCouponTemplate() {
         mRealm.beginTransaction();
         List<CouponTemplate> couponTemplateList = getListCouponTemplate();
-        for (CouponTemplate coupon : couponTemplateList) {
-            coupon.deleteFromRealm();
+        if (couponTemplateList != null) {
+            for (CouponTemplate coupon : couponTemplateList) {
+                coupon.deleteFromRealm();
+            }
         }
         mRealm.commitTransaction();
     }

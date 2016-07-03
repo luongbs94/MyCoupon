@@ -49,11 +49,11 @@ public class NewsOfLike extends RealmObject {
         content = message.getContent();
         isLike = like;
         company_id = message.getCompany_id();
-        created_date = message.getCreated_date();
+//        created_date = message.getCreated_date();
         link = message.getLink();
         images_link = message.getImages_link();
         title = message.getTitle();
-        last_date = message.getLast_date();
+//        last_date = message.getLast_date();
     }
 
     public boolean isLike() {
