@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.android.datetimepicker.date.DatePickerDialog;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.ItemImage;
 import com.ln.model.Message;
@@ -54,7 +53,7 @@ import retrofit2.Response;
  * Created by luongnguyen on 4/7/16.
  * <></>
  */
-public class AddMessageActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
+public class AddMessageActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private String TAG = getClass().getSimpleName();
 
@@ -88,8 +87,6 @@ public class AddMessageActivity extends AppCompatActivity implements DatePickerD
     TextView lastDate;
     private Calendar calendar;
     private DateFormat dateFormat;
-
-
 
 
     @Override
@@ -129,7 +126,6 @@ public class AddMessageActivity extends AppCompatActivity implements DatePickerD
 
 
         mRecyclerViewImages = (RecyclerView) findViewById(R.id.rec_select_images);
-
 
 
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -202,8 +198,8 @@ public class AddMessageActivity extends AppCompatActivity implements DatePickerD
         template.setLink(link);
         template.setTitle(title);
         Log.d("date", calendar.getTime().toString());
-        template.setLast_date(calendar.getTime());
-        template.setCompany_id(SaveData.company.getCompany_id() + "");
+//        template.setLast_date(calendar.getTime());
+        template.setCompany_id(MainApplication.mRealmController.getAccountShop().getCompany_id() + "");
         if (mLinkImageNews != null) {
             template.setImages_link(mLinkImageNews);
         }
@@ -397,7 +393,6 @@ public class AddMessageActivity extends AppCompatActivity implements DatePickerD
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                Log.e(TAG, t.getMessage());
             }
         });
     }

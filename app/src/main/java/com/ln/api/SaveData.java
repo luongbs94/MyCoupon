@@ -1,6 +1,5 @@
 package com.ln.api;
 
-import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
 
 import java.util.List;
@@ -11,19 +10,9 @@ import java.util.List;
  */
 public class SaveData {
 
-    public static Company company;
-
     public static List<CompanyOfCustomer> listCompanyCustomer;
     public static boolean updateCoupon = false;
 
-
-    public static Company getCompany() {
-        return company;
-    }
-
-    public static void setCompany(Company company1) {
-        company = company1;
-    }
 
     public static String web_token = "";
     public static String USER_ID = "";

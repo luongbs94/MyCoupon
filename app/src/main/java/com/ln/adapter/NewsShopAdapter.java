@@ -64,7 +64,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         final NewsOfCompany news = mListNews.get(position);
         final int positionNews = position;
 
-//        Company company = SaveData.company;
         Company company = MainApplication.mRealmController.getAccountShop();
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());

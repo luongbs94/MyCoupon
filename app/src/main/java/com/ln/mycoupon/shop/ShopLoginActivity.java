@@ -29,7 +29,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CityOfUser;
@@ -233,7 +232,6 @@ public class ShopLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
 
                 if (response.body() != null) {
-                    SaveData.company = response.body().get(0);
                     loginSuccess(response.body().get(0));
                 } else {
                     Log.d(TAG, "getCompanyProfileSocial " + "null");
@@ -390,8 +388,8 @@ public class ShopLoginActivity extends AppCompatActivity
                     MainApplication.cityOfCompany = response.body();
 
                     Log.d(TAG, "City : " + MainApplication.cityOfCompany.getCity());
-                    if (SaveData.company != null) {
-                        mCompanyLocation = new CompanyLocation(SaveData.company.getCompany_id(),
+                    if (MainApplication.mRealmController.getAccountShop() != null) {
+                        mCompanyLocation = new CompanyLocation(MainApplication.mRealmController.getAccountShop().getCompany_id(),
                                 MainApplication.cityOfCompany.getCity(),
                                 MainApplication.cityOfCompany.getCountry_name());
 

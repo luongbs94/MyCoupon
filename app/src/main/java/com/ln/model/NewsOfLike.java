@@ -35,13 +35,11 @@ public class NewsOfLike extends RealmObject {
         setContent(message.getContent());
         setLike(isLike);
         setCompany_id(message.getCompany_id());
-        setCreated_date(message.getCreated_date());
         setLink(message.getLink());
         setImages_link(message.getImages_link());
         setName(message.getName());
         setLogo(message.getLogo());
         setTitle(message.getTitle());
-        setLast_date(message.getLast_date());
     }
 
     public NewsOfLike(NewsOfCompany message, boolean like) {

@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.support.v4.app.Fragment;
 
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
+import com.ln.model.AccountOflUser;
 import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
-import com.ln.model.AccountOflUser;
 import com.ln.model.Message;
 import com.ln.model.NewsOfCompany;
 
@@ -174,7 +173,7 @@ public class RealmController {
 
         mRealm.beginTransaction();
         ShopLikeNews likeNews = mRealm.createObject(ShopLikeNews.class);
-        likeNews.setIdCompany(SaveData.company.getCompany_id());
+        likeNews.setIdCompany(getAccountShop().getCompany_id());
         likeNews.setIdNews(idNews);
         mRealm.commitTransaction();
     }
@@ -256,8 +255,8 @@ public class RealmController {
         for (Message message : listMessage) {
             Message newOfCustomer = mRealm.createObject(Message.class);
             newOfCustomer.setNews(message.getMessage_id(),
-                    message.getContent(), message.getCreated_date(),
-                    message.getCompany_id(), message.getLast_date(),
+                    message.getContent(),
+                    message.getCompany_id(),
                     message.getTitle(), message.getLink(), message.getImages_link(),
                     message.getLogo(), message.getLogo_link(), message.getName());
         }

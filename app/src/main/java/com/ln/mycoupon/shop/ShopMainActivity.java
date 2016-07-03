@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.fragment.shop.CouponFragment;
 import com.ln.fragment.shop.HistoryFragment;
@@ -30,8 +29,8 @@ import com.ln.fragment.shop.NewsFragment;
 import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.interfaces.OnClickSetInformation;
-import com.ln.model.Company;
 import com.ln.model.AccountOflUser;
+import com.ln.model.Company;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.FirstActivity;
@@ -225,7 +224,7 @@ public class ShopMainActivity extends AppCompatActivity
                 MainApplication.editor.commit();
 
                 if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_NORMAL) {
-                    SaveData.company = null;
+
                 } else {
                     MainApplication.sShopDetail = null;
                 }

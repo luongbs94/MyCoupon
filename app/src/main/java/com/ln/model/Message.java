@@ -1,7 +1,5 @@
 package com.ln.model;
 
-import java.util.Date;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -18,20 +16,26 @@ public class Message extends RealmObject {
     private String logo_link;
     private String name;
 
-    private Date last_date, created_date;
+    private boolean isLike;
+    private boolean isDelete;
+
+//    private Date last_date, created_date;
 
     public Message() {
     }
 
 
-    public Message(String message_id, String content, Date created_date,
-                   String company_id, Date last_date, String title, String link,
+    //    public Message(String message_id, String content, Date created_date,
+//                   String company_id, Date last_date, String title, String link,
+//                   String images_link, String logo, String logo_link, String name) {
+    public Message(String message_id, String content,
+                   String company_id, String title, String link,
                    String images_link, String logo, String logo_link, String name) {
         this.message_id = message_id;
         this.content = content;
-        this.created_date = created_date;
+//        this.created_date = created_date;
         this.company_id = company_id;
-        this.last_date = last_date;
+//        this.last_date = last_date;
         this.title = title;
         this.link = link;
         this.images_link = images_link;
@@ -89,13 +93,6 @@ public class Message extends RealmObject {
         this.images_link = images_link;
     }
 
-    public Date getLast_date() {
-        return last_date;
-    }
-
-    public void setLast_date(Date last_date) {
-        this.last_date = last_date;
-    }
 
     public String getLogo() {
         return logo;
@@ -113,13 +110,6 @@ public class Message extends RealmObject {
         this.name = name;
     }
 
-    public Date getCreated_date() {
-        return created_date;
-    }
-
-    public void setCreated_date(Date created_date) {
-        this.created_date = created_date;
-    }
 
     public String getLogo_link() {
         return logo_link;
@@ -130,14 +120,33 @@ public class Message extends RealmObject {
     }
 
 
-    public void setNews(String message_id, String content, Date created_date,
-                        String company_id, Date last_date, String title, String link,
+    public boolean isLike() {
+        return isLike;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
+    }
+
+    //    public void setNews(String message_id, String content, Date created_date,
+//                        String company_id, Date last_date, String title, String link,
+//                        String images_link, String logo, String logo_link, String name) {
+    public void setNews(String message_id, String content,
+                        String company_id, String title, String link,
                         String images_link, String logo, String logo_link, String name) {
         this.message_id = message_id;
         this.content = content;
-        this.created_date = created_date;
+//        this.created_date = created_date;
         this.company_id = company_id;
-        this.last_date = last_date;
+//        this.last_date = last_date;
         this.title = title;
         this.link = link;
         this.images_link = images_link;

@@ -14,7 +14,6 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Coupon;
 
@@ -150,7 +149,7 @@ public class TestQRCode extends AppCompatActivity {
 
     private void addCoupon(final String coupon_id) {
         Coupon template = new Coupon();
-        template.setCompany_id(SaveData.company.getCompany_id() + "");
+        template.setCompany_id(MainApplication.mRealmController.getAccountShop().getCompany_id() + "");
         template.setCoupon_id(coupon_id);
         template.setValue(value);
         template.setCoupon_template_id(coupon_template_id);

@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.android.datetimepicker.date.DatePickerDialog;
 import com.ln.adapter.CreateCouponAdapter;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.Coupon;
@@ -33,7 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CreateFragment extends Fragment  implements DatePickerDialog.OnDateSetListener{
+public class CreateFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private LoveCouponAPI mApiServices;
 
@@ -51,8 +50,6 @@ public class CreateFragment extends Fragment  implements DatePickerDialog.OnDate
     private SwipeRefreshLayout swipeContainer;
     private Menu menu1;
     TextView textView;
-
-
 
 
     public CreateFragment() {
@@ -117,7 +114,7 @@ public class CreateFragment extends Fragment  implements DatePickerDialog.OnDate
 
     private void getCreateCoupon() {
 
-        Company company = SaveData.company;
+        Company company = MainApplication.mRealmController.getAccountShop();
         mListCoupon.clear();
         Call<ArrayList<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getCompany_id() + "", utc1, utc2);
         listCoupon.enqueue(new Callback<ArrayList<Coupon>>() {
@@ -129,10 +126,10 @@ public class CreateFragment extends Fragment  implements DatePickerDialog.OnDate
                 mRecyclerCreate.setAdapter(mCouponAdapter);
                 swipeContainer.setRefreshing(false);
 
-                if(mListCoupon.size() > 0 ){
+                if (mListCoupon.size() > 0) {
                     mRecyclerCreate.setVisibility(View.VISIBLE);
                     textView.setVisibility(View.GONE);
-                }else{
+                } else {
                     mRecyclerCreate.setVisibility(View.GONE);
                     textView.setVisibility(View.VISIBLE);
                 }
@@ -184,7 +181,7 @@ public class CreateFragment extends Fragment  implements DatePickerDialog.OnDate
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
         item.setTitle(fmt.format(calendar.getTime()));
 
-        calendar.add(Calendar.DAY_OF_MONTH,1);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
         utc2 = calendar.getTime().toString();
         getCreateCoupon();
 
