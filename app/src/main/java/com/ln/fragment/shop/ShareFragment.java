@@ -6,11 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -90,20 +88,28 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
     }
 
     private void onClickSendMessageToEmail() {
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
+//        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+//        emailIntent.setData(Uri.parse("mailto:" + MainApplication.EMAIL_LOVE_COUPON));
+//        emailIntent.setType("text/plain");
+//
+//        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{MainApplication.EMAIL_LOVE_COUPON});
+//        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+//        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+//
+//        try {
+//            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+//            Log.d(TAG, "onClickSendMessageToEmail " + "Finished sending email...");
+//        } catch (android.content.ActivityNotFoundException ex) {
+//            Toast.makeText(getActivity(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+//        }
 
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{MainApplication.EMAIL_LOVE_COUPON});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
-
-        try {
-            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-            Log.d(TAG, "onClickSendMessageToEmail " + "Finished sending email...");
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getActivity(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
-        }
+        Intent intent = new Intent(Intent.ACTION_SENDTO); // it's not ACTION_SEND
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "");
+        intent.putExtra(Intent.EXTRA_TEXT, "");
+        intent.setData(Uri.parse("mailto:" + MainApplication.EMAIL_LOVE_COUPON)); // or just "mailto:" for blank
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
+        startActivity(intent);
     }
 
     private void onClickVisitToWebsite() {

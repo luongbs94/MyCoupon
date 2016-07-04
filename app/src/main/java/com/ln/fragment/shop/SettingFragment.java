@@ -370,7 +370,7 @@ public class SettingFragment extends Fragment {
         if (text.equals(text2)) {
             textInputLayout.setError(getString(R.string.user1OtherUser2));
             requestFocus(editText);
-        } else if (isExistsAccount1(company.getUser_id(), text) == 1) {
+        } else if (isExistsAccount1(company.getUser_id(), text) == 0) {
             textInputLayout.setError(getString(R.string.account_exists));
             requestFocus(editText);
         } else {
