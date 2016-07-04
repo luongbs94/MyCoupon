@@ -15,20 +15,20 @@ public class IconTextView extends TextView {
 
     public IconTextView(Context context) {
         super(context);
-        setTypeface(context);
+        setTypefaces(context);
     }
 
     public IconTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setTypeface(context);
+        setTypefaces(context);
     }
 
     public IconTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setTypeface(context);
+        setTypefaces(context);
     }
 
-    private void setTypeface(Context context) {
+    private void setTypefaces(Context context) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), MainApplication.FONT);
         setTypeface(typeface);
     }

@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -57,22 +56,22 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private String TAG = getClass().getSimpleName();
 
-
-    private Button mBtnLogin;
-    private Button mBtnLoginFacebook;
-    private EditText mEdtUsername, mEdtPassword;
-    private LoveCouponAPI apiService;
-    private GoogleApiClient mGoogleApiClient;
-
-    private Button mBtnGooglePlus;
-    private CallbackManager mCallbackManager;
-
-    private LinearLayout mLinearLayout;
     private LoveCouponAPI mCouponAPI;
     private LoveCouponAPI mCouponAPI2;
 
-    private CompanyLocation mCompanyLocation;
     private RealmController mRealmController;
+
+    private Button mBtnLogin;
+    private Button mBtnLoginFacebook;
+    private Button mBtnGooglePlus;
+
+    private EditText mEdtUsername, mEdtPassword;
+
+    private GoogleApiClient mGoogleApiClient;
+
+    private CallbackManager mCallbackManager;
+
+    private CompanyLocation mCompanyLocation;
 
 
     @Override
@@ -93,9 +92,8 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void initViews() {
 
-        apiService = MainApplication.getAPI();
 
-        getSupportActionBar().setTitle(R.string.login);
+        setTitle(R.string.login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mBtnLogin = (Button) findViewById(R.id.btn_login);
@@ -105,7 +103,6 @@ public class ShopLoginActivity extends AppCompatActivity
         /* ================== START FACEBOOK ==================*/
 
         mBtnLoginFacebook = (Button) findViewById(R.id.btn_login_facebook);
-        mLinearLayout = (LinearLayout) findViewById(R.id.linear_login_shop);
 
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
@@ -120,6 +117,7 @@ public class ShopLoginActivity extends AppCompatActivity
                 Log.d(TAG, "mProfile " + id + " - " + token);
 
                 AccountOflUser accountOflUser = new AccountOflUser();
+
                 if (id != null) {
                     String url = getString(R.string.face_image) + id + getString(R.string.face_image_end);
                     accountOflUser.setId(id);
@@ -136,6 +134,7 @@ public class ShopLoginActivity extends AppCompatActivity
                     if (accountOflUser.getId() != null) {
                         MainApplication.sShopDetail = accountOflUser;
                         getCompanyProfileSocial(accountOflUser.getId());
+                        MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
                         LoginManager.getInstance().logOut();
                     }
 
@@ -157,9 +156,8 @@ public class ShopLoginActivity extends AppCompatActivity
 
         /* ===================== END FACEBOOK ====================*/
 
-
-
         /*=============== START GOOGLE ===========*/
+        mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
 
         GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -171,7 +169,6 @@ public class ShopLoginActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
                 .build();
 
-        mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
         /* ===================== END GOOGLE ==================*/
     }
 
@@ -193,7 +190,7 @@ public class ShopLoginActivity extends AppCompatActivity
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
-                loginGoogleSuccess(account);
+                signInGoogleSuccess(account);
             } else {
                 getSnackBar(getString(R.string.login_google_fails));
             }
@@ -203,13 +200,12 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void getCompanyProfile(String user, String pass) {
 
-        Call<List<Company>> call = apiService.getCompanyProfile(user, pass, null);
+        Call<List<Company>> call = mCouponAPI.getCompanyProfile(user, pass, null);
         call.enqueue(new Callback<List<Company>>() {
             @Override
             public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
 
                 if (response.body() != null) {
-//                    SaveData.company = response.body().get(0);
                     loginSuccess(response.body().get(0));
                     Log.d(TAG, "getCompanyProfile " + response.body().get(0).getCompany_id());
                 } else {
@@ -226,7 +222,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void getCompanyProfileSocial(String user_id) {
 
-        Call<List<Company>> call = apiService.getCompanyProfileSocial(user_id);
+        Call<List<Company>> call = mCouponAPI.getCompanyProfileSocial(user_id);
         call.enqueue(new Callback<List<Company>>() {
             @Override
             public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
@@ -250,16 +246,6 @@ public class ShopLoginActivity extends AppCompatActivity
         mRealmController.saveAccountShop(company);
         Log.d(TAG, "Company " + company.getCompany_id());
 
-//        MainApplication.sIdCompany = SaveData.company.getCompany_id();
-//
-//                Gson gson = new Gson();
-//
-//                String data = gson.toJson(SaveData.company);
-//                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, true);
-//                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
-//                MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
-//                MainApplication.editor.commit();
-
 
         SharedPreferences preferences = getSharedPreferences(
                 MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
@@ -279,7 +265,7 @@ public class ShopLoginActivity extends AppCompatActivity
     }
 
     private void getSnackBar(String string) {
-        Snackbar.make(mLinearLayout, string, Snackbar.LENGTH_LONG)
+        Snackbar.make(mBtnLogin, string, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
 
@@ -295,12 +281,14 @@ public class ShopLoginActivity extends AppCompatActivity
     }
 
     // integrator login google save state google login
-    private void loginGoogleSuccess(GoogleSignInAccount account) {
+    private void signInGoogleSuccess(GoogleSignInAccount account) {
 
         MainApplication.sShopDetail = new AccountOflUser(account.getId(), account.getEmail(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
             MainApplication.sShopDetail.setPicture(account.getPhotoUrl().toString());
         }
+        getCompanyProfileSocial(account.getId());
+        onClickLogoutGoogle();
         getSnackBar("Login Google Success ");
         Log.d(TAG, "Login Google " + account.getId() + " - " + account.getEmail());
         MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_GOOGLE;

@@ -23,6 +23,7 @@ import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
+import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
 
 import java.util.ArrayList;
@@ -50,16 +51,17 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(mContext)
-                .inflate(R.layout.item_news, parent, false));
+                .inflate(R.layout.item_news_customer, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final Message news = mListNews.get(position);
         final int positionNews = position;
+        final Message news = mListNews.get(positionNews);
 
         CompanyOfCustomer company = SaveData.getCompany(news.getCompany_id());
+
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
             if (company.getLogo() != null) {
@@ -88,27 +90,27 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
         }
 
-//        if (news.isLike()) {
-//            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-//        }
-
         if (news.isLike()) {
-            holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
         }
+
+//        if (news.isLike()) {
+//            holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+//        }
 
         holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (news.isLike()) {
-//                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
-                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
+                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+//                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
                     news.setLike(false);
                     MainApplication.mRealmController.deleteLikeNewsById(news.getMessage_id());
 
 
                 } else {
-//                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+//                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
                     news.setLike(true);
                     MainApplication.mRealmController.addLikeNewsByIdNews(news.getMessage_id());
 
@@ -128,13 +130,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                         .setImageUrl(uri)
                         .build();
 
+                mShareDialog.show(content);
 
-                try {
-                    mShareDialog.show(content);
-
-                } catch (Exception e) {
-
-                }
 
             }
         });
@@ -181,9 +178,9 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView mImgLogo, mImgShare, mImgDelete;
+        private ImageView mImgLogo;
         private TextView mTxtTile, mTxtLink;
-        private ImageView mImgLike;
+        private IconTextView mImgLike, mImgShare, mImgDelete;
         private RecyclerView mRecyclerView;
 
         private MyTextView mTxtTime, mTxtContent;
@@ -194,9 +191,9 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             super(itemView);
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.img_logo_news);
-            mImgLike = (ImageView) itemView.findViewById(R.id.img_like_newx);
-            mImgShare = (ImageView) itemView.findViewById(R.id.img_share_newx);
-            mImgDelete = (ImageView) itemView.findViewById(R.id.img_delete_news);
+            mImgLike = (IconTextView) itemView.findViewById(R.id.img_like_newx);
+            mImgShare = (IconTextView) itemView.findViewById(R.id.img_share_newx);
+            mImgDelete = (IconTextView) itemView.findViewById(R.id.img_delete_news);
 
             mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_news);
             mTxtTime = (MyTextView) itemView.findViewById(R.id.txt_date_news);
@@ -211,9 +208,6 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             mLinearLike = (LinearLayout) itemView.findViewById(R.id.linear_like);
             mLinearShare = (LinearLayout) itemView.findViewById(R.id.linear_share);
             mLinearDelete = (LinearLayout) itemView.findViewById(R.id.linear_delete);
-
-//            Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), MainApplication.FONT);
-//            mImgLike.setTypeface(typeface);
         }
     }
 }

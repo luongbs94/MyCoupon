@@ -1,11 +1,7 @@
 package com.ln.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+public class Message {
 
-public class Message extends RealmObject {
-
-    @PrimaryKey
     private String message_id;
     private String content;
     private String company_id;
@@ -21,30 +17,12 @@ public class Message extends RealmObject {
 
 //    private Date last_date, created_date;
 
+
     public Message() {
-    }
-
-
-    public Message(String message_id, String content,
-                   String company_id, String title, String link,
-                   String images_link, String logo, String logo_link, String name) {
-        this.message_id = message_id;
-        this.content = content;
-        this.company_id = company_id;
-        this.title = title;
-        this.link = link;
-        this.images_link = images_link;
-        this.logo = logo;
-        this.logo_link = logo_link;
-        this.name = name;
     }
 
     public String getLink() {
         return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
     }
 
 
@@ -52,25 +30,16 @@ public class Message extends RealmObject {
         return message_id;
     }
 
-    public void setMessage_id(String message_id) {
-        this.message_id = message_id;
-    }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public String getCompany_id() {
         return company_id;
     }
 
-    public void setCompany_id(String company_id) {
-        this.company_id = company_id;
-    }
 
     public String getTitle() {
         return title;
@@ -82,10 +51,6 @@ public class Message extends RealmObject {
 
     public String getImages_link() {
         return images_link;
-    }
-
-    public void setImages_link(String images_link) {
-        this.images_link = images_link;
     }
 
 
@@ -106,15 +71,6 @@ public class Message extends RealmObject {
     }
 
 
-    public String getLogo_link() {
-        return logo_link;
-    }
-
-    public void setLogo_link(String logo_link) {
-        this.logo_link = logo_link;
-    }
-
-
     public boolean isLike() {
         return isLike;
     }
@@ -131,18 +87,44 @@ public class Message extends RealmObject {
         isDelete = delete;
     }
 
-    public void setNews(String message_id, String content,
-                        String company_id, String title, String link,
-                        String images_link, String logo, String logo_link, String name) {
+    public void setMessage_id(String message_id) {
         this.message_id = message_id;
+    }
+
+    public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setCompany_id(String company_id) {
         this.company_id = company_id;
-        this.title = title;
+    }
+
+    public void setLink(String link) {
         this.link = link;
+    }
+
+    public void setImages_link(String images_link) {
         this.images_link = images_link;
-        this.logo = logo;
+    }
+
+    public String getLogo_link() {
+        return logo_link;
+    }
+
+    public void setLogo_link(String logo_link) {
         this.logo_link = logo_link;
-        this.name = name;
+    }
+
+    public  Message(NewsOfCustomer news) {
+        this.message_id = news.getMessage_id();
+        this.content = news.getContent();
+        this.company_id = news.getCompany_id();
+        this.title = news.getTitle();
+        this.link = news.getLink();
+        this.images_link = news.getImages_link();
+        this.logo = news.getLogo();
+        this.logo_link = news.getLogo_link();
+        this.name = news.getName();
     }
 }
 

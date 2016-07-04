@@ -32,7 +32,7 @@ import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CityOfUser;
 import com.ln.model.CompanyOfCustomer;
-import com.ln.model.Message;
+import com.ln.model.NewsOfCustomer;
 import com.ln.model.User;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
@@ -322,23 +322,23 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     public void getNewsOfCustomer(String id) {
 
-        Call<List<Message>> call = mCouponAPI.getNewsByUserId(id);
-        call.enqueue(new Callback<List<Message>>() {
-
+        Call<List<NewsOfCustomer>> call = mCouponAPI.getNewsByUserId(id);
+        call.enqueue(new Callback<List<NewsOfCustomer>>() {
             @Override
-            public void onResponse(Call<List<Message>> arg0, Response<List<Message>> arg1) {
+            public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
 
-                if (arg1.body() != null) {
+                if (response.body() != null) {
                     mRealmController.deleteAllNewsOfCustomer();
-                    mRealmController.addListNewsOfCustomer(arg1.body());
-                    Log.d(TAG, "List NewsOfCustomer " + arg1.body().size());
+                    mRealmController.addListNewsOfCustomer(response.body());
+                    Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
-                Log.d(TAG, "getNewsOfCustomer" + arg1.toString());
+            public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
+                Log.d(TAG, "getNewsOfCustomer" + t.toString());
             }
         });
+
     }
 }

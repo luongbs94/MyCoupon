@@ -10,8 +10,8 @@ import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
-import com.ln.model.Message;
 import com.ln.model.NewsOfCompany;
+import com.ln.model.NewsOfCustomer;
 
 import java.util.List;
 
@@ -249,34 +249,33 @@ public class RealmController {
 
 
     /* ====================== START SAVE NEWS  CUSTOMER =================*/
-    public void addListNewsOfCustomer(List<Message> listMessage) {
+    public void addListNewsOfCustomer(List<NewsOfCustomer> listNews) {
 
         mRealm.beginTransaction();
-        for (Message message : listMessage) {
-            Message newOfCustomer = mRealm.createObject(Message.class);
-            newOfCustomer.setNews(message.getMessage_id(),
+        for (NewsOfCustomer message : listNews) {
+            NewsOfCustomer newOfCustomer = mRealm.createObject(NewsOfCustomer.class);
+            newOfCustomer.setNewsOfCustomer(message.getMessage_id(),
                     message.getContent(),
                     message.getCompany_id(),
                     message.getTitle(), message.getLink(), message.getImages_link(),
                     message.getLogo(), message.getLogo_link(), message.getName());
         }
         mRealm.commitTransaction();
-
     }
 
     //
     public void deleteAllNewsOfCustomer() {
         mRealm.beginTransaction();
-        RealmResults<Message> listMessages = getListNewsOfCustomer();
-        for (Message message : listMessages) {
+        RealmResults<NewsOfCustomer> listMessages = getListNewsOfCustomer();
+        for (NewsOfCustomer message : listMessages) {
             message.deleteFromRealm();
         }
 
         mRealm.commitTransaction();
     }
 
-    public RealmResults<Message> getListNewsOfCustomer() {
-        return mRealm.where(Message.class).findAll();
+    public RealmResults<NewsOfCustomer> getListNewsOfCustomer() {
+        return mRealm.where(NewsOfCustomer.class).findAll();
     }
 
        /* ====================== START SAVE NEWS  CUSTOMER =================*/

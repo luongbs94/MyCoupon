@@ -8,14 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.CouponTemplate;
-import com.ln.model.Message;
 import com.ln.model.NewsOfCompany;
+import com.ln.model.NewsOfCustomer;
 import com.ln.model.User;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.customer.CustomerMainActivity;
@@ -39,9 +38,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private LoveCouponAPI mLoveCouponAPI;
     private RealmController mRealmController;
-
-    private Gson gson = new Gson();
-
     private Button mBtnShop, mBtnCustomer;
 
     @Override
@@ -82,10 +78,24 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
+
+    private void startShop() {
+        Intent intent = new Intent(FirstActivity.this, ShopMainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void startCustomer() {
+        Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
     private void setLogin() {
+
         SharedPreferences preferences = getSharedPreferences(
                 MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
-
 
         boolean isShop = preferences.getBoolean(MainApplication.LOGIN_SHOP, false);
         boolean isCustomer = preferences.getBoolean(MainApplication.LOGIN_CLIENT, false);
@@ -95,17 +105,12 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
         if (isShop && !isCustomer) {
 
-//            String data = MainApplication.sharedPreferences.getString(MainApplication.SHOP_DATA, "");
-//            SaveData.company = gson.fromJson(data, Company.class);
-
             Company company = mRealmController.getAccountShop();
             if (company != null && company.getCompany_id() != null) {
 
-//                getCouponTemplateOfShop(company.getCompany_id());
-//                getNewsOfShop(company.getCompany_id());
-
-                startActivity(new Intent(FirstActivity.this, ShopMainActivity.class));
-                finish();
+                getCouponTemplateOfShop(company.getCompany_id());
+                getNewsOfShop(company.getCompany_id());
+                startShop();
             }
         } else if (isCustomer && !isShop) {
 //            String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
@@ -121,9 +126,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 getNewsOfCustomer(MainApplication.sDetailUser.getId());
                 updateUserToken(MainApplication.sDetailUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
 
-                Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
-                startActivity(intent);
-                finish();
+                startCustomer();
             }
         }
 
@@ -145,20 +148,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         customerLogin.enqueue(new Callback<List<CompanyOfCustomer>>() {
             @Override
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
-//                List<CompanyOfCustomer> templates = response.body();
-//                if (templates == null) {
-//                    SaveData.listCompanyCustomer = new ArrayList<>();
-//                } else {
-//                    SaveData.listCompanyCustomer = templates;
-//                }
-
-//                SaveData.USER_ID = userId;
-//
-//                String data = gson.toJson(SaveData.listCompanyCustomer);
-//                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
-//                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, true);
-//                MainApplication.editor.putString(MainApplication.CLIENT_DATA, data);
-//                MainApplication.editor.commit();
 
                 if (response.body() != null) {
                     mRealmController.deleteListCompanyCustomer();
@@ -179,24 +168,26 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     public void getNewsOfCustomer(String id) {
 
-        Call<List<Message>> newsCustomer = mLoveCouponAPI.getNewsByUserId(id);
-        newsCustomer.enqueue(new Callback<List<Message>>() {
-
+        Call<List<NewsOfCustomer>> newsCustomer = mLoveCouponAPI.getNewsByUserId(id);
+        newsCustomer.enqueue(new Callback<List<NewsOfCustomer>>() {
             @Override
-            public void onResponse(Call<List<Message>> arg0, Response<List<Message>> arg1) {
-
-                if (arg1.body() != null) {
+            public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
+                if (response.body() != null) {
                     mRealmController.deleteAllNewsOfCustomer();
-                    mRealmController.addListNewsOfCustomer(arg1.body());
-                    Log.d(TAG, "List NewsOfCustomer " + arg1.body().size());
+                    mRealmController.addListNewsOfCustomer(response.body());
+                    Log.d(TAG, "List NewsOfCustomer " + response.body().size());
+                } else {
+                    Log.d(TAG, "List NewsOfCustomer " + "null");
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Message>> arg0, Throwable arg1) {
-                Log.d(TAG, "getNewsOfCustomer" + arg1.toString());
+            public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
+                Log.d(TAG, "getNewsOfCustomer" + "onFailure " + t.toString());
+
             }
         });
+
     }
 
 
@@ -216,6 +207,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         });
     }
     /* ============================ END CUSTOMER ==============*/
+
 
     /* ================ START CUSTOMER ===========*/
 
@@ -264,9 +256,8 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
-
-
     /* ================ END CUSTOMER   ===========*/
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

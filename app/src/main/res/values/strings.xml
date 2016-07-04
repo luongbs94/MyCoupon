@@ -121,7 +121,9 @@
 
     <string name="news_more">Tin khác</string>
     <string name="no_data_display">Dont have any coupon</string>
-    <string name="heart_like">\uf004</string>
+    <string name="ic_heart">\uf004</string>
+    <string name="ic_share">\uf064</string>
+    <string name="ic_delete">\uf00d</string>
 
 
 </resources>

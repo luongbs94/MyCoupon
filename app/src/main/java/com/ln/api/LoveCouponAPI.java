@@ -13,6 +13,7 @@ import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.Message;
 import com.ln.model.NewsOfCompany;
+import com.ln.model.NewsOfCustomer;
 import com.ln.model.User;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public interface LoveCouponAPI {
 
 
     @GET("/get_news_by_user_id")
-    Call<List<Message>> getNewsByUserId(@Query("user_id") String id);
+    Call<List<NewsOfCustomer>> getNewsByUserId(@Query("user_id") String id);
 
     @POST("/update_user_coupon")
     Call<List<CompanyOfCustomer>> updateUserCoupon(@Body Coupon template);
