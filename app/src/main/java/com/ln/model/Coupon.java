@@ -1,8 +1,6 @@
 package com.ln.model;
 
 
-import java.util.Date;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -12,7 +10,7 @@ public class Coupon extends RealmObject {
     private String coupon_id;
     private String user_id;
     private String coupon_template_id;
-    private Date created_date;
+    //    private Date created_date;
     private String used_date;
     private String company_id;
     private String value;
@@ -26,11 +24,11 @@ public class Coupon extends RealmObject {
     }
 
     public Coupon(String coupon_id, String user_id, String coupon_template_id,
-                  Date created_date, String used_date, String company_id, String value, int duration, String code, String user_name, String user_social, String user_image_link) {
+                  String used_date, String company_id, String value, int duration, String code, String user_name, String user_social, String user_image_link) {
         this.coupon_id = coupon_id;
         this.user_id = user_id;
         this.coupon_template_id = coupon_template_id;
-        this.created_date = created_date;
+//        this.created_date = created_date;
         this.used_date = used_date;
         this.company_id = company_id;
         this.value = value;
@@ -41,9 +39,6 @@ public class Coupon extends RealmObject {
         this.user_image_link = user_image_link;
     }
 
-    public Date getCreated_date() {
-        return created_date;
-    }
 
     public String getUser_id() {
         return user_id;
@@ -53,9 +48,6 @@ public class Coupon extends RealmObject {
         this.user_id = user_id;
     }
 
-    public void setCreated_date(Date created_date) {
-        this.created_date = created_date;
-    }
 
     public String getCoupon_id() {
         return coupon_id;
@@ -137,12 +129,17 @@ public class Coupon extends RealmObject {
         this.code = code;
     }
 
+//    public void setCoupon(String coupon_id, String user_id, String coupon_template_id,
+//                          Date created_date, String used_date, String company_id, String value, int duration, String code, String user_name, String user_social, String user_image_link) {
+
     public void setCoupon(String coupon_id, String user_id, String coupon_template_id,
-                          Date created_date, String used_date, String company_id, String value, int duration, String code, String user_name, String user_social, String user_image_link) {
+                          String used_date, String company_id, String value,
+                          int duration, String code, String user_name, String user_social, String user_image_link) {
+
         this.coupon_id = coupon_id;
         this.user_id = user_id;
         this.coupon_template_id = coupon_template_id;
-        this.created_date = created_date;
+//        this.created_date = created_date;
         this.used_date = used_date;
         this.company_id = company_id;
         this.value = value;

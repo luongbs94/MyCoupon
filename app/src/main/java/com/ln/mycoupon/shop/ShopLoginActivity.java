@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -29,7 +28,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CityOfUser;
@@ -54,31 +52,32 @@ import retrofit2.Response;
  */
 
 public class ShopLoginActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener {
+        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private String TAG = getClass().getSimpleName();
 
-
-    private Button mBtnLogin;
-    private Button mBtnLoginFacebook;
-    private EditText mEdtUsername, mEdtPassword;
-    private LoveCouponAPI apiService;
-    private GoogleApiClient mGoogleApiClient;
-
-    private Button mBtnGooglePlus;
-    private CallbackManager mCallbackManager;
-
-    private LinearLayout mLinearLayout;
     private LoveCouponAPI mCouponAPI;
     private LoveCouponAPI mCouponAPI2;
 
-    private CompanyLocation mCompanyLocation;
     private RealmController mRealmController;
+
+    private Button mBtnLogin;
+    private Button mBtnLoginFacebook;
+    private Button mBtnGooglePlus;
+
+    private EditText mEdtUsername, mEdtPassword;
+
+    private GoogleApiClient mGoogleApiClient;
+
+    private CallbackManager mCallbackManager;
+
+    private CompanyLocation mCompanyLocation;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_shop_login);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         mCallbackManager = CallbackManager.Factory.create();
@@ -87,18 +86,14 @@ public class ShopLoginActivity extends AppCompatActivity
         mCouponAPI2 = MainApplication.getApiService2();
         mRealmController = MainApplication.mRealmController;
 
-        setContentView(R.layout.activity_shop_login);
-
-
         initViews();
         addEvents();
     }
 
     private void initViews() {
 
-        apiService = MainApplication.getAPI();
 
-        getSupportActionBar().setTitle(R.string.login);
+        setTitle(R.string.login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mBtnLogin = (Button) findViewById(R.id.btn_login);
@@ -108,24 +103,6 @@ public class ShopLoginActivity extends AppCompatActivity
         /* ================== START FACEBOOK ==================*/
 
         mBtnLoginFacebook = (Button) findViewById(R.id.btn_login_facebook);
-        mLinearLayout = (LinearLayout) findViewById(R.id.linear_login_shop);
-
-        /* ===================== END FACEBOOK ====================*/
-
-        /*=============== START GOOGLE ===========*/
-
-        GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
-                .build();
-
-        mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
-        /* ===================== END GOOGLE ==================*/
 
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
@@ -140,26 +117,24 @@ public class ShopLoginActivity extends AppCompatActivity
                 Log.d(TAG, "mProfile " + id + " - " + token);
 
                 AccountOflUser accountOflUser = new AccountOflUser();
+
                 if (id != null) {
                     String url = getString(R.string.face_image) + id + getString(R.string.face_image_end);
                     accountOflUser.setId(id);
                     accountOflUser.setPicture(url);
-
                 }
                 if (token != null) {
                     accountOflUser.setAccessToken(token);
                 }
-                if (mProfile != null) {
-                    if (mProfile.getName() != null) {
-                        accountOflUser.setName(mProfile.getName());
-                    }
+                if (mProfile != null && mProfile.getName() != null) {
+                    accountOflUser.setName(mProfile.getName());
                 }
-
 
                 try {
                     if (accountOflUser.getId() != null) {
                         MainApplication.sShopDetail = accountOflUser;
                         getCompanyProfileSocial(accountOflUser.getId());
+                        MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
                         LoginManager.getInstance().logOut();
                     }
 
@@ -178,14 +153,30 @@ public class ShopLoginActivity extends AppCompatActivity
                 Log.d(TAG, "FACEBOOK - onError");
             }
         });
+
+        /* ===================== END FACEBOOK ====================*/
+
+        /*=============== START GOOGLE ===========*/
+        mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
+
+        GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
+                .build();
+
+        /* ===================== END GOOGLE ==================*/
     }
 
 
     private void addEvents() {
-
-        mBtnLogin.setOnClickListener(new Events());
-        mBtnGooglePlus.setOnClickListener(new Events());
-        mBtnLoginFacebook.setOnClickListener(new Events());
+        mBtnLogin.setOnClickListener(this);
+        mBtnGooglePlus.setOnClickListener(this);
+        mBtnLoginFacebook.setOnClickListener(this);
     }
 
     @Override
@@ -199,7 +190,7 @@ public class ShopLoginActivity extends AppCompatActivity
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
-                loginGoogleSuccess(account);
+                signInGoogleSuccess(account);
             } else {
                 getSnackBar(getString(R.string.login_google_fails));
             }
@@ -207,16 +198,19 @@ public class ShopLoginActivity extends AppCompatActivity
 
     }
 
-    private void getCompanyProfile(final String user, final String pass) {
+    private void getCompanyProfile(String user, String pass) {
 
-        Call<List<Company>> call = apiService.getCompanyProfile(user, pass, null);
+        Call<List<Company>> call = mCouponAPI.getCompanyProfile(user, pass, null);
         call.enqueue(new Callback<List<Company>>() {
             @Override
             public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
 
-                List<Company> templates = response.body();
-                SaveData.company = templates.get(0);
-                loginSuccess(templates.get(0));
+                if (response.body() != null) {
+                    loginSuccess(response.body().get(0));
+                    Log.d(TAG, "getCompanyProfile " + response.body().get(0).getCompany_id());
+                } else {
+                    Log.d(TAG, "getCompanyProfile " + "null");
+                }
             }
 
             @Override
@@ -226,39 +220,31 @@ public class ShopLoginActivity extends AppCompatActivity
         });
     }
 
-
     private void getCompanyProfileSocial(String user_id) {
 
-
-        Call<List<Company>> call = apiService.getCompanyProfileSocial(user_id);
+        Call<List<Company>> call = mCouponAPI.getCompanyProfileSocial(user_id);
         call.enqueue(new Callback<List<Company>>() {
             @Override
             public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
 
-                List<Company> templates = response.body();
-                SaveData.company = templates.get(0);
-                loginSuccess(templates.get(0));
+                if (response.body() != null) {
+                    loginSuccess(response.body().get(0));
+                } else {
+                    Log.d(TAG, "getCompanyProfileSocial " + "null");
+                }
             }
 
             @Override
             public void onFailure(Call<List<Company>> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
+                Log.d(TAG, "getCompanyProfileSocial " + "Failure");
             }
         });
     }
 
     private void loginSuccess(Company company) {
-        mRealmController.saveAccountShop(company);
 
-        MainApplication.sIdCompany = SaveData.company.getCompany_id();
-//
-//                Gson gson = new Gson();
-//
-//                String data = gson.toJson(SaveData.company);
-//                MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, true);
-//                MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
-//                MainApplication.editor.putString(MainApplication.SHOP_DATA, data);
-//                MainApplication.editor.commit();
+        mRealmController.saveAccountShop(company);
+        Log.d(TAG, "Company " + company.getCompany_id());
 
 
         SharedPreferences preferences = getSharedPreferences(
@@ -266,21 +252,20 @@ public class ShopLoginActivity extends AppCompatActivity
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(MainApplication.LOGIN_SHOP, true);
         editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
-        editor.putBoolean(MainApplication.OFF_LINE, true);
+        editor.putBoolean(MainApplication.OFF_LINE, false);
         editor.apply();
 
-        getCityOfUser();        // get address of company
-        getNewsByCompanyId();   // get list news of company
-        getCouponTemplate();    //  get list coupon template of company
+        getCityOfUser();                                 // get address of company
+        getNewsByCompanyId(company.getCompany_id());    // get list news of company
+        getCouponTemplate(company.getCompany_id());     //  get list coupon template of company
 
         Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
         startActivity(intent);
-
         finish();
     }
 
     private void getSnackBar(String string) {
-        Snackbar.make(mLinearLayout, string, Snackbar.LENGTH_LONG)
+        Snackbar.make(mBtnLogin, string, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
 
@@ -296,12 +281,14 @@ public class ShopLoginActivity extends AppCompatActivity
     }
 
     // integrator login google save state google login
-    private void loginGoogleSuccess(GoogleSignInAccount account) {
+    private void signInGoogleSuccess(GoogleSignInAccount account) {
 
         MainApplication.sShopDetail = new AccountOflUser(account.getId(), account.getEmail(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
             MainApplication.sShopDetail.setPicture(account.getPhotoUrl().toString());
         }
+        getCompanyProfileSocial(account.getId());
+        onClickLogoutGoogle();
         getSnackBar("Login Google Success ");
         Log.d(TAG, "Login Google " + account.getId() + " - " + account.getEmail());
         MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_GOOGLE;
@@ -323,47 +310,44 @@ public class ShopLoginActivity extends AppCompatActivity
                 });
     }
 
-    private class Events implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.btn_login:
-                    onClickLogin();
-                    break;
-                case R.id.btn_login_facebook:
-                    onClickLoginFacebook();
-                    break;
-                case R.id.btn_google:
-                    onClickGooglePlus();
-                    break;
-                default:
-                    break;
-            }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_login:
+                onClickLogin();
+                break;
+            case R.id.btn_login_facebook:
+                onClickLoginFacebook();
+                break;
+            case R.id.btn_google:
+                onClickGooglePlus();
+                break;
+            default:
+                break;
         }
+    }
 
-        private void onClickLogin() {
+    private void onClickLogin() {
 
-            String str_user = mEdtUsername.getText().toString();
-            String str_password = mEdtPassword.getText().toString();
+        String str_user = mEdtUsername.getText().toString();
+        String str_password = mEdtPassword.getText().toString();
 
-            if (str_user.length() > 0 && str_password.length() > 0) {
-                getCompanyProfile(str_user, str_password);
-                MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_NORMAL;
-            } else {
-                getSnackBar(getString(R.string.not_fill_login));
-            }
+        if (str_user.length() > 0 && str_password.length() > 0) {
+            getCompanyProfile(str_user, str_password);
+            MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_NORMAL;
+        } else {
+            getSnackBar(getString(R.string.not_fill_login));
         }
+    }
 
-        private void onClickGooglePlus() {
-            Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
-        }
+    private void onClickGooglePlus() {
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
+    }
 
-        private void onClickLoginFacebook() {
-            LoginManager.getInstance().logInWithReadPermissions(ShopLoginActivity.this,
-                    Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
-        }
-
+    private void onClickLoginFacebook() {
+        LoginManager.getInstance().logInWithReadPermissions(ShopLoginActivity.this,
+                Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
     }
 
     private void updateCompanyLocation() {
@@ -392,16 +376,17 @@ public class ShopLoginActivity extends AppCompatActivity
                     MainApplication.cityOfCompany = response.body();
 
                     Log.d(TAG, "City : " + MainApplication.cityOfCompany.getCity());
-                    if (SaveData.company != null) {
-                        mCompanyLocation = new CompanyLocation(SaveData.company.getCompany_id(),
+                    if (MainApplication.mRealmController.getAccountShop() != null) {
+                        mCompanyLocation = new CompanyLocation(MainApplication.mRealmController.getAccountShop().getCompany_id(),
                                 MainApplication.cityOfCompany.getCity(),
                                 MainApplication.cityOfCompany.getCountry_name());
 
                         updateCompanyLocation();
                     }
 
+                } else {
+                    Log.d(TAG, "City : " + "Khong co du lieu");
                 }
-                Log.d(TAG, "City : " + "Khong co du lieu");
             }
 
             @Override
@@ -413,65 +398,49 @@ public class ShopLoginActivity extends AppCompatActivity
     }
 
     /* =============== Get list coupon of company ==============*/
-    private void getNewsByCompanyId() {
+    private void getNewsByCompanyId(String idCompany) {
 
-        String idCompany;
-        if (SaveData.company == null) {
-            idCompany = MainApplication.sIdCompany;
-        } else {
-            idCompany = SaveData.company.getCompany_id();
-        }
-
-        Call<List<NewsOfCompany>> call = mCouponAPI.getNewsByCompanyId(idCompany);
+        Call<List<NewsOfCompany>> call = MainApplication.getAPI().getNewsByCompanyId(idCompany);
         call.enqueue(new Callback<List<NewsOfCompany>>() {
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
-                List<NewsOfCompany> mListNews = response.body();
-
-                mRealmController.deleteAllNewsOfCompany();
-                mRealmController.addListNewsOfCompany(mListNews);
+                if (response.body() != null) {
+                    mRealmController.deleteListNewsOfCompany();
+                    mRealmController.addListNewsOfCompany(response.body());
+                    Log.d(TAG, "getNewsByCompanyId " + response.body().size());
+                } else {
+                    Log.d(TAG, "getNewsByCompanyId " + "null");
+                }
             }
 
             @Override
             public void onFailure(Call<List<NewsOfCompany>> call, Throwable t) {
-
+                Log.d(TAG, "getNewsByCompanyId " + "onFailure");
             }
         });
     }
 
 
     /* ============= GET LIST COUPON TEMPLATE =================*/
-    private void getCouponTemplate() {
-
-        String idCompany;
-        if (SaveData.company == null) {
-            idCompany = MainApplication.sIdCompany;
-        } else {
-            idCompany = SaveData.company.getCompany_id();
-        }
+    private void getCouponTemplate(String idCompany) {
 
         //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
-        Call<List<CouponTemplate>> call = mCouponAPI.getCouponTemplates("abc", idCompany);
-        call.enqueue(new Callback<List<CouponTemplate>>() {
-
+        Call<List<CouponTemplate>> couponShop = mCouponAPI.getCouponTemplates("abc", idCompany);
+        couponShop.enqueue(new Callback<List<CouponTemplate>>() {
             @Override
-            public void onResponse(Call<List<CouponTemplate>> arg0,
-                                   Response<List<CouponTemplate>> arg1) {
-                List<CouponTemplate> listCouponTemplate = arg1.body();
-                if (listCouponTemplate != null) {
+            public void onResponse(Call<List<CouponTemplate>> call, Response<List<CouponTemplate>> response) {
+                if (response.body() != null) {
                     mRealmController.deleteCouponTemplate();
-                    mRealmController.addListCouponTemplate(listCouponTemplate);
-                    Log.d(TAG, "CouponTemplate  " + listCouponTemplate.size());
-
+                    mRealmController.addListCouponTemplate(response.body());
+                    Log.d(TAG, "getCouponTemplate  " + response.body().size());
                 } else {
-                    Log.d(TAG, "CouponTemplate  null");
+                    Log.d(TAG, "getCouponTemplate  " + "null");
                 }
-
             }
 
             @Override
-            public void onFailure(Call<List<CouponTemplate>> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
+            public void onFailure(Call<List<CouponTemplate>> call, Throwable t) {
+                Log.d(TAG, "getCouponTemplate  " + "onFailure");
             }
         });
     }

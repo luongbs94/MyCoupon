@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
@@ -62,7 +61,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
         final int intPosition = position;
 
         if (itemCoupon != null) {
-            Company company = SaveData.company;
+            Company company = MainApplication.mRealmController.getAccountShop();
             if (company != null && company.getLogo() != null) {
                 holder.mTxtNameCoupon.setText(company.getName());
                 Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))

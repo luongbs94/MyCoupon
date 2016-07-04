@@ -1,13 +1,7 @@
 package com.ln.model;
 
-import java.util.Date;
+public class Message {
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-public class Message extends RealmObject {
-
-    @PrimaryKey
     private String message_id;
     private String content;
     private String company_id;
@@ -18,34 +12,17 @@ public class Message extends RealmObject {
     private String logo_link;
     private String name;
 
-    private Date last_date, created_date;
+    private boolean isLike;
+    private boolean isDelete;
+
+//    private Date last_date, created_date;
+
 
     public Message() {
     }
 
-
-    public Message(String message_id, String content, Date created_date,
-                   String company_id, Date last_date, String title, String link,
-                   String images_link, String logo, String logo_link, String name) {
-        this.message_id = message_id;
-        this.content = content;
-        this.created_date = created_date;
-        this.company_id = company_id;
-        this.last_date = last_date;
-        this.title = title;
-        this.link = link;
-        this.images_link = images_link;
-        this.logo = logo;
-        this.logo_link = logo_link;
-        this.name = name;
-    }
-
     public String getLink() {
         return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
     }
 
 
@@ -53,25 +30,16 @@ public class Message extends RealmObject {
         return message_id;
     }
 
-    public void setMessage_id(String message_id) {
-        this.message_id = message_id;
-    }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public String getCompany_id() {
         return company_id;
     }
 
-    public void setCompany_id(String company_id) {
-        this.company_id = company_id;
-    }
 
     public String getTitle() {
         return title;
@@ -85,17 +53,6 @@ public class Message extends RealmObject {
         return images_link;
     }
 
-    public void setImages_link(String images_link) {
-        this.images_link = images_link;
-    }
-
-    public Date getLast_date() {
-        return last_date;
-    }
-
-    public void setLast_date(Date last_date) {
-        this.last_date = last_date;
-    }
 
     public String getLogo() {
         return logo;
@@ -113,12 +70,41 @@ public class Message extends RealmObject {
         this.name = name;
     }
 
-    public Date getCreated_date() {
-        return created_date;
+
+    public boolean isLike() {
+        return isLike;
     }
 
-    public void setCreated_date(Date created_date) {
-        this.created_date = created_date;
+    public void setLike(boolean like) {
+        isLike = like;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
+    }
+
+    public void setMessage_id(String message_id) {
+        this.message_id = message_id;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setCompany_id(String company_id) {
+        this.company_id = company_id;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public void setImages_link(String images_link) {
+        this.images_link = images_link;
     }
 
     public String getLogo_link() {
@@ -129,21 +115,16 @@ public class Message extends RealmObject {
         this.logo_link = logo_link;
     }
 
-
-    public void setNews(String message_id, String content, Date created_date,
-                        String company_id, Date last_date, String title, String link,
-                        String images_link, String logo, String logo_link, String name) {
-        this.message_id = message_id;
-        this.content = content;
-        this.created_date = created_date;
-        this.company_id = company_id;
-        this.last_date = last_date;
-        this.title = title;
-        this.link = link;
-        this.images_link = images_link;
-        this.logo = logo;
-        this.logo_link = logo_link;
-        this.name = name;
+    public  Message(NewsOfCustomer news) {
+        this.message_id = news.getMessage_id();
+        this.content = news.getContent();
+        this.company_id = news.getCompany_id();
+        this.title = news.getTitle();
+        this.link = news.getLink();
+        this.images_link = news.getImages_link();
+        this.logo = news.getLogo();
+        this.logo_link = news.getLogo_link();
+        this.name = news.getName();
     }
 }
 

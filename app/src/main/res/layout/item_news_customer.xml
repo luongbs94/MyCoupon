@@ -173,24 +173,16 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.ln.views.IconTextView
                 android:id="@+id/img_like_newx"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/size_12"
-                android:layout_marginStart="@dimen/size_12"
-                android:contentDescription="@null"
-                android:padding="@dimen/size_5"
-                android:src="@drawable/ic_heart" />
-            <!--<com.ln.views.IconTextView-->
-            <!--android:id="@+id/img_like_newx"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="@dimen/size_12"-->
-            <!--android:layout_marginRight="@dimen/size_12"-->
-            <!--android:text="\uf004"-->
-            <!--android:textColor="@color/icon_heart"-->
-            <!--android:textSize="20sp" />-->
+                android:layout_marginRight="@dimen/size_12"
+                android:gravity="center_vertical"
+                android:text="@string/ic_heart"
+                android:textColor="@color/icon_heart"
+                android:textSize="@dimen/size_18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -207,15 +199,17 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.ln.views.IconTextView
                 android:id="@+id/img_share_newx"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/size_12"
-                android:layout_marginStart="@dimen/size_12"
-                android:contentDescription="@null"
-                android:padding="@dimen/size_5"
-                android:src="@drawable/ic_share" />
+                android:layout_marginRight="@dimen/size_12"
+                android:gravity="center_vertical"
+                android:text="@string/ic_share"
+                android:textColor="@color/icon_heart"
+                android:textSize="@dimen/size_18sp" />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -232,15 +226,18 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.ln.views.IconTextView
                 android:id="@+id/img_delete_news"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/size_12"
-                android:layout_marginStart="@dimen/size_12"
-                android:contentDescription="@null"
-                android:padding="@dimen/size_5"
-                android:src="@drawable/ic_delete" />
+                android:layout_marginRight="@dimen/size_12"
+                android:gravity="center_vertical"
+                android:text="@string/ic_delete"
+                android:textColor="@color/icon_heart"
+                android:textSize="@dimen/size_18sp" />
+
+
         </LinearLayout>
     </LinearLayout>
 

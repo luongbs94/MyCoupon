@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.CouponTemplate;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -95,7 +94,7 @@ public class AddCouponActivity extends AppCompatActivity {
         template.setContent(content);
         template.setValue(value);
         template.setDuration(duration);
-        template.setCompany_id(SaveData.company.getCompany_id() + "");
+        template.setCompany_id(MainApplication.mRealmController.getAccountShop().getCompany_id() + "");
 
 
         //template.created_date= new Date();

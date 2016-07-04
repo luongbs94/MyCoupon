@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
@@ -130,7 +129,7 @@ public class SettingFragment extends Fragment {
 
     private void init() {
 
-        Company company = SaveData.company;
+        Company company = MainApplication.mRealmController.getAccountShop();
 
         if (company.getName() != null) {
             mEdtNameCompany.setText(company.getName());
@@ -286,7 +285,7 @@ public class SettingFragment extends Fragment {
             String logo = MainApplication.convertToBitmap(mImgLogo);
             logo = MainApplication.FIRST_BASE64 + logo;
 
-            Company company = SaveData.company;
+            Company company = MainApplication.mRealmController.getAccountShop();
 
             company.setName(name);
             company.setAddress(address);
@@ -364,7 +363,7 @@ public class SettingFragment extends Fragment {
 
     private void validateUser(EditText editText, EditText editText2, EditText edtPassword, TextInputLayout textInputLayout, TextInputLayout password) {
 
-        Company company = SaveData.company;
+        Company company = MainApplication.mRealmController.getAccountShop();
 
         String text = editText.getText().toString().trim();
         String text2 = editText2.getText().toString().trim();

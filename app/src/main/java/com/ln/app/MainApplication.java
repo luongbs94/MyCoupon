@@ -146,7 +146,6 @@ public class MainApplication extends MultiDexApplication {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-
         Retrofit retrofit1 = new Retrofit.Builder()
                 .baseUrl(URL_UPDATE_IMAGE)
                 .addConverterFactory(GsonConverterFactory.create())

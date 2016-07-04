@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.ln.api.SaveData;
+import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
@@ -43,7 +43,7 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         Coupon coupon = mListCoupons.get(position);
-        Company company = SaveData.company;
+        Company company = MainApplication.mRealmController.getAccountShop();
         Glide.with(mContext).load(coupon.getUser_image_link())
                 .placeholder(R.drawable.ic_logo_blank)
                 .into(holder.mImgLogo);
@@ -53,7 +53,7 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
-        holder.mTxtDate.setText(fmt.format(coupon.getCreated_date()));
+//        holder.mTxtDate.setText(fmt.format(coupon.getCreated_date()));
     }
 
     @Override
