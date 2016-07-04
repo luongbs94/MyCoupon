@@ -19,9 +19,6 @@ public class NewsOfCompany extends RealmObject {
     private String link;
     private String images_link;
 
-    private boolean isLike;
-    private boolean isDelete;
-
     public NewsOfCompany() {
     }
 
@@ -104,22 +101,6 @@ public class NewsOfCompany extends RealmObject {
 //        this.images_link = images_link;
 //    }
 
-
-    public boolean isLike() {
-        return isLike;
-    }
-
-    public void setLike(boolean like) {
-        isLike = like;
-    }
-
-    public boolean isDelete() {
-        return isDelete;
-    }
-
-    public void setDelete(boolean delete) {
-        isDelete = delete;
-    }
 
     public void setNews(String message_id, String content,
                         String company_id, String title,

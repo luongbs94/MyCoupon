@@ -124,6 +124,8 @@
     <string name="ic_heart">\uf004</string>
     <string name="ic_share">\uf064</string>
     <string name="ic_delete">\uf00d</string>
+    <string name="ic_email">\uf0e0</string>
+    <string name="ic_globe">\uf0ac</string>
 
 
 </resources>

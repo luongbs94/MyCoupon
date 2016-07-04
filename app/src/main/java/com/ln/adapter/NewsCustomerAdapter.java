@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Message;
@@ -60,7 +60,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         final int positionNews = position;
         final Message news = mListNews.get(positionNews);
 
-        CompanyOfCustomer company = SaveData.getCompany(news.getCompany_id());
+        CompanyOfCustomer company = MainApplication.mRealmController.getCompanyOfCustomer(news.getCompany_id());
+        Log.d("NewsCustomerAdapter", "company " + company.getName());
 
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());

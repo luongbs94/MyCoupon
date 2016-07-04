@@ -76,7 +76,7 @@ public class CouponFragment extends Fragment {
 
         mRecCoupon = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mRecCoupon.setHasFixedSize(true);
 
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
 

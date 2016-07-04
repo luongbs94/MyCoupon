@@ -123,6 +123,8 @@ public class MainApplication extends MultiDexApplication {
     public static CityOfUser cityOfCompany;
 
     public static final String FONT = "fonts/fontawesome-webfont.ttf";
+    public static final String EMAIL_LOVE_COUPON = "support@lovecoupon.com";
+    public static final String WEB_SITE_LOVE_COUPON = "http://www.lovecoupon.com";
 
     @Override
     public void onCreate() {

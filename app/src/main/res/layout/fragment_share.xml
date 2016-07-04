@@ -74,15 +74,27 @@
                 android:text="@string/support"
                 android:textSize="@dimen/size_15sp" />
 
-            <ImageView
+            <!--<ImageView-->
+            <!--android:id="@+id/image_email"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_span="1"-->
+            <!--android:layout_weight="1"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:src="@drawable/ic_email"-->
+            <!--android:textSize="40sp" />-->
+
+            <com.ln.views.IconTextView
                 android:id="@+id/image_email"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_span="1"
                 android:layout_weight="1"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_email"
-                android:textSize="40sp" />
+                android:gravity="center_horizontal"
+                android:text="@string/ic_email"
+                android:textColor="@color/icon_heart"
+                android:textSize="20sp" />
         </TableRow>
 
         <TableRow
@@ -98,13 +110,25 @@
                 android:text="@string/web"
                 android:textSize="@dimen/size_15sp" />
 
-            <ImageView
+            <!--<ImageView-->
+            <!--android:id="@+id/image_web"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:src="@drawable/ic_globe" />-->
+
+            <com.ln.views.IconTextView
                 android:id="@+id/image_web"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_span="1"
                 android:layout_weight="1"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_globe" />
+                android:gravity="center_horizontal"
+                android:text="@string/ic_globe"
+                android:textColor="@color/icon_heart"
+                android:textSize="20sp" />
         </TableRow>
 
 

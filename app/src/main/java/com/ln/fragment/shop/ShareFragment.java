@@ -1,26 +1,31 @@
 package com.ln.fragment.shop;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
+import com.ln.views.IconTextView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ShareFragment extends Fragment {
+public class ShareFragment extends Fragment implements View.OnClickListener {
 
     private FloatingActionButton mFabShare;
-    private ImageView mImageEmail, mImageWeb;
+    private IconTextView mImageEmail, mImageWeb;
+    private final String TAG = getClass().getSimpleName();
 
 
     public ShareFragment() {
@@ -45,42 +50,64 @@ public class ShareFragment extends Fragment {
     private void initViews(View view) {
 
         mFabShare = (FloatingActionButton) view.findViewById(R.id.fab_share);
-        mImageEmail = (ImageView) view.findViewById(R.id.image_email);
-        mImageWeb = (ImageView) view.findViewById(R.id.image_web);
+        mImageEmail = (IconTextView) view.findViewById(R.id.image_email);
+        mImageWeb = (IconTextView) view.findViewById(R.id.image_web);
     }
 
     private void addEvents() {
 
-        mFabShare.setOnClickListener(new Events());
+        mFabShare.setOnClickListener(this);
+        mImageEmail.setOnClickListener(this);
+        mImageWeb.setOnClickListener(this);
     }
 
-    private class Events implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.fab_share:
-                    onClickFabShare();
-                    break;
-                case R.id.image_email:
-                    break;
-                case R.id.image_web:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void onClickFabShare() {
-            ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.pixelcrater.Diaro"))
-                    .setContentTitle(getString(R.string.share_love_coupon))
-                    .setContentDescription(getString(R.string.description_love_coupon))
-                    .build();
-
-            ShareDialog shareDialog = new ShareDialog(ShareFragment.this);
-            shareDialog.show(content);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_share:
+                onClickFabShare();
+                break;
+            case R.id.image_email:
+                onClickSendMessageToEmail();
+                break;
+            case R.id.image_web:
+                onClickVisitToWebsite();
+                break;
+            default:
+                break;
         }
     }
 
+    private void onClickFabShare() {
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.pixelcrater.Diaro"))
+                .setContentTitle(getString(R.string.share_love_coupon))
+                .setContentDescription(getString(R.string.description_love_coupon))
+                .build();
 
+        ShareDialog shareDialog = new ShareDialog(ShareFragment.this);
+        shareDialog.show(content);
+    }
+
+    private void onClickSendMessageToEmail() {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{MainApplication.EMAIL_LOVE_COUPON});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            Log.d(TAG, "onClickSendMessageToEmail " + "Finished sending email...");
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onClickVisitToWebsite() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON));
+        startActivity(intent);
+    }
 }

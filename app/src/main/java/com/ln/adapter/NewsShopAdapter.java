@@ -22,8 +22,9 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
-import com.ln.model.NewsOfCompany;
+import com.ln.model.NewsOfCompanyLike;
 import com.ln.mycoupon.R;
+import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
 
 import java.text.SimpleDateFormat;
@@ -42,10 +43,10 @@ import retrofit2.Response;
 public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<NewsOfCompany> mListNews;
+    private List<NewsOfCompanyLike> mListNews;
     private ShareDialog mShareDialog;
 
-    public NewsShopAdapter(Context context, List<NewsOfCompany> listNews, Fragment fragment) {
+    public NewsShopAdapter(Context context, List<NewsOfCompanyLike> listNews, Fragment fragment) {
         mContext = context;
         mListNews = listNews;
         mShareDialog = new ShareDialog(fragment);
@@ -61,7 +62,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final NewsOfCompany news = mListNews.get(position);
+        final NewsOfCompanyLike news = mListNews.get(position);
         final int positionNews = position;
 
         Company company = MainApplication.mRealmController.getAccountShop();
@@ -99,25 +100,25 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         }
 
-//        if (news.isLike()) {
-//            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-//        }
         if (news.isLike()) {
-            holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
         }
+//        if (news.isLike()) {
+//            holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+//        }
 
         holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (news.isLike()) {
-//                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
-                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
+                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+//                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
                     news.setLike(false);
                     MainApplication.mRealmController.deleteShopLikeNewsByIdNews(news.getMessage_id());
 
                 } else {
-//                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
+                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+//                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
                     news.setLike(true);
                     MainApplication.mRealmController.addShopLikeNewsByIdNews(news.getMessage_id());
                 }
@@ -190,8 +191,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView mImgLogo, mImgShare, mImgDelete;
-        private ImageView mImgLike;
+        private ImageView mImgLogo;
+        private IconTextView mImgLike, mImgShare, mImgDelete;
+        ;
 
         private TextView mTxtTile, mTxtLink;
         private RecyclerView mRecyclerView;
@@ -205,9 +207,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             super(itemView);
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.img_logo_news);
-            mImgLike = (ImageView) itemView.findViewById(R.id.img_like_newx);
-            mImgShare = (ImageView) itemView.findViewById(R.id.img_share_newx);
-            mImgDelete = (ImageView) itemView.findViewById(R.id.img_delete_news);
+            mImgLike = (IconTextView) itemView.findViewById(R.id.img_like_newx);
+            mImgShare = (IconTextView) itemView.findViewById(R.id.img_share_newx);
+            mImgDelete = (IconTextView) itemView.findViewById(R.id.img_delete_news);
 
             mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_news);
             mTxtTime = (MyTextView) itemView.findViewById(R.id.txt_date_news);

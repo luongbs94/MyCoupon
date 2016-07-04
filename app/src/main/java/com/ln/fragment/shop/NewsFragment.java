@@ -15,9 +15,12 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
+import com.ln.model.NewsOfCompanyLike;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
+import com.ln.realm.ShopLikeNews;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -87,18 +90,23 @@ public class NewsFragment extends Fragment {
     private void setNewsOfCompany() {
 
         List<NewsOfCompany> mListNewsOfCompany = mRealmController.getListNewsOfCompany();
+        List<NewsOfCompanyLike> listNews = new ArrayList<>();
 
-//        List<ShopLikeNews> listLike = mRealmController.getListShopLikeNews();
-//
-//        for (ShopLikeNews likeNews : listLike) {
-//            for (NewsOfCompany news : mListNewsOfCompany) {
-//                if (news.getMessage_id().equals(likeNews.getIdNews())
-//                        && likeNews.getIdCompany().equals(mCompany.getCompany_id())) {
-//                    news.setLike(true);
-//                }
-//            }
-//        }
-        NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), mListNewsOfCompany, this);
+        for (NewsOfCompany newsOfCompany : mListNewsOfCompany) {
+            listNews.add(new NewsOfCompanyLike(newsOfCompany));
+        }
+
+        List<ShopLikeNews> listLike = mRealmController.getListShopLikeNews();
+
+        for (ShopLikeNews likeNews : listLike) {
+            for (NewsOfCompanyLike news : listNews) {
+                if (news.getMessage_id().equals(likeNews.getIdNews())
+                        && likeNews.getIdCompany().equals(mCompany.getCompany_id())) {
+                    news.setLike(true);
+                }
+            }
+        }
+        NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), listNews, this);
         mRecNews.setAdapter(adapter);
         Log.d(TAG, "Size : " + mListNewsOfCompany.size());
     }

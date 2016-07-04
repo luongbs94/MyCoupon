@@ -256,8 +256,8 @@ public class ShopLoginActivity extends AppCompatActivity
         editor.apply();
 
         getCityOfUser();                                 // get address of company
-        getNewsByCompanyId(company.getCompany_id());    // get list news of company
         getCouponTemplate(company.getCompany_id());     //  get list coupon template of company
+        getNewsByCompanyId(company.getCompany_id());    // get list news of company
 
         Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
         startActivity(intent);
@@ -419,7 +419,6 @@ public class ShopLoginActivity extends AppCompatActivity
             }
         });
     }
-
 
     /* ============= GET LIST COUPON TEMPLATE =================*/
     private void getCouponTemplate(String idCompany) {
