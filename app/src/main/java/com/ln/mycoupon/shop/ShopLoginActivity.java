@@ -35,6 +35,7 @@ import com.ln.model.Company;
 import com.ln.model.CompanyLocation;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
+import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
 
@@ -274,6 +275,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
         int id = item.getItemId();
         if (id == android.R.id.home) {
+            startActivity(new Intent(this, FirstActivity.class));
             finish();
         }
 

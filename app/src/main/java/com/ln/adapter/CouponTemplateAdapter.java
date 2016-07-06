@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -117,7 +118,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
     }
 
     private void deleteCouponTemplate(String coupon_template_id, final View view, final int position) {
-        CouponTemplate template = new CouponTemplate();
+        final CouponTemplate template = new CouponTemplate();
         template.setCoupon_template_id(coupon_template_id);
 
         //template.created_date= new Date();
@@ -130,7 +131,10 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
                                    Response<CouponTemplate> arg1) {
 
                 getSnackBar(view, mContext.getString(R.string.delete_coupon_success));
-                mListCoupon.remove(position);
+                Log.d("deleteCouponTemplate", arg1.body().toString());
+
+                MainApplication.mRealmController.deleteCouponTemplateById(template.getCoupon_template_id());
+
                 notifyDataSetChanged();
             }
 
@@ -166,12 +170,12 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
         return null;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView mImgLogo, mImageMore;
         private TextView mTxtNameCoupon, mTxtPriceCoupon, mTxtDescription, mTxtTimeCoupon;
         private Button mQRCode;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.app_icon);

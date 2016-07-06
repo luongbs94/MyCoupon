@@ -305,9 +305,23 @@ public class RealmController {
         mRealm.commitTransaction();
     }
 
+    public void deleteCouponTemplateById(String id) {
+        mRealm.beginTransaction();
+        CouponTemplate couponTemplate = getCouponTemplateById(id);
+        if (couponTemplate != null) {
+            couponTemplate.deleteFromRealm();
+        }
+        mRealm.commitTransaction();
+    }
+
     public RealmResults<CouponTemplate> getListCouponTemplate() {
         return mRealm.where(CouponTemplate.class).findAll();
     }
+
+    private CouponTemplate getCouponTemplateById(String id) {
+        return mRealm.where(CouponTemplate.class).equalTo("coupon_template_id", id).findFirst();
+    }
+
 
     /* =============== END OFFLINE COUPON TEMPLATE OF COMPANY ======*/
 

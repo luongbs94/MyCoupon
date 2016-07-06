@@ -99,6 +99,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             holder.mRecyclerView.setVisibility(View.GONE);
 
         }
+        holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
 
         if (news.isLike()) {
             holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));

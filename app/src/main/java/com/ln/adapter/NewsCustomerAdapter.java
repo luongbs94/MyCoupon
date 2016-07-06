@@ -91,6 +91,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
         }
 
+        holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+
         if (news.isLike()) {
             holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
         }

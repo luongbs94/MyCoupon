@@ -34,6 +34,7 @@ import com.ln.model.CityOfUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.User;
+import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
 
@@ -160,6 +161,7 @@ public class CustomerLoginActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            startActivity(new Intent(this, FirstActivity.class));
             finish();
         }
         return super.onOptionsItemSelected(item);

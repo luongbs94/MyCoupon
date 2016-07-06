@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.ln.adapter.CompanyAdapter;
 import com.ln.api.LoveCouponAPI;
@@ -41,7 +40,6 @@ public class CouponFragment extends Fragment {
     private String TAG = getClass().getSimpleName();
 
     private View mView;
-    private LinearLayout mLnLayout;
     private RecyclerView mRecCoupon;
 
     private SwipeRefreshLayout swipeContainer;
@@ -88,7 +86,6 @@ public class CouponFragment extends Fragment {
 
         mRecCoupon = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mLnLayout = (LinearLayout) mView.findViewById(R.id.ln_fragment_coupon);
 
         adapter = new CompanyAdapter(getActivity(), mListCompanyCustomer);
         mRecCoupon.setAdapter(adapter);
@@ -112,10 +109,10 @@ public class CouponFragment extends Fragment {
 
     private void setListCompanyCustomer() {
 
-        List<CompanyOfCustomer> listCompany = mRealmController.getListCompanyCustomer();
-        mListCompanyCustomer.addAll(listCompany);
+        mListCompanyCustomer.clear();
+        mListCompanyCustomer.addAll(mRealmController.getListCompanyCustomer());
         adapter.notifyDataSetChanged();
-
+//        mRecCoupon.setAdapter(adapter);
         Log.d(TAG, "setListCompanyCustomer " + mListCompanyCustomer.size());
     }
 
@@ -127,16 +124,16 @@ public class CouponFragment extends Fragment {
             call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
                 @Override
                 public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
-                    List<CompanyOfCustomer> listCompany = new ArrayList<>();
                     if (response.body() != null) {
-                        listCompany.addAll(response.body());
+                        mRealmController.deleteListCompanyCustomer();
+                        mRealmController.addListCompanyCustomer(response.body());
+
+                        setListCompanyCustomer();
+                        swipeContainer.setRefreshing(false);
+                        Log.d(TAG, "CompanyCustomer " + response.body().size());
+                    } else {
+                        Log.d(TAG, "CompanyCustomer " + "null");
                     }
-
-                    mRealmController.deleteListCompanyCustomer();
-                    mRealmController.addListCompanyCustomer(listCompany);
-
-                    setListCompanyCustomer();
-                    swipeContainer.setRefreshing(false);
                 }
 
                 @Override

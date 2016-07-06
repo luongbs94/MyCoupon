@@ -33,7 +33,7 @@ import retrofit2.Response;
  */
 public class NewsFragment extends Fragment {
 
-    private String TAG = getClass().getSimpleName();
+    private final String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mApiServices;
     private RealmController mRealmController;

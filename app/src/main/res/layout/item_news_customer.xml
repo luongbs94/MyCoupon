@@ -241,10 +241,4 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/size_5"
-        android:background="@android:color/darker_gray" />
-
 </LinearLayout>

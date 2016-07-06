@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ln_fragment_coupon"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0F2F1">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/size_10">
+        android:layout_height="match_parent">
 
 
         <android.support.v7.widget.RecyclerView
@@ -25,5 +25,6 @@
             android:scrollbars="vertical" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>
