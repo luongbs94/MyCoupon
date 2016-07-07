@@ -1,6 +1,7 @@
 package com.ln.mycoupon.customer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -108,9 +109,30 @@ public class CustomerLoginActivity extends AppCompatActivity
                             accountOflUser.setAccessToken(token);
                         }
 
+                        SharedPreferences preferences =
+                                getSharedPreferences(MainApplication.SHARED_PREFERENCE,
+                                        MODE_PRIVATE);
+
+
+                        String name = null;
                         if (mProfile != null && mProfile.getName() != null) {
-                            accountOflUser.setName(mProfile.getName());
+                            name = mProfile.getName();
+                            if (id != null) {
+
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString(MainApplication.USER_NAME, mProfile.getName());
+                                editor.putString(MainApplication.USER_ID, id);
+
+                                editor.apply();
+                            }
+                        } else {
+                            String idPreference = preferences.getString(MainApplication.USER_ID, "");
+                            if (idPreference.equals(id)) {
+                                name = preferences.getString(MainApplication.USER_NAME, "");
+                            }
                         }
+
+                        accountOflUser.setName(name);
 
                         if (accountOflUser.getId() != null) {
                             try {

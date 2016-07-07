@@ -34,9 +34,9 @@ import retrofit2.Response;
 
 public class FirstActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String TAG = getClass().getSimpleName();
+    private final String TAG = getClass().getSimpleName();
 
-    private LoveCouponAPI mLoveCouponAPI;
+    private LoveCouponAPI mCouponAPI;
     private RealmController mRealmController;
     private Button mBtnShop, mBtnCustomer;
 
@@ -45,7 +45,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
-        mLoveCouponAPI = MainApplication.getAPI();
+        mCouponAPI = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
 
         initViews();
@@ -144,7 +144,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     /* ============= START CUSTOMER =============*/
     private void getCompanyOfCustomer(final String userId) {
 
-        Call<List<CompanyOfCustomer>> customerLogin = mLoveCouponAPI.getCompaniesByUserId(userId);
+        Call<List<CompanyOfCustomer>> customerLogin = mCouponAPI.getCompaniesByUserId(userId);
         customerLogin.enqueue(new Callback<List<CompanyOfCustomer>>() {
             @Override
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
@@ -166,9 +166,9 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    public void getNewsOfCustomer(String id) {
+    private void getNewsOfCustomer(String id) {
 
-        Call<List<NewsOfCustomer>> newsCustomer = mLoveCouponAPI.getNewsByUserId(id);
+        Call<List<NewsOfCustomer>> newsCustomer = mCouponAPI.getNewsByUserId(id);
         newsCustomer.enqueue(new Callback<List<NewsOfCustomer>>() {
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
@@ -214,7 +214,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     private void getCouponTemplateOfShop(String idCompany) {
 
         //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
-        Call<List<CouponTemplate>> couponShop = mLoveCouponAPI.getCouponTemplates("abc", idCompany);
+        Call<List<CouponTemplate>> couponShop = mCouponAPI.getCouponTemplates("abc", idCompany);
 
         couponShop.enqueue(new Callback<List<CouponTemplate>>() {
             @Override
@@ -237,7 +237,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void getNewsOfShop(String idCompany) {
 
-        Call<List<NewsOfCompany>> newsCompany = mLoveCouponAPI.getNewsByCompanyId(idCompany);
+        Call<List<NewsOfCompany>> newsCompany = mCouponAPI.getNewsByCompanyId(idCompany);
         newsCompany.enqueue(new Callback<List<NewsOfCompany>>() {
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {

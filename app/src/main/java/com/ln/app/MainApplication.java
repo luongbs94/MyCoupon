@@ -38,6 +38,11 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String ID_COMPANY = "company_id";
     public static final String OFF_LINE = "OFF_LINE";
+
+    public static final String USER_NAME = "USER_NAME";
+    public static final String USER_ID = "USER_ID";
+
+
     private static MainApplication mInstances;
 
     public static final String POSITION = "POSITION";
@@ -60,7 +65,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String PUSH_NOTIFICATION = "pushNotification";
     public static final String DEVICE_TOKEN = "deviceToken";
     public static final String BOOL_ADD_TOKEN = "addToken";
-    public static final String SHARED_PREFERENCE = "sharePre";
+    public static final String SHARED_PREFERENCE = "SHARED_PREFERENCE";
     public static final String LOGIN_CLIENT = "loginclient";
 
     public static final String CLIENT_DATA = "client_data";

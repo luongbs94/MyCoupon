@@ -115,7 +115,6 @@ public class ShopMainActivity extends AppCompatActivity
                         .into(mImageLogo);
                 Log.d(TAG, "Logo " + MainApplication.getStringNoBase64(company.getLogo()));
             }
-//
 
             if (company.getName() != null) {
                 mTxtNameCompany.setText(company.getName());
