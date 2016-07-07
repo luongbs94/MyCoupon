@@ -92,9 +92,14 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         }
 
         holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+        holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
+        holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
 
         if (news.isLike()) {
             holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+            holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
+            holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+
         }
 
 //        if (news.isLike()) {
@@ -106,6 +111,9 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             public void onClick(View v) {
                 if (news.isLike()) {
                     holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+                    holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
+                    holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+//
 //                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
                     news.setLike(false);
                     MainApplication.mRealmController.deleteLikeNewsById(news.getMessage_id());
@@ -113,6 +121,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
                 } else {
                     holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+                    holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
+                    holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
 //                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
                     news.setLike(true);
                     MainApplication.mRealmController.addLikeNewsByIdNews(news.getMessage_id());
@@ -179,24 +189,25 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImgLogo;
         private TextView mTxtTile, mTxtLink;
-        private IconTextView mImgLike, mImgShare, mImgDelete;
+        private IconTextView mImgLike, mImgShare, mImgDelete, mImageBookmarks;
         private RecyclerView mRecyclerView;
 
         private MyTextView mTxtTime, mTxtContent;
         private TextView mTxtCompanyName;
         private LinearLayout mLinearLike, mLinearShare, mLinearDelete;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.img_logo_news);
             mImgLike = (IconTextView) itemView.findViewById(R.id.img_like_newx);
             mImgShare = (IconTextView) itemView.findViewById(R.id.img_share_newx);
             mImgDelete = (IconTextView) itemView.findViewById(R.id.img_delete_news);
+            mImageBookmarks = (IconTextView) itemView.findViewById(R.id.bookmark);
 
             mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_news);
             mTxtTime = (MyTextView) itemView.findViewById(R.id.txt_date_news);

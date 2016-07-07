@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/size_8"
-    android:layout_marginRight="@dimen/size_8"
+    android:layout_marginLeft="@dimen/size_4"
+    android:layout_marginRight="@dimen/size_4"
     android:background="@drawable/card_background_white"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -12,7 +12,6 @@
     android:paddingLeft="@dimen/size_8"
     android:paddingRight="@dimen/size_8"
     android:paddingTop="@dimen/size_16">
-
 
     <com.ln.views.CircleImageView
         android:id="@+id/app_icon"

@@ -125,7 +125,24 @@
     <string name="ic_share">\uf064</string>
     <string name="ic_delete">\uf00d</string>
     <string name="ic_email">\uf0e0</string>
+    <string name="ic_start">\uf006</string>
+    <string name="ic_start_like">\uf005</string>
     <string name="ic_globe">\uf0ac</string>
 
 
+
+    <string-array name="month">
+        <item>1 month</item>
+        <item>2 months</item>
+        <item>3 months</item>
+        <item>4 months</item>
+        <item>5 months</item>
+        <item>6 months</item>
+        <item>7 months</item>
+        <item>8 months</item>
+        <item>9 months</item>
+        <item>10 months</item>
+        <item>11 months</item>
+        <item>12 months</item>
+    </string-array>
 </resources>

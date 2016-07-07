@@ -9,120 +9,55 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.CouponTemplate;
-import com.rengwuxian.materialedittext.MaterialEditText;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.ln.mycoupon.R.id.spinner;
+
 /**
  * Created by luongnguyen on 4/2/16.
  * <></>
  */
-public class AddCouponActivity extends AppCompatActivity {
+public class AddCouponActivity extends AppCompatActivity
+        implements View.OnClickListener {
 
-    private ArrayList<String> list = new ArrayList<>();
+    private final String TAG = getClass().getSimpleName();
+    private static final int SIZE_MONTH = 12;
 
-    private MaterialEditText money, content;
-    private CardView saveCoupon;
-    private Spinner spinner;
-    private LoveCouponAPI apiService;
-    private String TAG = "Coupon";
-    private LinearLayout layoutView;
+    private EditText mEdtMoney, mEdtDescription;
+
+    private String[] mListMonth = new String[SIZE_MONTH];
+    private CardView mSaveCouponTemplate;
+    private Spinner mSpinner;
+    private LoveCouponAPI mApiService;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_add_new_coupon);
-        spinner = (Spinner) findViewById(R.id.spinner);
-        money = (MaterialEditText) findViewById(R.id.money);
-        content = (MaterialEditText) findViewById(R.id.description);
-        saveCoupon = (CardView) findViewById(R.id.cardview);
-        layoutView = (LinearLayout) findViewById(R.id.layout_add_coupon);
 
-        saveCoupon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String str_money = money.getText().toString();
-                String str_content = content.getText().toString();
-                if (str_money.length() > 0 && str_content.length() > 0) {
-                    int  duration = (spinner.getSelectedItemPosition() + 1) * 30;
-                    Log.d("duration", duration + "");
-                    postCouponTemplate(str_money, str_content, duration);
-                } else {
-                    Snackbar.make(view, R.string.not_fill_login, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            }
-        });
+        mApiService = MainApplication.getAPI();
+        mListMonth = getResources().getStringArray(R.array.month);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mEdtMoney = (EditText) findViewById(R.id.money);
+        mEdtDescription = (EditText) findViewById(R.id.description);
+        mSpinner = (Spinner) findViewById(spinner);
+        mSaveCouponTemplate = (CardView) findViewById(R.id.card_view);
 
-        list.add("1 month");
-        list.add("2 months");
-        list.add("3 months");
-        list.add("4 months");
-        list.add("5 months");
-        list.add("6 months");
-        list.add("7 months");
-        list.add("8 months");
-        list.add("9 months");
-        list.add("10 months");
-        list.add("11 months");
-        list.add("12 months");
-
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mListMonth);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
-        apiService = MainApplication.getAPI();
+        mSpinner.setAdapter(dataAdapter);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
-    public void postCouponTemplate(final String value, final String content, int duration) {
-        CouponTemplate template = new CouponTemplate();
-        template.setCoupon_template_id(MainApplication.getRandomString(15));
-        template.setContent(content);
-        template.setValue(value);
-        template.setDuration(duration);
-        template.setCompany_id(MainApplication.mRealmController.getAccountShop().getCompany_id() + "");
-
-
-        //template.created_date= new Date();
-
-        Call<CouponTemplate> call2 = apiService.addCouponTemplate(template);
-        call2.enqueue(new Callback<CouponTemplate>() {
-
-            @Override
-            public void onResponse(Call<CouponTemplate> arg0,
-                                   Response<CouponTemplate> arg1) {
-
-                Snackbar.make(layoutView, R.string.add_coupon_success, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                money.setText("");
-                AddCouponActivity.this.content.setText("");
-            }
-
-            @Override
-            public void onFailure(Call<CouponTemplate> arg0, Throwable arg1) {
-                // TODO Auto-generated method stub
-                Log.d(TAG, "fail");
-                Snackbar.make(layoutView, R.string.add_coupon_fail, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-            }
-        });
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -139,4 +74,49 @@ public class AddCouponActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.card_view) {
+            onClickSaveCouponTemplate(v);
+        }
+    }
+
+    private void onClickSaveCouponTemplate(View view) {
+        String money = mEdtMoney.getText().toString().trim();
+        String description = mEdtDescription.getText().toString().trim();
+        if (!money.isEmpty() && !description.isEmpty()) {
+            int duration = (mSpinner.getSelectedItemPosition() + 1) * 30;
+            Log.d("duration", duration + "");
+            postCouponTemplate(money, description, duration);
+        } else {
+            getShowSnackBar(getString(R.string.not_fill_login));
+        }
+    }
+
+    private void postCouponTemplate(String value, String content, int duration) {
+        CouponTemplate template = new CouponTemplate();
+        template.setCoupon_template_id(MainApplication.getRandomString(15));
+        template.setContent(content);
+        template.setValue(value);
+        template.setDuration(duration);
+        template.setCompany_id(MainApplication.mRealmController.getAccountShop().getCompany_id() + "");
+
+        Call<CouponTemplate> createCoupon = mApiService.addCouponTemplate(template);
+        createCoupon.enqueue(new Callback<CouponTemplate>() {
+            @Override
+            public void onResponse(Call<CouponTemplate> call, Response<CouponTemplate> response) {
+                getShowSnackBar(getString(R.string.add_coupon_success));
+            }
+
+            @Override
+            public void onFailure(Call<CouponTemplate> call, Throwable t) {
+                getShowSnackBar(getString(R.string.add_coupon_fail));
+            }
+        });
+    }
+
+    private void getShowSnackBar(String s) {
+        Snackbar.make(mSaveCouponTemplate, s, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
 }
