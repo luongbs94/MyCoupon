@@ -137,7 +137,17 @@ public class Message {
         this.logo_link = news.getLogo_link();
         this.name = news.getName();
     }
-
+    public Message(NewsOfMore news, boolean isLike) {
+        this.message_id = news.getMessage_id();
+        this.content = news.getContent();
+        this.company_id = news.getCompany_id();
+        this.title = news.getTitle();
+        this.link = news.getLink();
+        this.images_link = news.getImages_link();
+        this.logo_link = news.getLogo_link();
+        this.name = news.getName();
+        this.isLike = isLike;
+    }
     public Message(NewsOfCustomer news, boolean isLike) {
         this.message_id = news.getMessage_id();
         this.content = news.getContent();

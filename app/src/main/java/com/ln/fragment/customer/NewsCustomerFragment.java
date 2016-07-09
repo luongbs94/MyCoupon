@@ -21,6 +21,7 @@ import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
 import com.ln.model.Message;
 import com.ln.model.NewsOfCustomer;
+import com.ln.model.NewsOfMore;
 import com.ln.mycoupon.R;
 import com.ln.realm.DeleteNews;
 import com.ln.realm.LikeNews;
@@ -197,7 +198,9 @@ public class NewsCustomerFragment extends Fragment {
         String idUser = account.getId();
         List<LikeNews> listLikeNews = mRealmController.getListLikeNews();
         List<NewsOfCustomer> listNews = mRealmController.getListNewsOfCustomer();
+        List<NewsOfMore> listNewsOfMores = mRealmController.getListNewsOfMore();
         List<Message> listMessage = new ArrayList<>();
+
         for (LikeNews likeNews : listLikeNews) {
             for (NewsOfCustomer news : listNews) {
                 if (likeNews.getIdUser().equals(idUser) &&
@@ -205,24 +208,15 @@ public class NewsCustomerFragment extends Fragment {
                     listMessage.add(new Message(news, true));
                 }
             }
+
+            for (NewsOfMore newsOfMore : listNewsOfMores) {
+                if (likeNews.getIdUser().equals(idUser) &&
+                        likeNews.getIdNews().equals(newsOfMore.getMessage_id())) {
+                    listMessage.add(new Message(newsOfMore, true));
+                }
+            }
         }
-//        List<NewsOfCustomer> mListNewsOfCustomer = mRealmController.getListNewsOfCustomer();
-//        List<LikeNews> listLike = mRealmController.getListLikeNews();
-//        List<Message> listMessage = new ArrayList<>();
-//
-//        for (NewsOfCustomer newsOfCustomer : mListNewsOfCustomer) {
-//            listMessage.add(new Message(newsOfCustomer));
-//        }
-//
-//        for (LikeNews likeNews : listLike) {
-//            for (Message message : listMessage) {
-//                if (message.getMessage_id().equals(likeNews.getIdNews())
-//                        && likeNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
-//                    message.setLike(true);
-//                }
-//            }
-//        }
-//
+
         NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listMessage, this);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);

@@ -57,8 +57,6 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private LoveCouponAPI mCouponAPI;
     private RealmController mRealmController;
-    private String mCity;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +106,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                                 getSharedPreferences(MainApplication.SHARED_PREFERENCE,
                                         MODE_PRIVATE);
 
+                        String mCity = preferences.getString(MainApplication.CITY_CUSTOMER, "");
 
                         String name = null;
                         if (mProfile != null && mProfile.getName() != null) {
@@ -117,7 +116,6 @@ public class CustomerLoginActivity extends AppCompatActivity
                                 SharedPreferences.Editor editor = preferences.edit();
                                 editor.putString(MainApplication.USER_NAME, mProfile.getName());
                                 editor.putString(MainApplication.USER_ID, id);
-
                                 editor.apply();
                             }
                         } else {
@@ -134,11 +132,14 @@ public class CustomerLoginActivity extends AppCompatActivity
 //                                MainApplication.sDetailUser = accountOflUser;
                                 mRealmController.saveAccountCustomer(accountOflUser);
                                 getCompanyByUserId(accountOflUser.getId());
-//                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
+                                getNewsOfCustomer(id);
+                                getNewsMore(id, mCity);
 
+//                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
                                 LoginManager.getInstance().logOut();
                                 MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
                                 Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
+                                start();
 
                             } catch (NullPointerException e) {
                                 Log.d(TAG, "Login Facebook Error");
@@ -213,6 +214,10 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private void signInGoogleSuccess(GoogleSignInAccount account) {
 
+        String mCity = getSharedPreferences(
+                MainApplication.SHARED_PREFERENCE, MODE_PRIVATE)
+                .getString(MainApplication.CITY_CUSTOMER, "");
+
         AccountOflUser accountOflUser = new AccountOflUser(account.getId(), account.getEmail(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
             accountOflUser.setPicture(account.getPhotoUrl().toString());
@@ -222,6 +227,8 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         Log.d(TAG, "Login Google Success " + account.getId() + " - " + account.getEmail());
         getCompanyByUserId(account.getId());
+        getNewsOfCustomer(account.getId());
+        getNewsMore(account.getId(), mCity);
         updateUserToken(account.getIdToken(), MainApplication.getDeviceToken(), "android");
         MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
 
@@ -245,20 +252,12 @@ public class CustomerLoginActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                 if (response.body() != null) {
-//                    SaveData.listCompanyCustomer = response.body();
                     mRealmController.deleteListCompanyCustomer();
                     mRealmController.addListCompanyCustomer(response.body());
                     Log.d(TAG, "getCompanyByUserId " + response.body().size());
                 } else {
                     Log.d(TAG, "getCompanyByUserId " + "null");
                 }
-
-                getNewsOfCustomer(id);
-                if (mCity != null) {
-                    getNewsMore(id, mCity);
-                }
-                start();
-
             }
 
             @Override
