@@ -22,7 +22,7 @@
         android:paddingTop="@dimen/size_8"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/size_15sp" />
+        android:textSize="@dimen/size_17sp" />
 
     <TextView
         android:id="@+id/txt_email_nav"

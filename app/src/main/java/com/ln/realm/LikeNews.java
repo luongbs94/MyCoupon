@@ -11,13 +11,12 @@ import io.realm.annotations.Required;
 
 public class LikeNews extends RealmObject {
 
-
-    @Required
-    private String idUser;
-
     @Required
     @PrimaryKey
     private String idNews;
+    @Required
+    private String idUser;
+    private int type;
 
     public String getIdUser() {
         return idUser;
@@ -33,5 +32,13 @@ public class LikeNews extends RealmObject {
 
     public void setIdNews(String idNews) {
         this.idNews = idNews;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

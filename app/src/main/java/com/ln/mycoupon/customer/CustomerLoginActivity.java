@@ -26,14 +26,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
-import com.ln.model.CityOfUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.NewsOfCustomer;
+import com.ln.model.NewsOfMore;
 import com.ln.model.User;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
@@ -51,17 +49,15 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private final String TAG = getClass().getSimpleName();
 
-    // FACEBOOK
     private Button mBtnFacebook;
     private CallbackManager mCallbackManager;
-
-    private Gson gson = new Gson();
 
     private Button mBtnGoogle;
     private GoogleApiClient mGoogleApiClient;
 
     private LoveCouponAPI mCouponAPI;
     private RealmController mRealmController;
+    private String mCity;
 
 
     @Override
@@ -73,7 +69,6 @@ public class CustomerLoginActivity extends AppCompatActivity
         mCouponAPI = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
 
-        getCityOfUser();
 
         initViews();
         addEvents();
@@ -136,7 +131,8 @@ public class CustomerLoginActivity extends AppCompatActivity
 
                         if (accountOflUser.getId() != null) {
                             try {
-                                MainApplication.sDetailUser = accountOflUser;
+//                                MainApplication.sDetailUser = accountOflUser;
+                                mRealmController.saveAccountCustomer(accountOflUser);
                                 getCompanyByUserId(accountOflUser.getId());
 //                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
 
@@ -206,7 +202,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 if (account != null) {
-                    loginGoogleSuccess(account);
+                    signInGoogleSuccess(account);
                 }
 
             } else {
@@ -215,18 +211,19 @@ public class CustomerLoginActivity extends AppCompatActivity
         }
     }
 
-    private void loginGoogleSuccess(GoogleSignInAccount account) {
+    private void signInGoogleSuccess(GoogleSignInAccount account) {
 
-        MainApplication.sDetailUser = new AccountOflUser(account.getId(), account.getEmail(), "", account.getIdToken());
+        AccountOflUser accountOflUser = new AccountOflUser(account.getId(), account.getEmail(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
-            MainApplication.sDetailUser.setPicture(account.getPhotoUrl().toString());
+            accountOflUser.setPicture(account.getPhotoUrl().toString());
         }
+
+        mRealmController.saveAccountCustomer(accountOflUser);
 
         Log.d(TAG, "Login Google Success " + account.getId() + " - " + account.getEmail());
         getCompanyByUserId(account.getId());
         updateUserToken(account.getIdToken(), MainApplication.getDeviceToken(), "android");
         MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
-
 
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -248,7 +245,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                 if (response.body() != null) {
-                    SaveData.listCompanyCustomer = response.body();
+//                    SaveData.listCompanyCustomer = response.body();
                     mRealmController.deleteListCompanyCustomer();
                     mRealmController.addListCompanyCustomer(response.body());
                     Log.d(TAG, "getCompanyByUserId " + response.body().size());
@@ -257,6 +254,9 @@ public class CustomerLoginActivity extends AppCompatActivity
                 }
 
                 getNewsOfCustomer(id);
+                if (mCity != null) {
+                    getNewsMore(id, mCity);
+                }
                 start();
 
             }
@@ -323,28 +323,8 @@ public class CustomerLoginActivity extends AppCompatActivity
         }
     }
 
-    private void getCityOfUser() {
-        Call<CityOfUser> call = mCouponAPI.getCityOfUser();
-        call.enqueue(new Callback<CityOfUser>() {
-            @Override
-            public void onResponse(Call<CityOfUser> call, Response<CityOfUser> response) {
-                if (response.body() != null) {
-                    MainApplication.cityOfUser = response.body();
 
-                    Log.d(TAG, "City : " + MainApplication.cityOfUser.getCity());
-                } else {
-                    Log.d(TAG, "City : " + "Khong co du lieu");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CityOfUser> call, Throwable t) {
-                Log.d(TAG, "City Error : " + t.toString());
-            }
-        });
-    }
-
-    public void getNewsOfCustomer(String id) {
+    private void getNewsOfCustomer(String id) {
 
         Call<List<NewsOfCustomer>> call = mCouponAPI.getNewsByUserId(id);
         call.enqueue(new Callback<List<NewsOfCustomer>>() {
@@ -352,7 +332,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
 
                 if (response.body() != null) {
-                    mRealmController.deleteAllNewsOfCustomer();
+                    mRealmController.deleteListNewsOfCustomer();
                     mRealmController.addListNewsOfCustomer(response.body());
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 }
@@ -363,6 +343,26 @@ public class CustomerLoginActivity extends AppCompatActivity
                 Log.d(TAG, "getNewsOfCustomer" + t.toString());
             }
         });
+    }
 
+    private void getNewsMore(String id, String city) {
+        Call<List<NewsOfMore>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
+        newsMore.enqueue(new Callback<List<NewsOfMore>>() {
+            @Override
+            public void onResponse(Call<List<NewsOfMore>> call, Response<List<NewsOfMore>> response) {
+                if (response.body() != null) {
+                    mRealmController.deleteListNewsOfMore();
+                    mRealmController.addListNewsOfMore(response.body());
+                    Log.d(TAG, " getNewsMore " + response.body().size());
+                } else {
+                    Log.d(TAG, " getNewsMore " + " null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsOfMore>> call, Throwable t) {
+                Log.d(TAG, "getNewsMore " + " onFailure " + t.toString());
+            }
+        });
     }
 }

@@ -96,7 +96,7 @@ public class CouponFragment extends Fragment {
     }
 
 
-    private void setCouponTemplate() {
+    public void setCouponTemplate() {
 
         List<CouponTemplate> mListCoupon = mRealmController.getListCouponTemplate();
         CouponTemplateAdapter adapter = new CouponTemplateAdapter(getActivity(), mListCoupon);
@@ -105,7 +105,7 @@ public class CouponFragment extends Fragment {
     }
 
 
-    private void getCouponTemplate() {
+    public void getCouponTemplate() {
 
 
         if (mCompany != null) {

@@ -51,7 +51,9 @@ public class AddCouponActivity extends AppCompatActivity
         mEdtMoney = (EditText) findViewById(R.id.money);
         mEdtDescription = (EditText) findViewById(R.id.description);
         mSpinner = (Spinner) findViewById(spinner);
+
         mSaveCouponTemplate = (CardView) findViewById(R.id.card_view);
+        mSaveCouponTemplate.setOnClickListener(this);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mListMonth);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -66,7 +68,7 @@ public class AddCouponActivity extends AppCompatActivity
 
         if (id == android.R.id.home) {
             Intent intent = new Intent();
-            setResult(2, intent);
+            setResult(MainApplication.ADD_COUPON_TEMPLATE, intent);
             finish();
         }
 
@@ -77,11 +79,11 @@ public class AddCouponActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.card_view) {
-            onClickSaveCouponTemplate(v);
+            onClickSaveCouponTemplate();
         }
     }
 
-    private void onClickSaveCouponTemplate(View view) {
+    private void onClickSaveCouponTemplate() {
         String money = mEdtMoney.getText().toString().trim();
         String description = mEdtDescription.getText().toString().trim();
         if (!money.isEmpty() && !description.isEmpty()) {
@@ -101,15 +103,19 @@ public class AddCouponActivity extends AppCompatActivity
         template.setDuration(duration);
         template.setCompany_id(MainApplication.mRealmController.getAccountShop().getCompany_id() + "");
 
-        Call<CouponTemplate> createCoupon = mApiService.addCouponTemplate(template);
-        createCoupon.enqueue(new Callback<CouponTemplate>() {
+        Call<Integer> createCoupon = mApiService.addCouponTemplate(template);
+        createCoupon.enqueue(new Callback<Integer>() {
             @Override
-            public void onResponse(Call<CouponTemplate> call, Response<CouponTemplate> response) {
-                getShowSnackBar(getString(R.string.add_coupon_success));
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.body() == MainApplication.SUCCESS) {
+                    getShowSnackBar(getString(R.string.add_coupon_success));
+                    setResult(RESULT_OK);
+                    finish();
+                }
             }
 
             @Override
-            public void onFailure(Call<CouponTemplate> call, Throwable t) {
+            public void onFailure(Call<Integer> call, Throwable t) {
                 getShowSnackBar(getString(R.string.add_coupon_fail));
             }
         });

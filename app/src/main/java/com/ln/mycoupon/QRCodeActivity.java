@@ -14,8 +14,10 @@ import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
+import com.ln.model.AccountOflUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
+import com.ln.realm.RealmController;
 
 import java.util.List;
 
@@ -29,24 +31,30 @@ import retrofit2.Response;
  */
 public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
 
-    private TextView myTextView;
-    private QRCodeReaderView mydecoderview;
-    private LoveCouponAPI apiService;
-    private String TAG = "Coupon";
+    private final String TAG = getClass().getSimpleName();
+    private TextView mTextView;
+    private QRCodeReaderView mQRCodeReaderView;
 
+
+    private LoveCouponAPI apiService;
+    private RealmController mRealmController;
+    private AccountOflUser mAccountOflUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         apiService = MainApplication.getAPI();
+        mRealmController = MainApplication.mRealmController;
+        mAccountOflUser = mRealmController.getAccountCustomer();
 
-        mydecoderview = (QRCodeReaderView) findViewById(R.id.qrdecoderview);
-        mydecoderview.setOnQRCodeReadListener(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        myTextView = (TextView) findViewById(R.id.exampleTextView);
+        mQRCodeReaderView = (QRCodeReaderView) findViewById(R.id.qrdecoderview);
+        mQRCodeReaderView.setOnQRCodeReadListener(this);
+
+        mTextView = (TextView) findViewById(R.id.exampleTextView);
 
     }
 
@@ -56,8 +64,8 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
     // "points" : points where QR control points are placed
     @Override
     public void onQRCodeRead(String text, PointF[] points) {
-        myTextView.setText(text);
-        mydecoderview.getCameraManager().stopPreview();
+        mTextView.setText(text);
+        mQRCodeReaderView.getCameraManager().stopPreview();
         getCoupon(text);
     }
 
@@ -77,13 +85,13 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
     @Override
     protected void onResume() {
         super.onResume();
-        mydecoderview.getCameraManager().startPreview();
+        mQRCodeReaderView.getCameraManager().startPreview();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mydecoderview.getCameraManager().stopPreview();
+        mQRCodeReaderView.getCameraManager().stopPreview();
     }
 
 
@@ -102,18 +110,13 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
 
     private void getCoupon(final String coupon_id) {
         Call<List<Coupon>> call = apiService.getCoupon(coupon_id);
-
         call.enqueue(new Callback<List<Coupon>>() {
-
             @Override
-            public void onResponse(Call<List<Coupon>> arg0,
-                                   Response<List<Coupon>> arg1) {
-                List<Coupon> templates = arg1.body();
-
-                if (templates.size() > 0) {
-                    Coupon coupon = templates.get(0);
+            public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
+                if (response.body().size() > 0) {
+                    Coupon coupon = response.body().get(0);
                     if (coupon.getUser_id() != null) {
-                        MaterialDialog dialog = new MaterialDialog.Builder(QRCodeActivity.this)
+                        new MaterialDialog.Builder(QRCodeActivity.this)
                                 .title("Coupon")
                                 .content("Coupon đã được sử dụng")
                                 .positiveText(R.string.ok)
@@ -121,23 +124,22 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
                                     @Override
                                     public void onClick(MaterialDialog dialog, DialogAction which) {
                                         dialog.dismiss();
-                                        mydecoderview.getCameraManager().startPreview();
+                                        mQRCodeReaderView.getCameraManager().startPreview();
 
                                     }
                                 })
                                 .show();
 
-
                     } else {
-                        if (MainApplication.sDetailUser != null) {
-                            updateCoupon(coupon_id, MainApplication.sDetailUser.getId(),
+
+                        if (mAccountOflUser != null) {
+                            updateCoupon(coupon_id, mAccountOflUser.getId(),
                                     coupon.getDuration());
                         }
                     }
-
                 } else {
 
-                    MaterialDialog dialog = new MaterialDialog.Builder(QRCodeActivity.this)
+                    new MaterialDialog.Builder(QRCodeActivity.this)
                             .title("Coupon")
                             .content("Không tìm thấy coupon này")
                             .positiveText(R.string.ok)
@@ -145,24 +147,22 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
                                 @Override
                                 public void onClick(MaterialDialog dialog, DialogAction which) {
                                     dialog.dismiss();
-                                    mydecoderview.getCameraManager().startPreview();
-
+                                    mQRCodeReaderView.getCameraManager().startPreview();
                                 }
                             })
-
                             .show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Coupon>> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
+            public void onFailure(Call<List<Coupon>> call, Throwable t) {
+                Log.d(TAG, "getCoupon Failure");
 
                 Toast.makeText(QRCodeActivity.this, "Not found", Toast.LENGTH_LONG).show();
 
-
             }
         });
+
     }
 
     private void updateCoupon(String coupon_id, String user_id, int duration) {
@@ -170,12 +170,13 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         template.setCoupon_id(coupon_id);
         template.setUser_id(user_id);
         template.setDuration(duration);
+
         try {
-            template.setUser_image_link(MainApplication.sDetailUser.getPicture());
-            template.setUser_name(MainApplication.sDetailUser.getName());
+            template.setUser_image_link(mAccountOflUser.getPicture());
+            template.setUser_name(mAccountOflUser.getName());
 
         } catch (Exception e) {
-
+            Log.d(TAG, "updateCoupon " + e.toString());
         }
 
 
@@ -185,7 +186,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
             @Override
             public void onResponse(Call<List<CompanyOfCustomer>> arg0,
                                    Response<List<CompanyOfCustomer>> arg1) {
-                MaterialDialog dialog = new MaterialDialog.Builder(QRCodeActivity.this)
+                new MaterialDialog.Builder(QRCodeActivity.this)
                         .title("Coupon")
                         .content("Bạn đã thêm mới một coupon")
                         .positiveText(R.string.ok)
@@ -204,7 +205,6 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
             @Override
             public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
                 Toast.makeText(QRCodeActivity.this, "Not found", Toast.LENGTH_LONG).show();
-
             }
         });
     }

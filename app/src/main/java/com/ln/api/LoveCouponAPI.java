@@ -7,13 +7,13 @@ package com.ln.api;
 
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
-import com.ln.model.CompanyOfCustomer;
 import com.ln.model.CompanyLocation;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
-import com.ln.model.Message;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
+import com.ln.model.NewsOfMore;
 import com.ln.model.User;
 
 import java.util.ArrayList;
@@ -50,13 +50,13 @@ public interface LoveCouponAPI {
     Call<List<Company>> getCompanyProfileSocial(@Query("user_id") String user_id);
 
     @POST("/addCouponTemplate")
-    Call<CouponTemplate> addCouponTemplate(@Body CouponTemplate template);
+    Call<Integer> addCouponTemplate(@Body CouponTemplate template);
 
     @POST("/deleteCouponTemplate")
     Call<CouponTemplate> deleteCouponTemplate(@Body CouponTemplate template);
 
     @POST("/addMessage")
-    Call<Message> addMessage(@Body Message template);
+    Call<Integer> addMessage(@Body NewsOfCompany news);
 
     @POST("/addCoupon")
     Call<Coupon> addCoupon(@Body Coupon template);
@@ -88,7 +88,7 @@ public interface LoveCouponAPI {
     Call<Coupon> useCoupon(@Body Coupon template);
 
     @POST("/updateCompany")
-    Call<Company> updateCompany(@Body Company template);
+    Call<Integer> updateCompany(@Body Company template);
 
 
     @GET("/get_web_token")
@@ -115,5 +115,5 @@ public interface LoveCouponAPI {
     Call<ResponseBody> updateCompanyLocation(@Body CompanyLocation companyLocation);
 
     @GET("/get_news_more_by_user_id")
-    Call<List<Message>> getNewsMoreByUserId(@Query("user_id") String user_id, @Query("city") String city);
+    Call<List<NewsOfMore>> getNewsMoreByUserId(@Query("user_id") String user_id, @Query("city") String city);
 }

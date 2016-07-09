@@ -4,10 +4,10 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by Nhahv on 7/3/2016.
+ * Created by Nhahv on 7/9/2016.
  * <></>
  */
-public class NewsOfCustomer extends RealmObject {
+public class NewsOfMore extends RealmObject {
 
     @PrimaryKey
     private String message_id;
@@ -18,9 +18,26 @@ public class NewsOfCustomer extends RealmObject {
     private String title;
     private String link;
     private String images_link;
-    private String logo;
     private String logo_link;
     private String name;
+
+    public NewsOfMore() {
+    }
+
+    public NewsOfMore(String message_id, String content, long created_date,
+                      String company_id, long last_date, String title,
+                      String link, String images_link, String logo_link, String name) {
+        this.message_id = message_id;
+        this.content = content;
+        this.created_date = created_date;
+        this.company_id = company_id;
+        this.last_date = last_date;
+        this.title = title;
+        this.link = link;
+        this.images_link = images_link;
+        this.logo_link = logo_link;
+        this.name = name;
+    }
 
     public String getMessage_id() {
         return message_id;
@@ -38,12 +55,28 @@ public class NewsOfCustomer extends RealmObject {
         this.content = content;
     }
 
+    public long getCreated_date() {
+        return created_date;
+    }
+
+    public void setCreated_date(long created_date) {
+        this.created_date = created_date;
+    }
+
     public String getCompany_id() {
         return company_id;
     }
 
     public void setCompany_id(String company_id) {
         this.company_id = company_id;
+    }
+
+    public long getLast_date() {
+        return last_date;
+    }
+
+    public void setLast_date(long last_date) {
+        this.last_date = last_date;
     }
 
     public String getTitle() {
@@ -70,14 +103,6 @@ public class NewsOfCustomer extends RealmObject {
         this.images_link = images_link;
     }
 
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
     public String getLogo_link() {
         return logo_link;
     }
@@ -91,21 +116,6 @@ public class NewsOfCustomer extends RealmObject {
     }
 
     public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public void setNewsOfCustomer(String message_id, String content, String company_id,
-                                  String title, String link, String images_link,
-                                  String logo, String logo_link, String name) {
-        this.message_id = message_id;
-        this.content = content;
-        this.company_id = company_id;
-        this.title = title;
-        this.link = link;
-        this.images_link = images_link;
-        this.logo = logo;
-        this.logo_link = logo_link;
         this.name = name;
     }
 }

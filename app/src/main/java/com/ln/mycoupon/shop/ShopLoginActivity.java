@@ -208,6 +208,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
                 if (response.body() != null) {
                     loginSuccess(response.body().get(0));
+                    mRealmController.saveAccountShop(response.body().get(0));
                     Log.d(TAG, "getCompanyProfile " + response.body().get(0).getCompany_id());
                 } else {
                     Log.d(TAG, "getCompanyProfile " + "null");
@@ -230,6 +231,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
                 if (response.body() != null) {
                     loginSuccess(response.body().get(0));
+                    mRealmController.saveAccountShop(response.body().get(0));
                 } else {
                     Log.d(TAG, "getCompanyProfileSocial " + "null");
                 }
