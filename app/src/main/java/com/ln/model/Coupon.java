@@ -10,7 +10,7 @@ public class Coupon extends RealmObject {
     private String coupon_id;
     private String user_id;
     private String coupon_template_id;
-    //    private Date created_date;
+    private long created_date;
     private String used_date;
     private String company_id;
     private String value;
@@ -21,6 +21,14 @@ public class Coupon extends RealmObject {
     private String user_image_link;
 
     public Coupon() {
+    }
+
+    public long getCreated_date() {
+        return created_date;
+    }
+
+    public void setCreated_date(long created_date) {
+        this.created_date = created_date;
     }
 
     public Coupon(String coupon_id, String user_id, String coupon_template_id,

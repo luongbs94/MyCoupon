@@ -17,6 +17,8 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Coupon;
 
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -154,6 +156,10 @@ public class TestQRCode extends AppCompatActivity {
         template.setValue(value);
         template.setCoupon_template_id(coupon_template_id);
         template.setDuration(duration);
+
+
+        Log.d("test", new Date().getTime() + "");
+        template.setCreated_date(new Date().getTime());
 
 
         //template.created_date= new Date();
