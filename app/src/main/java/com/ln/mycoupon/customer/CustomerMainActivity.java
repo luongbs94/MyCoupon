@@ -86,15 +86,15 @@ public class CustomerMainActivity extends AppCompatActivity
 
         startFragment(new CouponFragment());
 
-        if (MainApplication.sDetailUser != null) {
+        AccountOflUser accountOflUser = MainApplication.mRealmController.getAccountCustomer();
+        if (accountOflUser != null) {
 
-            AccountOflUser accountOflUser = MainApplication.sDetailUser;
             if (accountOflUser.getPicture() != null) {
-
                 Glide.with(this).load(accountOflUser.getPicture()).into(imageView);
             }
+
             if (accountOflUser.getName() != null) {
-                txt.setText(MainApplication.sDetailUser.getName());
+                txt.setText(accountOflUser.getName());
             }
         }
 
@@ -171,7 +171,7 @@ public class CustomerMainActivity extends AppCompatActivity
                     };
                 }
 
-                MainApplication.sDetailUser = null;
+//                MainApplication.sDetailUser = null;
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
                 MainApplication.editor.commit();
                 Intent intent = new Intent(this, FirstActivity.class);

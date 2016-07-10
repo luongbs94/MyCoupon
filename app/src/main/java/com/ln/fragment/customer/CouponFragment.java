@@ -15,6 +15,7 @@ import com.ln.adapter.CompanyAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.ItemClickSupport;
 import com.ln.app.MainApplication;
+import com.ln.model.AccountOflUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.customer.CouponCompanyOfClientActivity;
@@ -118,9 +119,9 @@ public class CouponFragment extends Fragment {
 
     private void getCompanyByUserId() {
 
-        if (MainApplication.sDetailUser != null) {
-            Call<List<CompanyOfCustomer>> call3 = mApiServices.getCompaniesByUserId(
-                    MainApplication.sDetailUser.getId());
+        AccountOflUser account = mRealmController.getAccountCustomer();
+        if (account != null) {
+            Call<List<CompanyOfCustomer>> call3 = mApiServices.getCompaniesByUserId(account.getId());
             call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
                 @Override
                 public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {

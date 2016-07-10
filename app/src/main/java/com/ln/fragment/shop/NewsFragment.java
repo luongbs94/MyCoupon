@@ -87,7 +87,7 @@ public class NewsFragment extends Fragment {
         swipeContainer.setRefreshing(false);
     }
 
-    private void setNewsOfCompany() {
+    public void setNewsOfCompany() {
 
         List<NewsOfCompany> mListNewsOfCompany = mRealmController.getListNewsOfCompany();
         List<NewsOfCompanyLike> listNews = new ArrayList<>();
@@ -112,7 +112,6 @@ public class NewsFragment extends Fragment {
     }
 
     private void getNewsByCompanyId() {
-
 
         if (mCompany != null) {
 

@@ -32,6 +32,7 @@ import com.ln.app.MainApplication;
 import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.mycoupon.R;
+import com.ln.realm.RealmController;
 import com.ln.views.CircleImageView;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ import retrofit2.Response;
 public class SettingFragment extends Fragment {
 
     private LoveCouponAPI mLoveCouponAPI;
+    private RealmController mRealmController;
 
     private String TAG = getClass().getSimpleName();
 
@@ -61,8 +63,6 @@ public class SettingFragment extends Fragment {
     private LinearLayout mLinearLayout;
     private FloatingActionButton mFabDoneSave;
 
-    private Uri mFileUri;
-
     private static final int SELECT_PICTURE = 1;
 
     private static OnClickSetInformation mListener;
@@ -71,6 +71,7 @@ public class SettingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLoveCouponAPI = MainApplication.getAPI();
+        mRealmController = MainApplication.mRealmController;
     }
 
     public static void setListener(OnClickSetInformation listener) {
@@ -285,28 +286,44 @@ public class SettingFragment extends Fragment {
             String logo = MainApplication.convertToBitmap(mImgLogo);
             logo = MainApplication.FIRST_BASE64 + logo;
 
-            Company company = MainApplication.mRealmController.getAccountShop();
+            Company company = mRealmController.getAccountShop();
+            final Company company1 = new Company();
+            company1.setCompany(company.getCompany_id(), company.getName(), company.getAddress(), company.getLogo(),
+                    company.getCreated_date(), company.getUser_id(), company.getUser1(),
+                    company.getPass1(), company.getUser1_admin(), company.getUser2(),
+                    company.getPass2(), company.getUser2_admin(), company.getIp(),
+                    company.getLogo_link(), company.getCity(), company.getCountry_name());
 
-            company.setName(name);
-            company.setAddress(address);
-            company.setLogo(logo);
+            company1.setName(name);
+            company1.setAddress(address);
+            company1.setLogo(logo);
 
-            Call<Company> call = mLoveCouponAPI.updateCompany(company);
+            Log.d(TAG, "Logo : " + logo);
             final String finalLogo = logo;
-            call.enqueue(new Callback<Company>() {
-                @Override
-                public void onResponse(Call<Company> call, Response<Company> response) {
-                    Log.d(TAG, "Success");
-                    getShowMessage("Success");
-                    if (mListener != null) {
-                        mListener.onClickSetInformation(finalLogo, name, address);
-                    }
 
+            if (mListener != null) {
+                mListener.onClickSetInformation(finalLogo, name, address);
+            }
+            Call<Integer> call = mLoveCouponAPI.updateCompany(company1);
+
+            call.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.body() == 1) {
+                        Log.d(TAG, "Success");
+
+
+                        getShowMessage("Success");
+                        mRealmController.saveAccountShop(company1);
+                        if (mListener != null) {
+                            mListener.onClickSetInformation(finalLogo, name, address);
+                        }
+                    }
                 }
 
                 @Override
-                public void onFailure(Call<Company> call, Throwable t) {
-                    Log.d(TAG, "Fails");
+                public void onFailure(Call<Integer> call, Throwable t) {
+                    Log.d(TAG, "Fails " + t.toString());
                 }
             });
 

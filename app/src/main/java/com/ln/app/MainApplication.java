@@ -38,6 +38,16 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String ID_COMPANY = "company_id";
     public static final String OFF_LINE = "OFF_LINE";
+
+    public static final String USER_NAME = "USER_NAME";
+    public static final String USER_ID = "USER_ID";
+    public static final String CITY_CUSTOMER = "CITY_CUSTOMER";
+    public static final int ADD_COUPON_TEMPLATE = 2;
+    public static final int ADD_MESSAGES = 3;
+    public static final int SUCCESS = 1;
+    public static final int SIZE_ID = 20;
+
+
     private static MainApplication mInstances;
 
     public static final String POSITION = "POSITION";
@@ -49,7 +59,6 @@ public class MainApplication extends MultiDexApplication {
 
     // apis normal
     public static LoveCouponAPI apiService;
-    // api use upload images
     public static LoveCouponAPI apiService1;
     public static LoveCouponAPI apiService2;
 
@@ -60,7 +69,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String PUSH_NOTIFICATION = "pushNotification";
     public static final String DEVICE_TOKEN = "deviceToken";
     public static final String BOOL_ADD_TOKEN = "addToken";
-    public static final String SHARED_PREFERENCE = "sharePre";
+    public static final String SHARED_PREFERENCE = "SHARED_PREFERENCE";
     public static final String LOGIN_CLIENT = "loginclient";
 
     public static final String CLIENT_DATA = "client_data";
@@ -82,7 +91,8 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String FACEBOOK_EMAIL = "email";
     public static final String FACEBOOK_USER_FRIENDS = "user_friends";
-    public static AccountOflUser sDetailUser;
+
+//    public static AccountOflUser sDetailUser;
 
     private static final String URL_GET_POST = "http://188.166.179.187:3000";
     public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
@@ -92,9 +102,6 @@ public class MainApplication extends MultiDexApplication {
     public static AccountOflUser sShopDetail;
 
     public static boolean sIsAdmin = false;
-
-    // id company when logout
-    public static String sIdCompany;
 
 
     public static final String FILE_URI = "file_uri";
@@ -119,13 +126,18 @@ public class MainApplication extends MultiDexApplication {
     public static int TYPE_LOGIN_CUSTOMER = TYPE_FACEBOOK;
 
 
-    public static CityOfUser cityOfUser;
+    //    public static CityOfUser cityOfUser;
     public static CityOfUser cityOfCompany;
 
     public static final String FONT = "fonts/fontawesome-webfont.ttf";
-//    public static final String EMAIL_LOVE_COUPON = "support@lovecoupon.com";
+    //    public static final String EMAIL_LOVE_COUPON = "support@lovecoupon.com";
     public static final String EMAIL_LOVE_COUPON = "nhahv09021995@gmail.com";
-    public static final String WEB_SITE_LOVE_COUPON = "http://www.lovecoupon.com";
+    public static final String WEB_SITE_LOVE_COUPON = "http://www.lovecoupon.com:8080";
+
+
+    public static final int NEWS_CUSTOMER = 0;
+    public static final int NEWS_MORE = 1;
+
 
     @Override
     public void onCreate() {
@@ -252,8 +264,9 @@ public class MainApplication extends MultiDexApplication {
 
         BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
         Bitmap bitmap = bitmapDrawable.getBitmap();
+        Bitmap resize = Bitmap.createScaledBitmap(bitmap, WIDTH_IMAGES, WIDTH_IMAGES, true);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        resize.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         byte[] bytes = outputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }

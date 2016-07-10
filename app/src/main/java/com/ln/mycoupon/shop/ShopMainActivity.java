@@ -29,7 +29,6 @@ import com.ln.fragment.shop.NewsFragment;
 import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.interfaces.OnClickSetInformation;
-import com.ln.model.AccountOflUser;
 import com.ln.model.Company;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
@@ -38,7 +37,8 @@ import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
 
 public class ShopMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnClickSetInformation {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        OnClickSetInformation, View.OnClickListener {
 
     private String TAG = getClass().getSimpleName();
 
@@ -50,8 +50,8 @@ public class ShopMainActivity extends AppCompatActivity
     private FloatingActionButton mFbButton;
     private DrawerLayout mDrawerLayout;
 
-    private static ImageView mImageLogo;
-    private static TextView mTxtNameCompany, mTxtAddress;
+    private ImageView mImageLogo;
+    private TextView mTxtNameCompany, mTxtAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +71,11 @@ public class ShopMainActivity extends AppCompatActivity
                     && company.getUser2_admin().equals("1"))) {
                 MainApplication.sIsAdmin = true;
             }
+
+            Log.d(TAG, "Company " + company.getName());
+            Log.d(TAG, "Company " + company.getLogo());
+            Log.d(TAG, "Company " + company.getLogo_link());
+            Log.d(TAG, "Company " + company.getAddress());
         }
 
 
@@ -80,24 +85,6 @@ public class ShopMainActivity extends AppCompatActivity
         setTitle(sTitle);
 
         mFbButton = (FloatingActionButton) findViewById(R.id.fab);
-        mFbButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                switch (currentPosition) {
-                    case 0:
-                        Intent intent = new Intent(ShopMainActivity.this, AddCouponActivity.class);
-                        startActivityForResult(intent, 2);
-                        break;
-                    case 1:
-                        Intent intent1 = new Intent(ShopMainActivity.this, AddMessageActivity.class);
-                        startActivityForResult(intent1, 3);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -107,7 +94,6 @@ public class ShopMainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-
         navigationView.setNavigationItemSelectedListener(this);
         View headView = navigationView.getHeaderView(0);
         mImageLogo = (ImageView) headView.findViewById(R.id.img_logo_nav);
@@ -115,15 +101,13 @@ public class ShopMainActivity extends AppCompatActivity
         mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
         if (company != null) {
-
-            AccountOflUser accountOflUser = MainApplication.sShopDetail;
             if (company.getLogo_link() != null) {
                 Glide.with(this).load(company.getLogo_link())
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(mImageLogo);
                 Log.d(TAG, "Logo " + company.getLogo_link());
 
-            } else if (company.getLogo() != null) {
+            } else if (company.getLogo_link() == null && company.getLogo() != null) {
                 Glide.with(this).load(MainApplication
                         .convertToBytes(company.getLogo()))
                         .asBitmap()
@@ -131,29 +115,25 @@ public class ShopMainActivity extends AppCompatActivity
                         .into(mImageLogo);
                 Log.d(TAG, "Logo " + MainApplication.getStringNoBase64(company.getLogo()));
             }
-//            else if (company.getLogo_link() == null && company.getLogo() == null
-//                    && accountOflUser.getPicture() != null) {
-//                Glide.with(this).load(accountOflUser.getPicture())
-//                .placeholder(R.drawable.ic_logo_blank)
-//                .into(mImageLogo);
-//                Log.d(TAG, "Logo " + accountOflUser.getPicture());
-//            }
 
             if (company.getName() != null) {
                 mTxtNameCompany.setText(company.getName());
-            } else if (accountOflUser != null && accountOflUser.getName() != null) {
-                mTxtNameCompany.setText(accountOflUser.getName());
+            } else {
+                mTxtNameCompany.setText("");
             }
             if (company.getAddress() != null) {
                 mTxtAddress.setText(company.getAddress());
+            } else {
+                mTxtAddress.setText("");
             }
         }
-
 
         if (!MainApplication.sIsAdmin) {
             mFbButton.setVisibility(View.GONE);
         }
         startFragment(new CouponFragment());
+
+        mFbButton.setOnClickListener(this);
     }
 
 
@@ -285,6 +265,48 @@ public class ShopMainActivity extends AppCompatActivity
         }
         if (mTxtAddress != null) {
             mTxtAddress.setText(address);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.fab) {
+            switch (currentPosition) {
+                case 0:
+                    Intent intent = new Intent(ShopMainActivity.this, AddCouponActivity.class);
+                    startActivityForResult(intent, MainApplication.ADD_COUPON_TEMPLATE);
+
+                    return;
+                case 1:
+                    Intent intent1 = new Intent(ShopMainActivity.this, AddMessageActivity.class);
+                    startActivityForResult(intent1, MainApplication.ADD_MESSAGES);
+                    return;
+                default:
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
+
+            switch (requestCode) {
+                case MainApplication.ADD_COUPON_TEMPLATE:
+                    if (fragment instanceof CouponFragment) {
+                        ((CouponFragment) fragment).getCouponTemplate();
+                    }
+                    break;
+                case MainApplication.ADD_MESSAGES:
+                    if (fragment instanceof NewsFragment) {
+                        ((NewsFragment) fragment).setNewsOfCompany();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

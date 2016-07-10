@@ -14,9 +14,7 @@ public class CityOfUser {
     private String city;
     private String zip_code;
     private String time_zone;
-    private String latitude;
-    private String longitude;
-    private String metro_code;
+
 
     public String getIp() {
         return ip;
@@ -82,27 +80,4 @@ public class CityOfUser {
         this.time_zone = time_zone;
     }
 
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getMetro_code() {
-        return metro_code;
-    }
-
-    public void setMetro_code(String metro_code) {
-        this.metro_code = metro_code;
-    }
 }

@@ -10,11 +10,14 @@ import android.widget.Button;
 
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.model.AccountOflUser;
+import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
+import com.ln.model.NewsOfMore;
 import com.ln.model.User;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.customer.CustomerMainActivity;
@@ -34,9 +37,10 @@ import retrofit2.Response;
 
 public class FirstActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String TAG = getClass().getSimpleName();
+    private final String TAG = getClass().getSimpleName();
 
-    private LoveCouponAPI mLoveCouponAPI;
+    private LoveCouponAPI mCouponAPI;
+
     private RealmController mRealmController;
     private Button mBtnShop, mBtnCustomer;
 
@@ -45,9 +49,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
-        mLoveCouponAPI = MainApplication.getAPI();
+        mCouponAPI = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
 
+        getCityOfUser();
         initViews();
         addEvents();
         setLogin();
@@ -91,7 +96,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
-
     private void setLogin() {
 
         SharedPreferences preferences = getSharedPreferences(
@@ -113,18 +117,14 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 startShop();
             }
         } else if (isCustomer && !isShop) {
-//            String data = MainApplication.sharedPreferences.getString(MainApplication.CLIENT_DATA, "");
-//            SaveData.listCompanyCustomer = gson.fromJson(data, new TypeToken<List<CompanyOfCustomer>>() {
-//            }.getType());
-//
-//            if (MainApplication.sDetailUser != null) {
-//                getCompanyOfCustomer(MainApplication.sDetailUser.getId());
-//                updateUserToken(MainApplication.sDetailUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
-//            }
-            if (MainApplication.sDetailUser != null) {
-                getCompanyOfCustomer(MainApplication.sDetailUser.getId());
-                getNewsOfCustomer(MainApplication.sDetailUser.getId());
-                updateUserToken(MainApplication.sDetailUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
+
+            AccountOflUser account = mRealmController.getAccountCustomer();
+            if (account != null) {
+                getCompanyOfCustomer(account.getId());
+                getNewsOfCustomer(account.getId());
+                String city = preferences.getString(MainApplication.CITY_CUSTOMER, "");
+                getNewsMore(account.getId(), city);
+                updateUserToken(account.getAccessToken(), MainApplication.getDeviceToken(), "android");
 
                 startCustomer();
             }
@@ -144,7 +144,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     /* ============= START CUSTOMER =============*/
     private void getCompanyOfCustomer(final String userId) {
 
-        Call<List<CompanyOfCustomer>> customerLogin = mLoveCouponAPI.getCompaniesByUserId(userId);
+        Call<List<CompanyOfCustomer>> customerLogin = mCouponAPI.getCompaniesByUserId(userId);
         customerLogin.enqueue(new Callback<List<CompanyOfCustomer>>() {
             @Override
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
@@ -166,14 +166,14 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    public void getNewsOfCustomer(String id) {
+    private void getNewsOfCustomer(String id) {
 
-        Call<List<NewsOfCustomer>> newsCustomer = mLoveCouponAPI.getNewsByUserId(id);
+        Call<List<NewsOfCustomer>> newsCustomer = mCouponAPI.getNewsByUserId(id);
         newsCustomer.enqueue(new Callback<List<NewsOfCustomer>>() {
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteAllNewsOfCustomer();
+                    mRealmController.deleteListNewsOfCustomer();
                     mRealmController.addListNewsOfCustomer(response.body());
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 } else {
@@ -184,12 +184,9 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
                 Log.d(TAG, "getNewsOfCustomer" + "onFailure " + t.toString());
-
             }
         });
-
     }
-
 
     private void updateUserToken(String userId, String token, String device_os) {
 
@@ -206,6 +203,27 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+
+    private void getNewsMore(String id, String city) {
+        Call<List<NewsOfMore>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
+        newsMore.enqueue(new Callback<List<NewsOfMore>>() {
+            @Override
+            public void onResponse(Call<List<NewsOfMore>> call, Response<List<NewsOfMore>> response) {
+                if (response.body() != null) {
+                    mRealmController.deleteListNewsOfMore();
+                    mRealmController.addListNewsOfMore(response.body());
+                    Log.d(TAG, " getNewsMore " + response.body().size());
+                } else {
+                    Log.d(TAG, " getNewsMore " + " null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsOfMore>> call, Throwable t) {
+                Log.d(TAG, "getNewsMore " + " onFailure " + t.toString());
+            }
+        });
+    }
     /* ============================ END CUSTOMER ==============*/
 
 
@@ -214,7 +232,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     private void getCouponTemplateOfShop(String idCompany) {
 
         //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
-        Call<List<CouponTemplate>> couponShop = mLoveCouponAPI.getCouponTemplates("abc", idCompany);
+        Call<List<CouponTemplate>> couponShop = mCouponAPI.getCouponTemplates("abc", idCompany);
 
         couponShop.enqueue(new Callback<List<CouponTemplate>>() {
             @Override
@@ -237,7 +255,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void getNewsOfShop(String idCompany) {
 
-        Call<List<NewsOfCompany>> newsCompany = mLoveCouponAPI.getNewsByCompanyId(idCompany);
+        Call<List<NewsOfCompany>> newsCompany = mCouponAPI.getNewsByCompanyId(idCompany);
         newsCompany.enqueue(new Callback<List<NewsOfCompany>>() {
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
@@ -257,6 +275,34 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         });
     }
     /* ================ END CUSTOMER   ===========*/
+
+    private void getCityOfUser() {
+        Call<CityOfUser> call = MainApplication.getApiService2().getCityOfUser();
+        call.enqueue(new Callback<CityOfUser>() {
+            @Override
+            public void onResponse(Call<CityOfUser> call, Response<CityOfUser> response) {
+                if (response.body() != null) {
+
+                    String mCity = response.body().getCity();
+                    SharedPreferences preferences =
+                            getSharedPreferences(MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
+
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(MainApplication.CITY_CUSTOMER, mCity);
+                    editor.apply();
+
+                    Log.d(TAG, "City : " + response.body().getCity());
+                } else {
+                    Log.d(TAG, "City : " + "Khong co du lieu");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CityOfUser> call, Throwable t) {
+                Log.d(TAG, "City Error : " + t.toString());
+            }
+        });
+    }
 
     @Override
     public void onClick(View v) {

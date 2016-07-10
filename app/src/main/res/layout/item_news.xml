@@ -81,15 +81,16 @@
 
                 </LinearLayout>
 
-                <ImageView
+                <com.ln.views.IconTextView
                     android:id="@+id/bookmark"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:textSize="@dimen/size_22sp"
+                    android:textColor="@color/icon_heart"
+                    android:text="@string/ic_start"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:contentDescription="@null"
-                    android:padding="3dp"
-                    android:src="@mipmap/bookmark_disable" />
+                    android:padding="3dp" />
 
             </RelativeLayout>
         </LinearLayout>

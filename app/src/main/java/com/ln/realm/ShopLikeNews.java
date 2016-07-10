@@ -24,7 +24,7 @@ public class ShopLikeNews extends RealmObject {
         return idNews;
     }
 
-    public void setIdNews(String idNews) {
+   public void setIdNews(String idNews) {
         this.idNews = idNews;
     }
 

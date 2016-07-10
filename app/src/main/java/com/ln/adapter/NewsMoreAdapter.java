@@ -33,8 +33,7 @@ import java.util.List;
  * <></>
  */
 
-
-public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapter.ViewHolder> {
+public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHolder> {
 
     private List<Message> mListNews;
     private Context mContext;
@@ -42,11 +41,11 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     private int mType;
 
 
-    public NewsCustomerAdapter(Context context, List<Message> listNews, Fragment fragment) {
+    public NewsMoreAdapter(Context context, List<Message> listNews, Fragment fragment) {
         mContext = context;
         mListNews = listNews;
         mShareDialog = new ShareDialog(fragment);
-        mType = MainApplication.NEWS_CUSTOMER;
+        mType = MainApplication.NEWS_MORE;
     }
 
     @Override
@@ -63,19 +62,34 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
         if (news.getLogo_link() != null) {
             Glide.with(mContext).load(news.getLogo_link())
-                    .asBitmap()
+                    .placeholder(R.drawable.ic_love_coupon)
                     .into(holder.mImgLogo);
+        }
+
+        if (news.getContent() != null) {
+            holder.mTxtContent.setText(news.getContent());
+        } else {
+            holder.mTxtContent.setVisibility(View.GONE);
+        }
+
+        if (news.getTitle() != null) {
+            holder.mTxtTile.setText(news.getTitle());
+        }
+
+        if (news.getLink() != null) {
+            holder.mTxtLink.setText(news.getLink());
+        } else {
+            holder.mTxtLink.setVisibility(View.GONE);
         }
         if (news.getName() != null) {
             holder.mTxtCompanyName.setText(news.getName());
+        } else {
+            holder.mTxtCompanyName.setText("");
         }
 
-        holder.mTxtTile.setText(news.getTitle());
-        holder.mTxtContent.setText(news.getContent());
-        holder.mTxtLink.setText(news.getLink());
+        if (news.getImages_link() != null) {
+            String strImages = news.getImages_link();
 
-        String strImages = news.getImages_link();
-        if (strImages != null) {
             List<String> listImages = new ArrayList<>();
 
             String[] listStrImages = strImages.split(";");
@@ -83,10 +97,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
             holder.mRecyclerView.setAdapter(gridAdapter);
             holder.mRecyclerView.setVisibility(View.VISIBLE);
-
         } else {
             holder.mRecyclerView.setVisibility(View.GONE);
-
         }
 
         holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
@@ -99,7 +111,6 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
         }
 
-
         holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,29 +118,38 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                     holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
                     holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
                     holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+//
                     news.setLike(false);
                     MainApplication.mRealmController.deleteLikeNewsById(news.getMessage_id());
+
+//                    MainApplication.mRealmController.deleteNewsCustomerLike(news.getMessage_id());
 
 
                 } else {
                     holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
                     holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
                     holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+
                     news.setLike(true);
                     MainApplication.mRealmController.addLikeNewsCustomer(news.getMessage_id(), mType);
 
+//                    NewsOfLike newsOfLike = new NewsOfLike();
+//                    AccountOflUser account = MainApplication.mRealmController.getAccountCustomer();
+//
+//                    newsOfLike.setNewsOfLike(news, account.getId(), mType);
+//                    MainApplication.mRealmController.addNewsCustomerLike(newsOfLike);
 
                 }
             }
         });
-
+//
         holder.mLinearShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Uri uri = Uri.parse("http://188.166.179.187:3001/upload/ImageSelector_20160616_223027_19062016_010851.png");
                 ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse("https://google.com"))
+                        .setContentUrl(Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON))
                         .setContentTitle(news.getTitle())
                         .setContentDescription(news.getContent())
                         .setImageUrl(uri)
@@ -149,25 +169,21 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                         .negativeText(R.string.disagree)
                         .positiveColor(mContext.getResources().getColor(R.color.title_bg))
                         .negativeColor(mContext.getResources().getColor(R.color.title_bg))
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id());
+                                mListNews.remove(positionNews);
+                                notifyDataSetChanged();
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        })
                         .show();
-
-                dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id());
-                        mListNews.remove(positionNews);
-                        notifyDataSetChanged();
-                    }
-                });
-
-                dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                });
-
-
             }
         });
 
@@ -183,7 +199,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
         private ImageView mImgLogo;
         private TextView mTxtTile, mTxtLink;
-        private IconTextView mImgLike, mImgShare, mImgDelete, mImageBookmarks;
+        private IconTextView mImgLike, mImageBookmarks;
         private RecyclerView mRecyclerView;
 
         private MyTextView mTxtTime, mTxtContent;
@@ -195,8 +211,6 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.img_logo_news);
             mImgLike = (IconTextView) itemView.findViewById(R.id.img_like_newx);
-            mImgShare = (IconTextView) itemView.findViewById(R.id.img_share_newx);
-            mImgDelete = (IconTextView) itemView.findViewById(R.id.img_delete_news);
             mImageBookmarks = (IconTextView) itemView.findViewById(R.id.bookmark);
 
             mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_news);

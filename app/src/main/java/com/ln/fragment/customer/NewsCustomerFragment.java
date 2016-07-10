@@ -18,8 +18,10 @@ import android.view.ViewGroup;
 import com.ln.adapter.NewsCustomerAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.model.AccountOflUser;
 import com.ln.model.Message;
 import com.ln.model.NewsOfCustomer;
+import com.ln.model.NewsOfMore;
 import com.ln.mycoupon.R;
 import com.ln.realm.DeleteNews;
 import com.ln.realm.LikeNews;
@@ -45,6 +47,7 @@ public class NewsCustomerFragment extends Fragment {
     private SwipeRefreshLayout mSwipeContainer;
 
     private RealmController mRealmController;
+    private AccountOflUser account;
 
 
     @Override
@@ -53,6 +56,7 @@ public class NewsCustomerFragment extends Fragment {
 
         apiService = MainApplication.getAPI();
         mRealmController = RealmController.with(this);
+        account = mRealmController.getAccountCustomer();
     }
 
     @Nullable
@@ -90,6 +94,7 @@ public class NewsCustomerFragment extends Fragment {
 
     private void setListMessages() {
 
+        AccountOflUser account = mRealmController.getAccountCustomer();
         List<NewsOfCustomer> mListNews = mRealmController.getListNewsOfCustomer();
 
         // set like news
@@ -105,7 +110,7 @@ public class NewsCustomerFragment extends Fragment {
 
             for (Message newsOfLike : listMessage) {
                 if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
-                        && likeNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
+                        && likeNews.getIdUser().equals(account.getId())) {
                     newsOfLike.setLike(true);
                 }
             }
@@ -116,7 +121,7 @@ public class NewsCustomerFragment extends Fragment {
         for (DeleteNews deleteNews : listDeleteNews) {
             for (Message newsOfLike : listMessage) {
                 if (newsOfLike.getMessage_id().equals(deleteNews.getIdNews())
-                        && deleteNews.getIdNews().equals(MainApplication.sDetailUser.getId())) {
+                        && deleteNews.getIdNews().equals(account.getId())) {
                     newsOfLike.setDelete(true);
                 }
             }
@@ -135,18 +140,18 @@ public class NewsCustomerFragment extends Fragment {
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);
 
-
     }
 
     public void getNewsOfCustomer() {
 
-        Call<List<NewsOfCustomer>> newsCustomer = apiService.getNewsByUserId(MainApplication.sDetailUser.getId());
+        AccountOflUser account = mRealmController.getAccountCustomer();
+        Call<List<NewsOfCustomer>> newsCustomer = apiService.getNewsByUserId(account.getId());
 
         newsCustomer.enqueue(new Callback<List<NewsOfCustomer>>() {
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteAllNewsOfCustomer();
+                    mRealmController.deleteListNewsOfCustomer();
                     mRealmController.addListNewsOfCustomer(response.body());
                     setListMessages();
                     mSwipeContainer.setRefreshing(false);
@@ -190,19 +195,24 @@ public class NewsCustomerFragment extends Fragment {
 
     private void likeNews() {
 
-        List<NewsOfCustomer> mListNewsOfCustomer = mRealmController.getListNewsOfCustomer();
-        List<LikeNews> listLike = mRealmController.getListLikeNews();
+        String idUser = account.getId();
+        List<LikeNews> listLikeNews = mRealmController.getListLikeNews();
+        List<NewsOfCustomer> listNews = mRealmController.getListNewsOfCustomer();
+        List<NewsOfMore> listNewsOfMores = mRealmController.getListNewsOfMore();
         List<Message> listMessage = new ArrayList<>();
 
-        for (NewsOfCustomer newsOfCustomer : mListNewsOfCustomer) {
-            listMessage.add(new Message(newsOfCustomer));
-        }
+        for (LikeNews likeNews : listLikeNews) {
+            for (NewsOfCustomer news : listNews) {
+                if (likeNews.getIdUser().equals(idUser) &&
+                        likeNews.getIdNews().equals(news.getMessage_id())) {
+                    listMessage.add(new Message(news, true));
+                }
+            }
 
-        for (LikeNews likeNews : listLike) {
-            for (Message message : listMessage) {
-                if (message.getMessage_id().equals(likeNews.getIdNews())
-                        && likeNews.getIdUser().equals(MainApplication.sDetailUser.getId())) {
-                    message.setLike(true);
+            for (NewsOfMore newsOfMore : listNewsOfMores) {
+                if (likeNews.getIdUser().equals(idUser) &&
+                        likeNews.getIdNews().equals(newsOfMore.getMessage_id())) {
+                    listMessage.add(new Message(newsOfMore, true));
                 }
             }
         }

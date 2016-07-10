@@ -1,7 +1,5 @@
 package com.ln.model;
 
-import java.util.Date;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -11,64 +9,41 @@ import io.realm.annotations.PrimaryKey;
  */
 public class NewsOfLike extends RealmObject {
 
-
     @PrimaryKey
     private String message_id;
-
     private String content;
-    private Date created_date;
     private String company_id;
-    private Date last_date;
     private String title;
     private String link;
     private String images_link;
     private String logo;
     private String logo_link;
     private String name;
-    private boolean isLike;
-    private boolean isDelete;
+
+    private String userId;
+
+    // type =0 newsCustomer type =1 newsMore
+    private int type;
 
     public NewsOfLike() {
     }
 
-    public NewsOfLike(Message message, boolean isLike) {
-        setMessage_id(message.getMessage_id());
-        setContent(message.getContent());
-        setLike(isLike);
-        setCompany_id(message.getCompany_id());
-        setLink(message.getLink());
-        setImages_link(message.getImages_link());
-        setName(message.getName());
-        setLogo(message.getLogo());
-        setTitle(message.getTitle());
-    }
 
-    public NewsOfLike(NewsOfCompany message, boolean like) {
-        message_id = message.getMessage_id();
-        content = message.getContent();
-        isLike = like;
-        company_id = message.getCompany_id();
-//        created_date = message.getCreated_date();
-        link = message.getLink();
-        images_link = message.getImages_link();
-        title = message.getTitle();
-//        last_date = message.getLast_date();
-    }
-
-    public boolean isLike() {
-        return isLike;
-    }
-
-    public void setLike(boolean like) {
-        isLike = like;
-    }
-
-    public boolean isDelete() {
-        return isDelete;
-    }
-
-    public void setDelete(boolean delete) {
-        isDelete = delete;
+    public NewsOfLike(String message_id, String content, String company_id,
+                      String title, String link, String images_link,
+                      String logo, String logo_link, String name, String userId,
+                      int type) {
+        this.message_id = message_id;
+        this.content = content;
+        this.company_id = company_id;
+        this.title = title;
+        this.link = link;
+        this.images_link = images_link;
+        this.logo = logo;
+        this.logo_link = logo_link;
+        this.name = name;
+        this.userId = userId;
+        this.type = type;
     }
 
     public String getMessage_id() {
@@ -87,28 +62,12 @@ public class NewsOfLike extends RealmObject {
         this.content = content;
     }
 
-    public Date getCreated_date() {
-        return created_date;
-    }
-
-    public void setCreated_date(Date created_date) {
-        this.created_date = created_date;
-    }
-
     public String getCompany_id() {
         return company_id;
     }
 
     public void setCompany_id(String company_id) {
         this.company_id = company_id;
-    }
-
-    public Date getLast_date() {
-        return last_date;
-    }
-
-    public void setLast_date(Date last_date) {
-        this.last_date = last_date;
     }
 
     public String getTitle() {
@@ -158,4 +117,35 @@ public class NewsOfLike extends RealmObject {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void setNewsOfLike(Message message, String userId, int type){
+        this.message_id = message.getMessage_id();
+        this.content = message.getContent();
+        this.company_id = message.getCompany_id();
+        this.title = message.getTitle();
+        this.link = message.getLink();
+        this.images_link = message.getImages_link();
+        this.logo = message.getLogo();
+        this.logo_link = message.getLogo_link();
+        this.name = message.getName();
+        this.userId = userId;
+        this.type = type;
+    }
+
 }
