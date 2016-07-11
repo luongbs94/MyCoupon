@@ -109,9 +109,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-
                 Profile mProfile = Profile.getCurrentProfile();
-
                 String id = loginResult.getAccessToken().getUserId();
                 String token = loginResult.getAccessToken().getToken();
 
@@ -212,12 +210,13 @@ public class ShopLoginActivity extends AppCompatActivity
                     Log.d(TAG, "getCompanyProfile " + response.body().get(0).getCompany_id());
                 } else {
                     Log.d(TAG, "getCompanyProfile " + "null");
+                    getSnackBar(getString(R.string.login_fails));
                 }
             }
 
             @Override
             public void onFailure(Call<List<Company>> call, Throwable t) {
-                getSnackBar(getString(R.string.login_fails));
+                Log.d(TAG, "getCompanyProfile " + "onFailure " + t.toString());
             }
         });
     }

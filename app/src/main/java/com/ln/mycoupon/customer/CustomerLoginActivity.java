@@ -135,7 +135,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                                 getNewsOfCustomer(id);
                                 getNewsMore(id, mCity);
 
-                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
+//                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
                                 LoginManager.getInstance().logOut();
                                 MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
                                 Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
@@ -252,7 +252,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteListCompanyCustomer();
+//                    mRealmController.deleteListCompanyCustomer();
                     mRealmController.addListCompanyCustomer(response.body());
                     Log.d(TAG, "getCompanyByUserId " + response.body().size());
                 } else {

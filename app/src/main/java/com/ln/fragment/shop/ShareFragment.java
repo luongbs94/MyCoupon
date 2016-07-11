@@ -23,25 +23,16 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
 
     private FloatingActionButton mFabShare;
     private IconTextView mImageEmail, mImageWeb;
-    private final String TAG = getClass().getSimpleName();
-
-
-    public ShareFragment() {
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_share, container, false);
         initViews(view);
         addEvents();
 
         setHasOptionsMenu(false);
-
-
         return view;
     }
 

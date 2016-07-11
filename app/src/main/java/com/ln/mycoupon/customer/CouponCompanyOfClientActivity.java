@@ -17,12 +17,8 @@ import com.bumptech.glide.Glide;
 import com.ln.adapter.CouponTemplateClientAdapter;
 import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
-import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by luongnguyen on 6/7/16.
@@ -31,13 +27,8 @@ import java.util.List;
  */
 public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
-    private RealmController mRealmController;
-    private RecyclerView mRecCoupon;
-    private CompanyOfCustomer mCompanyOfCustomer;
-    private ImageView mImageView;
-    private TextView mTxtName;
-
     private final String TAG = getClass().getSimpleName();
+    private RealmController mRealmController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,20 +47,31 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         String idCompany = bundle.getString(MainApplication.ID_COMPANY);
 
 
-        mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
+        CompanyOfCustomer mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         initCollapsingToolbar();
 
-        mImageView = (ImageView) findViewById(R.id.img_logo_customer_nav);
-        mTxtName = (TextView) findViewById(R.id.txt_name_customer_nav);
+        ImageView mImageView = (ImageView) findViewById(R.id.img_logo_customer_nav);
+        TextView mTxtName = (TextView) findViewById(R.id.txt_name_customer_nav);
+
 
         if (mCompanyOfCustomer.getLogo() != null) {
-            Glide.with(this).load(MainApplication.convertToBytes(mCompanyOfCustomer.getLogo()))
-                    .asBitmap()
-                    .into(mImageView);
+            String strLogo = mCompanyOfCustomer.getLogo();
+            strLogo = strLogo.substring(0, 4);
+            if (strLogo.equals(MainApplication.LOGO)) {
+                Glide.with(this).load(MainApplication.convertToBytes(mCompanyOfCustomer.getLogo()))
+                        .asBitmap()
+                        .placeholder(R.drawable.ic_logo_blank)
+                        .into(mImageView);
+            } else {
+                Glide.with(this).load(mCompanyOfCustomer.getLogo())
+                        .placeholder(R.drawable.ic_logo_blank)
+                        .into(mImageView);
+            }
+
 
             Log.d(TAG, mCompanyOfCustomer.getLogo());
         }
@@ -78,7 +80,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
             mTxtName.setText(mCompanyOfCustomer.getName());
         }
 
-        mRecCoupon = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView mRecCoupon = (RecyclerView) findViewById(R.id.recycler_view);
         mRecCoupon.setHasFixedSize(true);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(this));
 

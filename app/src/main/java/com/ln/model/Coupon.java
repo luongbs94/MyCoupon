@@ -1,10 +1,12 @@
 package com.ln.model;
 
 
+import android.support.annotation.NonNull;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Coupon extends RealmObject {
+public class Coupon extends RealmObject implements Comparable<Coupon> {
 
     @PrimaryKey
     private String coupon_id;
@@ -21,14 +23,6 @@ public class Coupon extends RealmObject {
     private String user_image_link;
 
     public Coupon() {
-    }
-
-    public long getCreated_date() {
-        return created_date;
-    }
-
-    public void setCreated_date(long created_date) {
-        this.created_date = created_date;
     }
 
     public Coupon(String coupon_id, String user_id, String coupon_template_id,
@@ -156,6 +150,19 @@ public class Coupon extends RealmObject {
         this.user_name = user_name;
         this.user_social = user_social;
         this.user_image_link = user_image_link;
+    }
+
+    public long getCreated_date() {
+        return created_date;
+    }
+
+    public void setCreated_date(long created_date) {
+        this.created_date = created_date;
+    }
+
+    @Override
+    public int compareTo(@NonNull Coupon another) {
+        return (created_date > another.getCreated_date()) ? -1 : 1;
     }
 }
 

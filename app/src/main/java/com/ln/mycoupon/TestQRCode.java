@@ -162,8 +162,6 @@ public class TestQRCode extends AppCompatActivity {
         template.setCreated_date(new Date().getTime());
 
 
-        //template.created_date= new Date();
-
         Call<Coupon> call2 = apiService.addCoupon(template);
         call2.enqueue(new Callback<Coupon>() {
 

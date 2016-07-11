@@ -34,7 +34,6 @@ import retrofit2.Response;
  */
 public class CouponFragment extends Fragment {
 
-
     private LoveCouponAPI mApiServices;
     private RealmController mRealmController;
 
@@ -44,7 +43,6 @@ public class CouponFragment extends Fragment {
     private RecyclerView mRecCoupon;
 
     private SwipeRefreshLayout swipeContainer;
-    private CompanyAdapter adapter;
 
     private List<CompanyOfCustomer> mListCompanyCustomer = new ArrayList<>();
 
@@ -88,8 +86,6 @@ public class CouponFragment extends Fragment {
         mRecCoupon = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new CompanyAdapter(getActivity(), mListCompanyCustomer);
-        mRecCoupon.setAdapter(adapter);
         setListCompanyCustomer();
 
         ItemClickSupport.addTo(mRecCoupon).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -110,9 +106,10 @@ public class CouponFragment extends Fragment {
 
     private void setListCompanyCustomer() {
 
-        mListCompanyCustomer.clear();
-        mListCompanyCustomer.addAll(mRealmController.getListCompanyCustomer());
-        adapter.notifyDataSetChanged();
+
+        mListCompanyCustomer = mRealmController.getListCompanyCustomer();
+        CompanyAdapter adapter = new CompanyAdapter(getActivity(), mListCompanyCustomer);
+        mRecCoupon.setAdapter(adapter);
 //        mRecCoupon.setAdapter(adapter);
         Log.d(TAG, "setListCompanyCustomer " + mListCompanyCustomer.size());
     }
@@ -126,9 +123,9 @@ public class CouponFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                     if (response.body() != null) {
+
                         mRealmController.deleteListCompanyCustomer();
                         mRealmController.addListCompanyCustomer(response.body());
-
                         setListCompanyCustomer();
                         swipeContainer.setRefreshing(false);
                         Log.d(TAG, "CompanyCustomer " + response.body().size());

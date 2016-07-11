@@ -1,6 +1,8 @@
 package com.ln.model;
 
-public class Message {
+import android.support.annotation.NonNull;
+
+public class Message implements Comparable<Message> {
 
     private String message_id;
     private String content;
@@ -15,7 +17,7 @@ public class Message {
     private boolean isLike;
     private boolean isDelete;
 
-//    private Date last_date, created_date;
+    private long last_date, created_date;
 
 
     public Message() {
@@ -115,6 +117,14 @@ public class Message {
         this.logo_link = logo_link;
     }
 
+    public long getLast_date() {
+        return last_date;
+    }
+
+    public long getCreated_date() {
+        return created_date;
+    }
+
     public Message(NewsOfCustomer news) {
         this.message_id = news.getMessage_id();
         this.content = news.getContent();
@@ -137,6 +147,7 @@ public class Message {
         this.logo_link = news.getLogo_link();
         this.name = news.getName();
     }
+
     public Message(NewsOfMore news, boolean isLike) {
         this.message_id = news.getMessage_id();
         this.content = news.getContent();
@@ -148,6 +159,7 @@ public class Message {
         this.name = news.getName();
         this.isLike = isLike;
     }
+
     public Message(NewsOfCustomer news, boolean isLike) {
         this.message_id = news.getMessage_id();
         this.content = news.getContent();
@@ -159,6 +171,12 @@ public class Message {
         this.logo_link = news.getLogo_link();
         this.name = news.getName();
         this.isLike = isLike;
+    }
+
+
+    @Override
+    public int compareTo(@NonNull Message message) {
+        return (created_date > message.getCreated_date()) ? -1 :    1;
     }
 }
 

@@ -1,12 +1,9 @@
-<LinearLayout
-
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.ln.fragment.shop.ShareFragment">
-
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -20,7 +17,7 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="200dp"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_love_coupon" />
@@ -74,16 +71,6 @@
                 android:text="@string/support"
                 android:textSize="@dimen/size_15sp" />
 
-            <!--<ImageView-->
-            <!--android:id="@+id/image_email"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_span="1"-->
-            <!--android:layout_weight="1"-->
-            <!--android:contentDescription="@null"-->
-            <!--android:src="@drawable/ic_email"-->
-            <!--android:textSize="40sp" />-->
-
             <com.ln.views.IconTextView
                 android:id="@+id/image_email"
                 android:layout_width="0dp"
@@ -110,14 +97,6 @@
                 android:text="@string/web"
                 android:textSize="@dimen/size_15sp" />
 
-            <!--<ImageView-->
-            <!--android:id="@+id/image_web"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:contentDescription="@null"-->
-            <!--android:src="@drawable/ic_globe" />-->
-
             <com.ln.views.IconTextView
                 android:id="@+id/image_web"
                 android:layout_width="0dp"
@@ -130,7 +109,6 @@
                 android:textColor="@color/icon_heart"
                 android:textSize="20sp" />
         </TableRow>
-
 
         <TextView
             android:layout_width="match_parent"

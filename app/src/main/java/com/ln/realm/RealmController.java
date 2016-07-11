@@ -347,23 +347,25 @@ public class RealmController {
 
         mRealm.beginTransaction();
         for (CompanyOfCustomer companyOfCustomer : listCompany) {
-            CompanyOfCustomer company = mRealm.createObject(CompanyOfCustomer.class);
+//            CompanyOfCustomer company = mRealm.createObject(CompanyOfCustomer.class);
 
-            for (Coupon coupon : companyOfCustomer.getCoupon()) {
-                Coupon coupon1 = mRealm.createObject(Coupon.class);
-                coupon1.setCoupon(coupon.getCoupon_id(), coupon.getUser_id(),
-                        coupon.getCoupon_template_id(), coupon.getUsed_date(),
-                        coupon.getCompany_id(), coupon.getValue(), coupon.getDuration(), coupon.getCode(),
-                        coupon.getUser_name(), coupon.getUser_social(), coupon.getUser_image_link());
+//            for (Coupon coupon : companyOfCustomer.getCoupon()) {
+//                Coupon coupon1 = mRealm.createObject(Coupon.class);
+//                coupon1.setCoupon(coupon.getCoupon_id(), coupon.getUser_id(),
+//                        coupon.getCoupon_template_id(), coupon.getUsed_date(),
+//                        coupon.getCompany_id(), coupon.getValue(), coupon.getDuration(), coupon.getCode(),
+//                        coupon.getUser_name(), coupon.getUser_social(), coupon.getUser_image_link());
+//
+//                company.getCoupon().add(coupon1);
+//            }
 
-                company.getCoupon().add(coupon1);
-            }
+//            company.setCompanyCustomer(companyOfCustomer.getCompany_id(),
+//                    companyOfCustomer.getLogo(),
+//                    companyOfCustomer.getLogo_link(),
+//                    companyOfCustomer.getName(),
+//                    companyOfCustomer.getAddress());
+            mRealm.copyToRealmOrUpdate(companyOfCustomer);
 
-            company.setCompanyCustomer(companyOfCustomer.getCompany_id(),
-                    companyOfCustomer.getLogo(),
-                    companyOfCustomer.getLogo_link(),
-                    companyOfCustomer.getName(),
-                    companyOfCustomer.getAddress());
         }
         mRealm.commitTransaction();
     }

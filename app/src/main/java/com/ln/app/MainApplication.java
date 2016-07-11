@@ -47,6 +47,7 @@ public class MainApplication extends MultiDexApplication {
     public static final int SUCCESS = 1;
     public static final int SIZE_ID = 20;
 
+    public static final String LOGO = "data";
 
     private static MainApplication mInstances;
 

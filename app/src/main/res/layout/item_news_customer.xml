@@ -237,7 +237,6 @@
                 android:textColor="@color/icon_heart"
                 android:textSize="@dimen/size_18sp" />
 
-
         </LinearLayout>
     </LinearLayout>
 
