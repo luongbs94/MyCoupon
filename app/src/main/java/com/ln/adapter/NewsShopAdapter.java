@@ -65,7 +65,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         final NewsOfCompanyLike news = mListNews.get(position);
         final int positionNews = position;
 
-        Company company = MainApplication.mRealmController.getAccountShop();
+        final Company company = MainApplication.mRealmController.getAccountShop();
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
             if (company.getLogo() != null) {
@@ -140,14 +140,31 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             @Override
             public void onClick(View v) {
 
-                Uri uri = Uri.parse("http://188.166.179.187:3001/upload/ImageSelector_20160616_223027_19062016_010851.png");
-                ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse("https://google.com"))
-                        .setContentTitle(news.getTitle())
-                        .setContentDescription(news.getContent())
-                        .setImageUrl(uri)
-                        .build();
+                String logoLink;
+                if (company != null && company.getLogo_link() != null) {
+                    logoLink = company.getLogo_link();
+                } else {
+                    logoLink = "http://api.lovecoupon.com:3000/logo/7.jpg";
+                }
 
+
+                Uri uri = Uri.parse(logoLink);
+                ShareLinkContent content;
+                if (news.getLink() != null) {
+                    content = new ShareLinkContent.Builder()
+                            .setContentUrl(Uri.parse(news.getLink()))
+                            .setContentTitle(news.getTitle())
+                            .setContentDescription(news.getContent())
+                            .setImageUrl(uri)
+                            .build();
+                } else {
+                    content = new ShareLinkContent.Builder()
+                            .setContentUrl(null)
+                            .setContentTitle(news.getTitle())
+                            .setContentDescription(news.getContent())
+                            .setImageUrl(uri)
+                            .build();
+                }
                 mShareDialog.show(content);
             }
         });
@@ -165,22 +182,27 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                Call<List<Integer>> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
-                                call.enqueue(new Callback<List<Integer>>() {
+                                Call<Integer> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
+                                call.enqueue(new Callback<Integer>() {
                                     @Override
-                                    public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                                        mListNews.remove(positionNews);
-                                        notifyDataSetChanged();
-                                        getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_success));
+                                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                                        if (response.body() == MainApplication.SUCCESS) {
+                                            mListNews.remove(positionNews);
+                                            notifyDataSetChanged();
+                                            getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_success));
 
-                                        Log.d("NewsShopAdapter", "Delete : News Success");
+                                            Log.d("NewsShopAdapter", "Delete : News Success");
+                                        } else {
+                                            getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_error));
+                                        }
                                     }
 
                                     @Override
-                                    public void onFailure(Call<List<Integer>> call, Throwable t) {
-                                        Log.d("NewsShopAdapter", "Delete : News fails");
+                                    public void onFailure(Call<Integer> call, Throwable t) {
+                                        getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_error));
                                     }
                                 });
+
                             }
                         })
                         .onNegative(new MaterialDialog.SingleButtonCallback() {

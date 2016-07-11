@@ -48,6 +48,8 @@ public class MainApplication extends MultiDexApplication {
     public static final int SIZE_ID = 20;
 
     public static final String LOGO = "data";
+    public static final int TIME_SLEEP = 2000;
+    public static final long TIME_SLEEP_5 = 4000;
 
     private static MainApplication mInstances;
 

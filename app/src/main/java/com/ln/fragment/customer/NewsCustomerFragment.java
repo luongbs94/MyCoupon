@@ -28,6 +28,7 @@ import com.ln.realm.LikeNews;
 import com.ln.realm.RealmController;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -217,6 +218,7 @@ public class NewsCustomerFragment extends Fragment {
             }
         }
 
+        Collections.sort(listMessage);
         NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listMessage, this);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);

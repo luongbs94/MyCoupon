@@ -49,9 +49,9 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
+
         mCouponAPI = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
-
         getCityOfUser();
         initViews();
         addEvents();
@@ -150,7 +150,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
 
                 if (response.body() != null) {
-//                    mRealmController.deleteListCompanyCustomer();
+                    mRealmController.deleteListCompanyCustomer();
                     mRealmController.addListCompanyCustomer(response.body());
 
                     Log.d(TAG, "getCompanyOfCustomer + " + response.body().size());
@@ -303,6 +303,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+
 
     @Override
     public void onClick(View v) {

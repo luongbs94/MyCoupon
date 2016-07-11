@@ -12,9 +12,9 @@ public class NewsOfCompany extends RealmObject {
     @PrimaryKey
     private String message_id;
     private String content;
-    //    private int created_date;
+    private long created_date;
     private String company_id;
-    //    private Date last_date;
+    private long last_date;
     private String title;
     private String link;
     private String images_link;
@@ -22,17 +22,14 @@ public class NewsOfCompany extends RealmObject {
     public NewsOfCompany() {
     }
 
-    //    public NewsOfCompany(String message_id, String content, Date created_date,
-//                         String company_id, Date last_date, String title,
-//                         String link, String images_link) {
-    public NewsOfCompany(String message_id, String content,
-                         String company_id, String title,
+    public NewsOfCompany(String message_id, String content, long created_date,
+                         String company_id, long last_date, String title,
                          String link, String images_link) {
         this.message_id = message_id;
         this.content = content;
-//        this.created_date = created_date;
+        this.created_date = created_date;
         this.company_id = company_id;
-//        this.last_date = last_date;
+        this.last_date = last_date;
         this.title = title;
         this.link = link;
         this.images_link = images_link;
@@ -87,19 +84,6 @@ public class NewsOfCompany extends RealmObject {
     public void setImages_link(String images_link) {
         this.images_link = images_link;
     }
-
-    //    public void setNews(String message_id, String content, Date created_date,
-//                        String company_id, Date last_date, String title,
-//                        String link, String images_link) {
-//        this.message_id = message_id;
-//        this.content = content;
-////        this.created_date = created_date;
-//        this.company_id = company_id;
-////        this.last_date = last_date;
-//        this.title = title;
-//        this.link = link;
-//        this.images_link = images_link;
-//    }
 
 
     public void setNews(String message_id, String content,

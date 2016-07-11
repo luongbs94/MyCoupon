@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,12 +20,14 @@ import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.TestQRCode;
+import com.ln.views.IconTextView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,108 +43,99 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
     private List<CouponTemplate> mListCoupon;
     private Context mContext;
 
-
     public CouponTemplateAdapter(Context context, List<CouponTemplate> coupons) {
-
         mContext = context;
         mListCoupon = coupons;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_coupon_template, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.item_coupon_template, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final CouponTemplate itemCoupon = mListCoupon.get(position);
         final int intPosition = position;
+        final CouponTemplate itemCoupon = mListCoupon.get(intPosition);
 
-        if (itemCoupon != null) {
-            Company company = MainApplication.mRealmController.getAccountShop();
-            if (company != null && company.getLogo() != null) {
-                holder.mTxtNameCoupon.setText(company.getName());
-                Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
-                        .asBitmap()
-                        .placeholder(R.drawable.ic_logo_blank)
-                        .into(holder.mImgLogo);
-            }
-            holder.mTxtPriceCoupon.setText(itemCoupon.getValue());
+        Company company = MainApplication.mRealmController.getAccountShop();
 
-            Date date = convertStringToDate(itemCoupon.getCreated_date());
-            String dayLeft = MainApplication.dayLeft(date, itemCoupon.getDuration()) + "";
-            String day = dayLeft + " ngày";
-            holder.mTxtTimeCoupon.setText(day);
-            holder.mTxtDescription.setText(itemCoupon.getContent());
-
-
-            holder.mQRCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent intent = new Intent(mContext, TestQRCode.class);
-                    intent.putExtra(MainApplication.VALUE, itemCoupon.getValue());
-                    intent.putExtra(MainApplication.DURATION, itemCoupon.getDuration());
-                    intent.putExtra(MainApplication.COUPON_TEMpLATE_ID, itemCoupon.getCoupon_template_id());
-                    mContext.startActivity(intent);
-                }
-            });
-
-            holder.mImageMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-//
-                    PopupMenu popupMenu = new PopupMenu(mContext, view);
-                    final MenuInflater inflater = popupMenu.getMenuInflater();
-                    inflater.inflate(R.menu.menu_delete_coupon, popupMenu.getMenu());
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.menu_delete:
-                                    deleteCouponTemplate(itemCoupon.getCoupon_template_id(), view, intPosition);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            return false;
-                        }
-                    });
-                    popupMenu.show();
-                }
-            });
+        if (company != null && company.getLogo() != null) {
+            holder.mTxtNameCoupon.setText(company.getName());
+            Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_logo_blank)
+                    .into(holder.mImgLogo);
         }
-    }
 
-    private void deleteCouponTemplate(String coupon_template_id, final View view, final int position) {
-        final CouponTemplate template = new CouponTemplate();
-        template.setCoupon_template_id(coupon_template_id);
+        holder.mTxtPriceCoupon.setText(itemCoupon.getValue());
 
-        //template.created_date= new Date();
+        Date date = convertStringToDate(itemCoupon.getCreated_date());
+        String dayLeft = MainApplication.dayLeft(date, itemCoupon.getDuration()) + "";
+        String day = dayLeft + " ngày";
+        holder.mTxtTimeCoupon.setText(day);
+        holder.mTxtDescription.setText(itemCoupon.getContent());
 
-        Call<CouponTemplate> call2 = MainApplication.getAPI().deleteCouponTemplate(template);
-        call2.enqueue(new Callback<CouponTemplate>() {
-
+        holder.mQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<CouponTemplate> arg0,
-                                   Response<CouponTemplate> arg1) {
+            public void onClick(View v) {
 
-                getSnackBar(view, mContext.getString(R.string.delete_coupon_success));
-                Log.d("deleteCouponTemplate", arg1.body().toString());
-
-                MainApplication.mRealmController.deleteCouponTemplateById(template.getCoupon_template_id());
-
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<CouponTemplate> arg0, Throwable arg1) {
-
-                getSnackBar(view, mContext.getString(R.string.delete_coupon_fail));
+                Intent intent = new Intent(mContext, TestQRCode.class);
+                intent.putExtra(MainApplication.VALUE, itemCoupon.getValue());
+                intent.putExtra(MainApplication.DURATION, itemCoupon.getDuration());
+                intent.putExtra(MainApplication.COUPON_TEMpLATE_ID, itemCoupon.getCoupon_template_id());
+                mContext.startActivity(intent);
             }
         });
+
+        holder.mImageMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+//
+                PopupMenu popupMenu = new PopupMenu(mContext, view);
+                final MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.menu_delete_coupon, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_delete:
+
+                                Call<Integer> delete = MainApplication.getAPI().deleteCouponTemplate(itemCoupon.getCoupon_template_id());
+                                delete.enqueue(new Callback<Integer>() {
+                                    @Override
+                                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                                        if (response.body() == MainApplication.SUCCESS) {
+                                            getSnackBar(view, mContext.getString(R.string.delete_coupon_success));
+                                            MainApplication.mRealmController.deleteCouponTemplateById(itemCoupon.getCoupon_template_id());
+                                            mListCoupon.remove(intPosition);
+                                            notifyDataSetChanged();
+                                        } else {
+                                            getSnackBar(view, mContext.getString(R.string.delete_coupon_fail));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Integer> call, Throwable t) {
+                                        getSnackBar(view, mContext.getString(R.string.delete_coupon_fail));
+                                    }
+                                });
+
+
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+
     }
 
 
@@ -159,7 +151,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
 
     private Date convertStringToDate(String date) {
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Date startDate;
         try {
             startDate = df.parse(date);
@@ -171,7 +163,8 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView mImgLogo, mImageMore;
+        private ImageView mImgLogo;
+        private IconTextView mImageMore;
         private TextView mTxtNameCoupon, mTxtPriceCoupon, mTxtDescription, mTxtTimeCoupon;
         private Button mQRCode;
 
@@ -179,7 +172,7 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
             super(itemView);
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.app_icon);
-            mImageMore = (ImageView) itemView.findViewById(R.id.image_more);
+            mImageMore = (IconTextView) itemView.findViewById(R.id.image_more);
             mTxtNameCoupon = (TextView) itemView.findViewById(R.id.txt_company_name);
             mTxtPriceCoupon = (TextView) itemView.findViewById(R.id.txt_price_coupon);
             mTxtTimeCoupon = (TextView) itemView.findViewById(R.id.txt_time);

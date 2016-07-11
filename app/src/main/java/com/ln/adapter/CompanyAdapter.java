@@ -23,7 +23,6 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
 
     private List<CompanyOfCustomer> listCompany;
     private Context mContext;
-    private String TAG = getClass().getSimpleName();
 
     public CompanyAdapter(Context context, List<CompanyOfCustomer> company) {
         mContext = context;
@@ -47,6 +46,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
             if (item.getLogo() != null) {
                 Glide.with(mContext).load(MainApplication.convertToBytes(item.getLogo()))
                         .asBitmap()
+                        .centerCrop()
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(holder.mImgLogo);
             }

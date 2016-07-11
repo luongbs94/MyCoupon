@@ -129,7 +129,10 @@
     <string name="ic_start_like">\uf005</string>
     <string name="ic_globe">\uf0ac</string>
     <string name="icon_picture">\uf03e</string>
+    <string name="icon_more">\uf142</string>
     <string name="bookmark">Bookmark</string>
+    <string name="ic_close">\uf00d</string>
+    <string name="delete_news_error">Delete Message Error</string>
 
 
     <string-array name="month">

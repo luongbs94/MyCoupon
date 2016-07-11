@@ -22,30 +22,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--======================= START ACTIVITY OF APP ===============-->
+        <!-- ======================= START ACTIVITY OF APP =============== -->
         <activity
             android:name=".FirstActivity"
             android:excludeFromRecents="true"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-
         <activity
             android:name=".shop.ShopMainActivity"
             android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".customer.CustomerMainActivity"
             android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".shop.ShopLoginActivity"
             android:theme="@style/AppTheme"
@@ -58,21 +51,17 @@
             android:name=".AddCouponActivity"
             android:label="@string/add_coupon"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".AddMessageActivity"
             android:label="@string/add_message"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".QRCodeActivity"
             android:label="@string/qrcode"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".customer.CouponCompanyOfClientActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".customer.CustomerLoginActivity" />
 
         <!-- ======================== END ACTIVITY OF APP =============== -->
@@ -82,21 +71,18 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name="com.ln.firebase.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <!-- ============== START FACEBOOK ===============-->
+        <!-- ============== START FACEBOOK =============== -->
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -119,7 +105,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <!-- ===================== END FACEBOOK ================-->
+        <!-- ===================== END FACEBOOK ================ -->
         <activity
             android:name="com.yongchun.library.view.ImageSelectorActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -131,15 +117,23 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PreviewImagesActivity" />
 
-        <!-- CHECK NETWORK         -->
+        <!-- CHECK NETWORK -->
 
-            <receiver
-                android:enabled="true"
-                android:name="com.ln.broadcast.ConnectivityReceiver">
-                <intent-filter>
-                    <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-                </intent-filter>
-            </receiver>
+        <receiver
+            android:name="com.ln.broadcast.ConnectivityReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

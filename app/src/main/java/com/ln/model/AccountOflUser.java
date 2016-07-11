@@ -64,10 +64,5 @@ public class AccountOflUser extends RealmObject {
         this.accessToken = accessToken;
     }
 
-    public void setAccountOfUser(String id, String name, String picture, String token) {
-        this.id = id;
-        this.name = name;
-        this.picture = picture;
-        this.accessToken = token;
-    }
+
 }

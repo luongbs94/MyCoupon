@@ -1,8 +1,13 @@
 package com.ln.mycoupon.shop;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -53,8 +58,10 @@ import retrofit2.Response;
  */
 
 public class ShopLoginActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
+        , Runnable {
 
+    private static final int LOGIN_SHOP = 1;
     private String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mCouponAPI;
@@ -74,6 +81,9 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private CompanyLocation mCompanyLocation;
 
+    private ProgressDialog mProgressDialog;
+    private Handler mHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,13 +99,26 @@ public class ShopLoginActivity extends AppCompatActivity
 
         initViews();
         addEvents();
+
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == LOGIN_SHOP) {
+                    SystemClock.sleep(MainApplication.TIME_SLEEP);
+                    hideProgressDialog();
+                }
+            }
+        };
     }
 
     private void initViews() {
 
 
         setTitle(R.string.login);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         mBtnLogin = (Button) findViewById(R.id.btn_login);
         mEdtUsername = (EditText) findViewById(R.id.username);
@@ -207,8 +230,12 @@ public class ShopLoginActivity extends AppCompatActivity
                 if (response.body() != null) {
                     loginSuccess(response.body().get(0));
                     mRealmController.saveAccountShop(response.body().get(0));
+
+                    new Thread(ShopLoginActivity.this).start();
+
                     Log.d(TAG, "getCompanyProfile " + response.body().get(0).getCompany_id());
                 } else {
+                    new Thread(ShopLoginActivity.this).start();
                     Log.d(TAG, "getCompanyProfile " + "null");
                     getSnackBar(getString(R.string.login_fails));
                 }
@@ -336,6 +363,7 @@ public class ShopLoginActivity extends AppCompatActivity
         String str_password = mEdtPassword.getText().toString();
 
         if (str_user.length() > 0 && str_password.length() > 0) {
+            showProgressDialog();
             getCompanyProfile(str_user, str_password);
             MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_NORMAL;
         } else {
@@ -445,6 +473,29 @@ public class ShopLoginActivity extends AppCompatActivity
                 Log.d(TAG, "getCouponTemplate  " + "onFailure");
             }
         });
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
+        }
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void run() {
+
+        Message message = new Message();
+        message.what = LOGIN_SHOP;
+        message.setTarget(mHandler);
+        message.sendToTarget();
     }
 }
 

@@ -176,7 +176,7 @@ public class Message implements Comparable<Message> {
 
     @Override
     public int compareTo(@NonNull Message message) {
-        return (created_date > message.getCreated_date()) ? -1 :    1;
+        return (created_date > message.getCreated_date()) ? 1 :    -1;
     }
 }
 

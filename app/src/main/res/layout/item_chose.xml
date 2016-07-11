@@ -14,14 +14,14 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_test" />
 
-    <ImageView
+    <com.ln.views.IconTextView
         android:id="@+id/check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignEnd="@+id/picture"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/picture"
-        android:contentDescription="@null"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_delete" />
+        android:text="@string/ic_close"
+        android:textColor="@color/icon_heart"
+        android:textSize="@dimen/size_20sp" />
 </com.yongchun.library.widget.SquareRelativeLayout>
