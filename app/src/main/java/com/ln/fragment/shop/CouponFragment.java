@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.ln.adapter.CouponTemplateAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -36,11 +37,8 @@ public class CouponFragment extends Fragment {
 
     private LoveCouponAPI mApiServices;
     private RealmController mRealmController;
-
     private SwipeRefreshLayout swipeContainer;
-
     private RecyclerView mRecCoupon;
-
     private Company mCompany;
 
     public CouponFragment() {
@@ -51,7 +49,8 @@ public class CouponFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
-        mCompany = mRealmController.getAccountShop();
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        mCompany = new Gson().fromJson(strCompany, Company.class);
     }
 
     @Override

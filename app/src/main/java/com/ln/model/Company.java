@@ -22,7 +22,7 @@ public class Company extends RealmObject {
     private String user2;
     private String pass2;
     private String user2_admin;
-    private String ip;
+    //    private String ip;
     private String logo_link;
     private String city;
     private String country_name;
@@ -131,9 +131,6 @@ public class Company extends RealmObject {
         this.logo_link = logo_link;
     }
 
-    public String getIp() {
-        return ip;
-    }
 
     public String getCity() {
         return city;
@@ -147,7 +144,7 @@ public class Company extends RealmObject {
                            String logo, String created_date, String user_id,
                            String user1, String pass1, String user1_admin,
                            String user2, String pass2, String user2_admin,
-                           String ip, String logo_link, String city,
+                           String logo_link, String city,
                            String country_name) {
         this.company_id = company_id;
         this.name = name;
@@ -161,7 +158,6 @@ public class Company extends RealmObject {
         this.user2 = user2;
         this.pass2 = pass2;
         this.user2_admin = user2_admin;
-        this.ip = ip;
         this.logo_link = logo_link;
         this.city = city;
         this.country_name = country_name;

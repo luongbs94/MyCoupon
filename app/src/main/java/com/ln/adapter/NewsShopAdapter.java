@@ -20,6 +20,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompanyLike;
@@ -65,7 +66,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         final NewsOfCompanyLike news = mListNews.get(position);
         final int positionNews = position;
 
-        final Company company = MainApplication.mRealmController.getAccountShop();
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        final Company company = new Gson().fromJson(strCompany, Company.class);
+
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
             if (company.getLogo() != null) {
@@ -130,7 +133,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                     holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
 //                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
                     news.setLike(true);
-                    MainApplication.mRealmController.addShopLikeNewsByIdNews(news.getMessage_id());
+                    MainApplication.mRealmController.addShopLikeNewsByIdNews(news.getMessage_id(), company.getCompany_id());
                 }
 
             }

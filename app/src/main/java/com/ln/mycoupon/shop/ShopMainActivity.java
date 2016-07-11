@@ -1,13 +1,12 @@
 package com.ln.mycoupon.shop;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.fragment.shop.CouponFragment;
 import com.ln.fragment.shop.HistoryFragment;
@@ -34,15 +34,12 @@ import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
-import com.ln.realm.RealmController;
 
 public class ShopMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         OnClickSetInformation, View.OnClickListener {
 
-    private String TAG = getClass().getSimpleName();
-
-    private RealmController mRealmController;
+    private final String TAG = getClass().getSimpleName();
 
     private int currentPosition = 0;
     private static String sTitle;
@@ -58,9 +55,9 @@ public class ShopMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_main);
 
-        mRealmController = MainApplication.mRealmController;
-
-        Company company = mRealmController.getAccountShop();
+        String strCompany = getSharedPreferences(MainApplication.SHARED_PREFERENCE,
+                MODE_PRIVATE).getString(MainApplication.COMPANY_SHOP, "");
+        Company company = new Gson().fromJson(strCompany, Company.class);
 
         if (company != null) {
 
@@ -77,7 +74,6 @@ public class ShopMainActivity extends AppCompatActivity
             Log.d(TAG, "Company " + company.getLogo_link());
             Log.d(TAG, "Company " + company.getAddress());
         }
-
 
         sTitle = getString(R.string.my_coupon);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -101,18 +97,21 @@ public class ShopMainActivity extends AppCompatActivity
         mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
         if (company != null) {
-            if (company.getLogo_link() != null) {
-                Glide.with(this).load(company.getLogo_link())
-                        .placeholder(R.drawable.ic_logo_blank)
-                        .into(mImageLogo);
-                Log.d(TAG, "Logo " + company.getLogo_link());
+            if (company.getLogo() != null) {
 
-            } else if (company.getLogo_link() == null && company.getLogo() != null) {
                 Glide.with(this).load(MainApplication
                         .convertToBytes(company.getLogo()))
                         .asBitmap()
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(mImageLogo);
+
+
+            } else if (company.getLogo() == null && company.getLogo_link() != null) {
+
+                Glide.with(this).load(company.getLogo_link())
+                        .placeholder(R.drawable.ic_logo_blank)
+                        .into(mImageLogo);
+                Log.d(TAG, "Logo " + company.getLogo_link());
                 Log.d(TAG, "Logo " + MainApplication.getStringNoBase64(company.getLogo()));
             }
 
@@ -128,12 +127,17 @@ public class ShopMainActivity extends AppCompatActivity
             }
         }
 
-        if (!MainApplication.sIsAdmin) {
-            mFbButton.setVisibility(View.GONE);
-        }
-        startFragment(new CouponFragment());
+//        if (!MainApplication.sIsAdmin) {
+//            mFbButton.setVisibility(View.GONE);
+//        }
 
+        if (company != null && company.getName() != null) {
+            startFragment(new CouponFragment());
+        } else {
+            startFragment(new SettingFragment());
+        }
         mFbButton.setOnClickListener(this);
+        mFbButton.setVisibility(View.GONE);
     }
 
 
@@ -186,7 +190,6 @@ public class ShopMainActivity extends AppCompatActivity
                 fragment = new NewsFragment();
                 break;
             case R.id.nav_history:
-
                 sTitle = getString(R.string.history);
                 fragment = new HistoryFragment();
                 break;
@@ -203,11 +206,6 @@ public class ShopMainActivity extends AppCompatActivity
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
                 MainApplication.editor.commit();
 
-                if (MainApplication.TYPE_LOGIN_SHOP == MainApplication.TYPE_NORMAL) {
-
-                } else {
-                    MainApplication.sShopDetail = null;
-                }
                 MainApplication.sIsAdmin = false;
 
                 Intent intent = new Intent(this, FirstActivity.class);
@@ -237,20 +235,24 @@ public class ShopMainActivity extends AppCompatActivity
     }
 
     private void startFragment(Fragment fragment) {
-        String backStateName = fragment.getClass().getName();
-        String fragmentTag = backStateName;
+//        String backStateName = fragment.getClass().getName();
+//        String fragmentTag = backStateName;
+//
+//        FragmentManager manager = getSupportFragmentManager();
+//        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+//
+//        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
+//            FragmentTransaction ft = manager.beginTransaction();
+//            ft.replace(R.id.content_main, fragment, fragmentTag);
+//            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//            ft.commit();
+//        }
 
-        FragmentManager manager = getSupportFragmentManager();
-        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
-
-        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
-            FragmentTransaction ft = manager.beginTransaction();
-            ft.replace(R.id.content_main, fragment, fragmentTag);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.commit();
-        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_main, fragment)
+                .commit();
     }
-
 
     @Override
     public void onClickSetInformation(String logo, String name, String address) {
@@ -285,6 +287,13 @@ public class ShopMainActivity extends AppCompatActivity
                     break;
             }
         }
+    }
+
+    private void writeBooleanShare(String key, boolean isValue) {
+        SharedPreferences.Editor editor = getSharedPreferences(
+                MainApplication.SHARED_PREFERENCE, MODE_PRIVATE).edit();
+        editor.putBoolean(key, isValue);
+        editor.apply();
     }
 
     @Override

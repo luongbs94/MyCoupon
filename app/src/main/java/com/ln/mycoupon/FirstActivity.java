@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
@@ -38,9 +39,7 @@ import retrofit2.Response;
 public class FirstActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = getClass().getSimpleName();
-
     private LoveCouponAPI mCouponAPI;
-
     private RealmController mRealmController;
     private Button mBtnShop, mBtnCustomer;
 
@@ -49,10 +48,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
-
         mCouponAPI = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
-        getCityOfUser();
+
+        getCityOfAccount();
         initViews();
         addEvents();
         setLogin();
@@ -109,7 +108,9 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
         if (isShop && !isCustomer) {
 
-            Company company = mRealmController.getAccountShop();
+            String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+            Company company = new Gson().fromJson(strCompany, Company.class);
+
             if (company != null && company.getCompany_id() != null) {
 
                 getCouponTemplateOfShop(company.getCompany_id());
@@ -118,11 +119,12 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             }
         } else if (isCustomer && !isShop) {
 
-            AccountOflUser account = mRealmController.getAccountCustomer();
+            String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+            AccountOflUser account = new Gson().fromJson(strCompany, AccountOflUser.class);
             if (account != null) {
                 getCompanyOfCustomer(account.getId());
                 getNewsOfCustomer(account.getId());
-                String city = preferences.getString(MainApplication.CITY_CUSTOMER, "");
+                String city = preferences.getString(MainApplication.CITY_OF_USER, "");
                 getNewsMore(account.getId(), city);
                 updateUserToken(account.getAccessToken(), MainApplication.getDeviceToken(), "android");
 
@@ -276,19 +278,19 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     }
     /* ================ END CUSTOMER   ===========*/
 
-    private void getCityOfUser() {
+    private void getCityOfAccount() {
         Call<CityOfUser> call = MainApplication.getApiService2().getCityOfUser();
         call.enqueue(new Callback<CityOfUser>() {
             @Override
             public void onResponse(Call<CityOfUser> call, Response<CityOfUser> response) {
+
                 if (response.body() != null) {
 
-                    String mCity = response.body().getCity();
+                    String cityOfUser = new Gson().toJson(response.body());
                     SharedPreferences preferences =
                             getSharedPreferences(MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
-
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(MainApplication.CITY_CUSTOMER, mCity);
+                    editor.putString(MainApplication.CITY_OF_USER, cityOfUser);
                     editor.apply();
 
                     Log.d(TAG, "City : " + response.body().getCity());

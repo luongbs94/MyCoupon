@@ -26,9 +26,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
+import com.ln.model.CityOfUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.NewsOfMore;
@@ -76,13 +78,9 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         setTitle(R.string.login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mCallbackManager = CallbackManager.Factory.create();
-
         mBtnFacebook = (Button) findViewById(R.id.btn_facebook_customer);
-        LoginManager.getInstance().registerCallback(mCallbackManager,
-                new FacebookCallback<LoginResult>() {
-
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
 
@@ -102,21 +100,18 @@ public class CustomerLoginActivity extends AppCompatActivity
                             accountOflUser.setAccessToken(token);
                         }
 
-                        SharedPreferences preferences =
-                                getSharedPreferences(MainApplication.SHARED_PREFERENCE,
-                                        MODE_PRIVATE);
+                        SharedPreferences preferences = MainApplication.getSharedPreferences();
 
-                        String mCity = preferences.getString(MainApplication.CITY_CUSTOMER, "");
+                        String strCity = preferences.getString(MainApplication.CITY_OF_USER, "");
+                        strCity = new Gson().fromJson(strCity, CityOfUser.class).getCity();
 
                         String name = null;
                         if (mProfile != null && mProfile.getName() != null) {
                             name = mProfile.getName();
                             if (id != null) {
 
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putString(MainApplication.USER_NAME, mProfile.getName());
-                                editor.putString(MainApplication.USER_ID, id);
-                                editor.apply();
+                                writeSharePreferences(MainApplication.USER_NAME, mProfile.getName());
+                                writeSharePreferences(MainApplication.USER_ID, id);
                             }
                         } else {
                             String idPreference = preferences.getString(MainApplication.USER_ID, "");
@@ -129,15 +124,15 @@ public class CustomerLoginActivity extends AppCompatActivity
 
                         if (accountOflUser.getId() != null) {
                             try {
-//                                MainApplication.sDetailUser = accountOflUser;
-                                mRealmController.saveAccountCustomer(accountOflUser);
+                                String strUser = new Gson().toJson(accountOflUser);
+                                writeSharePreferences(MainApplication.ACCOUNT_CUSTOMER, strUser);
+
                                 getCompanyByUserId(accountOflUser.getId());
                                 getNewsOfCustomer(id);
-                                getNewsMore(id, mCity);
+                                getNewsMore(id, strCity);
 
 //                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
                                 LoginManager.getInstance().logOut();
-                                MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
                                 Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
                                 start();
 
@@ -216,14 +211,17 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         String mCity = getSharedPreferences(
                 MainApplication.SHARED_PREFERENCE, MODE_PRIVATE)
-                .getString(MainApplication.CITY_CUSTOMER, "");
+                .getString(MainApplication.CITY_OF_USER, "");
+        mCity = new Gson().fromJson(mCity, CityOfUser.class).getCity();
 
         AccountOflUser accountOflUser = new AccountOflUser(account.getId(), account.getEmail(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
             accountOflUser.setPicture(account.getPhotoUrl().toString());
         }
 
-        mRealmController.saveAccountCustomer(accountOflUser);
+        String strUser = new Gson().toJson(accountOflUser);
+        writeSharePreferences(MainApplication.ACCOUNT_CUSTOMER, strUser);
+
 
         Log.d(TAG, "Login Google Success " + account.getId() + " - " + account.getEmail());
         getCompanyByUserId(account.getId());
@@ -288,6 +286,12 @@ public class CustomerLoginActivity extends AppCompatActivity
         Intent intent = new Intent(CustomerLoginActivity.this, CustomerMainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void writeSharePreferences(String key, String value) {
+        SharedPreferences.Editor editor = MainApplication.getSharedPreferences().edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 
     @Override

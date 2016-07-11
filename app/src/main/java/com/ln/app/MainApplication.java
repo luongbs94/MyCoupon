@@ -16,7 +16,6 @@ import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.model.CityOfUser;
 import com.ln.model.CompanyOfCustomer;
-import com.ln.model.AccountOflUser;
 import com.ln.realm.RealmController;
 
 import java.io.ByteArrayOutputStream;
@@ -36,12 +35,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MainApplication extends MultiDexApplication {
 
+    public static final String POSITION = "POSITION";
+    public static final String LIST_IMAGES = "LIST_IMAGES";
+    public static final String DATA = "DATA";
+    public static final String PATH = "PATH";
+
     public static final String ID_COMPANY = "company_id";
     public static final String OFF_LINE = "OFF_LINE";
 
     public static final String USER_NAME = "USER_NAME";
     public static final String USER_ID = "USER_ID";
-    public static final String CITY_CUSTOMER = "CITY_CUSTOMER";
+    public static final String CITY_OF_USER = "CITY_OF_USER";
+
+    public static final String ID_SHOP = "ID_SHOP";
+    public static final String TOKEN_SHOP = "TOKEN_SHOP";
+    public static final String COMPANY_SHOP = "COMPANY_SHOP";
+    public static final String ACCOUNT_CUSTOMER = "ACCOUNT_CUSTOMER";
+
+
     public static final int ADD_COUPON_TEMPLATE = 2;
     public static final int ADD_MESSAGES = 3;
     public static final int SUCCESS = 1;
@@ -49,13 +60,8 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String LOGO = "data";
     public static final int TIME_SLEEP = 2000;
-    public static final long TIME_SLEEP_5 = 4000;
 
     private static MainApplication mInstances;
-
-    public static final String POSITION = "POSITION";
-    public static final String DATA = "DATA";
-    public static final String LIST_IMAGES = "LIST_IMAGES";
 
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
 
@@ -82,8 +88,6 @@ public class MainApplication extends MultiDexApplication {
 
 
     public static SharedPreferences.Editor editor;
-    public static final String PATH = "path";
-
 
     // size images fire base
     public static final int WIDTH_IMAGES = 150;
@@ -93,16 +97,12 @@ public class MainApplication extends MultiDexApplication {
 
 
     public static final String FACEBOOK_EMAIL = "email";
-    public static final String FACEBOOK_USER_FRIENDS = "user_friends";
-
-//    public static AccountOflUser sDetailUser;
 
     private static final String URL_GET_POST = "http://188.166.179.187:3000";
     public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
     public static final String URL_GET_CITY = "http://freegeoip.net";
 
-    // login with // STOPSHIP: 6/18/2016
-    public static AccountOflUser sShopDetail;
+//    public static AccountOflUser sShopDetail;
 
     public static boolean sIsAdmin = false;
 
@@ -178,9 +178,6 @@ public class MainApplication extends MultiDexApplication {
         apiService1 = retrofit1.create(LoveCouponAPI.class);
         apiService2 = retrofit2.create(LoveCouponAPI.class);
 
-        sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-
 
         // setup realm database
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
@@ -191,6 +188,10 @@ public class MainApplication extends MultiDexApplication {
         Realm.setDefaultConfiguration(realmConfiguration);
 
         mRealmController = RealmController.with(this);
+
+        sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
 
     }
 
@@ -287,6 +288,9 @@ public class MainApplication extends MultiDexApplication {
         return apiService2;
     }
 
+    public static SharedPreferences getSharePrefer() {
+        return sharedPreferences;
+    }
 
     public static long dayLeft(Date created_date, int duration) {
         Calendar last_cal = Calendar.getInstance();

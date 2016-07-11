@@ -18,7 +18,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.gson.Gson;
 import com.ln.app.MainApplication;
+import com.ln.model.AccountOflUser;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
@@ -60,6 +62,10 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
         final int positionNews = position;
         final Message news = mListNews.get(positionNews);
+
+        String strAccount = MainApplication.getSharedPreferences()
+                .getString(MainApplication.ACCOUNT_CUSTOMER, "");
+        final String idUser = new Gson().fromJson(strAccount, AccountOflUser.class).getId();
 
         if (news.getLogo_link() != null) {
             Glide.with(mContext).load(news.getLogo_link())
@@ -116,7 +122,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                     holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
                     holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
                     news.setLike(true);
-                    MainApplication.mRealmController.addLikeNewsCustomer(news.getMessage_id(), mType);
+                    MainApplication.mRealmController.addLikeNewsCustomer(news.getMessage_id(), mType,idUser);
 
 
                 }
@@ -154,7 +160,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                 dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id());
+                        MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id(),idUser);
                         mListNews.remove(positionNews);
                         notifyDataSetChanged();
                     }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.ln.adapter.CreateCouponAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -81,8 +82,9 @@ public class UseFragment extends Fragment {
     }
 
     private void getUseCoupon() {
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company company = new Gson().fromJson(strCompany, Company.class);
 
-        Company company = MainApplication.mRealmController.getAccountShop();
         Call<ArrayList<Coupon>> listCoupon = mApiServices.getUsedCoupon(company.getCompany_id() + "", utc1, utc2);
         listCoupon.enqueue(new Callback<ArrayList<Coupon>>() {
             @Override

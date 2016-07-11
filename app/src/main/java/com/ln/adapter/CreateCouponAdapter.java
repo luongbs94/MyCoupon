@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.Coupon;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 
 /**
  * Created by Nhahv on 5/22/2016.
- *
  */
 public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapter.ViewHolder> {
 
@@ -43,7 +43,8 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         Coupon coupon = mListCoupons.get(position);
-        Company company = MainApplication.mRealmController.getAccountShop();
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company company = new Gson().fromJson(strCompany, Company.class);
         Glide.with(mContext).load(coupon.getUser_image_link())
                 .placeholder(R.drawable.ic_logo_blank)
                 .into(holder.mImgLogo);

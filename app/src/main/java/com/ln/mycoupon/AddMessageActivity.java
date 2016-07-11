@@ -19,9 +19,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.datetimepicker.date.DatePickerDialog;
+import com.google.gson.Gson;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.model.Company;
 import com.ln.model.ItemImage;
 import com.ln.model.NewsOfCompany;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -171,7 +173,11 @@ public class AddMessageActivity extends AppCompatActivity
     private void addNews(final String title, final String content, final String link) {
 
         String idNews = MainApplication.getRandomString(MainApplication.SIZE_ID);
-        String idCompany = MainApplication.mRealmController.getAccountShop().getCompany_id();
+
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company mCompany = new Gson().fromJson(strCompany, Company.class);
+
+        String idCompany = mCompany.getCompany_id();
         final NewsOfCompany news = new NewsOfCompany();
 
         news.setMessage_id(idNews);

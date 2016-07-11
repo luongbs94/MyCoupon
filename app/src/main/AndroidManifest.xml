@@ -127,7 +127,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".SplashScreenActivity">
+        <activity
+            android:name=".SplashScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar.Theme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

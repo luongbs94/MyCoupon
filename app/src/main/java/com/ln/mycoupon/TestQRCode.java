@@ -9,12 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.model.Company;
 import com.ln.model.Coupon;
 
 import java.util.Date;
@@ -151,7 +153,11 @@ public class TestQRCode extends AppCompatActivity {
 
     private void addCoupon(final String coupon_id) {
         Coupon template = new Coupon();
-        template.setCompany_id(MainApplication.mRealmController.getAccountShop().getCompany_id() + "");
+
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company company = new Gson().fromJson(strCompany, Company.class);
+
+        template.setCompany_id(company.getCompany_id() + "");
         template.setCoupon_id(coupon_id);
         template.setValue(value);
         template.setCoupon_template_id(coupon_template_id);

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.datetimepicker.date.DatePickerDialog;
+import com.google.gson.Gson;
 import com.ln.adapter.CreateCouponAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -114,7 +115,8 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
 
     private void getCreateCoupon() {
 
-        Company company = MainApplication.mRealmController.getAccountShop();
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company company = new Gson().fromJson(strCompany, Company.class);
         mListCoupon.clear();
         Call<ArrayList<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getCompany_id() + "", utc1, utc2);
         listCoupon.enqueue(new Callback<ArrayList<Coupon>>() {

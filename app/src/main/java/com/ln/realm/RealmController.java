@@ -5,8 +5,6 @@ import android.app.Application;
 import android.support.v4.app.Fragment;
 
 import com.ln.app.MainApplication;
-import com.ln.model.AccountOflUser;
-import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
@@ -66,12 +64,11 @@ public class RealmController {
     /*================= START LIKE NEWS USER ================*/
 
     // add likeNews by id news
-    public void addLikeNewsCustomer(String idNews, int type) {
+    public void addLikeNewsCustomer(String idNews, int type, String idUser) {
 
-        AccountOflUser accountOflUser = getAccountCustomer();
         mRealm.beginTransaction();
         LikeNews likeNews = mRealm.createObject(LikeNews.class);
-        likeNews.setIdUser(accountOflUser.getId());
+        likeNews.setIdUser(idUser);
         likeNews.setIdNews(idNews);
         likeNews.setType(type);
         mRealm.commitTransaction();
@@ -79,12 +76,11 @@ public class RealmController {
 
 
     // add DeleteNews by id news
-    public void addDeleteNewsByIdNews(String idNews) {
+    public void addDeleteNewsByIdNews(String idNews, String idUser) {
 
-        AccountOflUser accountOflUser = getAccountCustomer();
         mRealm.beginTransaction();
         DeleteNews likeNews = mRealm.createObject(DeleteNews.class);
-        likeNews.setIdUser(accountOflUser.getId());
+        likeNews.setIdUser(idUser);
         likeNews.setIdNews(idNews);
         mRealm.commitTransaction();
     }
@@ -175,11 +171,11 @@ public class RealmController {
 
     /*============ START SHOP LIKE NEWS ===============*/
     // add shop like
-    public void addShopLikeNewsByIdNews(String idNews) {
+    public void addShopLikeNewsByIdNews(String idNews, String isUser) {
 
         mRealm.beginTransaction();
         ShopLikeNews likeNews = mRealm.createObject(ShopLikeNews.class);
-        likeNews.setIdCompany(getAccountShop().getCompany_id());
+        likeNews.setIdCompany(isUser);
         likeNews.setIdNews(idNews);
         mRealm.commitTransaction();
     }
@@ -236,12 +232,13 @@ public class RealmController {
     public void addListNewsOfCompany(List<NewsOfCompany> listMessage) {
 
         mRealm.beginTransaction();
-        for (NewsOfCompany message : listMessage) {
-            NewsOfCompany newsOfCompany = mRealm.createObject(NewsOfCompany.class);
-            newsOfCompany.setNews(message.getMessage_id(),
-                    message.getContent(),
-                    message.getCompany_id(),
-                    message.getTitle(), message.getLink(), message.getImages_link());
+        for (NewsOfCompany NewsOfCompany : listMessage) {
+//            NewsOfCompany newsOfCompany = mRealm.createObject(NewsOfCompany.class);
+//            newsOfCompany.setNews(message.getMessage_id(),
+//                    message.getContent(),
+//                    message.getCompany_id(),
+//                    message.getTitle(), message.getLink(), message.getImages_link());
+            mRealm.copyToRealmOrUpdate(NewsOfCompany);
         }
         mRealm.commitTransaction();
     }
@@ -302,10 +299,11 @@ public class RealmController {
         mRealm.beginTransaction();
 
         for (CouponTemplate template : listCouponTemplate) {
-            CouponTemplate coupon = mRealm.createObject(CouponTemplate.class);
-            coupon.setCouponTemplate(template.getCoupon_template_id(), template.getContent(),
-                    template.getDuration(), template.getCreated_date(),
-                    template.getCompany_id(), template.getValue());
+//            CouponTemplate coupon = mRealm.createObject(CouponTemplate.class);
+//            coupon.setCouponTemplate(template.getCoupon_template_id(), template.getContent(),
+//                    template.getDuration(), template.getCreated_date(),
+//                    template.getCompany_id(), template.getValue());
+            mRealm.copyToRealmOrUpdate(template);
         }
         mRealm.commitTransaction();
     }
@@ -401,64 +399,6 @@ public class RealmController {
 
     /* =================== END SAVE COMPANY OF CUSTOMER =============*/
 
-    /* =============== START ACCOUNT LOGIN SHOP =================*/
-
-    public void saveAccountShop(Company company) {
-
-        mRealm.beginTransaction();
-//        Company company1 = getAccountShop();
-//        if (company1 == null) {
-//            Company company2 = mRealm.createObject(Company.class);
-//            company2.setCompany(company.getCompany_id(), company.getName(), company.getAddress(),
-//                    company.getLogo(), company.getCreated_date(), company.getUser_id(), company.getUser1(),
-//                    company.getPass1(), company.getUser1_admin(), company.getUser2(),
-//                    company.getPass2(), company.getUser2_admin(), company.getIp(),
-//                    company.getLogo_link(), company.getCity(), company.getCountry_name());
-//        } else {
-//            company1.setCompany(company.getCompany_id(), company.getName(), company.getAddress(),
-//                    company.getLogo(), company.getCreated_date(), company.getUser_id(), company.getUser1(),
-//                    company.getPass1(), company.getUser1_admin(), company.getUser2(),
-//                    company.getPass2(), company.getUser2_admin(), company.getIp(),
-//                    company.getLogo_link(), company.getCity(), company.getCountry_name());
-//        }
-        mRealm.copyToRealmOrUpdate(company);
-
-        mRealm.commitTransaction();
-    }
-
-    public Company getAccountShop() {
-        return mRealm.where(Company.class).findFirst();
-    }
-
-    /* =============== END SAVE ACCOUNT SHOP    ==================*/
-
-
-     /* =============== START ACCOUNT LOGIN CUSTOMER =================*/
-
-    public void saveAccountCustomer(AccountOflUser account) {
-
-        mRealm.beginTransaction();
-//        AccountOflUser accountOflUser = getAccountCustomer();
-//        if (accountOflUser == null) {
-//            AccountOflUser accountOflUser1 = mRealm.createObject(AccountOflUser.class);
-//            accountOflUser1.setAccountOfUser(account.getId(), account.getName(),
-//                    account.getAccessToken(), account.getAccessToken());
-//        } else {
-//            accountOflUser.setAccountOfUser(account.getId(), account.getName(),
-//                    account.getAccessToken(), account.getAccessToken());
-//        }
-        mRealm.copyToRealmOrUpdate(account);
-        mRealm.commitTransaction();
-    }
-
-    public AccountOflUser getAccountCustomer() {
-        return mRealm.where(AccountOflUser.class).findFirst();
-    }
-
-    /* =============== END SAVE ACCOUNT CUSTOMER    ==================*/
-
-
-    /* ================== NEWS CUSTOMER LIKE ===============*/
 
     public void addNewsCustomerLike(NewsOfLike newsOfLike) {
 

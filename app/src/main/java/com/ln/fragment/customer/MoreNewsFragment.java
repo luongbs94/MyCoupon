@@ -17,11 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.ln.adapter.NewsCustomerAdapter;
 import com.ln.adapter.NewsMoreAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
+import com.ln.model.CityOfUser;
 import com.ln.model.Message;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.NewsOfMore;
@@ -50,6 +52,7 @@ public class MoreNewsFragment extends Fragment {
 
     private RealmController mRealmController;
     private AccountOflUser account;
+    private int mType;
 
 
     @Override
@@ -58,7 +61,11 @@ public class MoreNewsFragment extends Fragment {
 
         mApi = MainApplication.getAPI();
         mRealmController = RealmController.with(this);
-        account = mRealmController.getAccountCustomer();
+        account = new Gson().fromJson(
+                MainApplication.getSharedPreferences()
+                        .getString(MainApplication
+                                .ACCOUNT_CUSTOMER, ""),
+                AccountOflUser.class);
     }
 
     @Nullable
@@ -84,6 +91,11 @@ public class MoreNewsFragment extends Fragment {
             public void onRefresh() {
                 mRecyclerNews.setClickable(false);
                 getNewsMore();
+                if (mType == 0) {
+                    getNewsMore();
+                } else if (mType == 1) {
+                    getNewsLike();
+                }
                 mRecyclerNews.setClickable(true);
             }
         });
@@ -167,7 +179,8 @@ public class MoreNewsFragment extends Fragment {
         SharedPreferences preferences = getActivity()
                 .getSharedPreferences(MainApplication.SHARED_PREFERENCE,
                         Context.MODE_PRIVATE);
-        String city = preferences.getString(MainApplication.CITY_CUSTOMER, "");
+        String city = preferences.getString(MainApplication.CITY_OF_USER, "");
+        city = new Gson().fromJson(city, CityOfUser.class).getCity();
         String id = account.getId();
 
 
@@ -208,20 +221,22 @@ public class MoreNewsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_all_news:
+                mType = 0;
                 getSnackBar(getString(R.string.all_news));
                 getNewsMore();
                 return true;
 
             case R.id.menu_like_news:
+                mType = 1;
                 getSnackBar(getString(R.string.bookmark));
-                likeNews();
+                getNewsLike();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void likeNews() {
+    private void getNewsLike() {
 
         String idUser = account.getId();
         List<LikeNews> listLikeNews = mRealmController.getListLikeNews();

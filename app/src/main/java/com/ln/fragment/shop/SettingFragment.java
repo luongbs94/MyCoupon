@@ -1,6 +1,7 @@
 package com.ln.fragment.shop;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.interfaces.OnClickSetInformation;
@@ -65,6 +67,7 @@ public class SettingFragment extends Fragment {
 
     private static final int SELECT_PICTURE = 1;
 
+    private Company company;
     private static OnClickSetInformation mListener;
 
     @Override
@@ -72,6 +75,9 @@ public class SettingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mLoveCouponAPI = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
+
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        company = new Gson().fromJson(strCompany, Company.class);
     }
 
     public static void setListener(OnClickSetInformation listener) {
@@ -130,7 +136,6 @@ public class SettingFragment extends Fragment {
 
     private void init() {
 
-        Company company = MainApplication.mRealmController.getAccountShop();
 
         if (company.getName() != null) {
             mEdtNameCompany.setText(company.getName());
@@ -286,17 +291,9 @@ public class SettingFragment extends Fragment {
             String logo = MainApplication.convertToBitmap(mImgLogo);
             logo = MainApplication.FIRST_BASE64 + logo;
 
-            Company company = mRealmController.getAccountShop();
-            final Company company1 = new Company();
-            company1.setCompany(company.getCompany_id(), company.getName(), company.getAddress(), company.getLogo(),
-                    company.getCreated_date(), company.getUser_id(), company.getUser1(),
-                    company.getPass1(), company.getUser1_admin(), company.getUser2(),
-                    company.getPass2(), company.getUser2_admin(), company.getIp(),
-                    company.getLogo_link(), company.getCity(), company.getCountry_name());
-
-            company1.setName(name);
-            company1.setAddress(address);
-            company1.setLogo(logo);
+            company.setName(name);
+            company.setAddress(address);
+            company.setLogo(logo);
 
             Log.d(TAG, "Logo : " + logo);
             final String finalLogo = logo;
@@ -304,7 +301,7 @@ public class SettingFragment extends Fragment {
             if (mListener != null) {
                 mListener.onClickSetInformation(finalLogo, name, address);
             }
-            Call<Integer> call = mLoveCouponAPI.updateCompany(company1);
+            Call<Integer> call = mLoveCouponAPI.updateCompany(company);
 
             call.enqueue(new Callback<Integer>() {
                 @Override
@@ -312,9 +309,10 @@ public class SettingFragment extends Fragment {
                     if (response.body() == 1) {
                         Log.d(TAG, "Success");
 
-
                         getShowMessage("Success");
-                        mRealmController.saveAccountShop(company1);
+                        String str = new Gson().toJson(company);
+                        writeSharePreferences(MainApplication.COMPANY_SHOP, str);
+
                         if (mListener != null) {
                             mListener.onClickSetInformation(finalLogo, name, address);
                         }
@@ -380,7 +378,6 @@ public class SettingFragment extends Fragment {
 
     private void validateUser(EditText editText, EditText editText2, EditText edtPassword, TextInputLayout textInputLayout, TextInputLayout password) {
 
-        Company company = MainApplication.mRealmController.getAccountShop();
 
         String text = editText.getText().toString().trim();
         String text2 = editText2.getText().toString().trim();
@@ -425,6 +422,12 @@ public class SettingFragment extends Fragment {
         } else {
             inputPassword.setErrorEnabled(false);
         }
+    }
+
+    private void writeSharePreferences(String key, String value) {
+        SharedPreferences.Editor editor = MainApplication.getSharedPreferences().edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 
     private void getShowMessage(String s) {

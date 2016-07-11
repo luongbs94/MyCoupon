@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
+import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
@@ -47,7 +48,9 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
 
         apiService = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
-        mAccountOflUser = mRealmController.getAccountCustomer();
+
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+        mAccountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

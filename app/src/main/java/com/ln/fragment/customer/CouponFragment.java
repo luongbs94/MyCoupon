@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.ln.adapter.CompanyAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.ItemClickSupport;
@@ -116,7 +117,12 @@ public class CouponFragment extends Fragment {
 
     private void getCompanyByUserId() {
 
-        AccountOflUser account = mRealmController.getAccountCustomer();
+        AccountOflUser account = new Gson().fromJson(
+                MainApplication.getSharedPreferences()
+                        .getString(MainApplication
+                                .ACCOUNT_CUSTOMER, ""),
+                AccountOflUser.class);
+
         if (account != null) {
             Call<List<CompanyOfCustomer>> call3 = mApiServices.getCompaniesByUserId(account.getId());
             call3.enqueue(new Callback<List<CompanyOfCustomer>>() {

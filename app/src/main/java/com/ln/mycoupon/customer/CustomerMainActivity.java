@@ -22,19 +22,19 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
+import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.customer.MoreNewsFragment;
 import com.ln.fragment.customer.NewsCustomerFragment;
-import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.interfaces.OnClickLogoutGoogle;
 import com.ln.model.AccountOflUser;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
-import com.ln.mycoupon.shop.ShopLoginActivity;
 
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiverListener {
@@ -86,7 +86,9 @@ public class CustomerMainActivity extends AppCompatActivity
 
         startFragment(new CouponFragment());
 
-        AccountOflUser accountOflUser = MainApplication.mRealmController.getAccountCustomer();
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+        AccountOflUser accountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
+
         if (accountOflUser != null) {
 
             if (accountOflUser.getPicture() != null) {
@@ -163,12 +165,7 @@ public class CustomerMainActivity extends AppCompatActivity
                 if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_FACEBOOK) {
                     LoginManager.getInstance().logOut();
                 } else if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_GOOGLE) {
-                    mOnClickLogoutGoogle = new OnClickLogoutGoogle() {
-                        @Override
-                        public void onClickLogout() {
-                            new ShopLoginActivity().onClickLogoutGoogle();
-                        }
-                    };
+
                 }
 
 //                MainApplication.sDetailUser = null;

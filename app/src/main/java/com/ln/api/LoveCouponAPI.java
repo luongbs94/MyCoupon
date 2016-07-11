@@ -53,7 +53,7 @@ public interface LoveCouponAPI {
     Call<Integer> addCouponTemplate(@Body CouponTemplate template);
 
     @POST("/deleteCouponTemplate")
-    Call<Integer> deleteCouponTemplate(@Body String idString);
+    Call<Integer> deleteCouponTemplate(@Body CouponTemplate template);
 
     @POST("/addMessage")
     Call<Integer> addMessage(@Body NewsOfCompany news);

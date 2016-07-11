@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.ln.adapter.NewsShopAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -52,7 +53,8 @@ public class NewsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
-        mCompany = mRealmController.getAccountShop();
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        mCompany = new Gson().fromJson(strCompany, Company.class);
     }
 
     @Override

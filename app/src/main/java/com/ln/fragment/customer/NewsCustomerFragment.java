@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.ln.adapter.NewsCustomerAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -50,6 +51,8 @@ public class NewsCustomerFragment extends Fragment {
     private RealmController mRealmController;
     private AccountOflUser account;
 
+    private int mType;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,11 @@ public class NewsCustomerFragment extends Fragment {
 
         apiService = MainApplication.getAPI();
         mRealmController = RealmController.with(this);
-        account = mRealmController.getAccountCustomer();
+        account = new Gson().fromJson(
+                MainApplication.getSharedPreferences()
+                        .getString(MainApplication
+                                .ACCOUNT_CUSTOMER, ""),
+                AccountOflUser.class);
     }
 
     @Nullable
@@ -76,7 +83,12 @@ public class NewsCustomerFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mRecyclerNews.setClickable(false);
-                getNewsOfCustomer();
+                if (mType == 0) {
+                    getNewsOfCustomer();
+
+                } else if (mType == 1) {
+                    getNewsLike();
+                }
                 mRecyclerNews.setClickable(true);
             }
         });
@@ -95,7 +107,11 @@ public class NewsCustomerFragment extends Fragment {
 
     private void setListMessages() {
 
-        AccountOflUser account = mRealmController.getAccountCustomer();
+        AccountOflUser account = new Gson().fromJson(
+                MainApplication.getSharedPreferences()
+                        .getString(MainApplication
+                                .ACCOUNT_CUSTOMER, ""),
+                AccountOflUser.class);
         List<NewsOfCustomer> mListNews = mRealmController.getListNewsOfCustomer();
 
         // set like news
@@ -145,7 +161,7 @@ public class NewsCustomerFragment extends Fragment {
 
     public void getNewsOfCustomer() {
 
-        AccountOflUser account = mRealmController.getAccountCustomer();
+
         Call<List<NewsOfCustomer>> newsCustomer = apiService.getNewsByUserId(account.getId());
 
         newsCustomer.enqueue(new Callback<List<NewsOfCustomer>>() {
@@ -181,20 +197,22 @@ public class NewsCustomerFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_all_news:
+                mType = 0;
                 getSnackBar(getString(R.string.all_news));
                 getNewsOfCustomer();
                 return true;
 
             case R.id.menu_like_news:
+                mType = 1;
                 getSnackBar(getString(R.string.like_news));
-                likeNews();
+                getNewsLike();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void likeNews() {
+    private void getNewsLike() {
 
         String idUser = account.getId();
         List<LikeNews> listLikeNews = mRealmController.getListLikeNews();

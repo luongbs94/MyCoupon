@@ -12,8 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 
 import retrofit2.Call;
@@ -101,7 +103,11 @@ public class AddCouponActivity extends AppCompatActivity
         template.setContent(content);
         template.setValue(value);
         template.setDuration(duration);
-        template.setCompany_id(MainApplication.mRealmController.getAccountShop().getCompany_id() + "");
+
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company mCompany = new Gson().fromJson(strCompany, Company.class);
+
+        template.setCompany_id(mCompany.getCompany_id() + "");
 
         Call<Integer> createCoupon = mApiService.addCouponTemplate(template);
         createCoupon.enqueue(new Callback<Integer>() {

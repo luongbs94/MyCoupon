@@ -2,9 +2,9 @@ package com.ln.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
@@ -38,7 +40,8 @@ import retrofit2.Response;
  * Set coupon for show
  */
 
-public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAdapter.ViewHolder> {
+public class CouponTemplateAdapter
+        extends RecyclerView.Adapter<CouponTemplateAdapter.ViewHolder> {
 
     private List<CouponTemplate> mListCoupon;
     private Context mContext;
@@ -61,7 +64,9 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
         final int intPosition = position;
         final CouponTemplate itemCoupon = mListCoupon.get(intPosition);
 
-        Company company = MainApplication.mRealmController.getAccountShop();
+
+        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company company = new Gson().fromJson(strCompany, Company.class);
 
         if (company != null && company.getLogo() != null) {
             holder.mTxtNameCoupon.setText(company.getName());
@@ -94,7 +99,6 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
         holder.mImageMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-//
                 PopupMenu popupMenu = new PopupMenu(mContext, view);
                 final MenuInflater inflater = popupMenu.getMenuInflater();
                 inflater.inflate(R.menu.menu_delete_coupon, popupMenu.getMenu());
@@ -104,26 +108,28 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
                         switch (item.getItemId()) {
                             case R.id.menu_delete:
 
-                                Call<Integer> delete = MainApplication.getAPI().deleteCouponTemplate(itemCoupon.getCoupon_template_id());
+                                Log.d("mImageMore", "onResponse " + itemCoupon.getCoupon_template_id());
+                                Call<Integer> delete = MainApplication.getAPI().deleteCouponTemplate(itemCoupon);
                                 delete.enqueue(new Callback<Integer>() {
                                     @Override
                                     public void onResponse(Call<Integer> call, Response<Integer> response) {
+
+                                        Log.d("mImageMore", "onResponse " + response.body());
                                         if (response.body() == MainApplication.SUCCESS) {
-                                            getSnackBar(view, mContext.getString(R.string.delete_coupon_success));
-                                            MainApplication.mRealmController.deleteCouponTemplateById(itemCoupon.getCoupon_template_id());
+                                            getShowMessages(mContext.getString(R.string.delete_coupon_success));
+//                                            MainApplication.mRealmController.deleteCouponTemplateById(itemCoupon.getCoupon_template_id());
                                             mListCoupon.remove(intPosition);
                                             notifyDataSetChanged();
                                         } else {
-                                            getSnackBar(view, mContext.getString(R.string.delete_coupon_fail));
+                                            getShowMessages(mContext.getString(R.string.delete_coupon_fail));
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(Call<Integer> call, Throwable t) {
-                                        getSnackBar(view, mContext.getString(R.string.delete_coupon_fail));
+                                        getShowMessages(mContext.getString(R.string.delete_coupon_fail));
                                     }
                                 });
-
 
                                 break;
                             default:
@@ -139,8 +145,8 @@ public class CouponTemplateAdapter extends RecyclerView.Adapter<CouponTemplateAd
     }
 
 
-    private void getSnackBar(View view, String text) {
-        Snackbar.make(view, text, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    private void getShowMessages(String messages) {
+        Toast.makeText(mContext, messages, Toast.LENGTH_SHORT).show();
     }
 
     @Override
