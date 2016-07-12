@@ -106,7 +106,7 @@ public interface LoveCouponAPI {
     Call<Integer> isExists(@Query("company_id") String company_id, @Query("username") String username);
 
     @POST("/deleteMessage")
-    Call<Integer> deleteMessage(@Body String message_id);
+    Call<Integer> deleteMessage(@Body NewsOfCompany newsOfCompany);
 
     @GET("/json")
     Call<CityOfUser> getCityOfUser();

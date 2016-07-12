@@ -3,7 +3,6 @@ package com.ln.adapter;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -23,6 +23,7 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
+import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCompanyLike;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
@@ -65,6 +66,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         final NewsOfCompanyLike news = mListNews.get(position);
         final int positionNews = position;
+
+        final String idNewsOfCompany = news.getMessage_id();
 
         String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
         final Company company = new Gson().fromJson(strCompany, Company.class);
@@ -185,26 +188,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                Call<Integer> call = MainApplication.getAPI().deleteMessage(news.getMessage_id());
-                                call.enqueue(new Callback<Integer>() {
-                                    @Override
-                                    public void onResponse(Call<Integer> call, Response<Integer> response) {
-                                        if (response.body() == MainApplication.SUCCESS) {
-                                            mListNews.remove(positionNews);
-                                            notifyDataSetChanged();
-                                            getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_success));
-
-                                            Log.d("NewsShopAdapter", "Delete : News Success");
-                                        } else {
-                                            getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_error));
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<Integer> call, Throwable t) {
-                                        getSnackBar(holder.mImgDelete, mContext.getString(R.string.delete_news_error));
-                                    }
-                                });
+                                deleteNewsOfCompany(idNewsOfCompany);
 
                             }
                         })
@@ -227,8 +211,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImgLogo;
-        private IconTextView mImgLike, mImgShare, mImgDelete, mImageBookmarks;
-        ;
+        private IconTextView mImgLike, mImageBookmarks;
 
         private TextView mTxtTile, mTxtLink;
         private RecyclerView mRecyclerView;
@@ -243,8 +226,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.img_logo_news);
             mImgLike = (IconTextView) itemView.findViewById(R.id.img_like_newx);
-            mImgShare = (IconTextView) itemView.findViewById(R.id.img_share_newx);
-            mImgDelete = (IconTextView) itemView.findViewById(R.id.img_delete_news);
             mImageBookmarks = (IconTextView) itemView.findViewById(R.id.bookmark);
 
             mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_news);
@@ -263,7 +244,30 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
     }
 
-    private void getSnackBar(View view, String messages) {
-        Snackbar.make(view, messages, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    private void deleteNewsOfCompany(final String idNews) {
+        NewsOfCompany news = new NewsOfCompany(idNews);
+        Call<Integer> call = MainApplication.getAPI().deleteMessage(news);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.body() == MainApplication.SUCCESS) {
+                    getShowMessages(mContext.getString(R.string.delete_news_success));
+                    MainApplication.mRealmController.deleteNewsOfCompany(idNews);
+                    notifyDataSetChanged();
+                    Log.d("NewsShopAdapter", "Delete : News Success");
+                } else {
+                    getShowMessages(mContext.getString(R.string.delete_news_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                getShowMessages(mContext.getString(R.string.delete_news_error));
+            }
+        });
+    }
+
+    private void getShowMessages(String msg) {
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
 }

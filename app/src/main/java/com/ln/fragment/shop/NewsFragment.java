@@ -73,9 +73,7 @@ public class NewsFragment extends Fragment {
         mRecNews = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecNews.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
-
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

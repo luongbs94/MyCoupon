@@ -102,11 +102,11 @@
                 android:layout_gravity="bottom"
                 android:contentDescription="@null"
                 android:gravity="bottom"
-                android:paddingLeft="@dimen/size_3"
-                android:paddingRight="@dimen/size_3"
+                android:paddingLeft="@dimen/size_8"
+                android:paddingRight="@dimen/size_8"
                 android:text="@string/icon_more"
                 android:textColor="@color/icon_heart"
-                android:textSize="@dimen/size_20sp" />
+                android:textSize="@dimen/size_22sp" />
         </TableRow>
     </LinearLayout>
 

@@ -228,6 +228,15 @@ public class RealmController {
         mRealm.commitTransaction();
     }
 
+    public void deleteNewsOfCompany(String idNews) {
+        mRealm.beginTransaction();
+        NewsOfCompany newsOfCompany = getNewsOfCompanyById(idNews);
+        if (newsOfCompany != null) {
+            newsOfCompany.deleteFromRealm();
+        }
+        mRealm.commitTransaction();
+    }
+
 
     public void addListNewsOfCompany(List<NewsOfCompany> listMessage) {
 
@@ -257,7 +266,13 @@ public class RealmController {
         return mRealm.where(NewsOfCompany.class).findAll();
     }
 
-       /* ====================== START SAVE NEWS  SHOP =================*/
+    public NewsOfCompany getNewsOfCompanyById(String idNews) {
+        return mRealm.where(NewsOfCompany.class)
+                .equalTo("message_id", idNews)
+                .findFirst();
+    }
+
+    /* ====================== START SAVE NEWS  SHOP =================*/
 
 
     /* ====================== START SAVE NEWS  CUSTOMER =================*/
