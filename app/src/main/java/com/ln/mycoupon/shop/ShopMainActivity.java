@@ -136,8 +136,12 @@ public class ShopMainActivity extends AppCompatActivity
         } else {
             startFragment(new SettingFragment());
         }
-        mFbButton.setOnClickListener(this);
+
         mFbButton.setVisibility(View.GONE);
+        mFbButton.setOnClickListener(this);
+        if (MainApplication.sIsAdmin) {
+            mFbButton.setVisibility(View.VISIBLE);
+        }
     }
 
 

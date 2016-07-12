@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,7 +63,6 @@ public class CouponTemplateAdapter
         final int intPosition = position;
         final CouponTemplate itemCoupon = mListCoupon.get(intPosition);
 
-
         String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
 
@@ -108,29 +106,7 @@ public class CouponTemplateAdapter
                         switch (item.getItemId()) {
                             case R.id.menu_delete:
 
-                                Log.d("mImageMore", "onResponse " + itemCoupon.getCoupon_template_id());
-                                Call<Integer> delete = MainApplication.getAPI().deleteCouponTemplate(itemCoupon);
-                                delete.enqueue(new Callback<Integer>() {
-                                    @Override
-                                    public void onResponse(Call<Integer> call, Response<Integer> response) {
-
-                                        Log.d("mImageMore", "onResponse " + response.body());
-                                        if (response.body() == MainApplication.SUCCESS) {
-                                            getShowMessages(mContext.getString(R.string.delete_coupon_success));
-//                                            MainApplication.mRealmController.deleteCouponTemplateById(itemCoupon.getCoupon_template_id());
-                                            mListCoupon.remove(intPosition);
-                                            notifyDataSetChanged();
-                                        } else {
-                                            getShowMessages(mContext.getString(R.string.delete_coupon_fail));
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<Integer> call, Throwable t) {
-                                        getShowMessages(mContext.getString(R.string.delete_coupon_fail));
-                                    }
-                                });
-
+                                deleteCouponTemplate(itemCoupon.getCoupon_template_id());
                                 break;
                             default:
                                 break;
@@ -144,6 +120,29 @@ public class CouponTemplateAdapter
 
     }
 
+    private void deleteCouponTemplate(final String idCoupon) {
+        CouponTemplate coupon = new CouponTemplate(idCoupon);
+        Call<Integer> delete = MainApplication.getAPI().deleteCouponTemplate(coupon);
+        delete.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+
+                if (response.body() == MainApplication.SUCCESS) {
+                    getShowMessages(mContext.getString(R.string.delete_coupon_success));
+                    MainApplication.mRealmController.deleteCouponTemplateById(idCoupon);
+                    notifyDataSetChanged();
+                } else {
+                    getShowMessages(mContext.getString(R.string.delete_coupon_fail));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                getShowMessages(mContext.getString(R.string.delete_coupon_fail));
+            }
+        });
+
+    }
 
     private void getShowMessages(String messages) {
         Toast.makeText(mContext, messages, Toast.LENGTH_SHORT).show();
