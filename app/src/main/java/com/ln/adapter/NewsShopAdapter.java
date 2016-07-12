@@ -29,10 +29,12 @@ import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -86,7 +88,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mTxtContent.setText(news.getContent());
         holder.mTxtLink.setText(news.getLink());
 
-        SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
 //        holder.mTxtTime.setText(fmt.format(news.getCreated_date()));
 
@@ -115,9 +117,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
         }
-//        if (news.isLike()) {
-//            holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
-//        }
+
 
         holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +126,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                     holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
                     holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
                     holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
-//                    holder.mImgLike.setImageResource(R.drawable.ic_heart);
                     news.setLike(false);
                     MainApplication.mRealmController.deleteShopLikeNewsByIdNews(news.getMessage_id());
 
@@ -134,11 +133,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                     holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
                     holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
                     holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-//                    holder.mImgLike.setImageResource(R.drawable.ic_heart_color);
                     news.setLike(true);
                     MainApplication.mRealmController.addShopLikeNewsByIdNews(news.getMessage_id(), company.getCompany_id());
                 }
-
             }
         });
 
@@ -188,7 +185,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                deleteNewsOfCompany(idNewsOfCompany);
+                                deleteNewsOfCompany(idNewsOfCompany, positionNews);
 
                             }
                         })
@@ -244,7 +241,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
     }
 
-    private void deleteNewsOfCompany(final String idNews) {
+    private void deleteNewsOfCompany(final String idNews, final int positionNews) {
         NewsOfCompany news = new NewsOfCompany(idNews);
         Call<Integer> call = MainApplication.getAPI().deleteMessage(news);
         call.enqueue(new Callback<Integer>() {
@@ -253,6 +250,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                 if (response.body() == MainApplication.SUCCESS) {
                     getShowMessages(mContext.getString(R.string.delete_news_success));
                     MainApplication.mRealmController.deleteNewsOfCompany(idNews);
+                    mListNews.remove(positionNews);
                     notifyDataSetChanged();
                     Log.d("NewsShopAdapter", "Delete : News Success");
                 } else {

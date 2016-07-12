@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ln.model.ItemImage;
@@ -22,7 +23,7 @@ import java.util.List;
 public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<ItemImage> mListImages = new ArrayList<>();
+    private List<ItemImage> mListImages;
 
     public SelectedImageAdapter(Context mContext, List<ItemImage> mListImages) {
         this.mContext = mContext;
@@ -36,9 +37,8 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final int index = position;
         Glide.with(mContext)
                 .load(new File(mListImages.get(position).getPath()))
                 .centerCrop()
@@ -48,7 +48,7 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListImages.remove(index);
+                mListImages.remove(holder.getAdapterPosition());
                 notifyDataSetChanged();
             }
         });
@@ -62,13 +62,13 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImages;
-        private ImageView mDelete;
+        private TextView mDelete;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             mImages = (ImageView) itemView.findViewById(R.id.picture);
-            mDelete = (ImageView) itemView.findViewById(R.id.check);
+            mDelete = (TextView) itemView.findViewById(R.id.check);
         }
     }
 }
