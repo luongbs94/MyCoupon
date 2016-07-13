@@ -40,6 +40,9 @@ public class MainApplication extends MultiDexApplication {
     public static final String DATA = "DATA";
     public static final String PATH = "PATH";
 
+    public static final String FACEBOOK = "facebook";
+    public static final String GOOGLE = "google";
+
     public static final String ID_COMPANY = "company_id";
     public static final String OFF_LINE = "OFF_LINE";
 
@@ -53,6 +56,8 @@ public class MainApplication extends MultiDexApplication {
     public static final String ACCOUNT_CUSTOMER = "ACCOUNT_CUSTOMER";
 
 
+
+
     public static final int ADD_COUPON_TEMPLATE = 2;
     public static final int ADD_MESSAGES = 3;
     public static final int SUCCESS = 1;
@@ -60,6 +65,7 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String LOGO = "data";
     public static final int TIME_SLEEP = 2000;
+    public static final int START_QRCODE = 111;
 
     private static MainApplication mInstances;
 

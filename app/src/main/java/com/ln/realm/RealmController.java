@@ -359,26 +359,20 @@ public class RealmController {
     public void addListCompanyCustomer(List<CompanyOfCustomer> listCompany) {
 
         mRealm.beginTransaction();
+
+        List<CompanyOfCustomer> mListCompany = getListCompanyCustomer();
+        for (CompanyOfCustomer company : mListCompany) {
+            company.deleteFromRealm();
+        }
+
+        List<Coupon> listCoupon = getListCoupon();
+        for (Coupon coupon : listCoupon) {
+            coupon.deleteFromRealm();
+        }
+
+
         for (CompanyOfCustomer companyOfCustomer : listCompany) {
-//            CompanyOfCustomer company = mRealm.createObject(CompanyOfCustomer.class);
-
-//            for (Coupon coupon : companyOfCustomer.getCoupon()) {
-//                Coupon coupon1 = mRealm.createObject(Coupon.class);
-//                coupon1.setCoupon(coupon.getCoupon_id(), coupon.getUser_id(),
-//                        coupon.getCoupon_template_id(), coupon.getUsed_date(),
-//                        coupon.getCompany_id(), coupon.getValue(), coupon.getDuration(), coupon.getCode(),
-//                        coupon.getUser_name(), coupon.getUser_social(), coupon.getUser_image_link());
-//
-//                company.getCoupon().add(coupon1);
-//            }
-
-//            company.setCompanyCustomer(companyOfCustomer.getCompany_id(),
-//                    companyOfCustomer.getLogo(),
-//                    companyOfCustomer.getLogo_link(),
-//                    companyOfCustomer.getName(),
-//                    companyOfCustomer.getAddress());
             mRealm.copyToRealmOrUpdate(companyOfCustomer);
-
         }
         mRealm.commitTransaction();
     }

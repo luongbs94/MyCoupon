@@ -168,20 +168,20 @@ public class TestQRCode extends AppCompatActivity {
         template.setCreated_date(new Date().getTime());
 
 
-        Call<Coupon> call2 = apiService.addCoupon(template);
-        call2.enqueue(new Callback<Coupon>() {
-
+        Call<Integer> call2 = apiService.addCoupon(template);
+        call2.enqueue(new Callback<Integer>() {
             @Override
-            public void onResponse(Call<Coupon> arg0,
-                                   Response<Coupon> arg1) {
-                Log.d(TAG, "success");
-
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.body() == MainApplication.SUCCESS) {
+                    Log.d(TAG, "success");
+                } else {
+                    Log.d(TAG, "khong thanh cong");
+                }
             }
 
             @Override
-            public void onFailure(Call<Coupon> arg0, Throwable arg1) {
-                // TODO Auto-generated method stub
-                Log.d(TAG, "fail");
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d(TAG, "onFailure");
             }
         });
     }

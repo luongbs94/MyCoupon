@@ -152,7 +152,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
 
                 if (response.body() != null) {
-                    mRealmController.deleteListCompanyCustomer();
+//                    mRealmController.deleteListCompanyCustomer();
                     mRealmController.addListCompanyCustomer(response.body());
 
                     Log.d(TAG, "getCompanyOfCustomer + " + response.body().size());

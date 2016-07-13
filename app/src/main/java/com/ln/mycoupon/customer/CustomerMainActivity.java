@@ -64,7 +64,7 @@ public class CustomerMainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CustomerMainActivity.this, QRCodeActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, MainApplication.START_QRCODE);
 
             }
         });
@@ -209,6 +209,21 @@ public class CustomerMainActivity extends AppCompatActivity
     public void onNetworkConnectChange(boolean isConnect) {
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MainApplication.START_QRCODE) {
+                Bundle bundle = data.getExtras();
+                Intent intent = new Intent(this, CouponCompanyOfClientActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        }
+    }
+
 
     private void checkNetwork() {
         boolean isNetWork = ConnectivityReceiver.isConnect();
