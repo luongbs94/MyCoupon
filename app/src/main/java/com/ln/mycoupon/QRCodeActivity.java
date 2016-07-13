@@ -69,7 +69,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
     public void onQRCodeRead(String text, PointF[] points) {
         mTextView.setText(text);
         mQRCodeReaderView.getCameraManager().stopPreview();
-        getCoupon(text);
+        updateCoupon(text,  mAccountOflUser.getId());
     }
 
 
@@ -111,68 +111,10 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
     }
 
 
-    private void getCoupon(final String coupon_id) {
-        Call<List<Coupon>> call = apiService.getCoupon(coupon_id);
-        call.enqueue(new Callback<List<Coupon>>() {
-            @Override
-            public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
-                if (response.body().size() > 0) {
-                    Coupon coupon = response.body().get(0);
-                    if (coupon.getUser_id() != null) {
-                        new MaterialDialog.Builder(QRCodeActivity.this)
-                                .title("Coupon")
-                                .content("Coupon đã được sử dụng")
-                                .positiveText(R.string.ok)
-                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                                        dialog.dismiss();
-                                        mQRCodeReaderView.getCameraManager().startPreview();
-
-                                    }
-                                })
-                                .show();
-
-                    } else {
-
-                        if (mAccountOflUser != null) {
-                            updateCoupon(coupon_id, mAccountOflUser.getId(),
-                                    coupon.getDuration());
-                        }
-                    }
-                } else {
-
-                    new MaterialDialog.Builder(QRCodeActivity.this)
-                            .title("Coupon")
-                            .content("Không tìm thấy coupon này")
-                            .positiveText(R.string.ok)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(MaterialDialog dialog, DialogAction which) {
-                                    dialog.dismiss();
-                                    mQRCodeReaderView.getCameraManager().startPreview();
-                                }
-                            })
-                            .show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Coupon>> call, Throwable t) {
-                Log.d(TAG, "getCoupon Failure");
-
-                Toast.makeText(QRCodeActivity.this, "Not found", Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-    }
-
-    private void updateCoupon(String coupon_id, String user_id, int duration) {
+    private void updateCoupon(String coupon_id, String user_id) {
         Coupon template = new Coupon();
         template.setCoupon_id(coupon_id);
         template.setUser_id(user_id);
-        template.setDuration(duration);
 
         try {
             template.setUser_image_link(mAccountOflUser.getPicture());
@@ -188,21 +130,41 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
 
             @Override
             public void onResponse(Call<List<CompanyOfCustomer>> arg0,
-                                   Response<List<CompanyOfCustomer>> arg1) {
-                new MaterialDialog.Builder(QRCodeActivity.this)
-                        .title("Coupon")
-                        .content("Bạn đã thêm mới một coupon")
-                        .positiveText(R.string.ok)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog dialog, DialogAction which) {
-                                dialog.dismiss();
-                                SaveData.updateCoupon = true;
-                                QRCodeActivity.this.finish();
+                                   Response<List<CompanyOfCustomer>> response) {
 
-                            }
-                        })
-                        .show();
+                if(response == null){
+                    new MaterialDialog.Builder(QRCodeActivity.this)
+                            .title("Coupon")
+                            .content("Không tìm thấy coupon này")
+                            .positiveText(R.string.ok)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    dialog.dismiss();
+                                    mQRCodeReaderView.getCameraManager().startPreview();
+                                }
+                            })
+                            .show();
+
+                }else{
+
+                    new MaterialDialog.Builder(QRCodeActivity.this)
+                            .title("Coupon")
+                            .content("Bạn đã thêm mới một coupon")
+                            .positiveText(R.string.ok)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    dialog.dismiss();
+                                    SaveData.updateCoupon = true;
+                                    QRCodeActivity.this.finish();
+
+                                }
+                            })
+                            .show();
+
+                }
+
             }
 
             @Override
