@@ -20,9 +20,11 @@ import com.google.zxing.client.android.common.executor.AsyncTaskExecInterface;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
+import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
-import com.ln.model.RCompanyOfCustomer;
 import com.ln.realm.RealmController;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -128,11 +130,11 @@ public class QRCodeActivity extends AppCompatActivity
             coupon.setUser_social(MainApplication.GOOGLE);
         }
 
-        Call<RCompanyOfCustomer> updateCoupon = apiService.updateUserCoupon(coupon);
+        Call<List<CompanyOfCustomer>> updateCoupon = apiService.updateUserCoupon(coupon);
 
-        updateCoupon.enqueue(new Callback<RCompanyOfCustomer>() {
+        updateCoupon.enqueue(new Callback<List<CompanyOfCustomer>>() {
             @Override
-            public void onResponse(Call<RCompanyOfCustomer> call, Response<RCompanyOfCustomer> response) {
+            public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                 if (response.body() == null) {
                     new MaterialDialog.Builder(QRCodeActivity.this)
                             .title("Coupon")
@@ -142,11 +144,11 @@ public class QRCodeActivity extends AppCompatActivity
                                 @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                     dialog.dismiss();
-
                                     Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
+                                            isCamera = false;
                                             mQRCodeReaderView.getCameraManager().startPreview();
                                         }
                                     }, 1500);
@@ -160,9 +162,9 @@ public class QRCodeActivity extends AppCompatActivity
                     Log.d(TAG, "CompanyOfCustomer " + response.body());
                 } else {
 
-                    final RCompanyOfCustomer rCompanyOfCustomer = response.body();
+                    final CompanyOfCustomer company = response.body().get(0);
                     showDialog();
-                    mRealmController.addListCompanyCustomer(rCompanyOfCustomer.getCompanies());
+                    mRealmController.addCompanyOfCustomer(company);
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -170,7 +172,7 @@ public class QRCodeActivity extends AppCompatActivity
 
                             Intent intent = getIntent();
                             Bundle bundle = new Bundle();
-                            bundle.putString(MainApplication.ID_COMPANY, rCompanyOfCustomer.getCompany_id());
+                            bundle.putString(MainApplication.ID_COMPANY, company.getCompany_id());
                             intent.putExtras(bundle);
                             setResult(RESULT_OK, intent);
                             Toast.makeText(QRCodeActivity.this, "Ban da them 1 coupon moi", Toast.LENGTH_SHORT).show();
@@ -184,8 +186,9 @@ public class QRCodeActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<RCompanyOfCustomer> call, Throwable t) {
+            public void onFailure(Call<List<CompanyOfCustomer>> call, Throwable t) {
                 Log.d(TAG, "CompanyOfCustomer  onFailure " + t.toString());
+
             }
         });
     }
@@ -204,8 +207,9 @@ public class QRCodeActivity extends AppCompatActivity
         }
     }
 
+    @SafeVarargs
     @Override
-    public <T> void execute(AsyncTask<T, ?, ?> task, T... args) {
+    public final <T> void execute(AsyncTask<T, ?, ?> task, T... args) {
 
     }
 }

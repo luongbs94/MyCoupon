@@ -356,6 +356,35 @@ public class RealmController {
 
     /* ================ START SAVE LIST COMPANY OF CUSTOMER ===========*/
 
+    public void addCompanyOfCustomer(CompanyOfCustomer company) {
+
+        mRealm.beginTransaction();
+        List<Coupon> listCoupon = getListCouponByCompanyId(company.getCompany_id());
+        for (Coupon coupon : listCoupon) {
+            coupon.deleteFromRealm();
+        }
+
+        CompanyOfCustomer companyOfCustomer = getCompanyOfCustomer(company.getCompany_id());
+        if (companyOfCustomer != null) {
+            companyOfCustomer.deleteFromRealm();
+        }
+
+        CompanyOfCustomer companyOfCustomer1 = mRealm.createObject(CompanyOfCustomer.class);
+
+        for (Coupon coupon : company.getCoupon()) {
+            mRealm.copyToRealmOrUpdate(coupon);
+            companyOfCustomer1.getCoupon().add(coupon);
+        }
+
+        companyOfCustomer1.setCompanyCustomer(company.getCompany_id(),
+                company.getLogo(), company.getLogo_link(), company.getName(),
+                company.getAddress());
+
+        mRealm.commitTransaction();
+
+    }
+
+
     public void addListCompanyCustomer(List<CompanyOfCustomer> listCompany) {
 
         mRealm.beginTransaction();
@@ -400,10 +429,17 @@ public class RealmController {
         return mRealm.where(Coupon.class).findAll();
     }
 
+    private RealmResults<Coupon> getListCouponByCompanyId(String id) {
+        return mRealm.where(Coupon.class)
+                .equalTo("company_id", id)
+                .findAll();
+    }
 
     public CompanyOfCustomer getCompanyOfCustomer(String idCompany) {
-        return mRealm.where(CompanyOfCustomer.class)
-                .equalTo(MainApplication.ID_COMPANY, idCompany).findFirst();
+        return mRealm
+                .where(CompanyOfCustomer.class)
+                .equalTo(MainApplication.ID_COMPANY, idCompany)
+                .findFirst();
     }
 
     /* =================== END SAVE COMPANY OF CUSTOMER =============*/
