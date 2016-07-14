@@ -7,7 +7,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -22,7 +21,7 @@ import com.ln.realm.RealmController;
 
 /**
  * Created by luongnguyen on 6/7/16.
- * <p>
+ * <p/>
  * coupon
  */
 public class CouponCompanyOfClientActivity extends AppCompatActivity {
@@ -49,8 +48,15 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
         CompanyOfCustomer mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+
+        try{
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        }catch (Exception e){
+
+        }
 
         initCollapsingToolbar();
 
@@ -103,7 +109,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         collapsingToolbar.setTitle(" ");
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.setExpanded(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
@@ -115,7 +121,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(getString(R.string.app_name));
+                    collapsingToolbar.setTitle(" ");
                     isShow = true;
                 } else if (isShow) {
                     collapsingToolbar.setTitle(" ");

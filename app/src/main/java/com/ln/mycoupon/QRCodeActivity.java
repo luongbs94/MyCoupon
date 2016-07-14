@@ -1,26 +1,28 @@
 package com.ln.mycoupon;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.google.gson.Gson;
+import com.google.zxing.client.android.common.executor.AsyncTaskExecInterface;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
-import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
+import com.ln.model.RCompanyOfCustomer;
 import com.ln.realm.RealmController;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,16 +32,19 @@ import retrofit2.Response;
  * Created by luongnguyen on 4/13/16.
  * <></>
  */
-public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
+public class QRCodeActivity extends AppCompatActivity
+        implements QRCodeReaderView.OnQRCodeReadListener, AsyncTaskExecInterface {
 
     private final String TAG = getClass().getSimpleName();
-    private TextView mTextView;
+    private RealmController mRealmController;
+
+
     private QRCodeReaderView mQRCodeReaderView;
 
-
     private LoveCouponAPI apiService;
-    private RealmController mRealmController;
     private AccountOflUser mAccountOflUser;
+    private ProgressDialog mProgressDialog;
+    private boolean isCamera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,37 +57,34 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
         mAccountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        mQRCodeReaderView = (QRCodeReaderView) findViewById(R.id.qrdecoderview);
-        mQRCodeReaderView.setOnQRCodeReadListener(this);
-
-        mTextView = (TextView) findViewById(R.id.exampleTextView);
-
+        mQRCodeReaderView = (QRCodeReaderView) findViewById(R.id.decoder_view);
+        if (mQRCodeReaderView != null) {
+            mQRCodeReaderView.setOnQRCodeReadListener(this);
+        }
     }
 
-
-    // Called when a QR is decoded
-    // "text" : the text encoded in QR
-    // "points" : points where QR control points are placed
     @Override
     public void onQRCodeRead(String text, PointF[] points) {
-        mTextView.setText(text);
         mQRCodeReaderView.getCameraManager().stopPreview();
-        updateCoupon(text,  mAccountOflUser.getId());
+        if (!isCamera) {
+            isCamera = true;
+            updateCoupon(text);
+        }
+
+        Log.d(TAG, "onQRCodeRead " + text);
     }
 
 
-    // Called when your device have no camera
     @Override
     public void cameraNotFound() {
-
     }
 
-    // Called when there's no QR codes in the camera preview image
     @Override
     public void QRCodeNotFoundOnCamImage() {
-
     }
 
     @Override
@@ -101,77 +103,109 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateCoupon(String coupon_id) {
 
-    private void updateCoupon(String coupon_id, String user_id) {
-        Coupon template = new Coupon();
-        template.setCoupon_id(coupon_id);
-        template.setUser_id(user_id);
+        Log.d(TAG, "updateCoupon " + mAccountOflUser.getId());
+        Log.d(TAG, "updateCoupon " + mAccountOflUser.getName());
+        Log.d(TAG, "updateCoupon " + mAccountOflUser.getPicture());
 
-        try {
-            template.setUser_image_link(mAccountOflUser.getPicture());
-            template.setUser_name(mAccountOflUser.getName());
+        Coupon coupon = new Coupon();
+        coupon.setCoupon_id(coupon_id);
+        coupon.setUser_id(mAccountOflUser.getId());
+        coupon.setUser_image_link(mAccountOflUser.getPicture());
+        coupon.setUser_name(mAccountOflUser.getName());
 
-        } catch (Exception e) {
-            Log.d(TAG, "updateCoupon " + e.toString());
+        if (mAccountOflUser.getPicture().contains(MainApplication.FACEBOOK)) {
+            coupon.setUser_social(MainApplication.FACEBOOK);
+        } else {
+            coupon.setUser_social(MainApplication.GOOGLE);
         }
 
+        Call<RCompanyOfCustomer> updateCoupon = apiService.updateUserCoupon(coupon);
 
-        Call<List<CompanyOfCustomer>> call2 = apiService.updateUserCoupon(template);
-        call2.enqueue(new Callback<List<CompanyOfCustomer>>() {
-
+        updateCoupon.enqueue(new Callback<RCompanyOfCustomer>() {
             @Override
-            public void onResponse(Call<List<CompanyOfCustomer>> arg0,
-                                   Response<List<CompanyOfCustomer>> response) {
-
-                if(response == null){
+            public void onResponse(Call<RCompanyOfCustomer> call, Response<RCompanyOfCustomer> response) {
+                if (response.body() == null) {
                     new MaterialDialog.Builder(QRCodeActivity.this)
                             .title("Coupon")
-                            .content("Không tìm thấy coupon này")
+                            .content("Coupon đã được sử dụng")
                             .positiveText(R.string.ok)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
-                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                     dialog.dismiss();
+
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mQRCodeReaderView.getCameraManager().startPreview();
+                                        }
+                                    }, 1500);
+
                                     mQRCodeReaderView.getCameraManager().startPreview();
                                 }
                             })
                             .show();
 
-                }else{
 
-                    new MaterialDialog.Builder(QRCodeActivity.this)
-                            .title("Coupon")
-                            .content("Bạn đã thêm mới một coupon")
-                            .positiveText(R.string.ok)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(MaterialDialog dialog, DialogAction which) {
-                                    dialog.dismiss();
-                                    SaveData.updateCoupon = true;
-                                    QRCodeActivity.this.finish();
+                    Log.d(TAG, "CompanyOfCustomer " + response.body());
+                } else {
 
-                                }
-                            })
-                            .show();
+                    final RCompanyOfCustomer rCompanyOfCustomer = response.body();
+                    showDialog();
+                    mRealmController.addListCompanyCustomer(rCompanyOfCustomer.getCompanies());
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
+                            Intent intent = getIntent();
+                            Bundle bundle = new Bundle();
+                            bundle.putString(MainApplication.ID_COMPANY, rCompanyOfCustomer.getCompany_id());
+                            intent.putExtras(bundle);
+                            setResult(RESULT_OK, intent);
+                            Toast.makeText(QRCodeActivity.this, "Ban da them 1 coupon moi", Toast.LENGTH_SHORT).show();
+                            hideDialog();
+                            finish();
+                        }
+                    }, 2000);
+
+                    Log.d(TAG, "CompanyOfCustomer " + response.body());
                 }
-
             }
 
             @Override
-            public void onFailure(Call<List<CompanyOfCustomer>> arg0, Throwable arg1) {
-                Toast.makeText(QRCodeActivity.this, "Not found", Toast.LENGTH_LONG).show();
+            public void onFailure(Call<RCompanyOfCustomer> call, Throwable t) {
+                Log.d(TAG, "CompanyOfCustomer  onFailure " + t.toString());
             }
         });
     }
 
+    private void showDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
+        }
+        mProgressDialog.show();
+    }
+
+    private void hideDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public <T> void execute(AsyncTask<T, ?, ?> task, T... args) {
+
+    }
 }

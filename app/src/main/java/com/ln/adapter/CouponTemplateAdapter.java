@@ -60,8 +60,7 @@ public class CouponTemplateAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final int intPosition = position;
-        final CouponTemplate itemCoupon = mListCoupon.get(intPosition);
+        final CouponTemplate itemCoupon = mListCoupon.get(position);
 
         String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
@@ -105,7 +104,6 @@ public class CouponTemplateAdapter
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_delete:
-
                                 deleteCouponTemplate(itemCoupon.getCoupon_template_id());
                                 break;
                             default:

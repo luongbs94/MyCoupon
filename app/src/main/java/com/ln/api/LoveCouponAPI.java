@@ -14,6 +14,7 @@ import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.NewsOfMore;
+import com.ln.model.RCompanyOfCustomer;
 import com.ln.model.User;
 
 import java.util.ArrayList;
@@ -59,21 +60,21 @@ public interface LoveCouponAPI {
     Call<Integer> addMessage(@Body NewsOfCompany news);
 
     @POST("/addCoupon")
-    Call<Coupon> addCoupon(@Body Coupon template);
+    Call<Integer> addCoupon(@Body Coupon coupon);
 
     @GET("/get_companies_by_user_id")
     Call<List<CompanyOfCustomer>> getCompaniesByUserId(@Query("user_id") String id);
 
-
     @GET("/get_news_by_user_id")
     Call<List<NewsOfCustomer>> getNewsByUserId(@Query("user_id") String id);
 
+    // khong tim thay dang can hoi
     @POST("/update_user_coupon")
-    Call<List<CompanyOfCustomer>> updateUserCoupon(@Body Coupon template);
+    Call<RCompanyOfCustomer> updateUserCoupon(@Body Coupon template);
 
 
-    @GET("/getCoupon")
-    Call<List<Coupon>> getCoupon(@Query("coupon_id") String id);
+//    @GET("/getCoupon")
+//    Call<List<Coupon>> getCoupon(@Query("coupon_id") String id);
 
     @GET("/get_created_coupon_by_company_id")
     Call<ArrayList<Coupon>> getCreatedCoupon(@Query("company_id") String company_id, @Query("utc1") String utc1, @Query("utc2") String utc2);

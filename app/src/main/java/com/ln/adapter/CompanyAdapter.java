@@ -31,14 +31,15 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_company, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.item_company, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final CompanyOfCustomer item = listCompany.get(position);
+        CompanyOfCustomer item = listCompany.get(position);
         if (item != null) {
             holder.companyName.setText(item.getName());
             holder.companyAddress.setText(item.getAddress());
