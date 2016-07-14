@@ -15,7 +15,7 @@
     <string name="banla">You are</string>
     <string name="shop">Shop</string>
     <string name="customer">Customer</string>
-    <string name="not_fill_login">You didn't fill all information</string>
+    <string name="not_fill_login">You didnt fill all information</string>
     <string name="title_activity_test_qrcode">TestQRCode</string>
     <string name="reload">New Coupon</string>
     <string name="exit">Log out</string>

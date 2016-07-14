@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,15 +69,8 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
         date.setMinutes(0);
         date.setSeconds(0);
 
-        utc1 = date.toString();
-
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-
-        utc2 = calendar.getTime().toString();
+        utc1 = date.getTime() + "";
+        utc2 = (date.getTime() + 24*3600*1000 ) + "";
 
         getCreateCoupon();
     }
@@ -122,6 +116,7 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
         listCoupon.enqueue(new Callback<ArrayList<Coupon>>() {
             @Override
             public void onResponse(Call<ArrayList<Coupon>> call, Response<ArrayList<Coupon>> response) {
+                mListCoupon = new ArrayList<>();
                 mListCoupon = response.body();
 
                 mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupon);
@@ -177,14 +172,15 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
     @Override
     public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
         calendar.set(year, monthOfYear, dayOfMonth);
-        utc1 = calendar.getTime().toString();
+        utc1 = calendar.getTimeInMillis() + "";
+        utc2 = (calendar.getTimeInMillis() + 24*3600*1000 ) + "";
+
+
         MenuItem item = menu1.findItem(R.id.date);
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
         item.setTitle(fmt.format(calendar.getTime()));
 
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        utc2 = calendar.getTime().toString();
         getCreateCoupon();
 
 

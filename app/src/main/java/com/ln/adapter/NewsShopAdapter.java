@@ -33,8 +33,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -88,9 +88,12 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mTxtContent.setText(news.getContent());
         holder.mTxtLink.setText(news.getLink());
 
-        DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
-//        holder.mTxtTime.setText(fmt.format(news.getCreated_date()));
+        Date date = new Date(news.getCreated_date());
+
+
+        holder.mTxtTime.setText(fmt.format(date));
 
         String strImages = news.getImages_link();
         if (strImages != null) {

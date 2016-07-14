@@ -8,7 +8,7 @@ public class NewsOfCompanyLike {
 
     private String message_id;
     private String content;
-    //    private int created_date;
+    private long created_date;
     private String company_id;
     //    private Date last_date;
     private String title;
@@ -67,6 +67,14 @@ public class NewsOfCompanyLike {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public long getCreated_date() {
+        return created_date;
+    }
+
+    public void setCreated_date(long created_date) {
+        this.created_date = created_date;
     }
 
     public String getImages_link() {

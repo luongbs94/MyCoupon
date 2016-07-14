@@ -17,6 +17,7 @@ import com.ln.mycoupon.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Nhahv on 5/22/2016.
@@ -54,7 +55,10 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 
-//        holder.mTxtDate.setText(fmt.format(coupon.getCreated_date()));
+        Date date = new Date(coupon.getCreated_date());
+
+
+        holder.mTxtDate.setText(fmt.format(date));
     }
 
     @Override
