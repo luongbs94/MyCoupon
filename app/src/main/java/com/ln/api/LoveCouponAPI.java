@@ -14,7 +14,6 @@ import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.NewsOfMore;
-import com.ln.model.RCompanyOfCustomer;
 import com.ln.model.User;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public interface LoveCouponAPI {
 
     // khong tim thay dang can hoi
     @POST("/update_user_coupon")
-    Call<RCompanyOfCustomer> updateUserCoupon(@Body Coupon template);
+    Call<List<CompanyOfCustomer>> updateUserCoupon(@Body Coupon template);
 
 
 //    @GET("/getCoupon")
