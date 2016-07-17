@@ -40,7 +40,6 @@
                     android:textColor="@drawable/text_color"
                     android:textSize="@dimen/size_18sp" />
 
-
                 <EditText
                     android:id="@+id/address_company"
                     android:layout_width="match_parent"
@@ -88,7 +87,7 @@
                     android:layout_marginLeft="@dimen/size_16"
                     android:layout_marginRight="@dimen/size_16"
                     android:text="@string/show_password"
-                    android:textSize="@dimen/size_18sp" />
+                    android:textSize="@dimen/size_16sp" />
 
             </LinearLayout>
 

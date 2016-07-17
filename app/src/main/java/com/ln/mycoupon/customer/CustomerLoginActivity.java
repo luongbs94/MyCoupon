@@ -227,7 +227,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         getCompanyByUserId(account.getId());
         getNewsOfCustomer(account.getId());
         getNewsMore(account.getId(), mCity);
-        updateUserToken(account.getIdToken(), MainApplication.getDeviceToken(), "android");
+        updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
         MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
 
         start();
@@ -254,6 +254,10 @@ public class CustomerLoginActivity extends AppCompatActivity
 //                    mRealmController.deleteListCompanyCustomer();
                     mRealmController.addListCompanyCustomer(response.body());
                     Log.d(TAG, "getCompanyByUserId " + response.body().size());
+
+                    writeSharePreferences(MainApplication.LOGIN_SHOP, false);
+                    writeSharePreferences(MainApplication.LOGIN_CLIENT, true);
+
                 } else {
                     Log.d(TAG, "getCompanyByUserId " + "null");
                 }
@@ -292,6 +296,12 @@ public class CustomerLoginActivity extends AppCompatActivity
     private void writeSharePreferences(String key, String value) {
         SharedPreferences.Editor editor = MainApplication.getSharedPreferences().edit();
         editor.putString(key, value);
+        editor.apply();
+    }
+
+    private void writeSharePreferences(String key, boolean value) {
+        SharedPreferences.Editor editor = MainApplication.getSharedPreferences().edit();
+        editor.putBoolean(key, value);
         editor.apply();
     }
 

@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -57,8 +54,8 @@ import retrofit2.Response;
  */
 
 public class ShopLoginActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
-        , Runnable {
+        implements GoogleApiClient.OnConnectionFailedListener,
+        View.OnClickListener {
 
     private static final int LOGIN_SHOP = 1;
     private String TAG = getClass().getSimpleName();
@@ -77,7 +74,8 @@ public class ShopLoginActivity extends AppCompatActivity
     private CompanyLocation mCompanyLocation;
 
     private ProgressDialog mProgressDialog;
-    private Handler mHandler;
+
+// cap nhat vi tri cua cong ty len lam o phan setting
 
 
     @Override
@@ -89,22 +87,12 @@ public class ShopLoginActivity extends AppCompatActivity
         mCallbackManager = CallbackManager.Factory.create();
 
         mCouponAPI = MainApplication.getAPI();
-        mCouponAPI2 = MainApplication.getApiService2();
         mRealmController = MainApplication.mRealmController;
 
         initViews();
         addEvents();
 
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == LOGIN_SHOP) {
-                    SystemClock.sleep(MainApplication.TIME_SLEEP);
-                    hideProgressDialog();
-                }
-            }
-        };
+
     }
 
     private void initViews() {
@@ -224,13 +212,19 @@ public class ShopLoginActivity extends AppCompatActivity
                     writeSharePreferences(MainApplication.COMPANY_SHOP, strCompany);
 
                     loginSuccess(company);
-                    new Thread(ShopLoginActivity.this).start();
-
                     Log.d(TAG, "getCompanyProfile " + response.body().get(0).getCompany_id());
                 } else {
-                    new Thread(ShopLoginActivity.this).start();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideProgressDialog();
+                            getShowMessages(getString(R.string.login_fails));
+                        }
+                    }, 1500);
+
                     Log.d(TAG, "getCompanyProfile " + "null");
-                    getShowMessages(getString(R.string.login_fails));
                 }
             }
 
@@ -280,9 +274,19 @@ public class ShopLoginActivity extends AppCompatActivity
         getCouponTemplate(company.getCompany_id());     //  get list coupon template of company
         getNewsByCompanyId(company.getCompany_id());    // get list news of company
 
-        Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
-        startActivity(intent);
-        finish();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideProgressDialog();
+                Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        }, 2000);
+
+
     }
 
     private void getShowMessages(String string) {
@@ -449,15 +453,6 @@ public class ShopLoginActivity extends AppCompatActivity
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
-    }
-
-    @Override
-    public void run() {
-
-        Message message = new Message();
-        message.what = LOGIN_SHOP;
-        message.setTarget(mHandler);
-        message.sendToTarget();
     }
 
     private void writeSharePreferences(String key, String value) {

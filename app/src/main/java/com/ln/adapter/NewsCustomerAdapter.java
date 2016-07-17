@@ -53,15 +53,15 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(mContext)
-                .inflate(R.layout.item_news_customer, parent, false));
+        return new ViewHolder(LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.item_news, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final int positionNews = position;
-        final Message news = mListNews.get(positionNews);
+        final Message news = mListNews.get(position);
 
         String strAccount = MainApplication.getSharedPreferences()
                 .getString(MainApplication.ACCOUNT_CUSTOMER, "");
@@ -122,7 +122,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                     holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
                     holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
                     news.setLike(true);
-                    MainApplication.mRealmController.addLikeNewsCustomer(news.getMessage_id(), mType,idUser);
+                    MainApplication.mRealmController.addLikeNewsCustomer(news.getMessage_id(), mType, idUser);
 
 
                 }
@@ -160,8 +160,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                 dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id(),idUser);
-                        mListNews.remove(positionNews);
+                        MainApplication.mRealmController.addDeleteNewsByIdNews(news.getMessage_id(), idUser);
+                        mListNews.remove(holder.getAdapterPosition());
                         notifyDataSetChanged();
                     }
                 });
@@ -172,7 +172,6 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                         dialog.dismiss();
                     }
                 });
-
 
             }
         });
@@ -189,7 +188,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
         private ImageView mImgLogo;
         private TextView mTxtTile, mTxtLink;
-        private IconTextView mImgLike, mImgShare, mImgDelete, mImageBookmarks;
+        private IconTextView mImgLike, mImageBookmarks;
         private RecyclerView mRecyclerView;
 
         private MyTextView mTxtTime, mTxtContent;
@@ -201,8 +200,6 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.img_logo_news);
             mImgLike = (IconTextView) itemView.findViewById(R.id.img_like_newx);
-            mImgShare = (IconTextView) itemView.findViewById(R.id.img_share_newx);
-            mImgDelete = (IconTextView) itemView.findViewById(R.id.img_delete_news);
             mImageBookmarks = (IconTextView) itemView.findViewById(R.id.bookmark);
 
             mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_news);

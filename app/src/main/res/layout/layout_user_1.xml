@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/check_admin"
-            android:textSize="@dimen/size_18sp" />
+            android:textSize="@dimen/size_16sp" />
     </LinearLayout>
 
 

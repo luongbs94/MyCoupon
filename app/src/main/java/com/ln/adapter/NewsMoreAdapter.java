@@ -53,7 +53,7 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(mContext)
-                .inflate(R.layout.item_news_customer, parent, false));
+                .inflate(R.layout.item_news, parent, false));
     }
 
     @Override
@@ -138,13 +138,6 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
 
                     news.setLike(true);
                     MainApplication.mRealmController.addLikeNewsCustomer(news.getMessage_id(), mType, idUser);
-
-//                    NewsOfLike newsOfLike = new NewsOfLike();
-//                    AccountOflUser account = MainApplication.mRealmController.getAccountCustomer();
-//
-//                    newsOfLike.setNewsOfLike(news, account.getId(), mType);
-//                    MainApplication.mRealmController.addNewsCustomerLike(newsOfLike);
-
                 }
             }
         });
