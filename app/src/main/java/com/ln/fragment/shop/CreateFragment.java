@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -148,7 +148,7 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
 
         Date date = new Date();
 
-        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         item.setTitle(fmt.format(date));
         this.menu1 = menu;
         super.onCreateOptionsMenu(menu, inflater);
@@ -159,11 +159,9 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
         switch (item.getItemId()) {
             case R.id.calendar:
                 DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(getActivity().getFragmentManager(), "datePicker");
-
                 return true;
             default:
                 break;
-
         }
 
         return true;

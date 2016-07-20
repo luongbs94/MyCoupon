@@ -56,8 +56,6 @@ public class MainApplication extends MultiDexApplication {
     public static final String ACCOUNT_CUSTOMER = "ACCOUNT_CUSTOMER";
 
 
-
-
     public static final int ADD_COUPON_TEMPLATE = 2;
     public static final int ADD_MESSAGES = 3;
     public static final int SUCCESS = 1;
@@ -76,6 +74,7 @@ public class MainApplication extends MultiDexApplication {
     public static LoveCouponAPI apiService;
     public static LoveCouponAPI apiService1;
     public static LoveCouponAPI apiService2;
+    private static LoveCouponAPI apiService3;
 
 
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
@@ -107,6 +106,7 @@ public class MainApplication extends MultiDexApplication {
     private static final String URL_GET_POST = "http://188.166.179.187:3000";
     public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
     public static final String URL_GET_CITY = "http://freegeoip.net";
+    public static final String URL_GET_CITY2 = "http://ip-api.com";
 
 //    public static AccountOflUser sShopDetail;
 
@@ -180,10 +180,15 @@ public class MainApplication extends MultiDexApplication {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        Retrofit retrofit3 = new Retrofit.Builder()
+                .baseUrl(URL_GET_CITY2)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
         apiService = retrofit.create(LoveCouponAPI.class);
         apiService1 = retrofit1.create(LoveCouponAPI.class);
         apiService2 = retrofit2.create(LoveCouponAPI.class);
-
+        apiService3 = retrofit3.create(LoveCouponAPI.class);
 
         // setup realm database
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
@@ -245,6 +250,10 @@ public class MainApplication extends MultiDexApplication {
 
     public static LoveCouponAPI getAPI1() {
         return apiService1;
+    }
+
+    public static LoveCouponAPI getAPI3() {
+        return apiService3;
     }
 
     public static String getRandomString(final int sizeOfRandomString) {

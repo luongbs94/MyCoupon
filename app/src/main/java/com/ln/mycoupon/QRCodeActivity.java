@@ -129,8 +129,11 @@ public class QRCodeActivity extends AppCompatActivity
         } else {
             coupon.setUser_social(MainApplication.GOOGLE);
         }
+        String city = MainApplication
+                .getSharePrefer()
+                .getString(MainApplication.CITY_OF_USER, "");
 
-        Call<List<CompanyOfCustomer>> updateCoupon = apiService.updateUserCoupon(coupon);
+        Call<List<CompanyOfCustomer>> updateCoupon = apiService.updateUserCoupon(city, coupon);
 
         updateCoupon.enqueue(new Callback<List<CompanyOfCustomer>>() {
             @Override

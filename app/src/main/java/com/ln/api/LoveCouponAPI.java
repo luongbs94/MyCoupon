@@ -69,7 +69,7 @@ public interface LoveCouponAPI {
 
     // khong tim thay dang can hoi
     @POST("/update_user_coupon")
-    Call<List<CompanyOfCustomer>> updateUserCoupon(@Body Coupon template);
+    Call<List<CompanyOfCustomer>> updateUserCoupon(@Header("city") String city, @Body Coupon template);
 
 
 //    @GET("/getCoupon")
@@ -110,6 +110,9 @@ public interface LoveCouponAPI {
 
     @GET("/json")
     Call<CityOfUser> getCityOfUser();
+
+    @GET("/json")
+    Call<CityOfUser> getCityOfUser2();
 
     @POST("/updateCompanyLocation")
     Call<ResponseBody> updateCompanyLocation(@Body CompanyLocation companyLocation);

@@ -1,15 +1,16 @@
 package com.ln.fragment.shop;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -26,6 +27,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -47,7 +49,9 @@ import retrofit2.Response;
  * Created by luongnguyen on 4/14/16.
  * setting account shop
  */
-public class SettingFragment extends Fragment {
+public class SettingFragment extends Fragment implements
+        View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener {
 
     private LoveCouponAPI mLoveCouponAPI;
     private RealmController mRealmController;
@@ -70,13 +74,19 @@ public class SettingFragment extends Fragment {
     private Company company;
     private static OnClickSetInformation mListener;
 
+    private ProgressDialog mProgressDialog;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mLoveCouponAPI = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
 
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication
+                .getSharedPreferences()
+                .getString(MainApplication.COMPANY_SHOP, "");
+
         company = new Gson().fromJson(strCompany, Company.class);
     }
 
@@ -86,7 +96,9 @@ public class SettingFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_setting, container, false);
         mLoveCouponAPI = MainApplication.getAPI();
 
@@ -134,7 +146,6 @@ public class SettingFragment extends Fragment {
 
 
     private void init() {
-
 
         if (company.getName() != null) {
             mEdtNameCompany.setText(company.getName());
@@ -190,26 +201,25 @@ public class SettingFragment extends Fragment {
 
     private void addEvents() {
 
-        mCardView.setOnClickListener(new Events());
-        mImgLogo.setOnClickListener(new Events());
-        mEdtNameCompany.addTextChangedListener(new Events());
-        mEdtAddress.addTextChangedListener(new Events());
+        mCardView.setOnClickListener(this);
+        mImgLogo.setOnClickListener(this);
+        mEdtNameCompany.addTextChangedListener(new Events(mEdtNameCompany, null));
+        mEdtAddress.addTextChangedListener(new Events(mEdtAddress, null));
 
-        mFabDoneSave.setOnClickListener(new Events());
-        mChbShowPass.setOnCheckedChangeListener(new Events());
+        mFabDoneSave.setOnClickListener(this);
+        mChbShowPass.setOnCheckedChangeListener(this);
 
-        mEdtUser1.addTextChangedListener(new Events());
-        mEdtUser2.addTextChangedListener(new Events());
+        mEdtUser1.addTextChangedListener(new Events(mEdtUser1, mInputUser1));
+        mEdtUser2.addTextChangedListener(new Events(mEdtUser2, mInputUser2));
 
-        mEdtPassword1.addTextChangedListener(new Events());
-        mEdtPassword2.addTextChangedListener(new Events());
+        mEdtPassword1.addTextChangedListener(new Events(mEdtPassword1, mInputPassword1));
+        mEdtPassword2.addTextChangedListener(new Events(mEdtPassword2, mInputPassword2));
     }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         if (requestCode == SELECT_PICTURE) {
 
@@ -229,101 +239,219 @@ public class SettingFragment extends Fragment {
     }
 
     private boolean isDriverSupportCamera() {
-        return getActivity().getApplicationContext().getPackageManager().
-                hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        return getActivity()
+                .getApplicationContext()
+                .getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    private int isExistsAccount1(String company_id, String username) {
 
-        final int[] result = new int[1];
+    private int isCheckAccountExists(String company_id, String username) {
+
+//        Call<Integer> call = mLoveCouponAPI.isExists(company_id, username);
+
+//        try {
+//            return call.execute().body();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return 0;
+        final int[] isResult = new int[1];
         Call<Integer> call = mLoveCouponAPI.isExists(company_id, username);
         call.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
-                result[0] = response.body();
+                isResult[0] = response.body();
             }
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
-                Log.d(TAG, "isExists " + t.toString());
+                Log.d(TAG, "isCheckAccountExists " + t.toString());
+                isResult[0] = 0;
             }
         });
-        return result[0];
+        return isResult[0];
     }
 
 
-    private class Events implements View.OnClickListener, TextWatcher, CompoundButton.OnCheckedChangeListener {
-
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.cardview1:
-                    onClickSaveCompany();
-                    break;
-                case R.id.img_logo_nav:
-                    onClickOpenGallery();
-                    break;
-                case R.id.fab_done:
-                    onClickSaveCompany();
-                    break;
-                default:
-                    break;
-            }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.cardview1:
+                onClickSaveCompany();
+                break;
+            case R.id.img_logo_nav:
+                onClickOpenGallery();
+                break;
+            case R.id.fab_done:
+                onClickSaveCompany();
+                break;
+            default:
+                break;
         }
+    }
 
-        private void onClickOpenGallery() {
-            if (isDriverSupportCamera()) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, SELECT_PICTURE);
-            } else {
-                getShowMessage("Driver do not Support");
-            }
+    private void onClickOpenGallery() {
+        if (isDriverSupportCamera()) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent, SELECT_PICTURE);
+        } else {
+            getShowMessage("Driver do not Support");
         }
+    }
 
 
-        private void onClickSaveCompany() {
+    private void onClickSaveCompany() {
 
-            final String name = mEdtNameCompany.getText().toString();
-            final String address = mEdtNameCompany.getText().toString();
-            String logo = MainApplication.convertToBitmap(mImgLogo);
-            logo = MainApplication.FIRST_BASE64 + logo;
 
-            company.setName(name);
-            company.setAddress(address);
-            company.setLogo(logo);
+        showProgressDialog();
+        final String name = mEdtNameCompany.getText().toString();
+        final String address = mEdtNameCompany.getText().toString();
 
-            Log.d(TAG, "Logo : " + logo);
-            final String finalLogo = logo;
+        String logo = MainApplication.convertToBitmap(mImgLogo);
+        logo = MainApplication.FIRST_BASE64 + logo;
 
-            if (mListener != null) {
-                mListener.onClickSetInformation(finalLogo, name, address);
-            }
-            Call<Integer> call = mLoveCouponAPI.updateCompany(company);
 
-            call.enqueue(new Callback<Integer>() {
-                @Override
-                public void onResponse(Call<Integer> call, Response<Integer> response) {
-                    if (response.body() == 1) {
-                        Log.d(TAG, "Success");
 
-                        getShowMessage("Success");
-                        String str = new Gson().toJson(company);
-                        writeSharePreferences(MainApplication.COMPANY_SHOP, str);
+        Log.d(TAG, "Logo : " + logo);
+        final String finalLogo = logo;
+        final String user1 = mEdtUser1.getText().toString().trim();
+        final String user2 = mEdtUser2.getText().toString().trim();
+        company.setName(name);
+        company.setAddress(address);
+        company.setLogo(logo);
+        company.setUser1(user1);
+        company.setUser2(user2);
 
-                        if (mListener != null) {
-                            mListener.onClickSetInformation(finalLogo, name, address);
+        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+
+                if (response.body() == 1) {
+                    mInputUser1.setErrorEnabled(false);
+
+                    Call<Integer> call2 = mLoveCouponAPI.isExists(company.getCompany_id(), user2);
+                    call2.enqueue(new Callback<Integer>() {
+                        @Override
+                        public void onResponse(Call<Integer> call, Response<Integer> response) {
+
+                            if (response.body() == 1) {
+                                mInputUser2.setErrorEnabled(false);
+                                createSave(name, address, finalLogo, company);
+
+                            } else {
+                                mInputUser2.setError(getString(R.string.account_exists));
+                                mInputUser2.setErrorEnabled(true);
+                                mInputUser2.setError(getString(R.string.account_exists));
+                                requestFocus(mEdtUser2);
+
+                                hideProgressDialog();
+                            }
                         }
+
+                        @Override
+                        public void onFailure(Call<Integer> call, Throwable t) {
+                            Log.d(TAG, "isCheckAccountExists " + t.toString());
+                        }
+                    });
+
+
+                } else {
+                    mInputUser1.setError(getString(R.string.account_exists));
+                    mInputUser1.setErrorEnabled(true);
+                    mInputUser1.setError(getString(R.string.account_exists));
+                    requestFocus(mEdtUser1);
+
+                    hideProgressDialog();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d(TAG, "isCheckAccountExists " + t.toString());
+            }
+        });
+    }
+
+    private void createSave(final String name, final String address,
+                            final String finalLogo, final Company company) {
+        Call<Integer> call3 = mLoveCouponAPI.updateCompany(company);
+        call3.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.body() == 1) {
+                    Log.d(TAG, "Success");
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            getShowMessage("Success");
+                            String str = new Gson().toJson(company);
+                            writeSharePreferences(MainApplication.COMPANY_SHOP, str);
+
+                            if (mListener != null) {
+                                mListener.onClickSetInformation(finalLogo, name, address);
+                            }
+                            hideProgressDialog();
+                        }
+                    }, MainApplication.TIME_SLEEP);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d(TAG, "Fails " + t.toString());
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        getShowMessage("Save do not Success");
+                        hideProgressDialog();
                     }
-                }
+                }, MainApplication.TIME_SLEEP);
+            }
+        });
+    }
 
-                @Override
-                public void onFailure(Call<Integer> call, Throwable t) {
-                    Log.d(TAG, "Fails " + t.toString());
-                }
-            });
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            mEdtPassword1.setTransformationMethod(null);
+            mEdtPassword2.setTransformationMethod(null);
+        } else {
+            mEdtPassword1.setTransformationMethod(new PasswordTransformationMethod());
+            mEdtPassword2.setTransformationMethod(new PasswordTransformationMethod());
+        }
+    }
 
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
+        }
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    private class Events implements TextWatcher {
+
+        private View view;
+        private TextInputLayout textInputLayout;
+
+        public Events(View editText, TextInputLayout textInputLayout) {
+            this.view = editText;
+            this.textInputLayout = textInputLayout;
         }
 
         @Override
@@ -333,85 +461,76 @@ public class SettingFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
         }
+
 
         @Override
         public void afterTextChanged(Editable editable) {
 
-            if (mEdtNameCompany.isFocused()) {
-                mTxtNameCompany.setText(editable.toString());
-            } else if (mEdtAddress.isFocused()) {
-                mTxtAddress.setText(editable.toString());
-            } else if (mEdtUser1.isFocused()) {
-                onClickUser1();
-            } else if (mEdtUser2.isFocused()) {
-                onClickUser2();
-            } else if (mEdtPassword1.isFocused()) {
-                onClickPassword1();
-            } else if (mEdtPassword2.isFocused()) {
-                onClickPassword2();
+            switch (view.getId()) {
+                case R.id.username1:
+                    validateUser(mEdtUser1, mEdtUser2, mEdtPassword1, mInputUser1, mInputPassword1);
+                    break;
+                case R.id.username2:
+                    validateUser(mEdtUser2, mEdtUser1, mEdtPassword2, mInputUser2, mInputPassword2);
+                    break;
+                case R.id.name_company:
+                    mTxtNameCompany.setText(editable.toString());
+                    break;
+                case R.id.address_company:
+                    mTxtAddress.setText(editable.toString());
+                    break;
+                case R.id.password1:
+                    validatePassword(mEdtUser1, (EditText) view, textInputLayout);
+                    break;
+                case R.id.password2:
+                    validatePassword(mEdtUser2, (EditText) view, textInputLayout);
+                    break;
+                default:
+                    break;
             }
         }
 
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-                mEdtPassword1.setTransformationMethod(null);
-                mEdtPassword2.setTransformationMethod(null);
-            } else {
-                mEdtPassword1.setTransformationMethod(new PasswordTransformationMethod());
-                mEdtPassword2.setTransformationMethod(new PasswordTransformationMethod());
-            }
-        }
     }
 
-    private void onClickUser1() {
-
-        validateUser(mEdtUser1, mEdtUser2, mEdtPassword1, mInputUser1, mInputPassword1);
-    }
-
-    private void onClickUser2() {
-        validateUser(mEdtUser2, mEdtUser1, mEdtPassword2, mInputUser2, mInputPassword2);
-    }
-
-    private void validateUser(EditText editText, EditText editText2, EditText edtPassword, TextInputLayout textInputLayout, TextInputLayout password) {
-
+    private void validateUser(EditText editText,
+                              EditText editText2, EditText edtPassword,
+                              TextInputLayout textInputLayout,
+                              TextInputLayout password) {
 
         String text = editText.getText().toString().trim();
         String text2 = editText2.getText().toString().trim();
+
         if (text.equals(text2)) {
             textInputLayout.setError(getString(R.string.user1OtherUser2));
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(getString(R.string.user1OtherUser2));
             requestFocus(editText);
-        } else if (isExistsAccount1(company.getUser_id(), text) == 0) {
-            textInputLayout.setError(getString(R.string.account_exists));
-            requestFocus(editText);
-        } else {
-            textInputLayout.setErrorEnabled(false);
-            if (!text.isEmpty() && edtPassword.getText().toString().trim().isEmpty()) {
-                password.setErrorEnabled(true);
-                password.setError(getString(R.string.enter_password));
-            } else {
-                password.setErrorEnabled(false);
-            }
         }
 
+        if (!text.equals(text2)) {
+            textInputLayout.setErrorEnabled(false);
+        }
+        if (!text.isEmpty() && edtPassword.getText().toString().trim().isEmpty()) {
+            password.setErrorEnabled(true);
+            password.setError(getString(R.string.enter_password));
+            Log.d(TAG, "1");
+        } else {
+            password.setErrorEnabled(false);
+        }
     }
 
     private void requestFocus(View view) {
 
         if (view.requestFocus()) {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            getActivity()
+                    .getWindow()
+                    .setSoftInputMode(WindowManager
+                            .LayoutParams
+                            .SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
 
-    private void onClickPassword1() {
-        validatePassword(mEdtUser1, mEdtPassword1, mInputPassword1);
-    }
-
-    private void onClickPassword2() {
-        validatePassword(mEdtUser2, mEdtPassword2, mInputPassword2);
-    }
 
     private void validatePassword(EditText user, EditText password, TextInputLayout inputPassword) {
         if (!user.getText().toString().trim().isEmpty() && password.getText().toString().trim().isEmpty()) {
@@ -423,6 +542,7 @@ public class SettingFragment extends Fragment {
         }
     }
 
+
     private void writeSharePreferences(String key, String value) {
         SharedPreferences.Editor editor = MainApplication.getSharedPreferences().edit();
         editor.putString(key, value);
@@ -430,6 +550,6 @@ public class SettingFragment extends Fragment {
     }
 
     private void getShowMessage(String s) {
-        Snackbar.make(mLinearLayout, s, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 }

@@ -282,17 +282,17 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         Call<CityOfUser> call = MainApplication.getApiService2().getCityOfUser();
         call.enqueue(new Callback<CityOfUser>() {
             @Override
-            public void onResponse(Call<CityOfUser> call, Response<CityOfUser> response) {
+            public void onResponse(Call<CityOfUser> call,
+                                   Response<CityOfUser> response) {
 
                 if (response.body() != null) {
 
-                    String cityOfUser = new Gson().toJson(response.body());
-                    SharedPreferences preferences =
-                            getSharedPreferences(MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(MainApplication.CITY_OF_USER, cityOfUser);
-                    editor.apply();
-
+                    String cityOfUser = response.body().getCity();
+                    if (!cityOfUser.isEmpty()) {
+                        writeSharePreferences(MainApplication.CITY_OF_USER, cityOfUser);
+                    } else {
+                        getCityOfAccount1();
+                    }
                     Log.d(TAG, "City : " + response.body().getCity());
                 } else {
                     Log.d(TAG, "City : " + "Khong co du lieu");
@@ -304,6 +304,40 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 Log.d(TAG, "City Error : " + t.toString());
             }
         });
+    }
+
+    private void getCityOfAccount1() {
+        Call<CityOfUser> call = MainApplication.getAPI3().getCityOfUser2();
+        call.enqueue(new Callback<CityOfUser>() {
+            @Override
+            public void onResponse(Call<CityOfUser> call,
+                                   Response<CityOfUser> response) {
+
+                if (response.body() != null) {
+
+                    String cityOfUser = response.body().getCity();
+                    if (!cityOfUser.isEmpty()) {
+                        writeSharePreferences(MainApplication.CITY_OF_USER, cityOfUser);
+                    }
+                    Log.d(TAG, "City : " + response.body().getCity());
+                } else {
+                    Log.d(TAG, "City : " + "Khong co du lieu");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CityOfUser> call, Throwable t) {
+                Log.d(TAG, "City Error : " + t.toString());
+            }
+        });
+    }
+
+    private void writeSharePreferences(String key, String value) {
+        SharedPreferences preferences = getSharedPreferences
+                (MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 
 

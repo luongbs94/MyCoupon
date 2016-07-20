@@ -63,17 +63,15 @@
     <string name="save">SAVE</string>
     <string name="my_coupon">My Coupon</string>
     <string name="news">Tin mới</string>
-    <string name="history">History</string>
+    <string name="history">Lịch Sử</string>
     <string name="setting">Cài Đặt</string>
-    <string name="title_news">Khuyeen mai </string>
+    <string name="title_news">Khuyến mãi</string>
     <string name="qr_code">QRCode</string>
 
 
     <string name="time_news">May 20, 2016</string>
     <string name="share">Chia Sẻ</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create">CREATE</string>
     <string name="add">AddMessage</string>
     <string name="delete">Delete</string>
@@ -82,7 +80,7 @@
     <string name="share_news">Share</string>
     <string name="more">More</string>
     <string name="show_images">Hình ảnh</string>
-    <string name="coupon_of">Coupon\\</string>
+    <string name="coupon_of">Coupon</string>
     <string name="login_fails">Tài khoản hoặc mật khẩu không đúng</string>
     <string name="login_google_fails">Đăng nhập google không thành công</string>
     <string name="google_login">google+</string>
@@ -121,32 +119,22 @@
 
     <string name="news_more">Tin khác</string>
     <string name="no_data_display">Dont have any coupon</string>
-    <string name="ic_heart">\uf004</string>
-    <string name="ic_share">\uf064</string>
-    <string name="ic_delete">\uf00d</string>
-    <string name="ic_email">\uf0e0</string>
-    <string name="ic_start">\uf006</string>
-    <string name="ic_start_like">\uf005</string>
-    <string name="ic_globe">\uf0ac</string>
-    <string name="icon_picture">\uf03e</string>
-    <string name="icon_more">\uf142</string>
-    <string name="bookmark">Bookmark</string>
-    <string name="ic_close">\uf00d</string>
-    <string name="delete_news_error">Delete Message Error</string>
+
+    <string name="delete_news_error">Xóa tin mới không thành công!</string>
 
 
     <string-array name="month">
-        <item>1 month</item>
-        <item>2 months</item>
-        <item>3 months</item>
-        <item>4 months</item>
-        <item>5 months</item>
-        <item>6 months</item>
-        <item>7 months</item>
-        <item>8 months</item>
-        <item>9 months</item>
-        <item>10 months</item>
-        <item>11 months</item>
-        <item>12 months</item>
+        <item>1 tháng</item>
+        <item>2 tháng</item>
+        <item>3 tháng</item>
+        <item>4 tháng</item>
+        <item>5 tháng</item>
+        <item>6 tháng</item>
+        <item>7 tháng</item>
+        <item>8 tháng</item>
+        <item>9 tháng</item>
+        <item>10 tháng</item>
+        <item>11 tháng</item>
+        <item>12 tháng</item>
     </string-array>
 </resources>
