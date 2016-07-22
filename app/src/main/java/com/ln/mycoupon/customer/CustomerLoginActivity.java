@@ -4,12 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -47,18 +46,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CustomerLoginActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener {
+        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private final String TAG = getClass().getSimpleName();
-
-    private Button mBtnFacebook;
     private CallbackManager mCallbackManager;
-
-    private Button mBtnGoogle;
     private GoogleApiClient mGoogleApiClient;
 
     private LoveCouponAPI mCouponAPI;
-    private RealmController mRealmController;
+    private RealmController mRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +62,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         mCouponAPI = MainApplication.getAPI();
-        mRealmController = MainApplication.mRealmController;
+        mRealm = MainApplication.mRealmController;
 
 
         initViews();
@@ -82,7 +77,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         }
 
         mCallbackManager = CallbackManager.Factory.create();
-        mBtnFacebook = (Button) findViewById(R.id.btn_facebook_customer);
+
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
@@ -91,19 +86,21 @@ public class CustomerLoginActivity extends AppCompatActivity
                         String id = loginResult.getAccessToken().getUserId();
                         String token = loginResult.getAccessToken().getToken();
 
+                        if (id == null && mProfile != null && mProfile.getId() != null) {
+                            id = mProfile.getId();
+                        }
+
                         AccountOflUser accountOflUser = new AccountOflUser();
                         if (id != null) {
                             accountOflUser.setId(id);
-                            accountOflUser.setPicture(getString(R.string.face_image)
-                                    + id
-                                    + getString(R.string.face_image_end));
+                            accountOflUser.setPicture(getString(R.string.face_image, id));
                         }
 
                         if (token != null) {
                             accountOflUser.setAccessToken(token);
                         }
 
-                        SharedPreferences preferences = MainApplication.getSharedPreferences();
+                        SharedPreferences preferences = MainApplication.getPreferences();
 
                         String strCity = preferences.getString(MainApplication.CITY_OF_USER, "");
 
@@ -125,22 +122,18 @@ public class CustomerLoginActivity extends AppCompatActivity
                         accountOflUser.setName(name);
 
                         if (accountOflUser.getId() != null) {
-                            try {
-                                String strUser = new Gson().toJson(accountOflUser);
-                                writeSharePreferences(MainApplication.ACCOUNT_CUSTOMER, strUser);
 
-                                getCompanyByUserId(accountOflUser.getId());
-                                getNewsOfCustomer(id);
-                                getNewsMore(id, strCity);
+                            String strUser = new Gson().toJson(accountOflUser);
+                            writeSharePreferences(MainApplication.ACCOUNT_CUSTOMER, strUser);
 
-//                                updateUserToken(accountOflUser.getAccessToken(), MainApplication.getDeviceToken(), "android");
-                                LoginManager.getInstance().logOut();
-                                Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
-                                start();
+                            getCompanyByUserId(accountOflUser.getId());
+                            getNewsOfCustomer(id);
+                            getNewsMore(id, strCity);
 
-                            } catch (NullPointerException e) {
-                                Log.d(TAG, "Login Facebook Error");
-                            }
+                            updateUserToken(accountOflUser.getId(), MainApplication.getDeviceToken(), "android");
+                            LoginManager.getInstance().logOut();
+                            Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
+                            start();
                         }
                     }
 
@@ -158,14 +151,15 @@ public class CustomerLoginActivity extends AppCompatActivity
         );
 
      /* ============== START GOOGLE ===============*/
-        mBtnGoogle = (Button) findViewById(R.id.btn_google_customer);
 
-        GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions mInOptions = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
                 .build();
@@ -184,8 +178,8 @@ public class CustomerLoginActivity extends AppCompatActivity
     }
 
     private void addEvents() {
-        mBtnGoogle.setOnClickListener(new Events());
-        mBtnFacebook.setOnClickListener(new Events());
+        findViewById(R.id.btn_google_customer).setOnClickListener(this);
+        findViewById(R.id.btn_facebook_customer).setOnClickListener(this);
     }
 
     @Override
@@ -204,15 +198,14 @@ public class CustomerLoginActivity extends AppCompatActivity
                 }
 
             } else {
-                getSnackBar(getString(R.string.login_google_fails));
+                getShowMessages(getString(R.string.login_google_fails));
             }
         }
     }
 
     private void signInGoogleSuccess(GoogleSignInAccount account) {
 
-        String mCity = getSharedPreferences(
-                MainApplication.SHARED_PREFERENCE, MODE_PRIVATE)
+        String mCity = MainApplication.getPreferences()
                 .getString(MainApplication.CITY_OF_USER, "");
         mCity = new Gson().fromJson(mCity, CityOfUser.class).getCity();
 
@@ -224,14 +217,11 @@ public class CustomerLoginActivity extends AppCompatActivity
         String strUser = new Gson().toJson(accountOflUser);
         writeSharePreferences(MainApplication.ACCOUNT_CUSTOMER, strUser);
 
-
         Log.d(TAG, "Login Google Success " + account.getId() + " - " + account.getEmail());
         getCompanyByUserId(account.getId());
         getNewsOfCustomer(account.getId());
         getNewsMore(account.getId(), mCity);
         updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
-        MainApplication.TYPE_LOGIN_CUSTOMER = MainApplication.TYPE_GOOGLE;
-
         start();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -242,8 +232,8 @@ public class CustomerLoginActivity extends AppCompatActivity
                 });
     }
 
-    private void getSnackBar(String string) {
-        Snackbar.make(mBtnFacebook, string, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    private void getShowMessages(String string) {
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
     }
 
     private void getCompanyByUserId(final String id) {
@@ -251,10 +241,11 @@ public class CustomerLoginActivity extends AppCompatActivity
         Call<List<CompanyOfCustomer>> companyOfCustomer = mCouponAPI.getCompaniesByUserId(id);
         companyOfCustomer.enqueue(new Callback<List<CompanyOfCustomer>>() {
             @Override
-            public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
+            public void onResponse(Call<List<CompanyOfCustomer>> call,
+                                   Response<List<CompanyOfCustomer>> response) {
                 if (response.body() != null) {
 //                    mRealmController.deleteListCompanyCustomer();
-                    mRealmController.addListCompanyCustomer(response.body());
+                    mRealm.addListCompanyCustomer(response.body());
                     Log.d(TAG, "getCompanyByUserId " + response.body().size());
 
                     writeSharePreferences(MainApplication.LOGIN_SHOP, false);
@@ -296,49 +287,46 @@ public class CustomerLoginActivity extends AppCompatActivity
     }
 
     private void writeSharePreferences(String key, String value) {
-        SharedPreferences.Editor editor = MainApplication.getSharedPreferences().edit();
+        SharedPreferences.Editor editor = MainApplication.getPreferences().edit();
         editor.putString(key, value);
         editor.apply();
     }
 
     private void writeSharePreferences(String key, boolean value) {
-        SharedPreferences.Editor editor = MainApplication.getSharedPreferences().edit();
+        SharedPreferences.Editor editor = MainApplication.getPreferences().edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        getSnackBar(getString(R.string.login_google_fails));
+        getShowMessages(getString(R.string.login_google_fails));
     }
 
-    private class Events implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btn_facebook_customer:
-                    onClickLoginFacebook();
-                    break;
-                case R.id.btn_google_customer:
-                    onClickLoginGoogle();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void onClickLoginFacebook() {
-            LoginManager.getInstance().logInWithReadPermissions(CustomerLoginActivity.this,
-                    Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
-        }
-
-
-        private void onClickLoginGoogle() {
-            Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_facebook_customer:
+                onClickLoginFacebook();
+                break;
+            case R.id.btn_google_customer:
+                onClickLoginGoogle();
+                break;
+            default:
+                break;
         }
     }
 
+    private void onClickLoginFacebook() {
+        LoginManager.getInstance().logInWithReadPermissions(CustomerLoginActivity.this,
+                Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
+    }
+
+
+    private void onClickLoginGoogle() {
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
+    }
 
     private void getNewsOfCustomer(String id) {
 
@@ -348,8 +336,8 @@ public class CustomerLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
 
                 if (response.body() != null) {
-                    mRealmController.deleteListNewsOfCustomer();
-                    mRealmController.addListNewsOfCustomer(response.body());
+                    mRealm.deleteListNewsOfCustomer();
+                    mRealm.addListNewsOfCustomer(response.body());
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 }
             }
@@ -365,10 +353,11 @@ public class CustomerLoginActivity extends AppCompatActivity
         Call<List<NewsOfMore>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
         newsMore.enqueue(new Callback<List<NewsOfMore>>() {
             @Override
-            public void onResponse(Call<List<NewsOfMore>> call, Response<List<NewsOfMore>> response) {
+            public void onResponse(Call<List<NewsOfMore>> call,
+                                   Response<List<NewsOfMore>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteListNewsOfMore();
-                    mRealmController.addListNewsOfMore(response.body());
+                    mRealm.deleteListNewsOfMore();
+                    mRealm.addListNewsOfMore(response.body());
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
                     Log.d(TAG, " getNewsMore " + " null");

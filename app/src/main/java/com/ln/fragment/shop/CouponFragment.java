@@ -49,7 +49,7 @@ public class CouponFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         mCompany = new Gson().fromJson(strCompany, Company.class);
     }
 

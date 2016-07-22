@@ -154,7 +154,7 @@ public class TestQRCode extends AppCompatActivity {
     private void addCoupon(final String coupon_id) {
         Coupon template = new Coupon();
 
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
 
         template.setCompany_id(company.getCompany_id() + "");

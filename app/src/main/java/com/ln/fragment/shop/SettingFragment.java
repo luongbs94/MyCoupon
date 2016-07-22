@@ -84,7 +84,7 @@ public class SettingFragment extends Fragment implements
         mRealmController = MainApplication.mRealmController;
 
         String strCompany = MainApplication
-                .getSharedPreferences()
+                .getPreferences()
                 .getString(MainApplication.COMPANY_SHOP, "");
 
         company = new Gson().fromJson(strCompany, Company.class);
@@ -544,7 +544,7 @@ public class SettingFragment extends Fragment implements
 
 
     private void writeSharePreferences(String key, String value) {
-        SharedPreferences.Editor editor = MainApplication.getSharedPreferences().edit();
+        SharedPreferences.Editor editor = MainApplication.getPreferences().edit();
         editor.putString(key, value);
         editor.apply();
     }

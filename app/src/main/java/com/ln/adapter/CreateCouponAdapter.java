@@ -44,7 +44,7 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         Coupon coupon = mListCoupons.get(position);
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
         Glide.with(mContext).load(coupon.getUser_image_link())
                 .placeholder(R.drawable.ic_logo_blank)

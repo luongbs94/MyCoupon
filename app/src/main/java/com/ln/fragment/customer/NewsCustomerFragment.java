@@ -61,7 +61,7 @@ public class NewsCustomerFragment extends Fragment {
         apiService = MainApplication.getAPI();
         mRealmController = RealmController.with(this);
         account = new Gson().fromJson(
-                MainApplication.getSharedPreferences()
+                MainApplication.getPreferences()
                         .getString(MainApplication
                                 .ACCOUNT_CUSTOMER, ""),
                 AccountOflUser.class);
@@ -108,7 +108,7 @@ public class NewsCustomerFragment extends Fragment {
     private void setListMessages() {
 
         AccountOflUser account = new Gson().fromJson(
-                MainApplication.getSharedPreferences()
+                MainApplication.getPreferences()
                         .getString(MainApplication
                                 .ACCOUNT_CUSTOMER, ""),
                 AccountOflUser.class);

@@ -111,8 +111,7 @@
     <string name="share_love_coupon">A convenient truth is that the application for the goods!</string>
     <string name="description_love_coupon">We do everything free!</string>
 
-    <string name="face_image">https://graph.facebook.com/</string>
-    <string name="face_image_end">/picture?type=large</string>
+    <string name="face_image">https://graph.facebook.com/%1$s/picture?type=large</string>
     <string name="like_news">Like News</string>
     <string name="news_delete">Delete News</string>
     <string name="near_news">News Near</string>
@@ -124,6 +123,7 @@
 
     <string name="delete_news_error">Delete Message Error</string>
     <string name="date_menu">10/10/2016</string>
+    <string name="login_success">Login Success</string>
 
 
     <string-array name="month">

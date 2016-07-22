@@ -104,7 +104,7 @@ public class AddCouponActivity extends AppCompatActivity
         template.setValue(value);
         template.setDuration(duration);
 
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company mCompany = new Gson().fromJson(strCompany, Company.class);
 
         template.setCompany_id(mCompany.getCompany_id() + "");

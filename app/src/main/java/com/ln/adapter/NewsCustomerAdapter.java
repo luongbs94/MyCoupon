@@ -65,7 +65,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
         final Message item = mListNews.get(position);
 
-        String strAccount = MainApplication.getSharedPreferences()
+        String strAccount = MainApplication.getPreferences()
                 .getString(MainApplication.ACCOUNT_CUSTOMER, "");
         final String idUser = new Gson().fromJson(strAccount, AccountOflUser.class).getId();
 

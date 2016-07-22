@@ -109,7 +109,7 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
 
     private void getCreateCoupon() {
 
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
         mListCoupon.clear();
         Call<ArrayList<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getCompany_id() + "", utc1, utc2);

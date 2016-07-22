@@ -118,7 +118,7 @@ public class CouponFragment extends Fragment {
     private void getCompanyByUserId() {
 
         AccountOflUser account = new Gson().fromJson(
-                MainApplication.getSharedPreferences()
+                MainApplication.getPreferences()
                         .getString(MainApplication
                                 .ACCOUNT_CUSTOMER, ""),
                 AccountOflUser.class);

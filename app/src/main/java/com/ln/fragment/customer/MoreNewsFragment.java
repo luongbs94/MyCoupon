@@ -61,7 +61,7 @@ public class MoreNewsFragment extends Fragment {
         mApi = MainApplication.getAPI();
         mRealmController = RealmController.with(this);
         account = new Gson().fromJson(
-                MainApplication.getSharedPreferences()
+                MainApplication.getPreferences()
                         .getString(MainApplication
                                 .ACCOUNT_CUSTOMER, ""),
                 AccountOflUser.class);

@@ -56,7 +56,7 @@ public class QRCodeActivity extends AppCompatActivity
         apiService = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
 
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
         mAccountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
 
         if (getSupportActionBar() != null) {

@@ -86,7 +86,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
         startFragment(new CouponFragment());
 
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
         AccountOflUser accountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
 
         if (accountOflUser != null) {

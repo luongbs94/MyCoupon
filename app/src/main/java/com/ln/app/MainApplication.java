@@ -72,7 +72,7 @@ public class MainApplication extends MultiDexApplication {
 
 
     // apis normal
-    public static LoveCouponAPI apiService;
+    private static LoveCouponAPI apiService;
     public static LoveCouponAPI apiService1;
     public static LoveCouponAPI apiService2;
     private static LoveCouponAPI apiService3;
@@ -217,7 +217,7 @@ public class MainApplication extends MultiDexApplication {
 
     }
 
-    public static SharedPreferences getSharedPreferences() {
+    public static SharedPreferences getPreferences() {
         return sharedPreferences;
     }
 

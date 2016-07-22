@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -33,7 +32,6 @@ import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
-import com.ln.model.CompanyLocation;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.mycoupon.FirstActivity;
@@ -43,7 +41,6 @@ import com.ln.realm.RealmController;
 import java.util.Arrays;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,25 +54,17 @@ public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
-    private static final int LOGIN_SHOP = 1;
-    private String TAG = getClass().getSimpleName();
+    private final String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mCouponAPI;
-    private LoveCouponAPI mCouponAPI2;
     private RealmController mRealmController;
 
-    private Button mBtnLogin;
-    private Button mBtnLoginFacebook;
-    private Button mBtnGooglePlus;
     private EditText mEdtUsername, mEdtPassword;
 
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager mCallbackManager;
-    private CompanyLocation mCompanyLocation;
 
     private ProgressDialog mProgressDialog;
-
-// cap nhat vi tri cua cong ty len lam o phan setting
 
 
     @Override
@@ -100,61 +89,51 @@ public class ShopLoginActivity extends AppCompatActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mBtnLogin = (Button) findViewById(R.id.btn_login);
         mEdtUsername = (EditText) findViewById(R.id.username);
         mEdtPassword = (EditText) findViewById(R.id.password);
 
         /* ================== START FACEBOOK ==================*/
 
-        mBtnLoginFacebook = (Button) findViewById(R.id.btn_login_facebook);
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+                new FacebookCallback<LoginResult>() {
 
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Profile mProfile = Profile.getCurrentProfile();
+                        String id = loginResult.getAccessToken().getUserId();
+                        String token = loginResult.getAccessToken().getToken();
 
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Profile mProfile = Profile.getCurrentProfile();
-                String id = loginResult.getAccessToken().getUserId();
-                String token = loginResult.getAccessToken().getToken();
+                        Log.d(TAG, "mProfile " + id + " - " + token);
 
-                Log.d(TAG, "mProfile " + id + " - " + token);
-
-                if (id == null) {
-                    id = mProfile.getId();
-                }
-
-                try {
-                    if (id != null) {
+                        if (id == null) {
+                            id = mProfile.getId();
+                        }
 
                         if (token != null) {
-                            writeSharePreferences(MainApplication.ID_SHOP, id);
                             writeSharePreferences(MainApplication.TOKEN_SHOP, token);
                         }
 
-                        getCompanyProfileSocial(id);
-                        MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_FACEBOOK;
-                        LoginManager.getInstance().logOut();
+                        if (id != null) {
+                            writeSharePreferences(MainApplication.ID_SHOP, id);
+                            getCompanyProfileSocial(id);
+                            LoginManager.getInstance().logOut();
+                        }
                     }
 
-                } catch (NullPointerException e) {
-                    Log.d(TAG, "Login Facebook  error");
-                }
-            }
+                    @Override
+                    public void onCancel() {
+                        Log.d(TAG, "FACEBOOK - onCancel");
+                    }
 
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "FACEBOOK - onCancel");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d(TAG, "FACEBOOK - onError");
-            }
-        });
+                    @Override
+                    public void onError(FacebookException error) {
+                        Log.d(TAG, "FACEBOOK - onError" + error.toString());
+                    }
+                });
 
         /* ===================== END FACEBOOK ====================*/
 
         /*=============== START GOOGLE ===========*/
-        mBtnGooglePlus = (Button) findViewById(R.id.btn_google);
 
         GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -171,9 +150,9 @@ public class ShopLoginActivity extends AppCompatActivity
 
 
     private void addEvents() {
-        mBtnLogin.setOnClickListener(this);
-        mBtnGooglePlus.setOnClickListener(this);
-        mBtnLoginFacebook.setOnClickListener(this);
+        findViewById(R.id.btn_login).setOnClickListener(this);
+        findViewById(R.id.btn_google).setOnClickListener(this);
+        findViewById(R.id.btn_login_facebook).setOnClickListener(this);
     }
 
     @Override
@@ -184,15 +163,16 @@ public class ShopLoginActivity extends AppCompatActivity
             return;
         }
         if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            GoogleSignInResult result = Auth
+                    .GoogleSignInApi
+                    .getSignInResultFromIntent(data);
+
             if (result.isSuccess()) {
-                GoogleSignInAccount account = result.getSignInAccount();
-                signInGoogleSuccess(account);
+                signInGoogleSuccess(result.getSignInAccount());
             } else {
                 getShowMessages(getString(R.string.login_google_fails));
             }
         }
-
     }
 
     private void getCompanyProfile(String user, String pass) {
@@ -200,7 +180,8 @@ public class ShopLoginActivity extends AppCompatActivity
         Call<List<Company>> call = mCouponAPI.getCompanyProfile(user, pass, null);
         call.enqueue(new Callback<List<Company>>() {
             @Override
-            public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
+            public void onResponse(Call<List<Company>> call,
+                                   Response<List<Company>> response) {
 
                 if (response.body() != null) {
 
@@ -209,8 +190,8 @@ public class ShopLoginActivity extends AppCompatActivity
                     String strCompany = new Gson().toJson(company);
                     writeSharePreferences(MainApplication.COMPANY_SHOP, strCompany);
 
-                    loginSuccess(company);
-                    Log.d(TAG, "getCompanyProfile " + response.body().get(0).getCompany_id());
+                    signInSuccess(company);
+                    Log.d(TAG, "getCompanyProfile " + company.getCompany_id());
                 } else {
 
                     Handler handler = new Handler();
@@ -220,7 +201,7 @@ public class ShopLoginActivity extends AppCompatActivity
                             hideProgressDialog();
                             getShowMessages(getString(R.string.login_fails));
                         }
-                    }, 1500);
+                    }, MainApplication.TIME_SLEEP);
 
                     Log.d(TAG, "getCompanyProfile " + "null");
                 }
@@ -242,7 +223,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
                 if (response.body() != null) {
                     Company company = response.body().get(0);
-                    loginSuccess(response.body().get(0));
+                    signInSuccess(response.body().get(0));
                     String strCompany = new Gson().toJson(company);
                     writeSharePreferences(MainApplication.COMPANY_SHOP, strCompany);
                 } else {
@@ -257,17 +238,11 @@ public class ShopLoginActivity extends AppCompatActivity
         });
     }
 
-    private void loginSuccess(Company company) {
+    private void signInSuccess(Company company) {
 
-        Log.d(TAG, "Company " + company.getCompany_id());
-
-        SharedPreferences preferences = getSharedPreferences(
-                MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(MainApplication.LOGIN_SHOP, true);
-        editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
-        editor.putBoolean(MainApplication.OFF_LINE, false);
-        editor.apply();
+        writeSharePreferences(MainApplication.LOGIN_SHOP, true);
+        writeSharePreferences(MainApplication.LOGIN_CLIENT, false);
+        writeSharePreferences(MainApplication.OFF_LINE, false);
 
         getCouponTemplate(company.getCompany_id());     //  get list coupon template of company
         getNewsByCompanyId(company.getCompany_id());    // get list news of company
@@ -282,7 +257,7 @@ public class ShopLoginActivity extends AppCompatActivity
                 finish();
 
             }
-        }, 2000);
+        }, MainApplication.TIME_SLEEP);
 
 
     }
@@ -314,8 +289,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
             getCompanyProfileSocial(account.getId());
             onClickLogoutGoogle();
-            getShowMessages("Login Google Success ");
-            MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_GOOGLE;
+            getShowMessages(getString(R.string.login_success));
         }
     }
 
@@ -334,6 +308,7 @@ public class ShopLoginActivity extends AppCompatActivity
                     }
                 });
     }
+
 
     @Override
     public void onClick(View view) {
@@ -354,13 +329,12 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void onClickLogin() {
 
-        String str_user = mEdtUsername.getText().toString();
-        String str_password = mEdtPassword.getText().toString();
+        String user = mEdtUsername.getText().toString();
+        String password = mEdtPassword.getText().toString();
 
-        if (str_user.length() > 0 && str_password.length() > 0) {
+        if (user.length() > 0 && password.length() > 0) {
             showProgressDialog();
-            getCompanyProfile(str_user, str_password);
-            MainApplication.TYPE_LOGIN_SHOP = MainApplication.TYPE_NORMAL;
+            getCompanyProfile(user, password);
         } else {
             getShowMessages(getString(R.string.not_fill_login));
         }
@@ -376,22 +350,6 @@ public class ShopLoginActivity extends AppCompatActivity
                 Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
     }
 
-    private void updateCompanyLocation() {
-        Call<ResponseBody> call = mCouponAPI.updateCompanyLocation(mCompanyLocation);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d(TAG, "updateCompanyLocation Success : ");
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d(TAG, "updateCompanyLocation Error : " + t.toString());
-            }
-        });
-
-    }
-
     /* =============== Get list coupon of company ==============*/
     private void getNewsByCompanyId(String idCompany) {
 
@@ -400,7 +358,7 @@ public class ShopLoginActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteListNewsOfCompany();
+//                    mRealmController.deleteListNewsOfCompany();
                     mRealmController.addListNewsOfCompany(response.body());
                     Log.d(TAG, "getNewsByCompanyId " + response.body().size());
                 } else {
@@ -422,7 +380,8 @@ public class ShopLoginActivity extends AppCompatActivity
         Call<List<CouponTemplate>> couponShop = mCouponAPI.getCouponTemplates("abc", idCompany);
         couponShop.enqueue(new Callback<List<CouponTemplate>>() {
             @Override
-            public void onResponse(Call<List<CouponTemplate>> call, Response<List<CouponTemplate>> response) {
+            public void onResponse(Call<List<CouponTemplate>> call,
+                                   Response<List<CouponTemplate>> response) {
                 if (response.body() != null) {
                     mRealmController.deleteCouponTemplate();
                     mRealmController.addListCouponTemplate(response.body());
@@ -455,9 +414,14 @@ public class ShopLoginActivity extends AppCompatActivity
     }
 
     private void writeSharePreferences(String key, String value) {
-        SharedPreferences.Editor editor =
-                getSharedPreferences(MainApplication.SHARED_PREFERENCE, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = MainApplication.getPreferences().edit();
         editor.putString(key, value);
+        editor.apply();
+    }
+
+    private void writeSharePreferences(String key, boolean value) {
+        SharedPreferences.Editor editor = MainApplication.getPreferences().edit();
+        editor.putBoolean(key, value);
         editor.apply();
     }
 }

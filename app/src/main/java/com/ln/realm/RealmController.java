@@ -105,19 +105,6 @@ public class RealmController {
         return mRealm.where(LikeNews.class).findAll();
     }
 
-    // delete all like news
-    public void deleteAllLikeNews() {
-
-        mRealm.beginTransaction();
-        RealmResults<LikeNews> listLikeNewses = getListLikeNews();
-        if (!listLikeNewses.isEmpty()) {
-            for (LikeNews likeNews : listLikeNewses) {
-                likeNews.deleteFromRealm();
-            }
-        }
-        mRealm.commitTransaction();
-    }
-
 
     // find all like news by id
     public RealmResults<LikeNews> getListLikeNewsByIdNews(String idNews) {
@@ -126,38 +113,12 @@ public class RealmController {
                 .findAll();
     }
 
-    // delete Delete news by id
-    public void deleteDeleteNewsById(String idNews) {
-        mRealm.beginTransaction();
-        RealmResults<DeleteNews> listDeleteNews = getDeleteNewsById(idNews);
-
-        if (!listDeleteNews.isEmpty()) {
-            for (DeleteNews deleteNews : listDeleteNews) {
-                deleteNews.deleteFromRealm();
-            }
-        }
-
-        mRealm.commitTransaction();
-    }
 
     // find all delete news by id
     public RealmResults<DeleteNews> getDeleteNewsById(String idNews) {
 
         return mRealm.where(DeleteNews.class)
                 .equalTo(MainApplication.ID_NEWS, idNews).findAll();
-    }
-
-    // delete all like news
-    public void deleteAllDeleteNewsUser() {
-
-        mRealm.beginTransaction();
-        RealmResults<DeleteNews> listDeleteNews = getListDeleteNews();
-        if (!listDeleteNews.isEmpty()) {
-            for (DeleteNews likeNews : listDeleteNews) {
-                likeNews.deleteFromRealm();
-            }
-        }
-        mRealm.commitTransaction();
     }
 
 
@@ -195,17 +156,6 @@ public class RealmController {
 
     }
 
-    public void deleteAllShopLikeNews() {
-        mRealm.beginTransaction();
-
-        RealmResults<ShopLikeNews> likeNewses = getListShopLikeNews();
-        if (!likeNewses.isEmpty()) {
-            for (ShopLikeNews shopLikeNews : likeNewses) {
-                shopLikeNews.deleteFromRealm();
-            }
-        }
-        mRealm.commitTransaction();
-    }
 
     private RealmResults<ShopLikeNews> getShopLikeById(String idNews) {
         return mRealm.where(ShopLikeNews.class)
@@ -242,11 +192,6 @@ public class RealmController {
 
         mRealm.beginTransaction();
         for (NewsOfCompany NewsOfCompany : listMessage) {
-//            NewsOfCompany newsOfCompany = mRealm.createObject(NewsOfCompany.class);
-//            newsOfCompany.setNews(message.getMessage_id(),
-//                    message.getContent(),
-//                    message.getCompany_id(),
-//                    message.getTitle(), message.getLink(), message.getImages_link());
             mRealm.copyToRealmOrUpdate(NewsOfCompany);
         }
         mRealm.commitTransaction();
@@ -258,7 +203,6 @@ public class RealmController {
         for (NewsOfCompany message : listMessages) {
             message.deleteFromRealm();
         }
-
         mRealm.commitTransaction();
     }
 

@@ -174,7 +174,7 @@ public class AddMessageActivity extends AppCompatActivity
 
         String idNews = MainApplication.getRandomString(MainApplication.SIZE_ID);
 
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company mCompany = new Gson().fromJson(strCompany, Company.class);
 
         String idCompany = mCompany.getCompany_id();

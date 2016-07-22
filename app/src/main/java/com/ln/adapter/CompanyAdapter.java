@@ -21,12 +21,12 @@ import java.util.List;
  */
 public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHolder> {
 
-    private List<CompanyOfCustomer> listCompany;
+    private List<CompanyOfCustomer> mListCompanyOfCustomer;
     private Context mContext;
 
     public CompanyAdapter(Context context, List<CompanyOfCustomer> company) {
         mContext = context;
-        listCompany = company;
+        mListCompanyOfCustomer = company;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        CompanyOfCustomer item = listCompany.get(position);
+        CompanyOfCustomer item = mListCompanyOfCustomer.get(position);
         if (item != null) {
             holder.companyName.setText(item.getName());
             holder.companyAddress.setText(item.getAddress());
@@ -56,7 +56,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return listCompany.size();
+        return mListCompanyOfCustomer.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

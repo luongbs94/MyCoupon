@@ -70,7 +70,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         final String idNewsOfCompany = item.getMessage_id();
 
-        String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         final Company company = new Gson().fromJson(strCompany, Company.class);
 
         if (company != null) {

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
@@ -26,11 +25,7 @@ import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.mycoupon.shop.ShopMainActivity;
 import com.ln.realm.RealmController;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +36,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     private final String TAG = getClass().getSimpleName();
     private LoveCouponAPI mCouponAPI;
     private RealmController mRealmController;
-    private Button mBtnShop, mBtnCustomer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +47,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
         getCityOfAccount();
         initViews();
-        addEvents();
         setLogin();
     }
 
@@ -61,14 +54,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     private void initViews() {
 
         setTitle(R.string.banla);
-        mBtnShop = (Button) findViewById(R.id.shop);
-        mBtnCustomer = (Button) findViewById(R.id.customer);
+        findViewById(R.id.shop).setOnClickListener(this);
+        findViewById(R.id.customer).setOnClickListener(this);
     }
 
-    private void addEvents() {
-        mBtnShop.setOnClickListener(this);
-        mBtnCustomer.setOnClickListener(this);
-    }
 
     private void onClickLoginShop() {
         Intent intent = new Intent(FirstActivity.this, ShopLoginActivity.class);
@@ -81,7 +70,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         startActivity(intent);
         finish();
     }
-
 
     private void startShop() {
         Intent intent = new Intent(FirstActivity.this, ShopMainActivity.class);
@@ -97,8 +85,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void setLogin() {
 
-        SharedPreferences preferences = getSharedPreferences(
-                MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
+        SharedPreferences preferences = MainApplication.getPreferences();
 
         boolean isShop = preferences.getBoolean(MainApplication.LOGIN_SHOP, false);
         boolean isCustomer = preferences.getBoolean(MainApplication.LOGIN_CLIENT, false);
@@ -108,7 +95,8 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
         if (isShop && !isCustomer) {
 
-            String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
+            String strCompany = preferences.getString
+                    (MainApplication.COMPANY_SHOP, "");
             Company company = new Gson().fromJson(strCompany, Company.class);
 
             if (company != null && company.getCompany_id() != null) {
@@ -119,37 +107,38 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             }
         } else if (isCustomer && !isShop) {
 
-            String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+            String strCompany = preferences.getString(MainApplication.ACCOUNT_CUSTOMER, "");
             AccountOflUser account = new Gson().fromJson(strCompany, AccountOflUser.class);
             if (account != null) {
                 getCompanyOfCustomer(account.getId());
                 getNewsOfCustomer(account.getId());
                 String city = preferences.getString(MainApplication.CITY_OF_USER, "");
                 getNewsMore(account.getId(), city);
-                updateUserToken(account.getAccessToken(), MainApplication.getDeviceToken(), "android");
-
+                updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
                 startCustomer();
             }
         }
-
-        Date now = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z'('Z')'", Locale.getDefault());
-        //Convert the date from the local timezone to UTC timezone
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String dateFormatInUTC = formatter.format(now);
-
-        // Date now = new Date();
-        Log.d(TAG, dateFormatInUTC);
+//
+//        Date now = new Date();
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z'('Z')'", Locale.getDefault());
+//        //Convert the date from the local timezone to UTC timezone
+//        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        String dateFormatInUTC = formatter.format(now);
+//
+//        // Date now = new Date();
+//        Log.d(TAG, dateFormatInUTC);
     }
 
 
     /* ============= START CUSTOMER =============*/
     private void getCompanyOfCustomer(final String userId) {
 
-        Call<List<CompanyOfCustomer>> customerLogin = mCouponAPI.getCompaniesByUserId(userId);
+        Call<List<CompanyOfCustomer>> customerLogin
+                = mCouponAPI.getCompaniesByUserId(userId);
         customerLogin.enqueue(new Callback<List<CompanyOfCustomer>>() {
             @Override
-            public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
+            public void onResponse(Call<List<CompanyOfCustomer>> call,
+                                   Response<List<CompanyOfCustomer>> response) {
 
                 if (response.body() != null) {
 //                    mRealmController.deleteListCompanyCustomer();
@@ -192,7 +181,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void updateUserToken(String userId, String token, String device_os) {
 
-        Call<List<User>> call = MainApplication.apiService.updateUserToken(userId, token, device_os);
+        Call<List<User>> call = mCouponAPI.updateUserToken(userId, token, device_os);
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> arg0, Response<List<User>> arg1) {
@@ -262,7 +251,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteListNewsOfCompany();
+//                    mRealmController.deleteListNewsOfCompany();
                     mRealmController.addListNewsOfCompany(response.body());
                     Log.d(TAG, "getNewsOfShop " + response.body().size());
                 } else {
@@ -333,8 +322,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void writeSharePreferences(String key, String value) {
-        SharedPreferences preferences = getSharedPreferences
-                (MainApplication.SHARED_PREFERENCE, MODE_PRIVATE);
+        SharedPreferences preferences = MainApplication.getPreferences();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(key, value);
         editor.apply();
