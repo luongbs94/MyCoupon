@@ -123,6 +123,7 @@
     <string name="no_data_display">Dont have any coupon</string>
 
     <string name="delete_news_error">Delete Message Error</string>
+    <string name="date_menu">10/10/2016</string>
 
 
     <string-array name="month">

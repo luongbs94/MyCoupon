@@ -21,6 +21,7 @@ import com.ln.realm.RealmController;
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -103,7 +104,7 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String FACEBOOK_EMAIL = "email";
 
-    private static final String URL_GET_POST = "http://188.166.179.187:3000";
+    private static final String URL_GET_POST = "http://188.166.199.25:3000";
     public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
     public static final String URL_GET_CITY = "http://freegeoip.net";
     public static final String URL_GET_CITY2 = "http://ip-api.com";
@@ -146,6 +147,8 @@ public class MainApplication extends MultiDexApplication {
 
     public static final int NEWS_CUSTOMER = 0;
     public static final int NEWS_MORE = 1;
+
+    public static boolean isEnglish;
 
 
     @Override
@@ -203,6 +206,14 @@ public class MainApplication extends MultiDexApplication {
         sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
+
+        getEnglish();
+
+        if (isEnglish) {
+            Log.d("MyApplication", isEnglish + "");
+        }else {
+            Log.d("MyApplication", isEnglish + "");
+        }
 
     }
 
@@ -321,5 +332,22 @@ public class MainApplication extends MultiDexApplication {
         }
 
         return dayLeft;
+    }
+
+    public static boolean getLanguage() {
+        return isEnglish;
+    }
+
+
+    private static String getEnglish() {
+
+        String local = Locale.getDefault().getLanguage();
+        if (local.equals("en")) {
+            isEnglish = true;
+        } else {
+            isEnglish = false;
+        }
+        Log.d("getEnglish", local);
+        return local;
     }
 }

@@ -29,12 +29,11 @@ import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,10 +65,10 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final NewsOfCompanyLike news = mListNews.get(position);
+        final NewsOfCompanyLike item = mListNews.get(position);
         final int positionNews = position;
 
-        final String idNewsOfCompany = news.getMessage_id();
+        final String idNewsOfCompany = item.getMessage_id();
 
         String strCompany = MainApplication.getSharedPreferences().getString(MainApplication.COMPANY_SHOP, "");
         final Company company = new Gson().fromJson(strCompany, Company.class);
@@ -84,18 +83,24 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             }
         }
 
-        holder.mTxtTile.setText(news.getTitle());
-        holder.mTxtContent.setText(news.getContent());
-        holder.mTxtLink.setText(news.getLink());
-
-        DateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-
-        Date date = new Date(news.getCreated_date());
+        holder.mTxtTile.setText(item.getTitle());
+        holder.mTxtContent.setText(item.getContent());
+        holder.mTxtLink.setText(item.getLink());
 
 
-        holder.mTxtTime.setText(fmt.format(date));
+        SimpleDateFormat fmt;
+        if (MainApplication.getLanguage()) {
+            fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        } else {
+            fmt = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
 
-        String strImages = news.getImages_link();
+        }
+
+        String date = fmt.format(item.getCreated_date());
+
+        holder.mTxtTime.setText(date);
+
+        String strImages = item.getImages_link();
         if (strImages != null) {
             List<String> listImages = new ArrayList<>();
 
@@ -115,7 +120,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
         holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
 
-        if (news.isLike()) {
+        if (item.isLike()) {
             holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
@@ -125,19 +130,19 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (news.isLike()) {
+                if (item.isLike()) {
                     holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
                     holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
                     holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
-                    news.setLike(false);
-                    MainApplication.mRealmController.deleteShopLikeNewsByIdNews(news.getMessage_id());
+                    item.setLike(false);
+                    MainApplication.mRealmController.deleteShopLikeNewsByIdNews(item.getMessage_id());
 
                 } else {
                     holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
                     holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
                     holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-                    news.setLike(true);
-                    MainApplication.mRealmController.addShopLikeNewsByIdNews(news.getMessage_id(), company.getCompany_id());
+                    item.setLike(true);
+                    MainApplication.mRealmController.addShopLikeNewsByIdNews(item.getMessage_id(), company.getCompany_id());
                 }
             }
         });
@@ -156,18 +161,18 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
                 Uri uri = Uri.parse(logoLink);
                 ShareLinkContent content;
-                if (news.getLink() != null) {
+                if (item.getLink() != null) {
                     content = new ShareLinkContent.Builder()
-                            .setContentUrl(Uri.parse(news.getLink()))
-                            .setContentTitle(news.getTitle())
-                            .setContentDescription(news.getContent())
+                            .setContentUrl(Uri.parse(item.getLink()))
+                            .setContentTitle(item.getTitle())
+                            .setContentDescription(item.getContent())
                             .setImageUrl(uri)
                             .build();
                 } else {
                     content = new ShareLinkContent.Builder()
                             .setContentUrl(null)
-                            .setContentTitle(news.getTitle())
-                            .setContentDescription(news.getContent())
+                            .setContentTitle(item.getTitle())
+                            .setContentDescription(item.getContent())
                             .setImageUrl(uri)
                             .build();
                 }

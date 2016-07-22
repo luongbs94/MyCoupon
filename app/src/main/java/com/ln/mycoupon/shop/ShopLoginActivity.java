@@ -91,8 +91,6 @@ public class ShopLoginActivity extends AppCompatActivity
 
         initViews();
         addEvents();
-
-
     }
 
     private void initViews() {
@@ -446,6 +444,7 @@ public class ShopLoginActivity extends AppCompatActivity
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
         }
+        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
     }
 

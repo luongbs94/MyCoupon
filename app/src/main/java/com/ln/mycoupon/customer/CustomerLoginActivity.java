@@ -77,7 +77,10 @@ public class CustomerLoginActivity extends AppCompatActivity
     private void initViews() {
 
         setTitle(R.string.login);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         mCallbackManager = CallbackManager.Factory.create();
         mBtnFacebook = (Button) findViewById(R.id.btn_facebook_customer);
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -103,7 +106,6 @@ public class CustomerLoginActivity extends AppCompatActivity
                         SharedPreferences preferences = MainApplication.getSharedPreferences();
 
                         String strCity = preferences.getString(MainApplication.CITY_OF_USER, "");
-                        strCity = new Gson().fromJson(strCity, CityOfUser.class).getCity();
 
                         String name = null;
                         if (mProfile != null && mProfile.getName() != null) {

@@ -23,7 +23,6 @@ import com.ln.adapter.NewsMoreAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
-import com.ln.model.CityOfUser;
 import com.ln.model.Message;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.NewsOfMore;
@@ -180,7 +179,7 @@ public class MoreNewsFragment extends Fragment {
                 .getSharedPreferences(MainApplication.SHARED_PREFERENCE,
                         Context.MODE_PRIVATE);
         String city = preferences.getString(MainApplication.CITY_OF_USER, "");
-        city = new Gson().fromJson(city, CityOfUser.class).getCity();
+
         String id = account.getId();
 
 

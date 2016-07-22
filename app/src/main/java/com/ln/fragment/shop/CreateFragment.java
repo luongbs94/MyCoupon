@@ -70,7 +70,7 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
         date.setSeconds(0);
 
         utc1 = date.getTime() + "";
-        utc2 = (date.getTime() + 24*3600*1000 ) + "";
+        utc2 = (date.getTime() + 24 * 3600 * 1000) + "";
 
         getCreateCoupon();
     }
@@ -171,12 +171,12 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
     public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
         calendar.set(year, monthOfYear, dayOfMonth);
         utc1 = calendar.getTimeInMillis() + "";
-        utc2 = (calendar.getTimeInMillis() + 24*3600*1000 ) + "";
+        utc2 = (calendar.getTimeInMillis() + 24 * 3600 * 1000) + "";
 
 
         MenuItem item = menu1.findItem(R.id.date);
 
-        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         item.setTitle(fmt.format(calendar.getTime()));
 
         getCreateCoupon();

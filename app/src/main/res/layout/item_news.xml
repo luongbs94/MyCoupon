@@ -154,10 +154,10 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_marginBottom="@dimen/size_5"
         android:layout_marginTop="@dimen/size_5"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/icon_heart" />
 
     <LinearLayout
         android:layout_width="match_parent"

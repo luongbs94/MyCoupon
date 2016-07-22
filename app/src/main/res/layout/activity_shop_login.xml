@@ -24,6 +24,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/username"
             android:text="abc"
+            android:background="@android:color/transparent"
+            android:textColorHint="@android:color/white"
             android:textColor="@color/white"
             android:textSize="@dimen/size_18sp" />
 

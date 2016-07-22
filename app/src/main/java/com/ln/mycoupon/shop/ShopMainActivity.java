@@ -48,7 +48,7 @@ public class ShopMainActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
 
     private ImageView mImageLogo;
-    private TextView mTxtNameCompany, mTxtAddress;
+    private TextView mTxtNameCompany;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +94,6 @@ public class ShopMainActivity extends AppCompatActivity
         View headView = navigationView.getHeaderView(0);
         mImageLogo = (ImageView) headView.findViewById(R.id.img_logo_nav);
         mTxtNameCompany = (TextView) headView.findViewById(R.id.txt_name_nav);
-        mTxtAddress = (TextView) headView.findViewById(R.id.txt_email_nav);
 
         if (company != null) {
             if (company.getLogo() != null) {
@@ -119,11 +118,6 @@ public class ShopMainActivity extends AppCompatActivity
                 mTxtNameCompany.setText(company.getName());
             } else {
                 mTxtNameCompany.setText("");
-            }
-            if (company.getAddress() != null) {
-                mTxtAddress.setText(company.getAddress());
-            } else {
-                mTxtAddress.setText("");
             }
         }
 
@@ -268,9 +262,6 @@ public class ShopMainActivity extends AppCompatActivity
 
         if (mTxtNameCompany != null) {
             mTxtNameCompany.setText(name);
-        }
-        if (mTxtAddress != null) {
-            mTxtAddress.setText(address);
         }
     }
 

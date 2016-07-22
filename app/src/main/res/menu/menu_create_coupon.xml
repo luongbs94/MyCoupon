@@ -4,12 +4,12 @@
     <item
         android:id="@+id/date"
         android:orderInCategory="100"
-        android:title="10/10/2016"
-        app:showAsAction="always" />
+        android:title="@string/date_menu"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/calendar"
+        android:icon="@drawable/ic_more_vert_white_24dp"
         android:orderInCategory="100"
-        android:icon="@drawable/calendar_white"
         android:title="@string/action_settings"
         app:showAsAction="always" />
 </menu>

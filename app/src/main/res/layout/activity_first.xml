@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/ic_love_coupon"
     android:orientation="horizontal"
-    android:weightSum="5">
+    android:weightSum="7">
 
     <TextView
         android:layout_width="0dp"
@@ -16,7 +16,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:layout_weight="3"
+        android:layout_weight="5"
         android:orientation="vertical">
 
         <Button
@@ -26,7 +26,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_login"
             android:text="@string/shop"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/customer"
@@ -35,7 +36,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_login"
             android:text="@string/customer"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
