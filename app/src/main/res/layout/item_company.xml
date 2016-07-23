@@ -25,22 +25,22 @@
         app:civ_border_width="1dp" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/company_name"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:ellipsize="marquee"
-            android:paddingBottom="10dp"
+            android:paddingBottom="@dimen/size_4"
             android:text="@string/name_company"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="@color/colorTextNews"
-            android:textSize="@dimen/size_30sp"
+            android:textSize="@dimen/size_24sp"
             android:textStyle="bold" />
 
         <TextView
@@ -51,6 +51,6 @@
             android:text="@string/address_company"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="?android:textColorSecondary"
-            android:textSize="@dimen/size_18sp" />
+            android:textSize="@dimen/size_16sp" />
     </LinearLayout>
 </LinearLayout>

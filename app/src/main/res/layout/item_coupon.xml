@@ -42,7 +42,7 @@
                 android:text="@string/name_company"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/size_30sp"
+                android:textSize="@dimen/size_24sp"
                 android:textStyle="bold" />
 
             <LinearLayout

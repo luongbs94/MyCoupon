@@ -24,21 +24,6 @@ public class NewsOfMore extends RealmObject {
     public NewsOfMore() {
     }
 
-    public NewsOfMore(String message_id, String content, long created_date,
-                      String company_id, long last_date, String title,
-                      String link, String images_link, String logo_link, String name) {
-        this.message_id = message_id;
-        this.content = content;
-        this.created_date = created_date;
-        this.company_id = company_id;
-        this.last_date = last_date;
-        this.title = title;
-        this.link = link;
-        this.images_link = images_link;
-        this.logo_link = logo_link;
-        this.name = name;
-    }
-
     public String getMessage_id() {
         return message_id;
     }

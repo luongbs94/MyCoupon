@@ -29,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by luongnguyen on 4/6/16.
+ * Created by nha on 4/6/16.
  * show news in shop
  */
 public class NewsFragment extends Fragment {
@@ -40,7 +40,6 @@ public class NewsFragment extends Fragment {
     private RealmController mRealmController;
 
     private SwipeRefreshLayout swipeContainer;
-
 
     private RecyclerView mRecNews;
     private Company mCompany;
@@ -53,7 +52,9 @@ public class NewsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
-        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication
+                .getPreferences()
+                .getString(MainApplication.COMPANY_SHOP, "");
         mCompany = new Gson().fromJson(strCompany, Company.class);
     }
 
@@ -90,6 +91,14 @@ public class NewsFragment extends Fragment {
     public void setNewsOfCompany() {
 
         List<NewsOfCompany> mListNewsOfCompany = mRealmController.getListNewsOfCompany();
+
+        Log.d(TAG, "======================");
+
+        for (NewsOfCompany item : mListNewsOfCompany) {
+            Log.d(TAG, item.getCreated_date() + "");
+        }
+
+        Log.d(TAG, "======================");
         List<NewsOfCompanyLike> listNews = new ArrayList<>();
 
         for (NewsOfCompany newsOfCompany : mListNewsOfCompany) {

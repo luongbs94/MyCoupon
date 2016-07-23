@@ -22,21 +22,23 @@
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:hint="@string/username"
             android:text="abc"
-            android:background="@android:color/transparent"
-            android:textColorHint="@android:color/white"
             android:textColor="@color/white"
+            android:textColorHint="@android:color/white"
             android:textSize="@dimen/size_18sp" />
 
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:hint="@string/password"
             android:inputType="textPassword"
             android:text="12345"
             android:textColor="@color/white"
+            android:textColorHint="@android:color/white"
             android:textSize="@dimen/size_18sp" />
 
         <Button

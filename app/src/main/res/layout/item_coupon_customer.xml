@@ -47,7 +47,7 @@
             android:text="@string/price"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="#F44336"
-            android:textSize="@dimen/size_30sp"
+            android:textSize="@dimen/size_24sp"
             android:textStyle="bold" />
 
 

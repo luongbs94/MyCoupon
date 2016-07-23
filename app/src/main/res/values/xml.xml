@@ -13,4 +13,5 @@
     <string name="icon_more">\uf142</string>
     <string name="bookmark">Bookmark</string>
     <string name="ic_close">\uf00d</string>
+    <string name="ic_calendar_message">\uf073</string>
 </resources>

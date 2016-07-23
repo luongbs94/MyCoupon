@@ -168,7 +168,7 @@ public class NewsCustomerFragment extends Fragment {
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteListNewsOfCustomer();
+//                    mRealmController.deleteListNewsOfCustomer();
                     mRealmController.addListNewsOfCustomer(response.body());
                     setListMessages();
                     mSwipeContainer.setRefreshing(false);

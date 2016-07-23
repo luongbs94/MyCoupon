@@ -17,12 +17,12 @@
     <string name="customer">Customer</string>
     <string name="not_fill_login">information</string>
     <string name="title_activity_test_qrcode">TestQRCode</string>
-    <string name="reload">New Coupon</string>
+    <string name="reload">Other Code</string>
     <string name="exit">Log out</string>
     <string name="add_coupon">Add Coupon</string>
     <string name="add_message">Add News</string>
 
-    <string name="money">Money</string>
+    <string name="money">Amount</string>
     <string name="title">Title </string>
     <string name="content">Content </string>
     <string name="link">Link</string>
@@ -60,7 +60,7 @@
     <string name="price">123234</string>
     <string name="txt_time_coupon">30</string>
     <string name="check_admin">Admin</string>
-    <string name="save">SAVE</string>
+    <string name="save">save</string>
     <string name="my_coupon">My Coupon</string>
     <string name="news">Notifications</string>
     <string name="history">History</string>
@@ -96,7 +96,7 @@
     <string name="enter_password">Password can not be blank!</string>
     <string name="title_share">We are like you, love coupon and promotion news.</string>
     <string name="contact">Contact Out Team:</string>
-    <string name="support">support@lovecoupon.com</string>
+    <string name="support">info@lovecoupon.com</string>
     <string name="web">www.lovecoupon.com</string>
     <string name="please_question">Please contact us if you have any question?</string>
     <string name="love_coupon">Love Coupon</string>
@@ -124,6 +124,10 @@
     <string name="delete_news_error">Delete Message Error</string>
     <string name="date_menu">10/10/2016</string>
     <string name="login_success">Login Success</string>
+    <string name="save_running">Saving...</string>
+    <string name="delete_coupon">Delete Coupon</string>
+    <string name="post">Post</string>
+    <string name="time_coupon_template" formated="false">%1$s day</string>
 
 
     <string-array name="month">

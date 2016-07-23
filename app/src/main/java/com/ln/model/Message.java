@@ -135,6 +135,8 @@ public class Message implements Comparable<Message> {
         this.logo = news.getLogo();
         this.logo_link = news.getLogo_link();
         this.name = news.getName();
+        this.created_date = news.getCreated_date();
+        this.last_date = news.getLast_date();
     }
 
     public Message(NewsOfMore news) {
@@ -146,6 +148,8 @@ public class Message implements Comparable<Message> {
         this.images_link = news.getImages_link();
         this.logo_link = news.getLogo_link();
         this.name = news.getName();
+        this.last_date = news.getLast_date();
+        this.created_date = news.getCreated_date();
     }
 
     public Message(NewsOfMore news, boolean isLike) {
@@ -158,6 +162,8 @@ public class Message implements Comparable<Message> {
         this.logo_link = news.getLogo_link();
         this.name = news.getName();
         this.isLike = isLike;
+        this.last_date = news.getLast_date();
+        this.created_date = news.getCreated_date();
     }
 
     public Message(NewsOfCustomer news, boolean isLike) {
@@ -171,12 +177,14 @@ public class Message implements Comparable<Message> {
         this.logo_link = news.getLogo_link();
         this.name = news.getName();
         this.isLike = isLike;
+        this.last_date = news.getLast_date();
+        this.created_date = news.getCreated_date();
     }
 
 
     @Override
     public int compareTo(@NonNull Message message) {
-        return (created_date > message.getCreated_date()) ? 1 :    -1;
+        return (created_date > message.getCreated_date()) ? -1 : 1;
     }
 }
 

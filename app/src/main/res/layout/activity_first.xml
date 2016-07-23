@@ -26,8 +26,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_login"
             android:text="@string/shop"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/customer"
@@ -36,8 +35,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_login"
             android:text="@string/customer"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

@@ -401,7 +401,7 @@ public class ShopLoginActivity extends AppCompatActivity
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
+            mProgressDialog.setMessage(getString(R.string.login));
         }
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();

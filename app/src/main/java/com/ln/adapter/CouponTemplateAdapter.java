@@ -2,6 +2,7 @@ package com.ln.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,12 +23,7 @@ import com.ln.mycoupon.R;
 import com.ln.mycoupon.TestQRCode;
 import com.ln.views.IconTextView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,23 +70,8 @@ public class CouponTemplateAdapter
 
         holder.mTxtPriceCoupon.setText(itemCoupon.getValue());
 
-        Date date = convertStringToDate(itemCoupon.getCreated_date());
-        String dayLeft = MainApplication.dayLeft(date, itemCoupon.getDuration()) + "";
-        String day = dayLeft + " ngày";
-        holder.mTxtTimeCoupon.setText(day);
+        holder.mTxtTimeCoupon.setText(mContext.getString(R.string.time_coupon_template, itemCoupon.getDuration()));
         holder.mTxtDescription.setText(itemCoupon.getContent());
-
-        holder.mQRCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(mContext, TestQRCode.class);
-                intent.putExtra(MainApplication.VALUE, itemCoupon.getValue());
-                intent.putExtra(MainApplication.DURATION, itemCoupon.getDuration());
-                intent.putExtra(MainApplication.COUPON_TEMpLATE_ID, itemCoupon.getCoupon_template_id());
-                mContext.startActivity(intent);
-            }
-        });
 
         holder.mImageMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,25 +131,11 @@ public class CouponTemplateAdapter
         return mListCoupon.size();
     }
 
-
-    private Date convertStringToDate(String date) {
-
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        Date startDate;
-        try {
-            startDate = df.parse(date);
-            return startDate;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView mImgLogo;
         private IconTextView mImageMore;
         private TextView mTxtNameCoupon, mTxtPriceCoupon, mTxtDescription, mTxtTimeCoupon;
-        private Button mQRCode;
+//        private Button mQRCode;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -180,11 +146,35 @@ public class CouponTemplateAdapter
             mTxtPriceCoupon = (TextView) itemView.findViewById(R.id.txt_price_coupon);
             mTxtTimeCoupon = (TextView) itemView.findViewById(R.id.txt_time);
             mTxtDescription = (TextView) itemView.findViewById(R.id.txt_description);
-            mQRCode = (Button) itemView.findViewById(R.id.btn_qr_code);
+
+            (itemView.findViewById(R.id.btn_qr_code)).setOnClickListener(this);
 
             if (!MainApplication.sIsAdmin) {
                 mImageMore.setVisibility(View.INVISIBLE);
             }
         }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btn_qr_code:
+                    onClickBtnQRCode(this.getAdapterPosition());
+                    break;
+            }
+        }
+    }
+
+    public void onClickBtnQRCode(int position) {
+
+        CouponTemplate item = mListCoupon.get(position);
+        Intent intent = new Intent(mContext, TestQRCode.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(MainApplication.VALUE, item.getValue());
+        bundle.putInt(MainApplication.DURATION, item.getDuration());
+        bundle.putString(MainApplication.COUPON_TEMpLATE_ID, item.getCoupon_template_id());
+        intent.putExtras(bundle);
+
+        mContext.startActivity(intent);
     }
 }

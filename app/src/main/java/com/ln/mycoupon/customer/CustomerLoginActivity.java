@@ -29,7 +29,6 @@ import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
-import com.ln.model.CityOfUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.NewsOfMore;
@@ -207,7 +206,6 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         String mCity = MainApplication.getPreferences()
                 .getString(MainApplication.CITY_OF_USER, "");
-        mCity = new Gson().fromJson(mCity, CityOfUser.class).getCity();
 
         AccountOflUser accountOflUser = new AccountOflUser(account.getId(), account.getEmail(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
@@ -336,7 +334,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
 
                 if (response.body() != null) {
-                    mRealm.deleteListNewsOfCustomer();
+//                    mRealm.deleteListNewsOfCustomer();
                     mRealm.addListNewsOfCustomer(response.body());
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 }

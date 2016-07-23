@@ -101,7 +101,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         if (MainApplication.getLanguage()) {
             fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         } else {
-            fmt = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+            fmt = new SimpleDateFormat("dd MM, yyyy", Locale.getDefault());
 
         }
 

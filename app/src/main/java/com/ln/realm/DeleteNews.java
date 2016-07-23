@@ -9,14 +9,16 @@ import io.realm.annotations.Required;
  * save news user delete
  */
 
-public class DeleteNews  extends RealmObject  {
+public class DeleteNews extends RealmObject {
+
+    @PrimaryKey
+    private String idNews;
 
     @Required
     private String idUser;
 
-    @Required
-    @PrimaryKey
-    private String idNews;
+    public DeleteNews() {
+    }
 
     public String getIdUser() {
         return idUser;

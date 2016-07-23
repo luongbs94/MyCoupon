@@ -224,13 +224,6 @@ public class RealmController {
 
         mRealm.beginTransaction();
         for (NewsOfCustomer news : listNews) {
-//            NewsOfCustomer newOfCustomer = mRealm.createObject(NewsOfCustomer.class);
-//            newOfCustomer.setNewsOfCustomer(message.getMessage_id(),
-//                    news.getContent(),
-//                    news.getCompany_id(),
-//                    news.getTitle(), news.getLink(), news.getImages_link(),
-//                    news.getLogo(), news.getLogo_link(), news.getName());
-
             mRealm.copyToRealmOrUpdate(news);
         }
         mRealm.commitTransaction();
@@ -243,7 +236,6 @@ public class RealmController {
         for (NewsOfCustomer message : listMessages) {
             message.deleteFromRealm();
         }
-
         mRealm.commitTransaction();
     }
 
@@ -440,4 +432,21 @@ public class RealmController {
         return mRealm.where(NewsOfMore.class).findAll();
     }
     /* ================== END NEWS MORE   ==============*/
+
+    // delete coupon
+    public void deleteCoupon(String id) {
+        mRealm.beginTransaction();
+        Coupon coupon1 = getCoupon(id);
+        if (coupon1 != null) {
+            coupon1.deleteFromRealm();
+        }
+        mRealm.commitTransaction();
+    }
+
+    public Coupon getCoupon(String id) {
+        return mRealm
+                .where(Coupon.class)
+                .equalTo("coupon_id", id)
+                .findFirst();
+    }
 }

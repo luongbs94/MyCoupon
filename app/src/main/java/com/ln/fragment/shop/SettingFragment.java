@@ -245,35 +245,6 @@ public class SettingFragment extends Fragment implements
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-
-    private int isCheckAccountExists(String company_id, String username) {
-
-//        Call<Integer> call = mLoveCouponAPI.isExists(company_id, username);
-
-//        try {
-//            return call.execute().body();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return 0;
-        final int[] isResult = new int[1];
-        Call<Integer> call = mLoveCouponAPI.isExists(company_id, username);
-        call.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                isResult[0] = response.body();
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                Log.d(TAG, "isCheckAccountExists " + t.toString());
-                isResult[0] = 0;
-            }
-        });
-        return isResult[0];
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -308,11 +279,10 @@ public class SettingFragment extends Fragment implements
 
         showProgressDialog();
         final String name = mEdtNameCompany.getText().toString();
-        final String address = mEdtNameCompany.getText().toString();
+        final String address = mEdtAddress.getText().toString();
 
         String logo = MainApplication.convertToBitmap(mImgLogo);
         logo = MainApplication.FIRST_BASE64 + logo;
-
 
 
         Log.d(TAG, "Logo : " + logo);
@@ -432,7 +402,7 @@ public class SettingFragment extends Fragment implements
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
+            mProgressDialog.setMessage(getString(R.string.save_running));
         }
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();

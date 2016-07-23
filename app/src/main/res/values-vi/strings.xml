@@ -53,14 +53,12 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
 
-    <string name="facebook_app_id">1073363172685474</string>
-    <string name="fb_login_protocol_scheme">fb1073363172685474</string>
     <string name="name_user">Le Hong Hai</string>
     <string name="email">hailh@vnu.edu.vn</string>
     <string name="price">123234</string>
     <string name="txt_time_coupon">30 ngày</string>
     <string name="check_admin">Admin</string>
-    <string name="save">SAVE</string>
+    <string name="save">Lưu</string>
     <string name="my_coupon">My Coupon</string>
     <string name="news">Tin mới</string>
     <string name="history">Lịch Sử</string>
@@ -92,11 +90,9 @@
     <string name="username2">Username 2</string>
     <string name="user_error">Bạn hãy nhập username!</string>
     <string name="enter_password">Password không được để trống!</string>
-    <string name="title_share">We are like you, love coupon and promotion news.</string>
-    <string name="contact">Contact Out Team:</string>
-    <string name="support">support@lovecoupon.com</string>
-    <string name="web">www.lovecoupon.com</string>
-    <string name="please_question">Please contact us if you have any question?</string>
+    <string name="title_share">Chúng tôi giống như bạn, yêu phiếu giảm giá và khuyến mãi tin tức.</string>
+    <string name="contact">Liên hệ của chúng tôi:</string>
+    <string name="please_question">Hãy liên lạc với chúng tôi nếu bạn có bất kì câu hỏi nào?</string>
     <string name="love_coupon">Love Coupon</string>
     <string name="delete_news">Bạn có muốn xóa tin mới này không?</string>
     <string name="exit_alert">Bạn có muốn thoát ứng dụng không?</string>
@@ -120,8 +116,9 @@
     <string name="no_data_display">Dont have any coupon</string>
 
     <string name="delete_news_error">Xóa tin mới không thành công!</string>
-
-
+    <string name="time_coupon_template" formated="false">%1$s ngày</string>
+    <string name="save_running">Đang lưu...</string>
+    <string name="post">Tạo</string>
     <string-array name="month">
         <item>1 tháng</item>
         <item>2 tháng</item>

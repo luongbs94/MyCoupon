@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
@@ -27,9 +26,9 @@ import retrofit2.Response;
 
 public class TestQRCode extends AppCompatActivity {
 
-    private ImageView qrCodeImageview;
-    private String QRcode;
-    private final static int WIDTH = 300;
+    private ImageView mImageQRCode;
+    private String QRCode;
+    private final static int WIDTH = 200;
     private LoveCouponAPI apiService;
     private final String TAG = "Coupon";
     private String value, coupon_template_id;
@@ -39,25 +38,26 @@ public class TestQRCode extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_qrcode);
-        qrCodeImageview = (ImageView) findViewById(R.id.img_qr_code_image);
+
+        apiService = MainApplication.getAPI();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        value = getIntent().getExtras().getString(MainApplication.VALUE);
-        duration = getIntent().getExtras().getInt(MainApplication.DURATION);
-        coupon_template_id = getIntent().getExtras().getString("coupon_template_id");
+        Bundle bundle = getIntent().getExtras();
 
-        Button exit = (Button) findViewById(R.id.exit);
-        Button reload = (Button) findViewById(R.id.reload);
-
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
+        if (bundle != null) {
+            value = bundle.getString(MainApplication.VALUE);
+            duration = bundle.getInt(MainApplication.DURATION);
+            coupon_template_id = bundle.getString(MainApplication.COUPON_TEMpLATE_ID);
+            if (value != null) {
+                setTitle("QR Code - " + value + " coupon");
             }
-        });
+        }
 
-        reload.setOnClickListener(new View.OnClickListener() {
+        mImageQRCode = (ImageView) findViewById(R.id.img_qr_code_image);
+
+
+        findViewById(R.id.card_other_code).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String test = MainApplication.getRandomString(10);
@@ -65,14 +65,7 @@ public class TestQRCode extends AppCompatActivity {
             }
         });
 
-        apiService = MainApplication.getAPI();
-
-
-        String value = getIntent().getExtras().getString("value");
-        setTitle("QR Code - " + value + " coupon");
-
         generateQRCode(MainApplication.getRandomString(10));
-
 
     }
 
@@ -82,33 +75,29 @@ public class TestQRCode extends AppCompatActivity {
 
         Thread t = new Thread(new Runnable() {
             public void run() {
-                QRcode = text;
-
+                QRCode = text;
                 try {
                     synchronized (this) {
-                        //   wait(1);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
                                     Bitmap bitmap = null;
 
-                                    bitmap = encodeAsBitmap(QRcode);
-                                    qrCodeImageview.setImageBitmap(bitmap);
+                                    bitmap = encodeAsBitmap(QRCode);
+                                    mImageQRCode.setImageBitmap(bitmap);
 
                                 } catch (WriterException e) {
                                     e.printStackTrace();
-                                } // end of catch block
+                                }
 
-                            } // end of run method
+                            }
                         });
 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
         t.start();
@@ -133,7 +122,7 @@ public class TestQRCode extends AppCompatActivity {
                 pixels[offset + x] = result.get(x, y) ? getResources().getColor(R.color.black) : getResources().getColor(R.color.white);
             }
         }
-        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
         bitmap.setPixels(pixels, 0, 300, 0, 0, w, h);
         return bitmap;
     } /// end of this method
