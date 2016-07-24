@@ -59,8 +59,12 @@ public class CustomerMainActivity extends AppCompatActivity
         mFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CustomerMainActivity.this, QRCodeActivity.class);
-                startActivityForResult(intent, MainApplication.START_QRCODE);
+                if (ConnectivityReceiver.isConnect()) {
+                    Intent intent = new Intent(CustomerMainActivity.this, QRCodeActivity.class);
+                    startActivityForResult(intent, MainApplication.START_QRCODE);
+                } else {
+                    getShowMessages(getString(R.string.check_network));
+                }
 
             }
         });
@@ -95,7 +99,6 @@ public class CustomerMainActivity extends AppCompatActivity
                 txt.setText(accountOflUser.getName());
             }
         }
-
 
         mTxtConnectNetwork = (TextView) findViewById(R.id.text_network);
         checkNetwork();
@@ -223,7 +226,8 @@ public class CustomerMainActivity extends AppCompatActivity
         super.onResume();
         MainApplication.getInstance().setConnectivityListener(this);
     }
-    private void getShowMessages(String msg){
+
+    private void getShowMessages(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

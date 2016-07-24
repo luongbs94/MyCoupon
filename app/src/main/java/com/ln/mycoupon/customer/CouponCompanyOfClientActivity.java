@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 import com.ln.adapter.CouponTemplateClientAdapter;
 import com.ln.app.MainApplication;
 import com.ln.interfaces.OnClickRecyclerView;
-import com.ln.interfaces.RecyclerViewListenner;
+import com.ln.interfaces.RecyclerViewListener;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
@@ -95,8 +95,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         RecyclerView mRecCoupon = (RecyclerView) findViewById(R.id.recycler_view);
         mRecCoupon.setHasFixedSize(true);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(this));
-        mRecCoupon.addOnItemTouchListener(new RecyclerViewListenner(this,
-                mRecCoupon, new OnClickRecyclerView() {
+        mRecCoupon.addOnItemTouchListener(new RecyclerViewListener(this, new OnClickRecyclerView() {
             @Override
             public void onClick(View view, final int position) {
                 new MaterialDialog

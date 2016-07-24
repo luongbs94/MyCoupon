@@ -117,8 +117,10 @@ public class RealmController {
     // find all delete news by id
     public RealmResults<DeleteNews> getDeleteNewsById(String idNews) {
 
-        return mRealm.where(DeleteNews.class)
-                .equalTo(MainApplication.ID_NEWS, idNews).findAll();
+        return mRealm
+                .where(DeleteNews.class)
+                .equalTo(MainApplication.ID_NEWS, idNews)
+                .findAll();
     }
 
 

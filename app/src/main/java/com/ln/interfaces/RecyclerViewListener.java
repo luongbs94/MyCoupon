@@ -10,13 +10,12 @@ import android.view.View;
  * Created by Nhahv on 7/23/2016.
  * <></>
  */
-public class RecyclerViewListenner implements RecyclerView.OnItemTouchListener {
+public class RecyclerViewListener implements RecyclerView.OnItemTouchListener {
 
     private GestureDetector mGestureDetector;
     private OnClickRecyclerView mOnClick;
 
-    public RecyclerViewListenner(Context context, RecyclerView recyclerView,
-                                 OnClickRecyclerView onClick) {
+    public RecyclerViewListener(Context context, OnClickRecyclerView onClick) {
         mOnClick = onClick;
         mGestureDetector = new GestureDetector(context,
                 new GestureDetector.SimpleOnGestureListener() {
