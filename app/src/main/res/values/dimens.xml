@@ -43,6 +43,8 @@
     <dimen name="size_76">76dp</dimen>
     <dimen name="size_14sp">14sp</dimen>
     <dimen name="size_16sp">16sp</dimen>
+    <dimen name="size_0">0dp</dimen>
+    <dimen name="size_26sp">26sp</dimen>
 
 
 </resources>

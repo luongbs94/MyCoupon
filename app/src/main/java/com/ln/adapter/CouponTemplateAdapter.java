@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.TestQRCode;
-import com.ln.views.IconTextView;
 
 import java.util.List;
 
@@ -55,7 +53,7 @@ public class CouponTemplateAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final CouponTemplate itemCoupon = mListCoupon.get(position);
+        CouponTemplate item = mListCoupon.get(position);
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
@@ -68,33 +66,14 @@ public class CouponTemplateAdapter
                     .into(holder.mImgLogo);
         }
 
-        holder.mTxtPriceCoupon.setText(itemCoupon.getValue());
+        if (item.getValue() != null) {
+            holder.mTxtPriceCoupon.setText(item.getValue());
+        }
+        holder.mTxtTimeCoupon.setText(mContext.getString(R.string.time_coupon_template, item.getDuration()));
 
-        holder.mTxtTimeCoupon.setText(mContext.getString(R.string.time_coupon_template, itemCoupon.getDuration()));
-        holder.mTxtDescription.setText(itemCoupon.getContent());
-
-        holder.mImageMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                PopupMenu popupMenu = new PopupMenu(mContext, view);
-                final MenuInflater inflater = popupMenu.getMenuInflater();
-                inflater.inflate(R.menu.menu_delete_coupon, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.menu_delete:
-                                deleteCouponTemplate(itemCoupon.getCoupon_template_id());
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
+        if (item.getContent() != null) {
+            holder.mTxtDescription.setText(item.getContent());
+        }
 
     }
 
@@ -133,24 +112,27 @@ public class CouponTemplateAdapter
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView mImgLogo;
-        private IconTextView mImageMore;
         private TextView mTxtNameCoupon, mTxtPriceCoupon, mTxtDescription, mTxtTimeCoupon;
-//        private Button mQRCode;
 
         ViewHolder(View itemView) {
             super(itemView);
 
             mImgLogo = (ImageView) itemView.findViewById(R.id.app_icon);
-            mImageMore = (IconTextView) itemView.findViewById(R.id.image_more);
+
             mTxtNameCoupon = (TextView) itemView.findViewById(R.id.txt_company_name);
             mTxtPriceCoupon = (TextView) itemView.findViewById(R.id.txt_price_coupon);
             mTxtTimeCoupon = (TextView) itemView.findViewById(R.id.txt_time);
             mTxtDescription = (TextView) itemView.findViewById(R.id.txt_description);
 
             (itemView.findViewById(R.id.btn_qr_code)).setOnClickListener(this);
+            (itemView.findViewById(R.id.image_more)).setOnClickListener(this);
+            (itemView.findViewById(R.id.txt_company_name)).setOnClickListener(this);
+            (itemView.findViewById(R.id.txt_price_coupon)).setOnClickListener(this);
+            (itemView.findViewById(R.id.txt_description)).setOnClickListener(this);
+            (itemView.findViewById(R.id.linear_time)).setOnClickListener(this);
 
             if (!MainApplication.sIsAdmin) {
-                mImageMore.setVisibility(View.INVISIBLE);
+                (itemView.findViewById(R.id.image_more)).setVisibility(View.INVISIBLE);
             }
         }
 
@@ -158,7 +140,16 @@ public class CouponTemplateAdapter
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btn_qr_code:
+                case R.id.linear_time:
+                case R.id.txt_company_name:
+                case R.id.txt_price_coupon:
+                case R.id.txt_description:
                     onClickBtnQRCode(this.getAdapterPosition());
+                    break;
+                case R.id.image_more:
+                    onClickMore(this.getAdapterPosition(), v);
+                    break;
+                default:
                     break;
             }
         }
@@ -173,8 +164,34 @@ public class CouponTemplateAdapter
         bundle.putString(MainApplication.VALUE, item.getValue());
         bundle.putInt(MainApplication.DURATION, item.getDuration());
         bundle.putString(MainApplication.COUPON_TEMpLATE_ID, item.getCoupon_template_id());
+        bundle.putString(MainApplication.CONTENT_COUPON, item.getContent());
         intent.putExtras(bundle);
 
         mContext.startActivity(intent);
+    }
+
+    public void onClickMore(int position, View view) {
+
+        final CouponTemplate itemCoupon = mListCoupon.get(position);
+
+        PopupMenu popupMenu = new PopupMenu(mContext, view);
+        popupMenu
+                .getMenuInflater()
+                .inflate(R.menu.menu_delete_coupon, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_delete:
+                        deleteCouponTemplate(itemCoupon.getCoupon_template_id());
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
     }
 }

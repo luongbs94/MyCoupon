@@ -16,6 +16,7 @@ import com.ln.mycoupon.R;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Nhahv on 5/21/2016.
@@ -36,8 +37,9 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_coupon_customer, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.item_coupon_customer, parent, false));
     }
 
     @Override
@@ -46,28 +48,38 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
         final Coupon item = mListCoupon.get(position);
         if (item != null) {
 
-            try{
-                if (item.getValue() != null) {
-                    holder.couponName.setText(item.getValue());
-                }
 
-                SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-
-//                holder.couponDate.setText(fmt.format(item.getCreated_date()));
-
-//                String dayLeft = MainApplication.dayLeft(item.getCreated_date(), item.getDuration()) + "";
-//                holder.dayLeft.setText(dayLeft + " days");
-
-            }catch (Exception e){
-
+            if (item.getValue() != null) {
+                holder.textPrice.setText(item.getValue());
             }
 
+            if (mCompanyOfCustomer.getName() != null) {
+                holder.textNameCompany.setText(mCompanyOfCustomer.getName());
+            }
+
+            if (item.getContent() != null) {
+                holder.textDescription.setText(item.getContent());
+            }
+
+
+            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            if (MainApplication.getLanguage()) {
+                fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+            }
+
+            holder.textTimeShelf.setText(fmt.format
+                    (MainApplication
+                            .convertDate(item.getCreated_date(),
+                                    item.getDuration())));
+
+            String dayLeft = MainApplication.dayLeft(item.getCreated_date(), item.getDuration()) + "";
+            holder.textDayShelf.setText(dayLeft);
 
             if (mCompanyOfCustomer.getLogo() != null) {
                 Glide.with(mContext).load(MainApplication
                         .convertToBytes(mCompanyOfCustomer.getLogo()))
                         .asBitmap()
-                        .into(holder.mImgLogo);
+                        .into(holder.mImageLogo);
             }
         }
     }
@@ -79,16 +91,19 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView mImgLogo;
-        private TextView couponName, couponDate, dayLeft;
+        private ImageView mImageLogo;
+        private TextView textNameCompany, textTimeShelf, textDayShelf,
+                textPrice, textDescription;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            mImgLogo = (ImageView) itemView.findViewById(R.id.app_icon);
-            couponName = (TextView) itemView.findViewById(R.id.coupon_name);
-            couponDate = (TextView) itemView.findViewById(R.id.coupon_date);
-            dayLeft = (TextView) itemView.findViewById(R.id.dayLeft);
+            mImageLogo = (ImageView) itemView.findViewById(R.id.app_icon);
+            textNameCompany = (TextView) itemView.findViewById(R.id.text_name_company);
+            textTimeShelf = (TextView) itemView.findViewById(R.id.text_time_shelf);
+            textDayShelf = (TextView) itemView.findViewById(R.id.text_day_shelf);
+            textPrice = (TextView) itemView.findViewById(R.id.text_price_);
+            textDescription = (TextView) itemView.findViewById(R.id.text_description);
 
         }
     }

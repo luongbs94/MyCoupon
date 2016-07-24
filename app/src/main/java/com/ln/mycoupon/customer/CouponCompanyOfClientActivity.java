@@ -33,7 +33,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 6/7/16.
- * <p>
+ * <p/>
  * coupon
  */
 public class CouponCompanyOfClientActivity extends AppCompatActivity {
@@ -163,7 +163,10 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
     }
 
     private void deleteCoupon(int position) {
-        final Coupon coupon = mCompanyOfCustomer.getCoupon().get(position);
+        final String id = mCompanyOfCustomer.getCoupon().get(position).getCoupon_id();
+        Coupon coupon = new Coupon();
+        coupon.setCoupon_id(id);
+
         Call<Integer> deleteCoupon = MainApplication
                 .getAPI()
                 .useCoupon(coupon);
@@ -172,7 +175,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.body() == MainApplication.SUCCESS) {
-                    MainApplication.mRealmController.deleteCoupon(coupon.getCompany_id());
+                    MainApplication.mRealmController.deleteCoupon(id);
                     getShowMessages(getString(R.string.delete_coupon_fail));
                     adapter.notifyDataSetChanged();
                 } else {

@@ -16,8 +16,9 @@
         android:src="@drawable/ic_logo_blank" />
 
     <TextView
+        android:gravity="center"
         android:id="@+id/txt_name_customer_nav"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/size_8"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"

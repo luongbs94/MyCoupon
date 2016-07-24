@@ -65,6 +65,8 @@ dependencies {
     compile 'com.google.firebase:firebase-core:9.0.0'
     compile 'com.google.android.gms:play-services-appinvite:9.0.0'
     compile 'com.google.firebase:firebase-messaging:9.0.0'
+
+    compile 'com.github.kenglxn.QRGen:android:2.2.0'
 }
 
 

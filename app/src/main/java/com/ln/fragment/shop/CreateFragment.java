@@ -54,10 +54,6 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
     TextView textView;
 
 
-    public CreateFragment() {
-
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,20 +76,6 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_create, container, false);
 
-        swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
-        textView = (TextView) mView.findViewById(R.id.text_no_data);
-
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getCreateCoupon();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
 
         initViews();
         getCreateCoupon();
@@ -105,12 +87,31 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
     private void initViews() {
         mRecyclerCreate = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecyclerCreate.setLayoutManager(new LinearLayoutManager(getActivity()));
+        swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
+        textView = (TextView) mView.findViewById(R.id.text_no_data);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getCreateCoupon();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
     }
 
     private void getCreateCoupon() {
 
-        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        String strCompany = MainApplication
+                .getPreferences()
+                .getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
+
         mListCoupon.clear();
         Call<ArrayList<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getCompany_id() + "", utc1, utc2);
         listCoupon.enqueue(new Callback<ArrayList<Coupon>>() {
@@ -149,6 +150,9 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
         Date date = new Date();
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        if (MainApplication.getLanguage()) {
+            fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        }
         item.setTitle(fmt.format(date));
         this.menu1 = menu;
         super.onCreateOptionsMenu(menu, inflater);
@@ -156,19 +160,21 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.calendar:
-                DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(getActivity().getFragmentManager(), "datePicker");
-                return true;
-            default:
-                break;
+        if (item.getItemId() == R.id.calendar) {
+            DatePickerDialog
+                    .newInstance(this,
+                            calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH))
+                    .show(getActivity().getFragmentManager(), "datePicker");
         }
 
         return true;
     }
 
     @Override
-    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
+    public void onDateSet(DatePickerDialog dialog, int year,
+                          int monthOfYear, int dayOfMonth) {
         calendar.set(year, monthOfYear, dayOfMonth);
         utc1 = calendar.getTimeInMillis() + "";
         utc2 = (calendar.getTimeInMillis() + 24 * 3600 * 1000) + "";
@@ -177,11 +183,12 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
         MenuItem item = menu1.findItem(R.id.date);
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        if (MainApplication.getLanguage()) {
+            fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        }
         item.setTitle(fmt.format(calendar.getTime()));
 
         getCreateCoupon();
-
-
     }
 
 }

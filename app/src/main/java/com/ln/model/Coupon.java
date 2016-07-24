@@ -21,24 +21,9 @@ public class Coupon extends RealmObject implements Comparable<Coupon> {
     private String user_name;
     private String user_social;
     private String user_image_link;
+    private String content;
 
     public Coupon() {
-    }
-
-    public Coupon(String coupon_id, String user_id, String coupon_template_id,
-                  long used_date, String company_id, String value, int duration, String code, String user_name, String user_social, String user_image_link) {
-        this.coupon_id = coupon_id;
-        this.user_id = user_id;
-        this.coupon_template_id = coupon_template_id;
-//        this.created_date = created_date;
-        this.used_date = used_date;
-        this.company_id = company_id;
-        this.value = value;
-        this.duration = duration;
-        this.code = code;
-        this.user_name = user_name;
-        this.user_social = user_social;
-        this.user_image_link = user_image_link;
     }
 
 
@@ -133,6 +118,15 @@ public class Coupon extends RealmObject implements Comparable<Coupon> {
 
 //    public void setCoupon(String coupon_id, String user_id, String coupon_template_id,
 //                          Date created_date, String used_date, String company_id, String value, int duration, String code, String user_name, String user_social, String user_image_link) {
+
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public void setCoupon(String coupon_id, String user_id, String coupon_template_id,
                           long used_date, String company_id, String value,
