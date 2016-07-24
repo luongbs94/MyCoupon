@@ -35,3 +35,14 @@ local.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+/.idea/*
+.idea/*

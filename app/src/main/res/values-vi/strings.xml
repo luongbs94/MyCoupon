@@ -12,7 +12,7 @@
 
     <string name="g_login">Google +</string>
 
-    <string name="banla">Bạn là</string>
+    <string name="you_are">Bạn là</string>
     <string name="shop">Cửa hàng</string>
     <string name="customer">Khách hàng</string>
     <string name="not_fill_login">Bạn chưa điền đầy đủ thông tin</string>
@@ -119,6 +119,10 @@
     <string name="time_coupon_template" formated="false">%1$s ngày</string>
     <string name="save_running">Đang lưu...</string>
     <string name="post">Tạo</string>
+    <string name="press_back_again">Nhấn back một lần nữa để thoát!</string>
+
+    <string name="check_network">Bạn hãy kiểm tra lại mạng!</string>
+
     <string-array name="month">
         <item>1 tháng</item>
         <item>2 tháng</item>

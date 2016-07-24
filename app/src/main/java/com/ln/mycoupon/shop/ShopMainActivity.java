@@ -16,10 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
+import com.ln.broadcast.ConnectivityReceiver;
+import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.fragment.shop.CouponFragment;
 import com.ln.fragment.shop.HistoryFragment;
 import com.ln.fragment.shop.NewsFragment;
@@ -34,7 +37,7 @@ import com.ln.mycoupon.R;
 
 public class ShopMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        OnClickSetInformation, View.OnClickListener {
+        OnClickSetInformation, View.OnClickListener, ConnectivityReceiverListener {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -51,6 +54,8 @@ public class ShopMainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_main);
+
+        checkNetwork();
 
         String strCompany = getSharedPreferences(MainApplication.SHARED_PREFERENCE,
                 MODE_PRIVATE).getString(MainApplication.COMPANY_SHOP, "");
@@ -135,37 +140,24 @@ public class ShopMainActivity extends AppCompatActivity
         }
     }
 
+    private boolean isClose;
 
     @Override
     public void onBackPressed() {
 
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            if (!isClose) {
+                getShowMessages(getString(R.string.press_back_again));
+                isClose = true;
+            } else if (isClose) {
+                super.onBackPressed();
+                isClose = false;
+            }
         }
-//        else {
-//            MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
-//            dialog.content(R.string.exit_alert)
-//                    .positiveText(R.string.agree)
-//                    .negativeText(R.string.disagree)
-//                    .positiveColor(getResources().getColor(R.color.title_bg))
-//                    .negativeColor(getResources().getColor(R.color.title_bg))
-//                    .show();
-//
-//            dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-//                @Override
-//                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                    finish();
-//                }
-//            });
-//
-//            dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
-//                @Override
-//                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                    dialog.dismiss();
-//                }
-//            });
-//        }
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -268,13 +260,23 @@ public class ShopMainActivity extends AppCompatActivity
         if (v.getId() == R.id.fab) {
             switch (currentPosition) {
                 case 0:
-                    Intent intent = new Intent(ShopMainActivity.this, AddCouponActivity.class);
-                    startActivityForResult(intent, MainApplication.ADD_COUPON_TEMPLATE);
-
+                    boolean isNetwork = ConnectivityReceiver.isConnect();
+                    if (isNetwork) {
+                        Intent intent = new Intent(ShopMainActivity.this, AddCouponActivity.class);
+                        startActivityForResult(intent, MainApplication.ADD_COUPON_TEMPLATE);
+                    } else {
+                        getShowMessages(getString(R.string.check_network));
+                    }
                     return;
                 case 1:
-                    Intent intent1 = new Intent(ShopMainActivity.this, AddMessageActivity.class);
-                    startActivityForResult(intent1, MainApplication.ADD_MESSAGES);
+                    boolean isNetwork1 = ConnectivityReceiver.isConnect();
+                    if (isNetwork1) {
+                        Intent intent1 = new Intent(ShopMainActivity.this, AddMessageActivity.class);
+                        startActivityForResult(intent1, MainApplication.ADD_MESSAGES);
+                    } else {
+                        getShowMessages(getString(R.string.check_network));
+                    }
+
                     return;
                 default:
                     break;
@@ -310,5 +312,34 @@ public class ShopMainActivity extends AppCompatActivity
                     break;
             }
         }
+    }
+
+    private void getShowMessages(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void checkNetwork() {
+        boolean isNetwork = ConnectivityReceiver.isConnect();
+        showCheckNetwork(isNetwork);
+    }
+
+
+    @Override
+    public void onNetworkConnectChange(boolean isConnect) {
+        showCheckNetwork(isConnect);
+    }
+
+    private void showCheckNetwork(boolean isNetwork) {
+        if (isNetwork) {
+            findViewById(R.id.text_network).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.text_network).setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainApplication.getInstance().setConnectivityListener(this);
     }
 }

@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:paddingBottom="@dimen/size_4"
+                android:paddingBottom="@dimen/size_6"
                 android:text="@string/icon_calendar"
                 android:textColor="@color/color_prices"
                 android:textSize="@dimen/size_14sp" />
@@ -89,9 +89,7 @@
                 android:paddingRight="@dimen/size_8"
                 android:paddingStart="@dimen/size_0"
                 android:text="@string/date_menu"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/color_prices" />
-
 
             <com.ln.views.IconTextView
                 android:layout_width="wrap_content"

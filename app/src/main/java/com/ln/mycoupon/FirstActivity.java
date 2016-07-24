@@ -53,7 +53,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void initViews() {
 
-        setTitle(R.string.banla);
         findViewById(R.id.shop).setOnClickListener(this);
         findViewById(R.id.customer).setOnClickListener(this);
     }

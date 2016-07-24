@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -32,7 +33,8 @@ import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
 
 public class CustomerMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiverListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ConnectivityReceiverListener {
 
     private static String sTitle;
 
@@ -95,39 +97,26 @@ public class CustomerMainActivity extends AppCompatActivity
         }
 
 
-        mTxtConnectNetwork = (TextView) findViewById(R.id.txt_network);
+        mTxtConnectNetwork = (TextView) findViewById(R.id.text_network);
         checkNetwork();
     }
+
+    private boolean isClose;
 
     @Override
     public void onBackPressed() {
 
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            if (!isClose) {
+                getShowMessages(getString(R.string.press_back_again));
+                isClose = true;
+            } else if (isClose) {
+                super.onBackPressed();
+                isClose = false;
+            }
         }
-//        else {
-//            MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
-//            dialog.content(R.string.exit_alert)
-//                    .positiveText(R.string.agree)
-//                    .negativeText(R.string.disagree)
-//                    .positiveColor(getResources().getColor(R.color.title_bg))
-//                    .negativeColor(getResources().getColor(R.color.title_bg))
-//                    .show();
-//
-//            dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-//                @Override
-//                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                    finish();
-//                }
-//            });
-//
-//            dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
-//                @Override
-//                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                    dialog.dismiss();
-//                }
-//            });
-//        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -233,5 +222,8 @@ public class CustomerMainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         MainApplication.getInstance().setConnectivityListener(this);
+    }
+    private void getShowMessages(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

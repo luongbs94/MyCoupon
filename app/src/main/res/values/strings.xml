@@ -12,7 +12,7 @@
 
     <string name="g_login">Google +</string>
 
-    <string name="banla">You are</string>
+    <string name="you_are">You are</string>
     <string name="shop">Shop</string>
     <string name="customer">Customer</string>
     <string name="not_fill_login">information</string>
@@ -115,7 +115,7 @@
     <string name="like_news">Like News</string>
     <string name="news_delete">Delete News</string>
     <string name="near_news">News Near</string>
-    <string name="connect_network">Offline mode!</string>
+    <string name="connect_network">Waiting for network!</string>
     <string name="changedate">Change</string>
 
     <string name="news_more">Other News</string>
@@ -128,6 +128,8 @@
     <string name="delete_coupon">Delete Coupon</string>
     <string name="post">Post</string>
     <string name="time_coupon_template" formated="false">%1$s day</string>
+    <string name="press_back_again">Press back one again to exits!</string>
+    <string name="check_network">Please, You check network</string>
 
 
     <string-array name="month">

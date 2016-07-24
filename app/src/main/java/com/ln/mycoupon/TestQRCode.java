@@ -22,7 +22,7 @@ import retrofit2.Response;
 
 public class TestQRCode extends AppCompatActivity {
 
-    private static final String TAG = "Coupon";
+    private static final String TAG = "TestQRCode";
     private LoveCouponAPI apiService;
     private String value, coupon_template_id, mContent;
     private int duration;
@@ -49,13 +49,14 @@ public class TestQRCode extends AppCompatActivity {
         }
 
 
-        findViewById(R.id.card_other_code).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String test = MainApplication.getRandomString(20);
-                generateQRCode(test);
-            }
-        });
+        findViewById(R.id.card_other_code)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String test = MainApplication.getRandomString(20);
+                        generateQRCode(test);
+                    }
+                });
 
         generateQRCode(MainApplication.getRandomString(20));
 
