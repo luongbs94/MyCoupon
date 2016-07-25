@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CreateFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class CreateFragment extends Fragment  {
 
     private LoveCouponAPI mApiServices;
 
@@ -50,7 +51,6 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
     private Calendar calendar;
 
     private SwipeRefreshLayout swipeContainer;
-    private Menu menu1;
     TextView textView;
 
 
@@ -98,7 +98,6 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
         initViews();
         getCreateCoupon();
 
-        setHasOptionsMenu(true);
         return mView;
     }
 
@@ -140,47 +139,12 @@ public class CreateFragment extends Fragment implements DatePickerDialog.OnDateS
         });
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_create_coupon, menu);
-
-        MenuItem item = menu.findItem(R.id.date);
-
-        Date date = new Date();
-
-        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        item.setTitle(fmt.format(date));
-        this.menu1 = menu;
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.calendar:
-                DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(getActivity().getFragmentManager(), "datePicker");
-                return true;
-            default:
-                break;
-        }
-
-        return true;
-    }
-
-    @Override
-    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
-        calendar.set(year, monthOfYear, dayOfMonth);
-        utc1 = calendar.getTimeInMillis() + "";
-        utc2 = (calendar.getTimeInMillis() + 24 * 3600 * 1000) + "";
 
 
-        MenuItem item = menu1.findItem(R.id.date);
-
-        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        item.setTitle(fmt.format(calendar.getTime()));
-
+    public void getData(long time){
+        utc1 = time + "";
+        utc2 = (time + 24 * 3600 * 1000) + "";
         getCreateCoupon();
-
 
     }
 

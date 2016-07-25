@@ -19,6 +19,8 @@ import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,6 +40,8 @@ public class UseFragment extends Fragment {
     private ArrayList<Coupon> mListCoupons = new ArrayList<>();
     private String TAG = getClass().getSimpleName();
     private SwipeRefreshLayout swipeContainer;
+    private Calendar calendar;
+
 
     public UseFragment() {
     }
@@ -46,6 +50,17 @@ public class UseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
+
+        calendar = Calendar.getInstance();
+        Date date = new Date();
+
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+
+        utc1 = date.getTime() + "";
+        utc2 = (date.getTime() + 24 * 3600 * 1000) + "";
+
         getUseCoupon();
 
     }
@@ -100,6 +115,13 @@ public class UseFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    public void getData(long time){
+        utc1 = time + "";
+        utc2 = (time + 24 * 3600 * 1000) + "";
+        getUseCoupon();
+
     }
 
 }

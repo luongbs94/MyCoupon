@@ -75,6 +75,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create">CREATE</string>
+    <string name="used">USED</string>
     <string name="add">AddMessage</string>
     <string name="delete">Delete</string>
     <string name="show_password">Show Password</string>

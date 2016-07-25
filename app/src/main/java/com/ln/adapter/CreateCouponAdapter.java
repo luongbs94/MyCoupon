@@ -50,10 +50,10 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
                 .placeholder(R.drawable.ic_logo_blank)
                 .into(holder.mImgLogo);
 
-        holder.mTxtCompanyName.setText(company.getName());
+        holder.mTxtCompanyName.setText(coupon.getUser_name());
         holder.mTxtPrice.setText(coupon.getValue());
 
-        SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat fmt = new SimpleDateFormat("HH:mm");
 
         Date date = new Date(coupon.getCreated_date());
 
