@@ -385,7 +385,6 @@ public class ShopLoginActivity extends AppCompatActivity
     /* ============= GET LIST COUPON TEMPLATE =================*/
     private void getCouponTemplate(String idCompany) {
 
-        //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
         Call<List<CouponTemplate>> couponShop = mCouponAPI.getCouponTemplates("abc", idCompany);
         couponShop.enqueue(new Callback<List<CouponTemplate>>() {
             @Override

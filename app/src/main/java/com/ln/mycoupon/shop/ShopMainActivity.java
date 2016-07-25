@@ -223,19 +223,6 @@ public class ShopMainActivity extends AppCompatActivity
     }
 
     private void startFragment(Fragment fragment) {
-//        String backStateName = fragment.getClass().getName();
-//        String fragmentTag = backStateName;
-//
-//        FragmentManager manager = getSupportFragmentManager();
-//        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
-//
-//        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
-//            FragmentTransaction ft = manager.beginTransaction();
-//            ft.replace(R.id.content_main, fragment, fragmentTag);
-//            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//            ft.commit();
-//        }
-
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_main, fragment)
@@ -245,7 +232,8 @@ public class ShopMainActivity extends AppCompatActivity
     @Override
     public void onClickSetInformation(String logo, String name, String address) {
         if (mImageLogo != null) {
-            Glide.with(this).load(MainApplication.convertToBytes(logo))
+            Glide.with(this)
+                    .load(MainApplication.convertToBytes(logo))
                     .asBitmap()
                     .placeholder(R.drawable.ic_logo_blank).into(mImageLogo);
         }

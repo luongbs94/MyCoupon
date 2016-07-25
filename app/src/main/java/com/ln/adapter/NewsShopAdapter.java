@@ -76,7 +76,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
             if (company.getLogo() != null) {
-                Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
+                Glide.with(mContext)
+                        .load(MainApplication.convertToBytes(company.getLogo()))
                         .asBitmap()
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(holder.mImgLogo);

@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
@@ -25,6 +24,7 @@ import com.ln.model.Message;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +44,6 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     private Context mContext;
     private ShareDialog mShareDialog;
     private int mType;
-
 
     public NewsCustomerAdapter(Context context, List<Message> listNews, Fragment fragment) {
         mContext = context;
@@ -70,8 +69,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         final String idUser = new Gson().fromJson(strAccount, AccountOflUser.class).getId();
 
         if (item.getLogo_link() != null) {
-            Glide.with(mContext).load(item.getLogo_link())
-                    .asBitmap()
+            Picasso.with(mContext)
+                    .load(item.getLogo_link())
                     .into(holder.mImgLogo);
         }
         if (item.getName() != null) {

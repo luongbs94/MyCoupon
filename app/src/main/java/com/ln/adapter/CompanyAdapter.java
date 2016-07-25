@@ -41,14 +41,17 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
 
         CompanyOfCustomer item = mListCompanyOfCustomer.get(position);
         if (item != null) {
-            holder.companyName.setText(item.getName());
-            holder.companyAddress.setText(item.getAddress());
+            if (item.getName() != null) {
+                holder.companyName.setText(item.getName());
+            }
+            if (item.getAddress() != null) {
+                holder.companyAddress.setText(item.getAddress());
+            }
 
             if (item.getLogo() != null) {
                 Glide.with(mContext)
                         .load(MainApplication.convertToBytes(item.getLogo()))
                         .asBitmap()
-                        .centerCrop()
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(holder.mImgLogo);
             }

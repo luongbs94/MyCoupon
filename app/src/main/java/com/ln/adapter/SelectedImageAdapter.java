@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.ln.model.ItemImage;
 import com.ln.mycoupon.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +29,6 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
         this.mListImages = mListImages;
     }
 
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chose, parent, false));
@@ -39,10 +37,8 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        Glide.with(mContext)
+        Picasso.with(mContext)
                 .load(new File(mListImages.get(position).getPath()))
-                .centerCrop()
-                .fitCenter()
                 .into(holder.mImages);
 
         holder.mDelete.setOnClickListener(new View.OnClickListener() {

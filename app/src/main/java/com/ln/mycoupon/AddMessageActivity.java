@@ -87,7 +87,6 @@ public class AddMessageActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_message);
 
-
         initViews();
         addEvents();
     }

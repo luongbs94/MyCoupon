@@ -8,22 +8,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Nhahv on 5/22/2016.
+ * <></>
  */
 public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapter.ViewHolder> {
-
 
     private ArrayList<Coupon> mListCoupons;
     private LayoutInflater mInflater;
@@ -43,20 +44,20 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Coupon coupon = mListCoupons.get(position);
+        Coupon item = mListCoupons.get(position);
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
-        Glide.with(mContext).load(coupon.getUser_image_link())
+        Picasso.with(mContext)
+                .load(item.getUser_image_link())
                 .placeholder(R.drawable.ic_logo_blank)
                 .into(holder.mImgLogo);
 
-        holder.mTxtCompanyName.setText(coupon.getUser_name());
-        holder.mTxtPrice.setText(coupon.getValue());
+        holder.mTxtCompanyName.setText(item.getUser_name());
+        holder.mTxtPrice.setText(item.getValue());
 
-        SimpleDateFormat fmt = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat fmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-        Date date = new Date(coupon.getCreated_date());
-
+        Date date = new Date(item.getCreated_date());
 
         holder.mTxtDate.setText(fmt.format(date));
     }

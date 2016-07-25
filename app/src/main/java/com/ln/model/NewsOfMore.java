@@ -60,9 +60,6 @@ public class NewsOfMore extends RealmObject {
         return last_date;
     }
 
-    public void setLast_date(long last_date) {
-        this.last_date = last_date;
-    }
 
     public String getTitle() {
         return title;
@@ -84,9 +81,6 @@ public class NewsOfMore extends RealmObject {
         return images_link;
     }
 
-    public void setImages_link(String images_link) {
-        this.images_link = images_link;
-    }
 
     public String getLogo_link() {
         return logo_link;

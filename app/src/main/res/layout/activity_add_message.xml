@@ -42,11 +42,11 @@
             android:textSize="@dimen/size_18sp" />
 
         <TextView
-            android:gravity="center"
             android:id="@+id/date_add_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/size_18sp" />
 
@@ -55,11 +55,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingLeft="@dimen/size_10"
-            android:paddingStart="@dimen/size_10"
-            android:paddingRight="@dimen/size_10"
-            android:paddingEnd="@dimen/size_10"
             android:gravity="end|center_vertical"
+            android:paddingEnd="@dimen/size_10"
+            android:paddingLeft="@dimen/size_10"
+            android:paddingRight="@dimen/size_10"
+            android:paddingStart="@dimen/size_10"
             android:text="@string/ic_calendar_message"
             android:textColor="@color/icon_heart"
             android:textSize="@dimen/size_24sp" />

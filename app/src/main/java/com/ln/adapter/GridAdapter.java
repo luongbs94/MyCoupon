@@ -38,8 +38,9 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
         String strImage = mListImages.get(position);
         if (strImage != null) {
-            Glide.with(mContext).load(strImage).
-                    centerCrop()
+            Glide.with(mContext)
+                    .load(strImage)
+                    .centerCrop()
                     .fitCenter()
                     .into(holder.imageView);
         }

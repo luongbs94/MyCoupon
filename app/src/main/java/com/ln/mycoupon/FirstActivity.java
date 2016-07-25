@@ -221,7 +221,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void getCouponTemplateOfShop(String idCompany) {
 
-        //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
         Call<List<CouponTemplate>> couponShop = mCouponAPI.getCouponTemplates("abc", idCompany);
 
         couponShop.enqueue(new Callback<List<CouponTemplate>>() {

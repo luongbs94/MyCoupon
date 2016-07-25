@@ -26,6 +26,7 @@ import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +34,7 @@ import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 6/7/16.
- * <p/>
+ * <p>
  * coupon
  */
 public class CouponCompanyOfClientActivity extends AppCompatActivity {
@@ -60,9 +61,6 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
         mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initCollapsingToolbar();
@@ -72,15 +70,15 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
 
         if (mCompanyOfCustomer.getLogo() != null) {
-            String strLogo = mCompanyOfCustomer.getLogo();
-            strLogo = strLogo.substring(0, 4);
-            if (strLogo.equals(MainApplication.LOGO)) {
-                Glide.with(this).load(MainApplication.convertToBytes(mCompanyOfCustomer.getLogo()))
+            if (mCompanyOfCustomer.getLogo().contains(MainApplication.LOGO)) {
+                Glide.with(this)
+                        .load(MainApplication.convertToBytes(mCompanyOfCustomer.getLogo()))
                         .asBitmap()
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(mImageView);
             } else {
-                Glide.with(this).load(mCompanyOfCustomer.getLogo())
+                Picasso.with(this)
+                        .load(mCompanyOfCustomer.getLogo())
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(mImageView);
             }
@@ -175,11 +173,13 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.body() == MainApplication.SUCCESS) {
                     MainApplication.mRealmController.deleteCoupon(id);
-                    getShowMessages(getString(R.string.delete_coupon_fail));
+                    getShowMessages(getString(R.string.delete_coupon_success));
                     adapter.notifyDataSetChanged();
                 } else {
                     getShowMessages(getString(R.string.delete_coupon_fail));
                 }
+
+                Log.d(TAG, response.body() + "");
             }
 
             @Override

@@ -6,16 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.datetimepicker.date.DatePickerDialog;
 import com.google.gson.Gson;
 import com.ln.adapter.CreateCouponAdapter;
 import com.ln.api.LoveCouponAPI;
@@ -24,18 +19,16 @@ import com.ln.model.Company;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CreateFragment extends Fragment  {
+public class CreateFragment extends Fragment {
 
     private LoveCouponAPI mApiServices;
 
@@ -51,7 +44,7 @@ public class CreateFragment extends Fragment  {
     private Calendar calendar;
 
     private SwipeRefreshLayout swipeContainer;
-    TextView textView;
+    private TextView textView;
 
 
     public CreateFragment() {
@@ -140,8 +133,7 @@ public class CreateFragment extends Fragment  {
     }
 
 
-
-    public void getData(long time){
+    public void getData(long time) {
         utc1 = time + "";
         utc2 = (time + 24 * 3600 * 1000) + "";
         getCreateCoupon();

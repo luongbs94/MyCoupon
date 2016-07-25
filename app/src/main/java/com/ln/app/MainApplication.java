@@ -11,11 +11,9 @@ import android.widget.ImageView;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.model.CityOfUser;
-import com.ln.model.CompanyOfCustomer;
 import com.ln.realm.RealmController;
 
 import java.io.ByteArrayOutputStream;
@@ -240,21 +238,6 @@ public class MainApplication extends MultiDexApplication {
         editor.commit();
     }
 
-
-    public static String getCompanyName(String company_id) {
-        for (int i = 0; i < SaveData.listCompanyCustomer.size(); i++) {
-
-            CompanyOfCustomer company1 = SaveData.listCompanyCustomer.get(i);
-
-            Log.d("Coupon", company1.getCompany_id());
-            if (company_id.equals(company1.getCompany_id())) {
-                return company1.getName();
-            }
-        }
-
-        return "No company found";
-
-    }
 
     public static LoveCouponAPI getAPI() {
         return apiService;
