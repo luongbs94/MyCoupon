@@ -26,18 +26,18 @@ public class NewsOfCompany extends RealmObject {
         this.message_id = message_id;
     }
 
-    public NewsOfCompany(String message_id, String content, long created_date,
-                         String company_id, long last_date, String title,
-                         String link, String images_link) {
-        this.message_id = message_id;
-        this.content = content;
-        this.created_date = created_date;
-        this.company_id = company_id;
-        this.last_date = last_date;
-        this.title = title;
-        this.link = link;
-        this.images_link = images_link;
-    }
+//    public NewsOfCompany(String message_id, String content, long created_date,
+//                         String company_id, long last_date, String title,
+//                         String link, String images_link) {
+//        this.message_id = message_id;
+//        this.content = content;
+//        this.created_date = created_date;
+//        this.company_id = company_id;
+//        this.last_date = last_date;
+//        this.title = title;
+//        this.link = link;
+//        this.images_link = images_link;
+//    }
 
     public String getMessage_id() {
         return message_id;
@@ -89,4 +89,19 @@ public class NewsOfCompany extends RealmObject {
         this.images_link = images_link;
     }
 
+    public void setLast_date(long last_date) {
+        this.last_date = last_date;
+    }
+
+    public void setCreated_date(long created_date) {
+        this.created_date = created_date;
+    }
+
+    public long getCreated_date() {
+        return created_date;
+    }
+
+    public long getLast_date() {
+        return last_date;
+    }
 }

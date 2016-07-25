@@ -53,7 +53,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void initViews() {
 
-        setTitle(R.string.banla);
         findViewById(R.id.shop).setOnClickListener(this);
         findViewById(R.id.customer).setOnClickListener(this);
     }
@@ -164,7 +163,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteListNewsOfCustomer();
+//                    mRealmController.deleteListNewsOfCustomer();
                     mRealmController.addListNewsOfCustomer(response.body());
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 } else {

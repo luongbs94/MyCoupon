@@ -25,7 +25,6 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,10 +32,10 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.mycoupon.R;
-import com.ln.realm.RealmController;
 import com.ln.views.CircleImageView;
 
 import java.io.IOException;
@@ -54,9 +53,8 @@ public class SettingFragment extends Fragment implements
         CompoundButton.OnCheckedChangeListener {
 
     private LoveCouponAPI mLoveCouponAPI;
-    private RealmController mRealmController;
 
-    private String TAG = getClass().getSimpleName();
+    private final String TAG = getClass().getSimpleName();
 
     private TextInputLayout mInputUser1, mInputUser2, mInputPassword1, mInputPassword2;
     private EditText mEdtNameCompany, mEdtAddress, mEdtPassword1, mEdtUser2, mEdtPassword2;
@@ -66,7 +64,6 @@ public class SettingFragment extends Fragment implements
     private CircleImageView mImgLogo;
     private TextView mTxtNameCompany, mTxtAddress;
     private CheckBox mChbShowPass;
-    private LinearLayout mLinearLayout;
     private FloatingActionButton mFabDoneSave;
 
     private static final int SELECT_PICTURE = 1;
@@ -81,7 +78,6 @@ public class SettingFragment extends Fragment implements
         super.onCreate(savedInstanceState);
 
         mLoveCouponAPI = MainApplication.getAPI();
-        mRealmController = MainApplication.mRealmController;
 
         String strCompany = MainApplication
                 .getPreferences()
@@ -115,10 +111,10 @@ public class SettingFragment extends Fragment implements
 
         mFabDoneSave = (FloatingActionButton) v.findViewById(R.id.fab_done);
         mChbShowPass = (CheckBox) v.findViewById(R.id.chb_show_password);
-        mLinearLayout = (LinearLayout) v.findViewById(R.id.linear_information);
+
 
         if (!MainApplication.sIsAdmin) {
-            mLinearLayout.setVisibility(View.GONE);
+            (v.findViewById(R.id.linear_information)).setVisibility(View.GONE);
             mFabDoneSave.setVisibility(View.GONE);
         }
 
@@ -245,35 +241,6 @@ public class SettingFragment extends Fragment implements
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-
-    private int isCheckAccountExists(String company_id, String username) {
-
-//        Call<Integer> call = mLoveCouponAPI.isExists(company_id, username);
-
-//        try {
-//            return call.execute().body();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return 0;
-        final int[] isResult = new int[1];
-        Call<Integer> call = mLoveCouponAPI.isExists(company_id, username);
-        call.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                isResult[0] = response.body();
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                Log.d(TAG, "isCheckAccountExists " + t.toString());
-                isResult[0] = 0;
-            }
-        });
-        return isResult[0];
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -305,75 +272,79 @@ public class SettingFragment extends Fragment implements
 
     private void onClickSaveCompany() {
 
+        boolean isNetowork = ConnectivityReceiver.isConnect();
+        if (isNetowork) {
+            showProgressDialog();
+            final String name = mEdtNameCompany.getText().toString();
+            final String address = mEdtAddress.getText().toString();
 
-        showProgressDialog();
-        final String name = mEdtNameCompany.getText().toString();
-        final String address = mEdtNameCompany.getText().toString();
-
-        String logo = MainApplication.convertToBitmap(mImgLogo);
-        logo = MainApplication.FIRST_BASE64 + logo;
+            String logo = MainApplication.convertToBitmap(mImgLogo);
+            logo = MainApplication.FIRST_BASE64 + logo;
 
 
+            Log.d(TAG, "Logo : " + logo);
+            final String finalLogo = logo;
+            final String user1 = mEdtUser1.getText().toString().trim();
+            final String user2 = mEdtUser2.getText().toString().trim();
+            company.setName(name);
+            company.setAddress(address);
+            company.setLogo(logo);
+            company.setUser1(user1);
+            company.setUser2(user2);
 
-        Log.d(TAG, "Logo : " + logo);
-        final String finalLogo = logo;
-        final String user1 = mEdtUser1.getText().toString().trim();
-        final String user2 = mEdtUser2.getText().toString().trim();
-        company.setName(name);
-        company.setAddress(address);
-        company.setLogo(logo);
-        company.setUser1(user1);
-        company.setUser2(user2);
+            Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
+            call.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
 
-        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
-        call.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.body() == 1) {
+                        mInputUser1.setErrorEnabled(false);
 
-                if (response.body() == 1) {
-                    mInputUser1.setErrorEnabled(false);
+                        Call<Integer> call2 = mLoveCouponAPI.isExists(company.getCompany_id(), user2);
+                        call2.enqueue(new Callback<Integer>() {
+                            @Override
+                            public void onResponse(Call<Integer> call, Response<Integer> response) {
 
-                    Call<Integer> call2 = mLoveCouponAPI.isExists(company.getCompany_id(), user2);
-                    call2.enqueue(new Callback<Integer>() {
-                        @Override
-                        public void onResponse(Call<Integer> call, Response<Integer> response) {
+                                if (response.body() == 1) {
+                                    mInputUser2.setErrorEnabled(false);
+                                    createSave(name, address, finalLogo, company);
 
-                            if (response.body() == 1) {
-                                mInputUser2.setErrorEnabled(false);
-                                createSave(name, address, finalLogo, company);
+                                } else {
+                                    mInputUser2.setError(getString(R.string.account_exists));
+                                    mInputUser2.setErrorEnabled(true);
+                                    mInputUser2.setError(getString(R.string.account_exists));
+                                    requestFocus(mEdtUser2);
 
-                            } else {
-                                mInputUser2.setError(getString(R.string.account_exists));
-                                mInputUser2.setErrorEnabled(true);
-                                mInputUser2.setError(getString(R.string.account_exists));
-                                requestFocus(mEdtUser2);
-
-                                hideProgressDialog();
+                                    hideProgressDialog();
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<Integer> call, Throwable t) {
-                            Log.d(TAG, "isCheckAccountExists " + t.toString());
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<Integer> call, Throwable t) {
+                                Log.d(TAG, "isCheckAccountExists " + t.toString());
+                            }
+                        });
 
 
-                } else {
-                    mInputUser1.setError(getString(R.string.account_exists));
-                    mInputUser1.setErrorEnabled(true);
-                    mInputUser1.setError(getString(R.string.account_exists));
-                    requestFocus(mEdtUser1);
+                    } else {
+                        mInputUser1.setError(getString(R.string.account_exists));
+                        mInputUser1.setErrorEnabled(true);
+                        mInputUser1.setError(getString(R.string.account_exists));
+                        requestFocus(mEdtUser1);
 
-                    hideProgressDialog();
+                        hideProgressDialog();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                Log.d(TAG, "isCheckAccountExists " + t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
+                    Log.d(TAG, "isCheckAccountExists " + t.toString());
+                }
+            });
+        } else {
+            getShowMessage(getString(R.string.check_network));
+        }
+
     }
 
     private void createSave(final String name, final String address,
@@ -432,7 +403,7 @@ public class SettingFragment extends Fragment implements
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
+            mProgressDialog.setMessage(getString(R.string.save_running));
         }
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();

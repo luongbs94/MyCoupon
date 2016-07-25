@@ -2,6 +2,7 @@ package com.ln.mycoupon.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -9,15 +10,26 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.ln.adapter.CouponTemplateClientAdapter;
 import com.ln.app.MainApplication;
+import com.ln.interfaces.OnClickRecyclerView;
+import com.ln.interfaces.RecyclerViewListener;
 import com.ln.model.CompanyOfCustomer;
+import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by luongnguyen on 6/7/16.
@@ -28,6 +40,8 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getSimpleName();
     private RealmController mRealmController;
+    private CompanyOfCustomer mCompanyOfCustomer;
+    private CouponTemplateClientAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +49,6 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_coupon_company_client);
 
         mRealmController = MainApplication.mRealmController;
-
         initViews();
     }
 
@@ -45,18 +58,12 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         String idCompany = bundle.getString(MainApplication.ID_COMPANY);
 
-
-        CompanyOfCustomer mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
+        mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
-        try{
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        }catch (Exception e){
-
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initCollapsingToolbar();
 
@@ -78,7 +85,6 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
                         .into(mImageView);
             }
 
-
             Log.d(TAG, mCompanyOfCustomer.getLogo());
         }
 
@@ -89,8 +95,32 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         RecyclerView mRecCoupon = (RecyclerView) findViewById(R.id.recycler_view);
         mRecCoupon.setHasFixedSize(true);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(this));
-
-        CouponTemplateClientAdapter adapter = new CouponTemplateClientAdapter(this, mCompanyOfCustomer);
+        mRecCoupon.addOnItemTouchListener(new RecyclerViewListener(this, new OnClickRecyclerView() {
+            @Override
+            public void onClick(View view, final int position) {
+                new MaterialDialog
+                        .Builder(CouponCompanyOfClientActivity.this)
+                        .content(R.string.delete_coupon)
+                        .positiveText(R.string.agree)
+                        .negativeText(R.string.disagree)
+                        .positiveColor(getResources().getColor(R.color.title_bg))
+                        .negativeColor(getResources().getColor(R.color.title_bg))
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                deleteCoupon(position);
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        }));
+        adapter = new CouponTemplateClientAdapter(this, mCompanyOfCustomer);
         mRecCoupon.setAdapter(adapter);
     }
 
@@ -129,5 +159,37 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void deleteCoupon(int position) {
+        final String id = mCompanyOfCustomer.getCoupon().get(position).getCoupon_id();
+        Coupon coupon = new Coupon();
+        coupon.setCoupon_id(id);
+
+        Call<Integer> deleteCoupon = MainApplication
+                .getAPI()
+                .useCoupon(coupon);
+
+        deleteCoupon.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.body() == MainApplication.SUCCESS) {
+                    MainApplication.mRealmController.deleteCoupon(id);
+                    getShowMessages(getString(R.string.delete_coupon_fail));
+                    adapter.notifyDataSetChanged();
+                } else {
+                    getShowMessages(getString(R.string.delete_coupon_fail));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d(TAG, "deleteCoupon " + t.toString());
+            }
+        });
+    }
+
+    private void getShowMessages(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 }

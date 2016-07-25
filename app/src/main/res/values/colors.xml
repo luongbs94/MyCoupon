@@ -17,10 +17,12 @@
     <color name="deep_steal_700">#ff439891</color>
     <color name="text_title">#878787</color>
     <color name="icon_heart">#808080</color>
+    <color name="color_line">#AFB4B6</color>
     <color name="heart_color">#F44336</color>
     <color name="color_text_title">#808080</color>
     <color name="color_text_description">#5C5C5C</color>
     <color name="color_prices">#F27167</color>
+    <color name="color_network">#FFEB3B</color>
 
 
 </resources>

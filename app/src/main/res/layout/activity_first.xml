@@ -1,44 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content_first"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/ic_love_coupon"
-    android:orientation="horizontal"
-    android:weightSum="7">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_love_coupon" />
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_weight="5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/shop"
+        <TextView
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/btn_login"
-            android:text="@string/shop"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:layout_height="@dimen/size_56"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="@string/you_are"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/size_20sp">
 
-        <Button
-            android:id="@+id/customer"
+        </TextView>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/btn_login"
-            android:text="@string/customer"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="7">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_weight="5"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/shop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_login"
+                    android:text="@string/shop"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/customer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_login"
+                    android:text="@string/customer"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>

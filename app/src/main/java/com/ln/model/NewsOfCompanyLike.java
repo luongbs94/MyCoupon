@@ -10,7 +10,7 @@ public class NewsOfCompanyLike {
     private String content;
     private long created_date;
     private String company_id;
-    //    private Date last_date;
+    private long last_date;
     private String title;
     private String link;
     private String images_link;
@@ -27,6 +27,7 @@ public class NewsOfCompanyLike {
         this.title = news.getTitle();
         this.link = news.getLink();
         this.images_link = news.getImages_link();
+        this.last_date = news.getLast_date();
     }
 
     public String getMessage_id() {
@@ -91,5 +92,9 @@ public class NewsOfCompanyLike {
 
     public void setLike(boolean like) {
         isLike = like;
+    }
+
+    public long getLast_date() {
+        return last_date;
     }
 }

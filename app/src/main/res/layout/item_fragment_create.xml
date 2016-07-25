@@ -52,7 +52,7 @@
             android:layout_gravity="start"
             android:text="@string/price"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/size_30sp" />
+            android:textSize="@dimen/size_24sp" />
 
         <TextView
             android:id="@+id/txt_date_coupon"

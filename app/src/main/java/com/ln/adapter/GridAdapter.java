@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.ln.app.MainApplication;
@@ -35,7 +34,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(GridAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final GridAdapter.ViewHolder holder, int position) {
 
         String strImage = mListImages.get(position);
         if (strImage != null) {
@@ -44,19 +43,16 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                     .fitCenter()
                     .into(holder.imageView);
         }
-        final int positionImage = position;
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, PreviewImagesActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt(MainApplication.POSITION, positionImage); // vi tri hien thi anh
+                bundle.putInt(MainApplication.POSITION, holder.getAdapterPosition()); // vi tri hien thi anh
                 bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) mListImages); // list anh
                 intent.putExtra(MainApplication.DATA, bundle);
-                Toast.makeText(mContext, "Log toast" + positionImage, Toast.LENGTH_SHORT).show();
                 mContext.startActivity(intent);
-
             }
         });
     }

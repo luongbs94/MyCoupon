@@ -65,6 +65,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String LOGO = "data";
     public static final int TIME_SLEEP = 2000;
     public static final int START_QRCODE = 111;
+    public static final String CONTENT_COUPON = "CONTENT_COUPON";
 
     private static MainApplication mInstances;
 
@@ -211,7 +212,7 @@ public class MainApplication extends MultiDexApplication {
 
         if (isEnglish) {
             Log.d("MyApplication", isEnglish + "");
-        }else {
+        } else {
             Log.d("MyApplication", isEnglish + "");
         }
 
@@ -318,11 +319,9 @@ public class MainApplication extends MultiDexApplication {
         return sharedPreferences;
     }
 
-    public static long dayLeft(Date created_date, int duration) {
-        Calendar last_cal = Calendar.getInstance();
-        last_cal.setTime(created_date);
-        last_cal.add(Calendar.DAY_OF_YEAR, duration);
-        Date last_date = last_cal.getTime();
+    public static long dayLeft(long created_date, int duration) {
+
+        Date last_date = convertDate(created_date, duration);
 
         long diff = last_date.getTime() - new Date().getTime();
         long dayLeft = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
@@ -332,6 +331,15 @@ public class MainApplication extends MultiDexApplication {
         }
 
         return dayLeft;
+    }
+
+    public static Date convertDate(long created_date, int duration) {
+
+        Date date = new Date(created_date);
+        Calendar last_cal = Calendar.getInstance();
+        last_cal.setTime(date);
+        last_cal.add(Calendar.DAY_OF_YEAR, duration);
+        return last_cal.getTime();
     }
 
     public static boolean getLanguage() {

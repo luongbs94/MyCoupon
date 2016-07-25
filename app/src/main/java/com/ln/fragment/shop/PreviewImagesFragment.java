@@ -71,7 +71,6 @@ public class PreviewImagesFragment extends Fragment {
 
         setHasOptionsMenu(false);
 
-
         return mView;
     }
 

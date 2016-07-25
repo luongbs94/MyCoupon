@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -59,14 +58,9 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final int positionNews = position;
-        final Message item = mListNews.get(positionNews);
-
-        String strAccount = MainApplication.getPreferences()
-                .getString(MainApplication.ACCOUNT_CUSTOMER, "");
-        final String idUser = new Gson().fromJson(strAccount, AccountOflUser.class).getId();
+        final Message item = mListNews.get(position);
 
         if (item.getLogo_link() != null) {
             Glide.with(mContext).load(item.getLogo_link())
@@ -99,7 +93,7 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
         if (MainApplication.getLanguage()) {
             fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         } else {
-            fmt = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+            fmt = new SimpleDateFormat("dd MM, yyyy", Locale.getDefault());
 
         }
 
@@ -130,75 +124,6 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
         }
 
-        holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (item.isLike()) {
-                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
-                    holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
-                    holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
-//
-                    item.setLike(false);
-                    MainApplication.mRealmController.deleteLikeNewsById(item.getMessage_id());
-
-//                    MainApplication.mRealmController.deleteNewsCustomerLike(news.getMessage_id());
-
-
-                } else {
-                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-                    holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
-                    holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-
-                    item.setLike(true);
-                    MainApplication.mRealmController.addLikeNewsCustomer(item.getMessage_id(), mType, idUser);
-                }
-            }
-        });
-//
-        holder.mLinearShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Uri uri = Uri.parse("http://188.166.179.187:3001/upload/ImageSelector_20160616_223027_19062016_010851.png");
-                ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON))
-                        .setContentTitle(item.getTitle())
-                        .setContentDescription(item.getContent())
-                        .setImageUrl(uri)
-                        .build();
-
-                mShareDialog.show(content);
-            }
-        });
-
-        holder.mLinearDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                MaterialDialog.Builder dialog = new MaterialDialog.Builder(mContext);
-                dialog.content(R.string.delete_news)
-                        .positiveText(R.string.agree)
-                        .negativeText(R.string.disagree)
-                        .positiveColor(mContext.getResources().getColor(R.color.title_bg))
-                        .negativeColor(mContext.getResources().getColor(R.color.title_bg))
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                MainApplication.mRealmController.addDeleteNewsByIdNews(item.getMessage_id(), idUser);
-                                mListNews.remove(positionNews);
-                                notifyDataSetChanged();
-                            }
-                        })
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .show();
-            }
-        });
-
     }
 
     @Override
@@ -207,15 +132,15 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView mImgLogo;
-        private TextView mTxtTile, mTxtLink, mTxtCompanyName, textTime;
+        private TextView mTxtTile, mTxtLink, mTxtCompanyName;
         private IconTextView mImgLike, mImageBookmarks;
         private RecyclerView mRecyclerView;
 
         private MyTextView mTxtTime, mTxtContent;
-        private LinearLayout mLinearLike, mLinearShare, mLinearDelete;
+
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -231,13 +156,103 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
             mTxtLink = (TextView) itemView.findViewById(R.id.txt_link_news);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
 
-            LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
-            mRecyclerView.setLayoutManager(manager);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,
+                    LinearLayoutManager.HORIZONTAL, false));
 
-            mLinearLike = (LinearLayout) itemView.findViewById(R.id.linear_like);
-            mLinearShare = (LinearLayout) itemView.findViewById(R.id.linear_share);
-            mLinearDelete = (LinearLayout) itemView.findViewById(R.id.linear_delete);
-            textTime = (TextView) itemView.findViewById(R.id.txt_title_news);
+            (itemView.findViewById(R.id.linear_like)).setOnClickListener(this);
+            (itemView.findViewById(R.id.linear_share)).setOnClickListener(this);
+            (itemView.findViewById(R.id.linear_delete)).setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.linear_like:
+                    onClickLike(this.getAdapterPosition(), this);
+                    break;
+                case R.id.linear_share:
+                    onClickShared(this.getAdapterPosition());
+                    break;
+                case R.id.linear_delete:
+                    onClickDelete(this.getAdapterPosition());
+                    break;
+            }
+        }
+    }
+
+    public void onClickLike(int position, ViewHolder holder) {
+
+        Message item = mListNews.get(position);
+
+        String strAccount = MainApplication.getPreferences()
+                .getString(MainApplication.ACCOUNT_CUSTOMER, "");
+        final String idUser = new Gson()
+                .fromJson(strAccount, AccountOflUser.class)
+                .getId();
+
+        if (item.isLike()) {
+            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+            holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
+            holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+            item.setLike(false);
+            MainApplication.mRealmController.deleteLikeNewsById(item.getMessage_id());
+
+        } else {
+            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+            holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
+            holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+
+            item.setLike(true);
+            MainApplication.mRealmController.addLikeNewsCustomer(item.getMessage_id(), mType, idUser);
+        }
+    }
+
+    public void onClickShared(int position) {
+        Message item = mListNews.get(position);
+        String link = null;
+        if (item.getLink() != null) {
+            link = item.getLink();
+        }
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse(link))
+                .setContentTitle(item.getTitle())
+                .setContentDescription(item.getContent())
+                .setImageUrl(Uri.parse(item.getLogo_link()))
+                .build();
+
+        mShareDialog.show(content);
+    }
+
+    public void onClickDelete(final int position) {
+
+        final Message item = mListNews.get(position);
+
+        String strAccount = MainApplication.getPreferences()
+                .getString(MainApplication.ACCOUNT_CUSTOMER, "");
+        final String idUser = new Gson()
+                .fromJson(strAccount, AccountOflUser.class)
+                .getId();
+
+        new MaterialDialog.Builder(mContext)
+                .content(R.string.delete_news)
+                .positiveText(R.string.agree)
+                .negativeText(R.string.disagree)
+                .positiveColor(mContext.getResources().getColor(R.color.title_bg))
+                .negativeColor(mContext.getResources().getColor(R.color.title_bg))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        MainApplication.mRealmController.addDeleteNewsByIdNews(item.getMessage_id(), idUser);
+                        mListNews.remove(position);
+                        notifyDataSetChanged();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 }

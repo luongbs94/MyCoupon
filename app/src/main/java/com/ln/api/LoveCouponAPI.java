@@ -85,7 +85,7 @@ public interface LoveCouponAPI {
     Call<List<User>> updateUserToken(@Query("user_id") String user_id, @Query("device_token") String device_token, @Query("device_os") String device_os);
 
     @POST("/useCoupon")
-    Call<Coupon> useCoupon(@Body Coupon template);
+    Call<Integer> useCoupon(@Body Coupon coupon);
 
     @POST("/updateCompany")
     Call<Integer> updateCompany(@Body Company template);

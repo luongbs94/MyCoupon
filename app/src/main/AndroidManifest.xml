@@ -26,8 +26,12 @@
         <activity
             android:name=".FirstActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".shop.ShopMainActivity"
@@ -69,6 +73,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <service android:name="com.ln.firebase.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -128,11 +133,7 @@
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/AppTheme.NoActionBar.Theme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

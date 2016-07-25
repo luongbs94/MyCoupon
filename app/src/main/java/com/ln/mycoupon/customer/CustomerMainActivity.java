@@ -2,7 +2,6 @@ package com.ln.mycoupon.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,11 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
@@ -30,20 +27,19 @@ import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.customer.MoreNewsFragment;
 import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.shop.ShareFragment;
-import com.ln.interfaces.OnClickLogoutGoogle;
 import com.ln.model.AccountOflUser;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
 
 public class CustomerMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ConnectivityReceiverListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ConnectivityReceiverListener {
 
     private static String sTitle;
 
     private FloatingActionButton mFabButton;
     private DrawerLayout mDrawerLayout;
-    public static OnClickLogoutGoogle mOnClickLogoutGoogle;
     private TextView mTxtConnectNetwork;
 
     @Override
@@ -63,8 +59,12 @@ public class CustomerMainActivity extends AppCompatActivity
         mFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CustomerMainActivity.this, QRCodeActivity.class);
-                startActivityForResult(intent, MainApplication.START_QRCODE);
+                if (ConnectivityReceiver.isConnect()) {
+                    Intent intent = new Intent(CustomerMainActivity.this, QRCodeActivity.class);
+                    startActivityForResult(intent, MainApplication.START_QRCODE);
+                } else {
+                    getShowMessages(getString(R.string.check_network));
+                }
 
             }
         });
@@ -100,10 +100,11 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         }
 
-
-        mTxtConnectNetwork = (TextView) findViewById(R.id.txt_network);
+        mTxtConnectNetwork = (TextView) findViewById(R.id.text_network);
         checkNetwork();
     }
+
+    private boolean isClose;
 
     @Override
     public void onBackPressed() {
@@ -111,27 +112,13 @@ public class CustomerMainActivity extends AppCompatActivity
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
-            dialog.content(R.string.exit_alert)
-                    .positiveText(R.string.agree)
-                    .negativeText(R.string.disagree)
-                    .positiveColor(getResources().getColor(R.color.title_bg))
-                    .negativeColor(getResources().getColor(R.color.title_bg))
-                    .show();
-
-            dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    finish();
-                }
-            });
-
-            dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    dialog.dismiss();
-                }
-            });
+            if (!isClose) {
+                getShowMessages(getString(R.string.press_back_again));
+                isClose = true;
+            } else if (isClose) {
+                super.onBackPressed();
+                isClose = false;
+            }
         }
     }
 
@@ -162,12 +149,6 @@ public class CustomerMainActivity extends AppCompatActivity
             case R.id.logout:
             default:
 
-                if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_FACEBOOK) {
-                    LoginManager.getInstance().logOut();
-                } else if (MainApplication.TYPE_LOGIN_CUSTOMER == MainApplication.TYPE_GOOGLE) {
-
-                }
-
 //                MainApplication.sDetailUser = null;
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_CLIENT, false);
                 MainApplication.editor.commit();
@@ -179,7 +160,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
         if (id == R.id.nav_coupon) {
             mFabButton.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_new || id == R.id.menu_share || id == R.id.logout) {
+        } else {
             mFabButton.setVisibility(View.GONE);
         }
         startFragment(fragment);
@@ -244,5 +225,9 @@ public class CustomerMainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         MainApplication.getInstance().setConnectivityListener(this);
+    }
+
+    private void getShowMessages(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

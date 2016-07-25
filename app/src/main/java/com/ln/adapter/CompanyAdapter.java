@@ -5,13 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
-import com.ln.views.CircleImageView;
 
 import java.util.List;
 
@@ -45,7 +45,8 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
             holder.companyAddress.setText(item.getAddress());
 
             if (item.getLogo() != null) {
-                Glide.with(mContext).load(MainApplication.convertToBytes(item.getLogo()))
+                Glide.with(mContext)
+                        .load(MainApplication.convertToBytes(item.getLogo()))
                         .asBitmap()
                         .centerCrop()
                         .placeholder(R.drawable.ic_logo_blank)
@@ -60,13 +61,13 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private CircleImageView mImgLogo;
+        private ImageView mImgLogo;
         private TextView companyName, companyAddress;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            mImgLogo = (CircleImageView) itemView.findViewById(R.id.app_icon);
+            mImgLogo = (ImageView) itemView.findViewById(R.id.app_icon);
             companyName = (TextView) itemView.findViewById(R.id.company_name);
             companyAddress = (TextView) itemView.findViewById(R.id.company_address);
         }

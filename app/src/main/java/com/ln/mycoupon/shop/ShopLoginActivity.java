@@ -31,6 +31,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
@@ -288,7 +289,15 @@ public class ShopLoginActivity extends AppCompatActivity
             writeSharePreferences(MainApplication.TOKEN_SHOP, account.getIdToken());
 
             getCompanyProfileSocial(account.getId());
-            onClickLogoutGoogle();
+
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+
+                        @Override
+                        public void onResult(@NonNull Status status) {
+                            Log.d(TAG, "Logout Google ");
+                        }
+                    });
             getShowMessages(getString(R.string.login_success));
         }
     }
@@ -298,29 +307,29 @@ public class ShopLoginActivity extends AppCompatActivity
         Log.d(TAG, "onConnectionListener + " + connectionResult);
     }
 
-    public void onClickLogoutGoogle() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        Log.d(TAG, "Logout Google ");
-                    }
-                });
-    }
-
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                onClickLogin();
+                if (ConnectivityReceiver.isConnect()) {
+                    onClickLogin();
+                } else {
+                    getShowMessages(getString(R.string.check_network));
+                }
                 break;
             case R.id.btn_login_facebook:
-                onClickLoginFacebook();
+                if (ConnectivityReceiver.isConnect()) {
+                    onClickLoginFacebook();
+                } else {
+                    getShowMessages(getString(R.string.check_network));
+                }
                 break;
             case R.id.btn_google:
-                onClickGooglePlus();
+                if (ConnectivityReceiver.isConnect()) {
+                    onClickGooglePlus();
+                } else {
+                    getShowMessages(getString(R.string.check_network));
+                }
                 break;
             default:
                 break;
@@ -401,7 +410,7 @@ public class ShopLoginActivity extends AppCompatActivity
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
+            mProgressDialog.setMessage(getString(R.string.login));
         }
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +57,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(mContext)
+        return new ViewHolder(LayoutInflater
+                .from(mContext)
                 .inflate(R.layout.item_news, parent, false));
     }
 
@@ -88,18 +88,14 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mTxtLink.setText(item.getLink());
 
 
-        SimpleDateFormat fmt;
+        SimpleDateFormat fmt = new SimpleDateFormat("dd MM, yyyy", Locale.getDefault());
         if (MainApplication.getLanguage()) {
             fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-        } else {
-            fmt = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
-
         }
 
-        String date = fmt.format(item.getCreated_date());
+        holder.mTxtTime.setText(fmt.format(item.getCreated_date()));
 
-        holder.mTxtTime.setText(date);
-
+        holder.mRecyclerView.setVisibility(View.GONE);
         String strImages = item.getImages_link();
         if (strImages != null) {
             List<String> listImages = new ArrayList<>();
@@ -110,9 +106,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             holder.mRecyclerView.setAdapter(gridAdapter);
             holder.mRecyclerView.setVisibility(View.VISIBLE);
 
-
-        } else {
-            holder.mRecyclerView.setVisibility(View.GONE);
 
         }
 
@@ -126,86 +119,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
         }
 
-
-        holder.mLinearLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (item.isLike()) {
-                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
-                    holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
-                    holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
-                    item.setLike(false);
-                    MainApplication.mRealmController.deleteShopLikeNewsByIdNews(item.getMessage_id());
-
-                } else {
-                    holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-                    holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
-                    holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
-                    item.setLike(true);
-                    MainApplication.mRealmController.addShopLikeNewsByIdNews(item.getMessage_id(), company.getCompany_id());
-                }
-            }
-        });
-
-        holder.mLinearShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String logoLink;
-                if (company != null && company.getLogo_link() != null) {
-                    logoLink = company.getLogo_link();
-                } else {
-                    logoLink = "http://api.lovecoupon.com:3000/logo/7.jpg";
-                }
-
-
-                Uri uri = Uri.parse(logoLink);
-                ShareLinkContent content;
-                if (item.getLink() != null) {
-                    content = new ShareLinkContent.Builder()
-                            .setContentUrl(Uri.parse(item.getLink()))
-                            .setContentTitle(item.getTitle())
-                            .setContentDescription(item.getContent())
-                            .setImageUrl(uri)
-                            .build();
-                } else {
-                    content = new ShareLinkContent.Builder()
-                            .setContentUrl(null)
-                            .setContentTitle(item.getTitle())
-                            .setContentDescription(item.getContent())
-                            .setImageUrl(uri)
-                            .build();
-                }
-                mShareDialog.show(content);
-            }
-        });
-
-        holder.mLinearDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                MaterialDialog.Builder dialog = new MaterialDialog.Builder(mContext);
-                dialog.content(R.string.delete_news)
-                        .positiveText(R.string.agree)
-                        .negativeText(R.string.disagree)
-                        .positiveColor(mContext.getResources().getColor(R.color.title_bg))
-                        .negativeColor(mContext.getResources().getColor(R.color.title_bg))
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                deleteNewsOfCompany(idNewsOfCompany, positionNews);
-
-                            }
-                        })
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .show();
-            }
-        });
     }
 
     @Override
@@ -213,7 +126,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         return mListNews.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView mImgLogo;
         private IconTextView mImgLike, mImageBookmarks;
@@ -223,8 +136,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         private MyTextView mTxtTime, mTxtContent;
         private TextView mTxtCompanyName;
-
-        private LinearLayout mLinearLike, mLinearShare, mLinearDelete;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -243,10 +154,111 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(manager);
 
-            mLinearLike = (LinearLayout) itemView.findViewById(R.id.linear_like);
-            mLinearShare = (LinearLayout) itemView.findViewById(R.id.linear_share);
-            mLinearDelete = (LinearLayout) itemView.findViewById(R.id.linear_delete);
+            (itemView.findViewById(R.id.linear_like)).setOnClickListener(this);
+            (itemView.findViewById(R.id.linear_share)).setOnClickListener(this);
+            (itemView.findViewById(R.id.linear_delete)).setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.linear_like:
+                    onClickLikeNews(this.getAdapterPosition(), this);
+                    break;
+                case R.id.linear_share:
+                    onClickShare(this.getAdapterPosition());
+                    break;
+                case R.id.linear_delete:
+                    onClickDeleteNews(this.getAdapterPosition());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void onClickDeleteNews(final int position) {
+
+        final String idNewsOfCompany = mListNews.get(position).getMessage_id();
+        new MaterialDialog
+                .Builder(mContext)
+                .content(R.string.delete_news)
+                .positiveText(R.string.agree)
+                .negativeText(R.string.disagree)
+                .positiveColor(mContext.getResources().getColor(R.color.title_bg))
+                .negativeColor(mContext.getResources().getColor(R.color.title_bg))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        deleteNewsOfCompany(idNewsOfCompany, position);
+
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    public void onClickLikeNews(int position, ViewHolder holder) {
+
+        NewsOfCompanyLike item = mListNews.get(position);
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        final Company company = new Gson().fromJson(strCompany, Company.class);
+
+
+        if (item.isLike()) {
+            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+            holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
+            holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
+            item.setLike(false);
+            MainApplication.mRealmController.deleteShopLikeNewsByIdNews(item.getMessage_id());
+
+        } else {
+            holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+            holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
+            holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
+            item.setLike(true);
+            MainApplication.mRealmController.addShopLikeNewsByIdNews(item.getMessage_id(), company.getCompany_id());
+        }
+    }
+
+    public void onClickShare(int position) {
+
+        NewsOfCompanyLike item = mListNews.get(position);
+
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        final Company company = new Gson().fromJson(strCompany, Company.class);
+
+        String logoLink;
+        if (company != null && company.getLogo_link() != null) {
+            logoLink = company.getLogo_link();
+        } else {
+            logoLink = "http://api.lovecoupon.com:3000/logo/7.jpg";
+        }
+
+        Uri uri = Uri.parse(logoLink);
+        ShareLinkContent content;
+        if (item.getLink() != null) {
+            content = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(item.getLink()))
+                    .setContentTitle(item.getTitle())
+                    .setContentDescription(item.getContent())
+                    .setImageUrl(uri)
+                    .build();
+        } else {
+            content = new ShareLinkContent.Builder()
+                    .setContentUrl(null)
+                    .setContentTitle(item.getTitle())
+                    .setContentDescription(item.getContent())
+                    .setImageUrl(uri)
+                    .build();
+        }
+        mShareDialog.show(content);
+
     }
 
     private void deleteNewsOfCompany(final String idNews, final int positionNews) {

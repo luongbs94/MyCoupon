@@ -66,9 +66,6 @@ public class NewsOfCustomer extends RealmObject {
         return images_link;
     }
 
-    public void setImages_link(String images_link) {
-        this.images_link = images_link;
-    }
 
     public String getLogo() {
         return logo;
@@ -94,18 +91,12 @@ public class NewsOfCustomer extends RealmObject {
         this.name = name;
     }
 
-
-    public void setNewsOfCustomer(String message_id, String content, String company_id,
-                                  String title, String link, String images_link,
-                                  String logo, String logo_link, String name) {
-        this.message_id = message_id;
-        this.content = content;
-        this.company_id = company_id;
-        this.title = title;
-        this.link = link;
-        this.images_link = images_link;
-        this.logo = logo;
-        this.logo_link = logo_link;
-        this.name = name;
+    public long getCreated_date() {
+        return created_date;
     }
+
+    public long getLast_date() {
+        return last_date;
+    }
+
 }

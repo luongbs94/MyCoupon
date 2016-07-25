@@ -5,18 +5,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.design.widget.Snackbar;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.datetimepicker.date.DatePickerDialog;
 import com.google.gson.Gson;
@@ -34,7 +32,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,18 +56,16 @@ public class AddMessageActivity extends AppCompatActivity
 
     private final String TAG = getClass().getSimpleName();
 
-    private LoveCouponAPI mApiService;
-    private LoveCouponAPI apiService;
-
     private static final int mSelectNumber = 9;
     private static final int mMode = 1;
     private static final boolean isShow = true;
     private static final boolean isPreview = true;
     private static final boolean isCrop = false;
 
+    private LoveCouponAPI mApiService;
+    private LoveCouponAPI apiService;
+
     private MaterialEditText mTxtTitle, mTxtContent, mTxtLink;
-    private CardView addMessage;
-    private TextView mImgSelectImages;
     private RecyclerView mRecyclerViewImages;
 
 
@@ -79,29 +74,19 @@ public class AddMessageActivity extends AppCompatActivity
     private SelectedImageAdapter mSelectedImageAdapter;
 
     private boolean mIsShowRecyclerView;
-
     private String mLinkImageNews;
-
     private ProgressDialog mProgressDialog;
 
-    private Button changeDate;
-
     private TextView lastDate;
-    private Calendar calendar;
-    private DateFormat dateFormat;
 
+    private long mTimeLong;
+    private Calendar mCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_message);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        apiService = MainApplication.getAPI();
-        mApiService = MainApplication.getAPI1();
-
-        dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
 
         initViews();
         addEvents();
@@ -109,18 +94,18 @@ public class AddMessageActivity extends AppCompatActivity
 
     private void initViews() {
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        apiService = MainApplication.getAPI();
+        mApiService = MainApplication.getAPI1();
+
+        mCalendar = Calendar.getInstance();
+
         mTxtTitle = (MaterialEditText) findViewById(R.id.title);
         mTxtContent = (MaterialEditText) findViewById(R.id.content);
         mTxtLink = (MaterialEditText) findViewById(R.id.link);
-        addMessage = (CardView) findViewById(R.id.card_view_add_messages);
-        mImgSelectImages = (TextView) findViewById(R.id.img_selected_images);
-        changeDate = (Button) findViewById(R.id.change_date);
+
         lastDate = (TextView) findViewById(R.id.date_add_message);
-
-        calendar = Calendar.getInstance();
-
-        calendar.add(Calendar.MONTH, 1);
-        lastDate.setText(dateFormat.format(calendar.getTime()));
 
 
         mRecyclerViewImages = (RecyclerView) findViewById(R.id.rec_select_images);
@@ -130,22 +115,27 @@ public class AddMessageActivity extends AppCompatActivity
         mSelectedImageAdapter = new SelectedImageAdapter(this, mListImagesSelected);
         mRecyclerViewImages.setAdapter(mSelectedImageAdapter);
 
-        changeDate.setOnClickListener(this);
     }
 
     @Override
     public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
-        calendar.set(year, monthOfYear, dayOfMonth);
-        lastDate.setText(dateFormat.format(calendar.getTime()));
 
+        mCalendar.set(year, monthOfYear, dayOfMonth);
+        SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+        if (!MainApplication.getLanguage()) {
+            mDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        }
+
+        mTimeLong = mCalendar.getTimeInMillis();
+        lastDate.setText(mDateFormat.format(mTimeLong));
     }
 
 
     private void addEvents() {
-        addMessage.setOnClickListener(this);
-        mImgSelectImages.setOnClickListener(this);
+        findViewById(R.id.text_change_date).setOnClickListener(this);
+        findViewById(R.id.card_view_add_messages).setOnClickListener(this);
+        findViewById(R.id.img_selected_images).setOnClickListener(this);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -184,46 +174,42 @@ public class AddMessageActivity extends AppCompatActivity
         news.setContent(content);
         news.setLink(link);
         news.setTitle(title);
-
+        news.setLast_date(mTimeLong);
+        Log.d(TAG, "Time  = " + mTimeLong);
         news.setCompany_id(idCompany);
 
         if (mLinkImageNews != null) {
             news.setImages_link(mLinkImageNews);
         }
-        //template.created_date= new Date();
-        Log.d("date", calendar.getTime().toString());
-//        template.setLast_date(calendar.getTime());
 
         Call<Integer> addNews = apiService.addMessage(news);
         addNews.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.body() == MainApplication.SUCCESS) {
-                    getSnackBar(getString(R.string.add_message_success));
 
                     MainApplication.mRealmController.addNewsOfCompany(news);
-                    new Thread(new Runnable() {
+                    new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            SystemClock.sleep(1000);
                             setResult(RESULT_OK);
                             hideProgressDialog();
+                            getShowMessages(getString(R.string.add_message_success));
                             finish();
                         }
-                    }).start();
+                    }, MainApplication.TIME_SLEEP);
                 } else {
-                    getSnackBar(getString(R.string.add_message_fail));
+                    getShowMessages(getString(R.string.add_message_fail));
                 }
             }
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
-                getSnackBar(getString(R.string.add_message_fail));
+                getShowMessages(getString(R.string.add_message_fail));
                 Log.d(TAG, "addNews " + t.toString());
             }
         });
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -237,7 +223,7 @@ public class AddMessageActivity extends AppCompatActivity
                     mListImagesSelected.add(itemImage);
                     mIsShowRecyclerView = true;
                 } else {
-                    getSnackBar(getString(R.string.images_chose_is_exists));
+                    getShowMessages(getString(R.string.images_chose_is_exists));
                 }
             }
 
@@ -261,9 +247,9 @@ public class AddMessageActivity extends AppCompatActivity
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setTitle("Đang tạo message");
-            mProgressDialog.setMessage("Running...");
+            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
         }
+        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
     }
 
@@ -282,8 +268,12 @@ public class AddMessageActivity extends AppCompatActivity
             case R.id.img_selected_images:
                 onClickSelectImages();
                 break;
-            case R.id.change_date:
-                DatePickerDialog.newInstance(AddMessageActivity.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(getFragmentManager(), "datePicker");
+            case R.id.text_change_date:
+                DatePickerDialog.newInstance(AddMessageActivity.this,
+                        mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH))
+                        .show(getFragmentManager(), "datePicker");
                 break;
             default:
                 break;
@@ -321,7 +311,7 @@ public class AddMessageActivity extends AppCompatActivity
             addNews(title, content, link);
 
         } else {
-            getSnackBar(getString(R.string.not_fill_login));
+            getShowMessages(getString(R.string.not_fill_login));
         }
     }
 
@@ -396,7 +386,7 @@ public class AddMessageActivity extends AppCompatActivity
         });
     }
 
-    private void getSnackBar(String s) {
-        Snackbar.make(addMessage, s, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    private void getShowMessages(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 }
