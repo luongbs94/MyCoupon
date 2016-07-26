@@ -72,6 +72,8 @@ public class SettingFragment extends Fragment implements
     private static OnClickSetInformation mListener;
 
     private ProgressDialog mProgressDialog;
+    private boolean isChoseImages;
+    private String mLogoBase64;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -217,17 +219,21 @@ public class SettingFragment extends Fragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SELECT_PICTURE) {
+        Log.d(TAG, "requestCode = " + requestCode + " - resultCode " + resultCode);
+        if (requestCode == SELECT_PICTURE && resultCode == getActivity().RESULT_OK) {
 
-            Uri uri = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+            if (data != null) {
+                Uri uri = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
 
-                Bitmap resize = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES,
-                        MainApplication.WIDTH_IMAGES, true);
-                mImgLogo.setImageBitmap(resize);
-            } catch (IOException e) {
-                e.printStackTrace();
+                    Bitmap resize = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES,
+                            MainApplication.WIDTH_IMAGES, true);
+                    mImgLogo.setImageBitmap(resize);
+                    isChoseImages = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             getShowMessage("User cancelled image capture");
@@ -235,6 +241,7 @@ public class SettingFragment extends Fragment implements
     }
 
     private boolean isDriverSupportCamera() {
+
         return getActivity()
                 .getApplicationContext()
                 .getPackageManager()
@@ -272,25 +279,38 @@ public class SettingFragment extends Fragment implements
 
     private void onClickSaveCompany() {
 
-        boolean isNetowork = ConnectivityReceiver.isConnect();
-        if (isNetowork) {
+        boolean isNetwork = ConnectivityReceiver.isConnect();
+        if (isNetwork) {
             showProgressDialog();
             final String name = mEdtNameCompany.getText().toString();
             final String address = mEdtAddress.getText().toString();
 
-            String logo = MainApplication.convertToBitmap(mImgLogo);
-            logo = MainApplication.FIRST_BASE64 + logo;
+            mLogoBase64 = MainApplication.FIRST_BASE64
+                    + MainApplication.convertToBitmap(mImgLogo);
 
 
-            Log.d(TAG, "Logo : " + logo);
-            final String finalLogo = logo;
             final String user1 = mEdtUser1.getText().toString().trim();
             final String user2 = mEdtUser2.getText().toString().trim();
-            company.setName(name);
-            company.setAddress(address);
-            company.setLogo(logo);
-            company.setUser1(user1);
-            company.setUser2(user2);
+
+
+            final Company companyTemplate = new Company(company.getCompany_id(),
+                    company.getName(), company.getAddress(),
+                    company.getLogo(), company.getCreated_date(),
+                    company.getUser_id(), company.getUser1(),
+                    company.getPass1(), company.getUser1_admin(),
+                    company.getUser2(), company.getPass2(),
+                    company.getUser2_admin(), company.getLogo_link(),
+                    company.getCity(), company.getCountry_name());
+
+            companyTemplate.setName(name);
+            companyTemplate.setAddress(address);
+            companyTemplate.setLogo(null);
+            if (isChoseImages) {
+                companyTemplate.setLogo(mLogoBase64);
+            }
+            companyTemplate.setUser1(user1);
+            companyTemplate.setUser2(user2);
+
 
             Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
             call.enqueue(new Callback<Integer>() {
@@ -307,7 +327,7 @@ public class SettingFragment extends Fragment implements
 
                                 if (response.body() == 1) {
                                     mInputUser2.setErrorEnabled(false);
-                                    createSave(name, address, finalLogo, company);
+                                    createSave(name, address, mLogoBase64, companyTemplate);
 
                                 } else {
                                     mInputUser2.setError(getString(R.string.account_exists));
@@ -348,8 +368,8 @@ public class SettingFragment extends Fragment implements
     }
 
     private void createSave(final String name, final String address,
-                            final String finalLogo, final Company company) {
-        Call<Integer> call3 = mLoveCouponAPI.updateCompany(company);
+                            final String finalLogo, final Company companyTemplate) {
+        Call<Integer> call3 = mLoveCouponAPI.updateCompany(companyTemplate);
         call3.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -361,15 +381,18 @@ public class SettingFragment extends Fragment implements
                         public void run() {
 
                             getShowMessage("Success");
+                            company = companyTemplate;
+                            company.setLogo(mLogoBase64);
                             String str = new Gson().toJson(company);
                             writeSharePreferences(MainApplication.COMPANY_SHOP, str);
 
                             if (mListener != null) {
                                 mListener.onClickSetInformation(finalLogo, name, address);
                             }
+                            isChoseImages = false;
                             hideProgressDialog();
                         }
-                    }, MainApplication.TIME_SLEEP);
+                    }, MainApplication.TIME_SLEEP_SETTING);
                 }
             }
 

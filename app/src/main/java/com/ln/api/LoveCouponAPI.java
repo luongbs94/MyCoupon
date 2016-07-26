@@ -71,10 +71,6 @@ public interface LoveCouponAPI {
     @POST("/update_user_coupon")
     Call<List<CompanyOfCustomer>> updateUserCoupon(@Header("city") String city, @Body Coupon template);
 
-
-//    @GET("/getCoupon")
-//    Call<List<Coupon>> getCoupon(@Query("coupon_id") String id);
-
     @GET("/get_created_coupon_by_company_id")
     Call<ArrayList<Coupon>> getCreatedCoupon(@Query("company_id") String company_id, @Query("utc1") String utc1, @Query("utc2") String utc2);
 

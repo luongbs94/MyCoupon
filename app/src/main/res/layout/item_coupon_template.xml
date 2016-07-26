@@ -2,135 +2,143 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/size_5"
-    android:layout_marginRight="@dimen/size_5"
+    android:layout_marginBottom="@dimen/size_1"
+    android:layout_marginTop="@dimen/size_1"
     android:background="@drawable/card_background_white"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/size_20"
-    android:paddingEnd="@dimen/size_8"
-    android:paddingLeft="@dimen/size_16"
-    android:paddingRight="@dimen/size_8"
-    android:paddingStart="@dimen/size_16"
-    android:paddingTop="@dimen/size_20">
+    android:orientation="vertical">
 
-    <com.ln.views.CircleImageView
-        android:layout_marginTop="@dimen/size_10"
-        android:id="@+id/app_icon"
-        android:layout_width="@dimen/size_82"
-        android:layout_height="@dimen/size_82"
-        android:layout_gravity="top"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_love_coupon" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/size_10"
-        android:layout_marginStart="@dimen/size_10"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:paddingBottom="@dimen/size_20"
+        android:paddingEnd="@dimen/size_8"
+        android:paddingLeft="@dimen/size_16"
+        android:paddingRight="@dimen/size_8"
+        android:paddingStart="@dimen/size_16"
+        android:paddingTop="@dimen/size_20">
 
-        <TextView
-            android:id="@+id/txt_company_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:text="@string/name_company"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/color_text_title"
-            android:textSize="@dimen/size_18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txt_price_coupon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:ellipsize="marquee"
-            android:maxLines="1"
-            android:text="@string/price"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/color_prices"
-            android:textSize="@dimen/size_26sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txt_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/description"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/color_text_description"
-            android:textSize="@dimen/size_16sp" />
+        <com.ln.views.CircleImageView
+            android:id="@+id/app_icon"
+            android:layout_width="@dimen/size_82"
+            android:layout_height="@dimen/size_82"
+            android:layout_gravity="top"
+            android:layout_marginTop="@dimen/size_10"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_love_coupon" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_marginStart="@dimen/size_10"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_company_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:text="@string/name_company"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/color_text_title"
+                android:textSize="@dimen/size_18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_price_coupon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:ellipsize="marquee"
+                android:maxLines="1"
+                android:text="@string/price"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/size_26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/color_text_description"
+                android:textSize="@dimen/size_16sp" />
 
             <LinearLayout
-                android:id="@+id/linear_time"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="end">
+                android:gravity="bottom"
+                android:orientation="horizontal">
 
-                <com.ln.views.IconTextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/linear_time"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:gravity="bottom"
-                    android:paddingBottom="@dimen/size_4"
-                    android:text="@string/icon_calendar"
-                    android:textColor="@color/color_prices"
-                    android:textSize="@dimen/size_16sp" />
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:paddingLeft="@dimen/size_10"
+                    android:paddingRight="@dimen/size_10"
+                    android:paddingTop="@dimen/size_3">
 
-                <TextView
-                    android:id="@+id/txt_time"
+                    <com.ln.views.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="bottom"
+                        android:paddingBottom="@dimen/size_4"
+                        android:text="@string/icon_calendar"
+                        android:textColor="@color/color_prices"
+                        android:textSize="@dimen/size_16sp" />
+
+                    <TextView
+                        android:id="@+id/txt_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom"
+                        android:paddingLeft="@dimen/size_3"
+                        android:paddingRight="@dimen/size_3"
+                        android:paddingTop="@dimen/size_3"
+                        android:text="@string/txt_time_coupon"
+                        android:textColor="@color/color_text_description"
+                        android:textSize="@dimen/size_16sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/image_more"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:gravity="bottom"
-                    android:paddingLeft="@dimen/size_3"
-                    android:paddingRight="@dimen/size_3"
-                    android:text="@string/txt_time_coupon"
-                    android:textColor="@color/color_text_description"
-                    android:textSize="@dimen/size_16sp" />
+                    android:contentDescription="@null"
+                    android:paddingBottom="@dimen/size_4"
+                    android:paddingLeft="@dimen/size_10"
+                    android:paddingRight="@dimen/size_10"
+                    android:paddingTop="@dimen/size_4"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_more_vert_black_24dp" />
             </LinearLayout>
+        </LinearLayout>
 
-            <ImageView
-                android:id="@+id/image_more"
-                android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_qr_code"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:contentDescription="@null"
-                android:paddingBottom="@dimen/size_4"
-                android:paddingLeft="@dimen/size_10"
-                android:paddingRight="@dimen/size_10"
-                android:paddingTop="@dimen/size_4"
-                android:scaleType="center"
-                android:src="@drawable/ic_more_vert_black_24dp" />
+                android:background="@drawable/rounded_corner"
+                android:padding="10dp"
+                android:text="@string/qr_code"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size_14sp"
+                android:visibility="gone" />
+
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/btn_qr_code"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corner"
-            android:padding="10dp"
-            android:text="@string/qr_code"
-            android:textColor="@color/white"
-            android:textSize="@dimen/size_14sp"
-            android:visibility="gone" />
-
-
-    </LinearLayout>
-
 </LinearLayout>

@@ -22,29 +22,11 @@ public class NewsOfLike extends RealmObject {
 
     private String userId;
 
-    // type =0 newsCustomer type =1 newsMore
     private int type;
 
     public NewsOfLike() {
     }
 
-
-    public NewsOfLike(String message_id, String content, String company_id,
-                      String title, String link, String images_link,
-                      String logo, String logo_link, String name, String userId,
-                      int type) {
-        this.message_id = message_id;
-        this.content = content;
-        this.company_id = company_id;
-        this.title = title;
-        this.link = link;
-        this.images_link = images_link;
-        this.logo = logo;
-        this.logo_link = logo_link;
-        this.name = name;
-        this.userId = userId;
-        this.type = type;
-    }
 
     public String getMessage_id() {
         return message_id;
@@ -134,7 +116,7 @@ public class NewsOfLike extends RealmObject {
         this.type = type;
     }
 
-    public void setNewsOfLike(Message message, String userId, int type){
+    public void setNewsOfLike(Message message, String userId, int type) {
         this.message_id = message.getMessage_id();
         this.content = message.getContent();
         this.company_id = message.getCompany_id();

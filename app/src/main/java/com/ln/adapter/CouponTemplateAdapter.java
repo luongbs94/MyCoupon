@@ -69,12 +69,14 @@ public class CouponTemplateAdapter
         if (item.getValue() != null) {
             holder.mTxtPriceCoupon.setText(item.getValue());
         }
-        holder.mTxtTimeCoupon.setText(mContext.getString(R.string.time_coupon_template, item.getDuration()));
+        holder.mTxtTimeCoupon
+                .setText(mContext.getString(
+                        R.string.time_coupon_template,
+                        item.getDuration() + ""));
 
         if (item.getContent() != null) {
             holder.mTxtDescription.setText(item.getContent());
         }
-
     }
 
     private void deleteCouponTemplate(final String idCoupon) {
@@ -98,7 +100,6 @@ public class CouponTemplateAdapter
                 getShowMessages(mContext.getString(R.string.delete_coupon_fail));
             }
         });
-
     }
 
     private void getShowMessages(String messages) {
@@ -155,7 +156,7 @@ public class CouponTemplateAdapter
         }
     }
 
-    public void onClickBtnQRCode(int position) {
+    private void onClickBtnQRCode(int position) {
 
         CouponTemplate item = mListCoupon.get(position);
         Intent intent = new Intent(mContext, TestQRCode.class);
@@ -170,7 +171,7 @@ public class CouponTemplateAdapter
         mContext.startActivity(intent);
     }
 
-    public void onClickMore(int position, View view) {
+    private void onClickMore(int position, View view) {
 
         final CouponTemplate itemCoupon = mListCoupon.get(position);
 

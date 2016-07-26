@@ -13,7 +13,6 @@ public class DeleteNews extends RealmObject {
 
     @PrimaryKey
     private String idNews;
-
     @Required
     private String idUser;
 

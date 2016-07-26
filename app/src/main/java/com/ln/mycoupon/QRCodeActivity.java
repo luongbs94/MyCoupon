@@ -3,7 +3,6 @@ package com.ln.mycoupon;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PointF;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,7 +15,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.google.gson.Gson;
-import com.google.zxing.client.android.common.executor.AsyncTaskExecInterface;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.AccountOflUser;
@@ -35,7 +33,7 @@ import retrofit2.Response;
  * <></>
  */
 public class QRCodeActivity extends AppCompatActivity
-        implements QRCodeReaderView.OnQRCodeReadListener, AsyncTaskExecInterface {
+        implements QRCodeReaderView.OnQRCodeReadListener {
 
     private final String TAG = getClass().getSimpleName();
     private RealmController mRealmController;
@@ -182,7 +180,7 @@ public class QRCodeActivity extends AppCompatActivity
                             hideDialog();
                             finish();
                         }
-                    }, 2000);
+                    }, MainApplication.TIME_SLEEP);
 
                     Log.d(TAG, "CompanyOfCustomer " + response.body());
                 }
@@ -208,11 +206,5 @@ public class QRCodeActivity extends AppCompatActivity
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
-    }
-
-    @SafeVarargs
-    @Override
-    public final <T> void execute(AsyncTask<T, ?, ?> task, T... args) {
-
     }
 }

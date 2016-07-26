@@ -108,7 +108,6 @@ public class CouponFragment extends Fragment {
 
         if (mCompany != null) {
 
-            //  Call<List<CouponTemplate>> call = mApiServices.getCouponTemplates(SaveData.web_token, SaveData.company.getCompany_id());
             Call<List<CouponTemplate>> couponShop = mApiServices.getCouponTemplates("abc", mCompany.getCompany_id());
             couponShop.enqueue(new Callback<List<CouponTemplate>>() {
                 @Override

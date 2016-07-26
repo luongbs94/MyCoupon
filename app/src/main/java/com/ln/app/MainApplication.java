@@ -11,11 +11,9 @@ import android.widget.ImageView;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.ln.api.LoveCouponAPI;
-import com.ln.api.SaveData;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.model.CityOfUser;
-import com.ln.model.CompanyOfCustomer;
 import com.ln.realm.RealmController;
 
 import java.io.ByteArrayOutputStream;
@@ -66,6 +64,7 @@ public class MainApplication extends MultiDexApplication {
     public static final int TIME_SLEEP = 2000;
     public static final int START_QRCODE = 111;
     public static final String CONTENT_COUPON = "CONTENT_COUPON";
+    public static final long TIME_SLEEP_SETTING = 500;
 
     private static MainApplication mInstances;
 
@@ -106,7 +105,8 @@ public class MainApplication extends MultiDexApplication {
     public static final String FACEBOOK_EMAIL = "email";
 
     private static final String URL_GET_POST = "http://188.166.199.25:3000";
-    public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
+    //    public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
+    public static final String URL_UPDATE_IMAGE = "http://188.166.196.171:3001";
     public static final String URL_GET_CITY = "http://freegeoip.net";
     public static final String URL_GET_CITY2 = "http://ip-api.com";
 
@@ -241,21 +241,6 @@ public class MainApplication extends MultiDexApplication {
     }
 
 
-    public static String getCompanyName(String company_id) {
-        for (int i = 0; i < SaveData.listCompanyCustomer.size(); i++) {
-
-            CompanyOfCustomer company1 = SaveData.listCompanyCustomer.get(i);
-
-            Log.d("Coupon", company1.getCompany_id());
-            if (company_id.equals(company1.getCompany_id())) {
-                return company1.getName();
-            }
-        }
-
-        return "No company found";
-
-    }
-
     public static LoveCouponAPI getAPI() {
         return apiService;
     }
@@ -324,13 +309,15 @@ public class MainApplication extends MultiDexApplication {
         Date last_date = convertDate(created_date, duration);
 
         long diff = last_date.getTime() - new Date().getTime();
-        long dayLeft = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
 
-        if (dayLeft < 0) {
-            dayLeft = 0;
-        }
+    public static long dayLeft(long lastDate) {
 
-        return dayLeft;
+        Date last_date = new Date(lastDate);
+
+        long diff = last_date.getTime() - new Date().getTime();
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
     public static Date convertDate(long created_date, int duration) {

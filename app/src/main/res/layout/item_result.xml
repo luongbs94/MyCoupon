@@ -13,5 +13,5 @@
         android:contentDescription="@null"
         android:padding="@dimen/size_1"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_test" />
+        android:src="@drawable/ic_logo_blank" />
 </com.yongchun.library.widget.SquareRelativeLayout>

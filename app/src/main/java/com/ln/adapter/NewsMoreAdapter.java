@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
@@ -24,6 +23,7 @@ import com.ln.model.Message;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,7 +63,8 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
         final Message item = mListNews.get(position);
 
         if (item.getLogo_link() != null) {
-            Glide.with(mContext).load(item.getLogo_link())
+            Picasso.with(mContext)
+                    .load(item.getLogo_link())
                     .placeholder(R.drawable.ic_love_coupon)
                     .into(holder.mImgLogo);
         }
@@ -89,12 +90,10 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
             holder.mTxtCompanyName.setText("");
         }
 
-        SimpleDateFormat fmt;
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/ MM/yyyy", Locale.getDefault());
+
         if (MainApplication.getLanguage()) {
             fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-        } else {
-            fmt = new SimpleDateFormat("dd MM, yyyy", Locale.getDefault());
-
         }
 
         String date = fmt.format(item.getCreated_date());
@@ -180,7 +179,7 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
         }
     }
 
-    public void onClickLike(int position, ViewHolder holder) {
+    private void onClickLike(int position, ViewHolder holder) {
 
         Message item = mListNews.get(position);
 
@@ -207,7 +206,7 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
         }
     }
 
-    public void onClickShared(int position) {
+    private void onClickShared(int position) {
         Message item = mListNews.get(position);
         String link = null;
         if (item.getLink() != null) {
@@ -223,7 +222,7 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
         mShareDialog.show(content);
     }
 
-    public void onClickDelete(final int position) {
+    private void onClickDelete(final int position) {
 
         final Message item = mListNews.get(position);
 

@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.ln.app.MainApplication;
 import com.ln.mycoupon.PreviewImagesActivity;
 import com.ln.mycoupon.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.List;
@@ -38,23 +38,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
         String strImage = mListImages.get(position);
         if (strImage != null) {
-            Glide.with(mContext).load(strImage).
-                    centerCrop()
-                    .fitCenter()
+            Picasso.with(mContext)
+                    .load(strImage)
                     .into(holder.imageView);
         }
-
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, PreviewImagesActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt(MainApplication.POSITION, holder.getAdapterPosition()); // vi tri hien thi anh
-                bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) mListImages); // list anh
-                intent.putExtra(MainApplication.DATA, bundle);
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -62,12 +49,25 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         return mListImages.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
+            imageView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.image) {
+                Intent intent = new Intent(mContext, PreviewImagesActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt(MainApplication.POSITION, this.getAdapterPosition());
+                bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) mListImages);
+                intent.putExtra(MainApplication.DATA, bundle);
+                mContext.startActivity(intent);
+            }
         }
     }
 }

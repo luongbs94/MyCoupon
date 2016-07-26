@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ import retrofit2.Response;
  */
 public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHolder> {
 
+    private static final String TAG = "NewsShopAdapter";
     private Context mContext;
     private List<NewsOfCompanyLike> mListNews;
     private ShareDialog mShareDialog;
@@ -53,7 +55,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         mListNews = listNews;
         mShareDialog = new ShareDialog(fragment);
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -65,18 +66,19 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final NewsOfCompanyLike item = mListNews.get(position);
-        final int positionNews = position;
+        NewsOfCompanyLike item = mListNews.get(position);
 
-        final String idNewsOfCompany = item.getMessage_id();
+        String strCompany = MainApplication
+                .getPreferences()
+                .getString(MainApplication.COMPANY_SHOP, "");
 
-        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         final Company company = new Gson().fromJson(strCompany, Company.class);
 
         if (company != null) {
             holder.mTxtCompanyName.setText(company.getName());
             if (company.getLogo() != null) {
-                Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
+                Glide.with(mContext)
+                        .load(MainApplication.convertToBytes(company.getLogo()))
                         .asBitmap()
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(holder.mImgLogo);
@@ -85,16 +87,25 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         holder.mTxtTile.setText(item.getTitle());
         holder.mTxtContent.setText(item.getContent());
-        holder.mTxtLink.setText(item.getLink());
 
+        holder.mTxtLink.setVisibility(View.GONE);
+        if (item.getLink() != null) {
+            holder.mTxtLink.setVisibility(View.VISIBLE);
+            holder.mTxtLink.setText(item.getLink());
+        }
 
-        SimpleDateFormat fmt = new SimpleDateFormat("dd MM, yyyy", Locale.getDefault());
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         if (MainApplication.getLanguage()) {
             fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         }
 
         holder.mTxtTime.setText(fmt.format(item.getCreated_date()));
 
+        if (item.getLast_date() != 0) {
+            holder.linearLastDate.setVisibility(View.VISIBLE);
+            holder.textLastDate.setText(fmt.format(item.getLast_date()));
+            holder.textTimeShelf.setText(String.valueOf(MainApplication.dayLeft(item.getLast_date())));
+        }
         holder.mRecyclerView.setVisibility(View.GONE);
         String strImages = item.getImages_link();
         if (strImages != null) {
@@ -105,8 +116,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
             holder.mRecyclerView.setAdapter(gridAdapter);
             holder.mRecyclerView.setVisibility(View.VISIBLE);
-
-
         }
 
         holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
@@ -118,7 +127,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
         }
-
     }
 
     @Override
@@ -135,7 +143,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         private RecyclerView mRecyclerView;
 
         private MyTextView mTxtTime, mTxtContent;
-        private TextView mTxtCompanyName;
+        private TextView mTxtCompanyName, textLastDate, textTimeShelf;
+        private LinearLayout linearLastDate;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -150,6 +159,11 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             mTxtContent = (MyTextView) itemView.findViewById(R.id.txt_content_news);
             mTxtLink = (TextView) itemView.findViewById(R.id.txt_link_news);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
+
+            textLastDate = (TextView) itemView.findViewById(R.id.text_last_date);
+            textTimeShelf = (TextView) itemView.findViewById(R.id.text_time_shelf);
+            linearLastDate = (LinearLayout) itemView.findViewById(R.id.linear_last_date);
+            linearLastDate.setVisibility(View.GONE);
 
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(manager);
@@ -177,7 +191,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
     }
 
-    public void onClickDeleteNews(final int position) {
+    private void onClickDeleteNews(final int position) {
 
         final String idNewsOfCompany = mListNews.get(position).getMessage_id();
         new MaterialDialog
@@ -203,7 +217,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                 .show();
     }
 
-    public void onClickLikeNews(int position, ViewHolder holder) {
+    private void onClickLikeNews(int position, ViewHolder holder) {
 
         NewsOfCompanyLike item = mListNews.get(position);
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
@@ -226,7 +240,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
     }
 
-    public void onClickShare(int position) {
+    private void onClickShare(int position) {
 
         NewsOfCompanyLike item = mListNews.get(position);
 
@@ -276,6 +290,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                 } else {
                     getShowMessages(mContext.getString(R.string.delete_news_error));
                 }
+
+                Log.d(TAG, "deleteNewsOfCompany " + response.body());
             }
 
             @Override

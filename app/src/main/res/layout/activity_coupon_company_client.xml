@@ -24,10 +24,7 @@
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <include
-                layout="@layout/nav_head_customer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <include layout="@layout/nav_head_customer" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

@@ -1,10 +1,12 @@
 package com.ln.model;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Nhahv on 7/4/2016.
  * <></>
  */
-public class NewsOfCompanyLike {
+public class NewsOfCompanyLike implements Comparable<NewsOfCompanyLike> {
 
     private String message_id;
     private String content;
@@ -28,6 +30,7 @@ public class NewsOfCompanyLike {
         this.link = news.getLink();
         this.images_link = news.getImages_link();
         this.last_date = news.getLast_date();
+        this.created_date = news.getCreated_date();
     }
 
     public String getMessage_id() {
@@ -96,5 +99,10 @@ public class NewsOfCompanyLike {
 
     public long getLast_date() {
         return last_date;
+    }
+
+    @Override
+    public int compareTo(@NonNull NewsOfCompanyLike another) {
+        return (created_date > another.created_date) ? -1 : 1;
     }
 }

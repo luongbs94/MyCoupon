@@ -28,6 +28,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.NewsOfCustomer;
@@ -305,10 +306,18 @@ public class CustomerLoginActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_facebook_customer:
-                onClickLoginFacebook();
+                if (ConnectivityReceiver.isConnect()) {
+                    onClickLoginFacebook();
+                } else {
+                    getShowMessages(getString(R.string.check_network));
+                }
                 break;
             case R.id.btn_google_customer:
-                onClickLoginGoogle();
+                if (ConnectivityReceiver.isConnect()) {
+                    onClickLoginGoogle();
+                } else {
+                    getShowMessages(getString(R.string.check_network));
+                }
                 break;
             default:
                 break;
@@ -316,8 +325,11 @@ public class CustomerLoginActivity extends AppCompatActivity
     }
 
     private void onClickLoginFacebook() {
-        LoginManager.getInstance().logInWithReadPermissions(CustomerLoginActivity.this,
-                Arrays.asList(MainApplication.FACEBOOK_PROFILE, MainApplication.FACEBOOK_EMAIL));
+        LoginManager.getInstance()
+                .logInWithReadPermissions(
+                        CustomerLoginActivity.this,
+                        Arrays.asList(MainApplication.FACEBOOK_PROFILE,
+                                MainApplication.FACEBOOK_EMAIL));
     }
 
 

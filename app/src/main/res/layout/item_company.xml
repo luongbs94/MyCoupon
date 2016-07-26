@@ -16,6 +16,7 @@
     <com.ln.views.CircleImageView
         android:id="@+id/app_icon"
         android:layout_width="@dimen/size_72"
+        android:scaleType="centerCrop"
         android:layout_height="@dimen/size_72"
         android:layout_marginEnd="8.0dip"
         android:layout_marginRight="8.0dip"
