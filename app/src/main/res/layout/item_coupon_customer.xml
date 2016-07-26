@@ -15,7 +15,6 @@
         android:id="@+id/app_icon"
         android:layout_width="@dimen/size_82"
         android:layout_height="@dimen/size_82"
-        android:layout_gravity="center"
         android:layout_marginEnd="@dimen/size_8"
         android:layout_marginRight="@dimen/size_8"
         android:contentDescription="@null"

@@ -173,6 +173,7 @@ public class AddMessageActivity extends AppCompatActivity
         news.setContent(content);
         news.setLink(link);
         news.setTitle(title);
+        news.setCreated_date(System.currentTimeMillis());
         news.setLast_date(mTimeLong);
         Log.d(TAG, "Time  = " + mTimeLong);
         news.setCompany_id(idCompany);

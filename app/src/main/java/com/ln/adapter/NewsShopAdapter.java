@@ -87,7 +87,12 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         holder.mTxtTile.setText(item.getTitle());
         holder.mTxtContent.setText(item.getContent());
-        holder.mTxtLink.setText(item.getLink());
+
+        holder.mTxtLink.setVisibility(View.GONE);
+        if (item.getLink() != null) {
+            holder.mTxtLink.setVisibility(View.VISIBLE);
+            holder.mTxtLink.setText(item.getLink());
+        }
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         if (MainApplication.getLanguage()) {

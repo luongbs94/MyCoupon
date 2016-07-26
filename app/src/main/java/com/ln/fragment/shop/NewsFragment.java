@@ -7,8 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,6 +22,7 @@ import com.ln.realm.RealmController;
 import com.ln.realm.ShopLikeNews;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -92,7 +91,8 @@ public class NewsFragment extends Fragment {
 
     public void setNewsOfCompany() {
 
-        List<NewsOfCompany> mListNewsOfCompany = mRealmController.getListNewsOfCompany();
+        List<NewsOfCompany> mListNewsOfCompany = new ArrayList<>();
+        mListNewsOfCompany.addAll(mRealmController.getListNewsOfCompany());
 
         Log.d(TAG, "======================");
 
@@ -107,7 +107,8 @@ public class NewsFragment extends Fragment {
             listNews.add(new NewsOfCompanyLike(newsOfCompany));
         }
 
-        List<ShopLikeNews> listLike = mRealmController.getListShopLikeNews();
+        List<ShopLikeNews> listLike = new ArrayList<>();
+        listLike.addAll(mRealmController.getListShopLikeNews());
 
         for (ShopLikeNews likeNews : listLike) {
             for (NewsOfCompanyLike news : listNews) {
@@ -117,6 +118,7 @@ public class NewsFragment extends Fragment {
                 }
             }
         }
+        Collections.sort(listNews);
         NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), listNews, this);
         mRecNews.setAdapter(adapter);
         Log.d(TAG, "Size : " + mListNewsOfCompany.size());

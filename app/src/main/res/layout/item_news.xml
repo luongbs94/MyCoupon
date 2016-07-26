@@ -142,35 +142,19 @@
             android:text="@string/link"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/colorTextNews"
+            android:textColorLink="@color/colorTextNews"
             android:textSize="@dimen/size_15sp"
             android:visibility="visible" />
     </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:dividerHeight="4dp"
-        android:fastScrollEnabled="true"
-        android:focusable="true"
-        android:layoutAnimation="@anim/list_anim"
-        android:listSelector="@android:color/transparent"
-        android:scrollbars="horizontal" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/size_5"
-        android:textColor="@color/text_item" />
 
     <LinearLayout
         android:id="@+id/linear_last_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/size_4"
         android:layout_marginLeft="@dimen/size_15"
         android:layout_marginRight="@dimen/size_15"
+        android:layout_marginTop="@dimen/size_4"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/size_5"
@@ -187,7 +171,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/size_5"
             android:layout_marginStart="@dimen/size_5"
-            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/size_4"
             android:text="@string/time_news" />
 
         <com.ln.views.IconTextView
@@ -203,9 +187,26 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/size_5"
             android:layout_marginStart="@dimen/size_5"
-            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/size_4"
             android:text="@string/time_shelf" />
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="@dimen/size_10"
+        android:layout_marginRight="@dimen/size_10"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:dividerHeight="4dp"
+        android:fastScrollEnabled="true"
+        android:focusable="true"
+        android:layoutAnimation="@anim/list_anim"
+        android:listSelector="@android:color/transparent"
+        android:paddingLeft="@dimen/size_5"
+        android:paddingRight="@dimen/size_5"
+        android:scrollbars="horizontal" />
 
     <TextView
         android:layout_width="match_parent"
