@@ -26,10 +26,14 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="center_horizontal"
+                android:paddingLeft="@dimen/size_10"
+                android:paddingRight="@dimen/size_10"
+                android:paddingTop="@dimen/size_56"
                 android:text="@string/title_share"
                 android:textColor="@color/white"
-                android:textSize="@dimen/size_22sp" />
+                android:textSize="@dimen/size_18sp"
+                android:textStyle="bold" />
 
         </FrameLayout>
 
@@ -69,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="@string/support"
-                android:textSize="@dimen/size_15sp" />
+                android:textSize="@dimen/size_18sp" />
 
             <com.ln.views.IconTextView
                 android:id="@+id/image_email"
@@ -95,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="@string/web"
-                android:textSize="@dimen/size_15sp" />
+                android:textSize="@dimen/size_18sp" />
 
             <com.ln.views.IconTextView
                 android:id="@+id/image_web"
@@ -115,7 +119,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/size_10"
             android:text="@string/please_question"
-            android:textSize="@dimen/size_15sp" />
+            android:textSize="@dimen/size_18sp" />
 
     </LinearLayout>
 </LinearLayout>

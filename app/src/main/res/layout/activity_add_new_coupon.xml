@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/limit"
-            android:textSize="@dimen/size_20sp" />
+            android:textSize="@dimen/size_18sp" />
 
         <Spinner
             android:id="@+id/spinner"
@@ -68,7 +68,8 @@
             android:fontFamily="sans-serif-medium"
             android:padding="10dp"
             android:text="@string/save"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/size_18sp" />
 
     </android.support.v7.widget.CardView>
 

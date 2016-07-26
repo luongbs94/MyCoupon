@@ -19,12 +19,12 @@ import java.util.List;
  * Created by luongnguyen on 6/7/16.
  * <></>
  */
-public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.ViewHolder> {
+public class CouponShopAdapter extends RecyclerView.Adapter<CouponShopAdapter.ViewHolder> {
 
     private List<CompanyOfCustomer> mListCompanyOfCustomer;
     private Context mContext;
 
-    public CompanyAdapter(Context context, List<CompanyOfCustomer> company) {
+    public CouponShopAdapter(Context context, List<CompanyOfCustomer> company) {
         mContext = context;
         mListCompanyOfCustomer = company;
     }

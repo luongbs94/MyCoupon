@@ -23,6 +23,9 @@
     <color name="color_text_description">#5C5C5C</color>
     <color name="color_prices">#F27167</color>
     <color name="color_network">#FFEB3B</color>
+    <color name="back_ground_item">#f6f6f6</color>
+    <color name="back_ground_line">#E1E1E1</color>
+    <color name="text_item">#808080</color>
 
 
 </resources>

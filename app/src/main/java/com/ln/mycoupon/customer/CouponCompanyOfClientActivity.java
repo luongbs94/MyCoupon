@@ -82,8 +82,6 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(mImageView);
             }
-
-            Log.d(TAG, mCompanyOfCustomer.getLogo());
         }
 
         if (mCompanyOfCustomer.getName() != null) {

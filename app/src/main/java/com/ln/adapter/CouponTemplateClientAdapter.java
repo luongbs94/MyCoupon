@@ -104,7 +104,6 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
             textDayShelf = (TextView) itemView.findViewById(R.id.text_day_shelf);
             textPrice = (TextView) itemView.findViewById(R.id.text_price_);
             textDescription = (TextView) itemView.findViewById(R.id.text_description);
-
         }
     }
 

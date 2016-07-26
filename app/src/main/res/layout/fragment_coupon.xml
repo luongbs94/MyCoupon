@@ -3,13 +3,12 @@
     android:id="@+id/ln_fragment_coupon"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_green">
+    android:background="@color/back_ground_item">
 
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -25,6 +24,4 @@
             android:scrollbars="vertical" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
-
 </LinearLayout>

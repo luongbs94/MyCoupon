@@ -90,12 +90,10 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
             holder.mTxtCompanyName.setText("");
         }
 
-        SimpleDateFormat fmt;
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/ MM/yyyy", Locale.getDefault());
+
         if (MainApplication.getLanguage()) {
             fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-        } else {
-            fmt = new SimpleDateFormat("dd MM, yyyy", Locale.getDefault());
-
         }
 
         String date = fmt.format(item.getCreated_date());
@@ -181,7 +179,7 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
         }
     }
 
-    public void onClickLike(int position, ViewHolder holder) {
+    private void onClickLike(int position, ViewHolder holder) {
 
         Message item = mListNews.get(position);
 
@@ -208,7 +206,7 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
         }
     }
 
-    public void onClickShared(int position) {
+    private void onClickShared(int position) {
         Message item = mListNews.get(position);
         String link = null;
         if (item.getLink() != null) {
@@ -224,7 +222,7 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
         mShareDialog.show(content);
     }
 
-    public void onClickDelete(final int position) {
+    private void onClickDelete(final int position) {
 
         final Message item = mListNews.get(position);
 

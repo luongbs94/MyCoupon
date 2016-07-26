@@ -45,8 +45,6 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         Coupon item = mListCoupons.get(position);
-        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
-        Company company = new Gson().fromJson(strCompany, Company.class);
         Picasso.with(mContext)
                 .load(item.getUser_image_link())
                 .placeholder(R.drawable.ic_logo_blank)

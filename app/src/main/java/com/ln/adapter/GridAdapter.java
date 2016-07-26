@@ -44,18 +44,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                     .fitCenter()
                     .into(holder.imageView);
         }
-
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, PreviewImagesActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt(MainApplication.POSITION, holder.getAdapterPosition()); // vi tri hien thi anh
-                bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) mListImages); // list anh
-                intent.putExtra(MainApplication.DATA, bundle);
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -63,12 +51,25 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         return mListImages.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image);
+            imageView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.image) {
+                Intent intent = new Intent(mContext, PreviewImagesActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt(MainApplication.POSITION, this.getAdapterPosition());
+                bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) mListImages);
+                intent.putExtra(MainApplication.DATA, bundle);
+                mContext.startActivity(intent);
+            }
         }
     }
 }

@@ -54,7 +54,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         mShareDialog = new ShareDialog(fragment);
     }
 
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater
@@ -65,12 +64,12 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final NewsOfCompanyLike item = mListNews.get(position);
-        final int positionNews = position;
+        NewsOfCompanyLike item = mListNews.get(position);
 
-        final String idNewsOfCompany = item.getMessage_id();
+        String strCompany = MainApplication
+                .getPreferences()
+                .getString(MainApplication.COMPANY_SHOP, "");
 
-        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         final Company company = new Gson().fromJson(strCompany, Company.class);
 
         if (company != null) {
@@ -88,8 +87,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mTxtContent.setText(item.getContent());
         holder.mTxtLink.setText(item.getLink());
 
-
-        SimpleDateFormat fmt = new SimpleDateFormat("dd MM, yyyy", Locale.getDefault());
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         if (MainApplication.getLanguage()) {
             fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         }
@@ -106,8 +104,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
             holder.mRecyclerView.setAdapter(gridAdapter);
             holder.mRecyclerView.setVisibility(View.VISIBLE);
-
-
         }
 
         holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
@@ -119,7 +115,6 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
         }
-
     }
 
     @Override
@@ -178,7 +173,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
     }
 
-    public void onClickDeleteNews(final int position) {
+    private void onClickDeleteNews(final int position) {
 
         final String idNewsOfCompany = mListNews.get(position).getMessage_id();
         new MaterialDialog
@@ -204,7 +199,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                 .show();
     }
 
-    public void onClickLikeNews(int position, ViewHolder holder) {
+    private void onClickLikeNews(int position, ViewHolder holder) {
 
         NewsOfCompanyLike item = mListNews.get(position);
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
@@ -227,7 +222,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
     }
 
-    public void onClickShare(int position) {
+    private void onClickShare(int position) {
 
         NewsOfCompanyLike item = mListNews.get(position);
 

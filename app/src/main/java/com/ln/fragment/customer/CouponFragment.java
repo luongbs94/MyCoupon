@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
-import com.ln.adapter.CompanyAdapter;
+import com.ln.adapter.CouponShopAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.ItemClickSupport;
 import com.ln.app.MainApplication;
@@ -35,16 +35,13 @@ import retrofit2.Response;
  */
 public class CouponFragment extends Fragment {
 
+    private final String TAG = getClass().getSimpleName();
+
     private LoveCouponAPI mApiServices;
     private RealmController mRealmController;
 
-    private String TAG = getClass().getSimpleName();
-
-    private View mView;
     private RecyclerView mRecCoupon;
-
     private SwipeRefreshLayout swipeContainer;
-
     private List<CompanyOfCustomer> mListCompanyCustomer = new ArrayList<>();
 
     public CouponFragment() {
@@ -62,27 +59,13 @@ public class CouponFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        mView = inflater.inflate(R.layout.fragment_company_of_client, container, false);
-        swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getCompanyByUserId();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        initViews();
+        View mView = inflater.inflate(R.layout.fragment_coupon, container, false);
+        initViews(mView);
         setHasOptionsMenu(true);
         return mView;
     }
 
-
-    private void initViews() {
+    private void initViews(View mView) {
 
         mRecCoupon = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecCoupon.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -102,16 +85,27 @@ public class CouponFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getCompanyByUserId();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
 
     private void setListCompanyCustomer() {
 
-
         mListCompanyCustomer = mRealmController.getListCompanyCustomer();
-        CompanyAdapter adapter = new CompanyAdapter(getActivity(), mListCompanyCustomer);
+        CouponShopAdapter adapter = new CouponShopAdapter(getActivity(), mListCompanyCustomer);
         mRecCoupon.setAdapter(adapter);
-//        mRecCoupon.setAdapter(adapter);
         Log.d(TAG, "setListCompanyCustomer " + mListCompanyCustomer.size());
     }
 
