@@ -27,6 +27,31 @@ public class Company extends RealmObject {
     private String city;
     private String country_name;
 
+    public Company() {
+    }
+
+    public Company(String company_id, String name, String address,
+                   String logo, String created_date, String user_id,
+                   String user1, String pass1, String user1_admin,
+                   String user2, String pass2, String user2_admin,
+                   String logo_link, String city, String country_name) {
+        this.company_id = company_id;
+        this.name = name;
+        this.address = address;
+        this.logo = logo;
+        this.created_date = created_date;
+        this.user_id = user_id;
+        this.user1 = user1;
+        this.pass1 = pass1;
+        this.user1_admin = user1_admin;
+        this.user2 = user2;
+        this.pass2 = pass2;
+        this.user2_admin = user2_admin;
+        this.logo_link = logo_link;
+        this.city = city;
+        this.country_name = country_name;
+    }
+
     public String getName() {
         return name;
     }

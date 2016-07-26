@@ -28,6 +28,7 @@ public class NewsOfCompanyLike {
         this.link = news.getLink();
         this.images_link = news.getImages_link();
         this.last_date = news.getLast_date();
+        this.created_date = news.getCreated_date();
     }
 
     public String getMessage_id() {

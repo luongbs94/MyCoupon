@@ -161,6 +161,54 @@
 
     <TextView
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/size_5"
+        android:textColor="@color/text_item" />
+
+    <LinearLayout
+        android:id="@+id/linear_last_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15"
+        android:layout_marginRight="@dimen/size_15"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/size_5"
+        android:paddingRight="@dimen/size_5">
+
+        <com.ln.views.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/icon_clock" />
+
+        <com.ln.views.MyTextView
+            android:id="@+id/text_last_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_5"
+            android:layout_marginStart="@dimen/size_5"
+            android:gravity="center_vertical"
+            android:text="@string/time_news" />
+
+        <com.ln.views.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/size_8"
+            android:layout_marginStart="@dimen/size_8"
+            android:text="@string/icon_bell" />
+
+        <com.ln.views.MyTextView
+            android:id="@+id/text_time_shelf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_5"
+            android:layout_marginStart="@dimen/size_5"
+            android:gravity="center_vertical"
+            android:text="@string/time_shelf" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="@dimen/size_5"
         android:layout_marginTop="@dimen/size_5"

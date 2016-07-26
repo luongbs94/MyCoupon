@@ -48,7 +48,6 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
         final Coupon item = mListCoupon.get(position);
         if (item != null) {
 
-
             if (item.getValue() != null) {
                 holder.textPrice.setText(item.getValue());
             }

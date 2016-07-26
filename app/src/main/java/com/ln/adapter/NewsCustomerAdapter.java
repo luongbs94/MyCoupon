@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -103,8 +104,13 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         }
 
-        String date = fmt.format(item.getCreated_date());
-        holder.mTxtTime.setText(date);
+        holder.mTxtTime.setText(fmt.format(item.getCreated_date()));
+
+        if (item.getLast_date() != 0) {
+            holder.linearLastDate.setVisibility(View.VISIBLE);
+            holder.textLastDate.setText(fmt.format(item.getLast_date()));
+            holder.textTimeShelf.setText(String.valueOf(MainApplication.dayLeft(item.getLast_date())));
+        }
 
         holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
         holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
@@ -132,7 +138,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         private RecyclerView mRecyclerView;
 
         private MyTextView mTxtTime, mTxtContent;
-        private TextView mTxtCompanyName;
+        private TextView mTxtCompanyName, textLastDate, textTimeShelf;
+        private LinearLayout linearLastDate;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -150,6 +157,11 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(manager);
+
+            textLastDate = (TextView) itemView.findViewById(R.id.text_last_date);
+            textTimeShelf = (TextView) itemView.findViewById(R.id.text_time_shelf);
+            linearLastDate = (LinearLayout) itemView.findViewById(R.id.linear_last_date);
+            linearLastDate.setVisibility(View.GONE);
 
             (itemView.findViewById(R.id.linear_like)).setOnClickListener(this);
             (itemView.findViewById(R.id.linear_share)).setOnClickListener(this);

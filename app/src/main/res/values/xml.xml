@@ -14,4 +14,5 @@
     <string name="bookmark">Bookmark</string>
     <string name="ic_close">\uf00d</string>
     <string name="ic_calendar_message">\uf073</string>
+    <string name="icon_bell">\uf0a2</string>
 </resources>

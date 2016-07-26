@@ -64,6 +64,7 @@ public class MainApplication extends MultiDexApplication {
     public static final int TIME_SLEEP = 2000;
     public static final int START_QRCODE = 111;
     public static final String CONTENT_COUPON = "CONTENT_COUPON";
+    public static final long TIME_SLEEP_SETTING = 500;
 
     private static MainApplication mInstances;
 
@@ -104,7 +105,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String FACEBOOK_EMAIL = "email";
 
     private static final String URL_GET_POST = "http://188.166.199.25:3000";
-//    public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
+    //    public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
     public static final String URL_UPDATE_IMAGE = "http://188.166.196.171:3001";
     public static final String URL_GET_CITY = "http://freegeoip.net";
     public static final String URL_GET_CITY2 = "http://ip-api.com";
@@ -308,13 +309,15 @@ public class MainApplication extends MultiDexApplication {
         Date last_date = convertDate(created_date, duration);
 
         long diff = last_date.getTime() - new Date().getTime();
-        long dayLeft = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+    }
 
-        if (dayLeft < 0) {
-            dayLeft = 0;
-        }
+    public static long dayLeft(long lastDate) {
 
-        return dayLeft;
+        Date last_date = new Date(lastDate);
+
+        long diff = last_date.getTime() - new Date().getTime();
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
     public static Date convertDate(long created_date, int duration) {

@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.ln.app.MainApplication;
 import com.ln.mycoupon.PreviewImagesActivity;
 import com.ln.mycoupon.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.List;
@@ -38,10 +38,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
         String strImage = mListImages.get(position);
         if (strImage != null) {
-            Glide.with(mContext)
+            Picasso.with(mContext)
                     .load(strImage)
-                    .centerCrop()
-                    .fitCenter()
                     .into(holder.imageView);
         }
     }

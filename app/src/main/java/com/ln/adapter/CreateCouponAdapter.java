@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.ln.app.MainApplication;
-import com.ln.model.Company;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 import com.squareup.picasso.Picasso;
@@ -45,18 +42,25 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         Coupon item = mListCoupons.get(position);
-        Picasso.with(mContext)
-                .load(item.getUser_image_link())
-                .placeholder(R.drawable.ic_logo_blank)
-                .into(holder.mImgLogo);
+        if (item.getUser_image_link() != null) {
+            Picasso.with(mContext)
+                    .load(item.getUser_image_link())
+                    .placeholder(R.drawable.ic_logo_blank)
+                    .into(holder.mImgLogo);
+        }
 
-        holder.mTxtCompanyName.setText(item.getUser_name());
-        holder.mTxtPrice.setText(item.getValue());
+        if (item.getUser_name() != null) {
+            holder.mTxtCompanyName.setText(item.getUser_name());
+        } else {
+            holder.mTxtCompanyName.setText("");
+        }
+
+        if (item.getValue() != null) {
+            holder.mTxtPrice.setText(item.getValue());
+        }
 
         SimpleDateFormat fmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
         Date date = new Date(item.getCreated_date());
-
         holder.mTxtDate.setText(fmt.format(date));
     }
 

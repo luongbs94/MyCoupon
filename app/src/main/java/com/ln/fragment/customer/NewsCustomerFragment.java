@@ -112,7 +112,8 @@ public class NewsCustomerFragment extends Fragment {
                         .getString(MainApplication
                                 .ACCOUNT_CUSTOMER, ""),
                 AccountOflUser.class);
-        List<NewsOfCustomer> mListNews = mRealmController.getListNewsOfCustomer();
+        List<NewsOfCustomer> mListNews = new ArrayList<>();
+        mListNews.addAll(mRealmController.getListNewsOfCustomer());
 
         // set like news
         List<LikeNews> listLike = mRealmController.getListLikeNews();

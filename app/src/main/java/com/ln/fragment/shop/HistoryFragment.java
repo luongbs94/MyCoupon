@@ -32,7 +32,6 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
     private Menu menu1;
     private Calendar calendar;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

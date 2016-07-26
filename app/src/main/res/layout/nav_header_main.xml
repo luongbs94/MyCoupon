@@ -12,7 +12,7 @@
         android:id="@+id/img_logo_nav"
         android:layout_width="@dimen/size_82"
         android:layout_height="@dimen/size_82"
-        android:layout_marginTop="@dimen/size_30"
+        android:layout_marginTop="@dimen/size_10"
         android:src="@drawable/ic_logo_blank" />
 
     <TextView
@@ -24,16 +24,16 @@
         android:paddingTop="@dimen/size_8"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/size_17sp"
+        android:textSize="@dimen/size_20sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txt_email_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/size_8"
+        android:layout_marginTop="@dimen/size_4"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/size_15sp" />
+        android:textSize="@dimen/size_18sp" />
 
 </LinearLayout>

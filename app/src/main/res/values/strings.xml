@@ -131,6 +131,7 @@
     <string name="time_coupon_template" formated="false">%1$s day</string>
     <string name="press_back_again">Press back one again to exits!</string>
     <string name="check_network">Please, You check network</string>
+    <string name="time_shelf">40</string>
 
 
     <string-array name="month">

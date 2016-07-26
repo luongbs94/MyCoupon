@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ import retrofit2.Response;
  */
 public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHolder> {
 
+    private static final String TAG = "NewsShopAdapter";
     private Context mContext;
     private List<NewsOfCompanyLike> mListNews;
     private ShareDialog mShareDialog;
@@ -94,6 +96,11 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         holder.mTxtTime.setText(fmt.format(item.getCreated_date()));
 
+        if (item.getLast_date() != 0) {
+            holder.linearLastDate.setVisibility(View.VISIBLE);
+            holder.textLastDate.setText(fmt.format(item.getLast_date()));
+            holder.textTimeShelf.setText(String.valueOf(MainApplication.dayLeft(item.getLast_date())));
+        }
         holder.mRecyclerView.setVisibility(View.GONE);
         String strImages = item.getImages_link();
         if (strImages != null) {
@@ -131,7 +138,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         private RecyclerView mRecyclerView;
 
         private MyTextView mTxtTime, mTxtContent;
-        private TextView mTxtCompanyName;
+        private TextView mTxtCompanyName, textLastDate, textTimeShelf;
+        private LinearLayout linearLastDate;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -146,6 +154,11 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             mTxtContent = (MyTextView) itemView.findViewById(R.id.txt_content_news);
             mTxtLink = (TextView) itemView.findViewById(R.id.txt_link_news);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
+
+            textLastDate = (TextView) itemView.findViewById(R.id.text_last_date);
+            textTimeShelf = (TextView) itemView.findViewById(R.id.text_time_shelf);
+            linearLastDate = (LinearLayout) itemView.findViewById(R.id.linear_last_date);
+            linearLastDate.setVisibility(View.GONE);
 
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(manager);
@@ -272,6 +285,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                 } else {
                     getShowMessages(mContext.getString(R.string.delete_news_error));
                 }
+
+                Log.d(TAG, "deleteNewsOfCompany " + response.body());
             }
 
             @Override

@@ -13,10 +13,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include
-                layout="@layout/nav_header_main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <include layout="@layout/nav_header_main" />
 
             <LinearLayout
                 android:id="@+id/linear_information"
@@ -84,6 +81,7 @@
                     android:layout_marginLeft="@dimen/size_16"
                     android:layout_marginRight="@dimen/size_16"
                     android:text="@string/show_password"
+                    android:textColor="@color/text_item"
                     android:textSize="@dimen/size_16sp" />
 
             </LinearLayout>
