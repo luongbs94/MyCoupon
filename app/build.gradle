@@ -31,6 +31,9 @@ android {
     repositories {
         mavenCentral()
     }
+    repositories {
+        jcenter()
+    }
 }
 
 dependencies {
@@ -68,6 +71,7 @@ dependencies {
 
     compile 'com.github.kenglxn.QRGen:android:2.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+
 }
 
 

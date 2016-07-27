@@ -72,10 +72,16 @@ public interface LoveCouponAPI {
     Call<List<CompanyOfCustomer>> updateUserCoupon(@Header("city") String city, @Body Coupon template);
 
     @GET("/get_created_coupon_by_company_id")
-    Call<ArrayList<Coupon>> getCreatedCoupon(@Query("company_id") String company_id, @Query("utc1") String utc1, @Query("utc2") String utc2);
+    Call<ArrayList<Coupon>> getCreatedCoupon(
+            @Query("company_id") String company_id,
+            @Query("utc1") long utc1,
+            @Query("utc2") long utc2);
 
     @GET("/get_used_coupon_by_company_id")
-    Call<ArrayList<Coupon>> getUsedCoupon(@Query("company_id") String company_id, @Query("utc1") String utc1, @Query("utc2") String utc2);
+    Call<ArrayList<Coupon>> getUsedCoupon(
+            @Query("company_id") String company_id,
+            @Query("utc1") String utc1,
+            @Query("utc2") String utc2);
 
     @GET("/get_user_profile")
     Call<List<User>> updateUserToken(@Query("user_id") String user_id, @Query("device_token") String device_token, @Query("device_os") String device_os);

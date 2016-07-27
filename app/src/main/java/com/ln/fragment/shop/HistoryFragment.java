@@ -25,7 +25,7 @@ import java.util.Locale;
  * Created by luongnguyen on 4/14/16.
  * <></>
  */
-public class HistoryFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
+public class HistoryFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     CreateFragment createFragment;
     UseFragment useFragment;
@@ -96,7 +96,9 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         calendar.set(year, monthOfYear, dayOfMonth);
         long utc1 = calendar.getTimeInMillis();
 
-
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
         MenuItem item = menu1.findItem(R.id.date);
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -104,8 +106,6 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
 
         createFragment.getData(utc1);
         useFragment.getData(utc1);
-
-
     }
 
 }

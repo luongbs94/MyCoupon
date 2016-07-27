@@ -171,7 +171,7 @@ public class CouponTemplateAdapter
         mContext.startActivity(intent);
     }
 
-    private void onClickMore(int position, View view) {
+    private void onClickMore(final int position, View view) {
 
         final CouponTemplate itemCoupon = mListCoupon.get(position);
 
@@ -186,6 +186,9 @@ public class CouponTemplateAdapter
                 switch (item.getItemId()) {
                     case R.id.menu_delete:
                         deleteCouponTemplate(itemCoupon.getCoupon_template_id());
+                        break;
+                    case R.id.menu_qrCode:
+                        onClickBtnQRCode(position);
                         break;
                     default:
                         break;

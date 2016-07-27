@@ -132,6 +132,8 @@
     <string name="press_back_again">Press back one again to exits!</string>
     <string name="check_network">Please, You check network</string>
     <string name="time_shelf">40</string>
+    <string name="fit_images">FIT IMAGE</string>
+    <string name="square">SQUARE</string>
 
 
     <string-array name="month">

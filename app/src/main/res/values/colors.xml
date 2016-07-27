@@ -3,6 +3,7 @@
     <color name="colorPrimary">#e91e63</color>
     <color name="colorPrimaryDark">#e91e63</color>
     <color name="colorAccent">#FF0000</color>
+    <color name="windowBackground">#1C1C1C</color>
     <color name="facebook">#3b5998</color>
     <color name="google">#f44336</color>
     <color name="green_6a">#ff2c5aa9</color>
@@ -26,6 +27,7 @@
     <color name="back_ground_item">#f6f6f6</color>
     <color name="back_ground_line">#E1E1E1</color>
     <color name="text_item">#808080</color>
-
-
+    <color name="divider">#333333</color>
+    <color name="textColorPrimary">#FFFFFB</color>
+    <color name="overlay">#AA1C1C1C</color>
 </resources>

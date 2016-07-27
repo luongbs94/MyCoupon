@@ -1,10 +1,11 @@
 package com.ln.fragment.shop;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,8 +38,10 @@ import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
+import com.yongchun.library.view.ImageCropActivity;
+import com.yongchun.library.view.ImageSelectorActivity;
 
-import java.io.IOException;
+import java.io.File;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,7 +69,7 @@ public class SettingFragment extends Fragment implements
     private CheckBox mChbShowPass;
     private FloatingActionButton mFabDoneSave;
 
-    private static final int SELECT_PICTURE = 1;
+    private static final int SELECT_PICTURE = 100;
 
     private Company company;
     private static OnClickSetInformation mListener;
@@ -220,21 +223,29 @@ public class SettingFragment extends Fragment implements
         super.onActivityResult(requestCode, resultCode, data);
 
         Log.d(TAG, "requestCode = " + requestCode + " - resultCode " + resultCode);
-        if (requestCode == SELECT_PICTURE && resultCode == getActivity().RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
 
-            if (data != null) {
-                Uri uri = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                if (data != null) {
+                    Uri uri = data.getData();
 
-                    Bitmap resize = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES,
-                            MainApplication.WIDTH_IMAGES, true);
-                    mImgLogo.setImageBitmap(resize);
+
+                    String path = getRealPathFromURI(uri);
+                    ImageCropActivity.startCrop(getActivity(), path);
+//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+//
+//                    Bitmap resize = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES,
+//                            MainApplication.WIDTH_IMAGES, true);
+//                    mImgLogo.setImageBitmap(resize);
                     isChoseImages = true;
-                } catch (IOException e) {
-                    e.printStackTrace();
+
                 }
             }
+            if (requestCode == ImageCropActivity.REQUEST_CROP) {
+                String path = data.getStringExtra(ImageCropActivity.OUTPUT_PATH);
+                Glide.with(this).load(new File(path)).into(mImgLogo);
+            }
+
         } else {
             getShowMessage("User cancelled image capture");
         }
@@ -266,14 +277,20 @@ public class SettingFragment extends Fragment implements
     }
 
     private void onClickOpenGallery() {
-        if (isDriverSupportCamera()) {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(intent, SELECT_PICTURE);
-        } else {
-            getShowMessage("Driver do not Support");
-        }
+//        if (isDriverSupportCamera()) {
+//            Intent intent = new Intent();
+//            intent.setType("image/*");
+//            intent.setAction(Intent.ACTION_GET_CONTENT);
+//            startActivityForResult(intent, SELECT_PICTURE);
+//        } else {
+//            getShowMessage("Driver do not Support");
+//        }
+
+        int mode = ImageSelectorActivity.MODE_SINGLE;
+        boolean isShow = true;
+        boolean isPreview = false;
+        boolean isCrop = true;
+        ImageSelectorActivity.start(getActivity(), 9, mode, isShow, isPreview, isCrop);
     }
 
 
@@ -523,6 +540,20 @@ public class SettingFragment extends Fragment implements
                             .LayoutParams
                             .SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
+    }
+
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getActivity().getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 
 

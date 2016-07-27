@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +39,8 @@ public class CreateFragment extends Fragment {
     private CreateCouponAdapter mCouponAdapter;
 
     private String TAG = getClass().getSimpleName();
-    private String utc1 = "Mon, 6 Mar 2016 17:00:00 GMT";
-    private String utc2 = "Mon, 17 Oct 2016 17:00:00 GMT";
+    private long utc1;
+    private long utc2;
     private static boolean isInitRecyclerView;
     private Calendar calendar;
 
@@ -62,8 +63,8 @@ public class CreateFragment extends Fragment {
         date.setMinutes(0);
         date.setSeconds(0);
 
-        utc1 = date.getTime() + "";
-        utc2 = (date.getTime() + 24 * 3600 * 1000) + "";
+        utc1 = date.getTime();
+        utc2 = (date.getTime() + 24 * 3600 * 1000);
 
         getCreateCoupon();
     }
@@ -101,9 +102,9 @@ public class CreateFragment extends Fragment {
 
     private void getCreateCoupon() {
 
+        Log.d(TAG, "getCreateCoupon" + utc1+ " - " + utc2);
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
-        mListCoupon.clear();
         Call<ArrayList<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getCompany_id() + "", utc1, utc2);
         listCoupon.enqueue(new Callback<ArrayList<Coupon>>() {
             @Override
@@ -134,10 +135,10 @@ public class CreateFragment extends Fragment {
 
 
     public void getData(long time) {
-        utc1 = time + "";
-        utc2 = (time + 24 * 3600 * 1000) + "";
+        utc1 = time;
+        utc2 = (time + 24 * 3600 * 1000);
         getCreateCoupon();
 
+        Log.d(TAG, "getData" + utc1+ " - " + utc2);
     }
-
 }

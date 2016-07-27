@@ -73,7 +73,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name="com.ln.firebase.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -132,9 +131,11 @@
 
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar.Theme">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar.Theme"></activity>
+        <activity
+            android:name="com.ln.cropimages.activities.ImagesSelectActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name="com.ln.cropimages.activities.ImagesActivity"></activity>
     </application>
 
 </manifest>
