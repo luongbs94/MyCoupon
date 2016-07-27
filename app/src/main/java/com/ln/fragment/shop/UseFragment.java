@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.ln.adapter.CreateCouponAdapter;
@@ -41,6 +42,7 @@ public class UseFragment extends Fragment {
     private String TAG = getClass().getSimpleName();
     private SwipeRefreshLayout swipeContainer;
     private Calendar calendar;
+    private TextView textView;
 
 
     public UseFragment() {
@@ -69,6 +71,8 @@ public class UseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_create, container, false);
+        textView = (TextView) mView.findViewById(R.id.text_no_data);
+
 
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
 
@@ -100,6 +104,8 @@ public class UseFragment extends Fragment {
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
 
+        mListCoupons.clear();
+
         Call<ArrayList<Coupon>> listCoupon = mApiServices.getUsedCoupon(company.getCompany_id() + "", utc1, utc2);
         listCoupon.enqueue(new Callback<ArrayList<Coupon>>() {
             @Override
@@ -108,6 +114,14 @@ public class UseFragment extends Fragment {
                 mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupons);
                 mRecyclerView.setAdapter(mCouponAdapter);
                 swipeContainer.setRefreshing(false);
+
+                if (mListCoupons.size() > 0) {
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.GONE);
+                } else {
+                    mRecyclerView.setVisibility(View.GONE);
+                    textView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
