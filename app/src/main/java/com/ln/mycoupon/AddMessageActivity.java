@@ -215,7 +215,7 @@ public class AddMessageActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE) {
-            List<String> images = (ArrayList<String>) data.getSerializableExtra(ImagesCheckActivity.REQUEST_OUTPUT);
+            List<String> images = (ArrayList<String>) data.getSerializableExtra(MainApplication.LIST_IMAGES);
 
             for (String s : images) {
                 if (!isExists(s)) {

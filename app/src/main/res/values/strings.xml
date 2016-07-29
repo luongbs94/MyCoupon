@@ -155,6 +155,7 @@
     <string name="permission_denied_never_ask_again">Permission was denied with never ask again.</string>
     <string name="external">SDcard</string>
     <string name="internal">Internal storage</string>
+    <string name="message_max_num">Up to %1$s photos can be selected</string>
 
     <string-array name="month">
         <item>1 month</item>

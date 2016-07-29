@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ln.app.MainApplication;
 import com.ln.images.adapter.ImageCheckAdapter;
 import com.ln.images.models.FileUtils;
 import com.ln.images.models.GridSpacingItemDecoration;
@@ -30,9 +31,7 @@ public class ImagesCheckActivity extends AppCompatActivity {
     private static final int spanCount = 3;
     private static final int REQUEST_CAMERA = 66;
     public static final String REQUEST_OUTPUT = "REQUEST_OUTPUT";
-    public final static String BUNDLE_CAMERA_PATH = "CameraPath";
-    private Toolbar mToolbar;
-    private RecyclerView mRecyclerView;
+    private final static String BUNDLE_CAMERA_PATH = "CameraPath";
     private ImageCheckAdapter mAdapter;
     private TextView mTextDone;
     private String cameraPath;
@@ -51,11 +50,11 @@ public class ImagesCheckActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rec_select_images);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rec_select_images);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, ScreenUtils.dip2px(this, 2), false));
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
@@ -64,19 +63,18 @@ public class ImagesCheckActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
         mTextDone = (TextView) findViewById(R.id.text_done);
-        mTextDone.setText(getString(R.string.text_done, 0));
+        mTextDone.setText(getString(R.string.text_done, 0 + ""));
 
         mAdapter.setOnImageSelectChangedListener(new ImageCheckAdapter.OnImageSelectChangedListener() {
             @Override
             public void onChange(List<LocalMedia> selectImages) {
                 boolean enable = selectImages.size() != 0;
-                mTextDone.setEnabled(enable ? true : false);
+                mTextDone.setEnabled(enable);
                 if (enable) {
-                    mTextDone.setText(getString(R.string.text_done, selectImages.size() + ""));
-                    mTextDone.setEnabled(true);
+                    mTextDone.setText(getString(R.string.text_done, selectImages.size(), maxSelectNum));
+
                 } else {
                     mTextDone.setText(getString(R.string.text_done, 0 + ""));
-                    mTextDone.setEnabled(false);
                 }
             }
 
@@ -85,17 +83,6 @@ public class ImagesCheckActivity extends AppCompatActivity {
                 startCamera();
             }
 
-            @Override
-            public void onPictureClick(LocalMedia media, int position) {
-//                if (true) {
-//
-//                } else if (enableCrop) {
-//                    startCrop(media.getPath());
-//                } else {
-//                    onSelectDone(media.getPath());
-//                }
-                startPreview(mAdapter.getmListImages(), position);
-            }
         });
         mTextDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +93,7 @@ public class ImagesCheckActivity extends AppCompatActivity {
 
     }
 
-    public void startCamera() {
+    private void startCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             File cameraFile = FileUtils.createCameraFile(this);
@@ -116,11 +103,8 @@ public class ImagesCheckActivity extends AppCompatActivity {
         }
     }
 
-    public void startPreview(List<LocalMedia> previewImages, int position) {
-//        ImagePreviewActivity.startPreview(this, previewImages, mAdapter.getSelectedImages(), maxSelectNum, position);
-    }
 
-    public void onSelectDone(List<LocalMedia> medias) {
+    private void onSelectDone(List<LocalMedia> medias) {
         ArrayList<String> images = new ArrayList<>();
         for (LocalMedia media : medias) {
             images.add(media.getPath());
@@ -128,36 +112,28 @@ public class ImagesCheckActivity extends AppCompatActivity {
         onResult(images);
     }
 
-    public void onSelectDone(String path) {
+    private void onSelectDone(String path) {
         ArrayList<String> images = new ArrayList<>();
         images.add(path);
         onResult(images);
     }
 
-    public void onResult(ArrayList<String> images) {
-        setResult(RESULT_OK, new Intent().putStringArrayListExtra(REQUEST_OUTPUT, images));
+    private void onResult(ArrayList<String> images) {
+        Intent intent = getIntent();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(MainApplication.LIST_IMAGES, images);
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            // on take photo success
             if (requestCode == REQUEST_CAMERA) {
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(cameraPath))));
                 onSelectDone(cameraPath);
             }
-            //on preview select change
-//            else if (requestCode == ImagePreviewActivity.REQUEST_PREVIEW) {
-//                boolean isDone = data.getBooleanExtra(ImagePreviewActivity.OUTPUT_ISDONE, false);
-//                List<LocalMedia> images = (List<LocalMedia>) data.getSerializableExtra(ImagePreviewActivity.OUTPUT_LIST);
-//                if (isDone) {
-//                    onSelectDone(images);
-//                } else {
-//                    mAdapter.bindSelectImages(images);
-//                }
-//            }
-            // on crop success
         }
     }
 

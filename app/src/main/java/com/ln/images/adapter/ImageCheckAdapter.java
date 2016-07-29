@@ -34,6 +34,7 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private Context mContext;
     private boolean showCamera = true;
+    private static final int maxSelectNum = 9;
 
     private List<LocalMedia> mListImages = new ArrayList<>();
     private List<LocalMedia> selectImages = new ArrayList<>();
@@ -41,7 +42,7 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private OnImageSelectChangedListener imageSelectChangedListener;
 
     public ImageCheckAdapter(Context context) {
-        this.mContext = context;
+        mContext = context;
         setListImages(ImagesManager.TYPE_ALL_IMAGE);
     }
 
@@ -49,15 +50,6 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mListImages.clear();
         mListImages.addAll(ImagesManager.loadImages(mContext, type));
         notifyDataSetChanged();
-    }
-
-
-    public void bindSelectImages(List<LocalMedia> images) {
-        this.selectImages = images;
-        notifyDataSetChanged();
-        if (imageSelectChangedListener != null) {
-            imageSelectChangedListener.onChange(selectImages);
-        }
     }
 
     @Override
@@ -116,14 +108,13 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
 
-
-            contentHolder.picture.setOnClickListener(new View.OnClickListener() {
+            contentHolder.contentView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, PreviewImagesActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt(MainApplication.POSITION, holder.getAdapterPosition());
-                    bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) mListImages);
+                    bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) selectImages);
                     intent.putExtras(bundle);
                     mContext.startActivity(intent);
                 }
@@ -138,8 +129,8 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void changeCheckboxState(ViewHolder contentHolder, LocalMedia image) {
         boolean isChecked = contentHolder.check.isSelected();
-        if (!isChecked) {
-            Toast.makeText(mContext, "Check imagess", Toast.LENGTH_LONG).show();
+        if (selectImages.size() >= maxSelectNum && !isChecked) {
+            Toast.makeText(mContext, mContext.getString(R.string.message_max_num, maxSelectNum), Toast.LENGTH_LONG).show();
             return;
         }
         if (isChecked) {
@@ -162,11 +153,8 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return selectImages;
     }
 
-    public List<LocalMedia> getmListImages() {
-        return mListImages;
-    }
 
-    public boolean isSelected(LocalMedia image) {
+    private boolean isSelected(LocalMedia image) {
         for (LocalMedia media : selectImages) {
             if (media.getPath().equals(image.getPath())) {
                 return true;
@@ -194,23 +182,24 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView picture;
+        ImageView check;
 
-        private ImageView picture;
-        private ImageView check;
+        View contentView;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            contentView = itemView;
             picture = (ImageView) itemView.findViewById(R.id.picture);
             check = (ImageView) itemView.findViewById(R.id.check);
         }
+
     }
 
     public interface OnImageSelectChangedListener {
         void onChange(List<LocalMedia> selectImages);
 
         void onTakePhoto();
-
-        void onPictureClick(LocalMedia media, int position);
     }
 
     public void setOnImageSelectChangedListener(OnImageSelectChangedListener imageSelectChangedListener) {

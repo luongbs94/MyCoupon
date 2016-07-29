@@ -12,11 +12,11 @@
     <ImageView
         android:id="@+id/check"
         android:layout_width="36dp"
+        android:scaleType="centerCrop"
         android:layout_height="36dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:contentDescription="@null"
         android:padding="@dimen/size_8"
-        android:scaleType="centerCrop"
         android:src="@drawable/checkbox_selector" />
 </com.ln.images.views.SquareRelativeLayout>
