@@ -31,7 +31,9 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chose, parent, false));
+        return new ViewHolder(LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.item_chose, parent, false));
     }
 
     @Override

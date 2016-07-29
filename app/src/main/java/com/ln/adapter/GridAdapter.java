@@ -23,15 +23,16 @@ class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     private Context mContext;
     private List<LocalMedia> mListImages;
 
-    GridAdapter(Context mContext, List<LocalMedia> listImages) {
-        this.mContext = mContext;
+    GridAdapter(Context context, List<LocalMedia> listImages) {
+        mContext = context;
         mListImages = listImages;
     }
 
     @Override
     public GridAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_result, parent, false);
-        return new ViewHolder(itemView);
+        return new ViewHolder(LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.item_result, parent, false));
     }
 
     @Override
@@ -51,7 +52,7 @@ class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView imageView;
+        private ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
