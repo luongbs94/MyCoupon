@@ -3,11 +3,10 @@ package com.ln.mycoupon.customer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
 import com.ln.adapter.CouponTemplateClientAdapter;
 import com.ln.app.MainApplication;
@@ -50,48 +50,32 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_coupon_company_client);
 
         mRealmController = MainApplication.mRealmController;
+
+        initData();
         initViews();
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String idCompany = bundle.getString(MainApplication.ID_COMPANY);
+        mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
+
     }
 
     private void initViews() {
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        String idCompany = bundle.getString(MainApplication.ID_COMPANY);
-
-        mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.shop);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        initCollapsingToolbar();
+//        initCollapsingToolbar();
 
-        ImageView mImageView = (ImageView) findViewById(R.id.img_logo_customer_nav);
-        TextView mTxtName = (TextView) findViewById(R.id.txt_name_customer_nav);
-
-
-        if (mCompanyOfCustomer.getLogo() != null) {
-            if (mCompanyOfCustomer.getLogo().contains(MainApplication.LOGO)) {
-                Glide.with(this)
-                        .load(MainApplication.convertToBytes(mCompanyOfCustomer.getLogo()))
-                        .asBitmap()
-                        .placeholder(R.drawable.ic_logo_blank)
-                        .into(mImageView);
-            } else {
-                Picasso.with(this)
-                        .load(mCompanyOfCustomer.getLogo())
-                        .placeholder(R.drawable.ic_logo_blank)
-                        .into(mImageView);
-            }
-        }
-
-        if (mCompanyOfCustomer.getName() != null) {
-            mTxtName.setText(mCompanyOfCustomer.getName());
-        }
-
-        RecyclerView mRecCoupon = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecCoupon.setHasFixedSize(true);
-        mRecCoupon.setLayoutManager(new LinearLayoutManager(this));
-        mRecCoupon.addOnItemTouchListener(new RecyclerViewListener(this, new OnClickRecyclerView() {
+        RecyclerView mRecyclerCoupon = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerCoupon.setHasFixedSize(true);
+        mRecyclerCoupon.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerCoupon.addOnItemTouchListener(new RecyclerViewListener(this, new OnClickRecyclerView() {
             @Override
             public void onClick(View view, final int position) {
                 new MaterialDialog
@@ -117,7 +101,35 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
             }
         }));
         adapter = new CouponTemplateClientAdapter(this, mCompanyOfCustomer);
-        mRecCoupon.setAdapter(adapter);
+        mRecyclerCoupon.setAdapter(adapter);
+
+        RecyclerViewHeader header = (RecyclerViewHeader) findViewById(R.id.header);
+        header.attachTo(mRecyclerCoupon);
+        if (mCompanyOfCustomer != null) {
+            if (mCompanyOfCustomer.getLogo() != null) {
+                if (mCompanyOfCustomer.getLogo().contains(MainApplication.LOGO)) {
+                    Glide.with(this)
+                            .load(MainApplication.convertToBytes(mCompanyOfCustomer.getLogo()))
+                            .asBitmap()
+                            .placeholder(R.drawable.ic_logo_blank)
+                            .into((ImageView) header.findViewById(R.id.img_logo_nav));
+                } else {
+                    Picasso.with(this)
+                            .load(mCompanyOfCustomer.getLogo())
+                            .placeholder(R.drawable.ic_logo_blank)
+                            .into((ImageView) header.findViewById(R.id.img_logo_nav));
+                }
+            }
+
+            if (mCompanyOfCustomer.getName() != null) {
+                ((TextView) header.findViewById(R.id.txt_name_nav)).setText(mCompanyOfCustomer.getName());
+            }
+
+            if (mCompanyOfCustomer.getAddress() != null) {
+                ((TextView) header.findViewById(R.id.txt_email_nav)).setText(mCompanyOfCustomer.getAddress());
+            }
+        }
+
     }
 
     @Override
@@ -126,35 +138,6 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initCollapsingToolbar() {
-
-        final CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        collapsingToolbar.setTitle(" ");
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
-        appBarLayout.setExpanded(true);
-
-
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
-            int scrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(" ");
-                    isShow = true;
-                } else if (isShow) {
-                    collapsingToolbar.setTitle(" ");
-                    isShow = false;
-                }
-            }
-        });
     }
 
     private void deleteCoupon(int position) {

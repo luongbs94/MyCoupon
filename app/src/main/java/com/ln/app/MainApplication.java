@@ -309,7 +309,7 @@ public class MainApplication extends MultiDexApplication {
         Date last_date = convertDate(created_date, duration);
 
         long diff = last_date.getTime() - new Date().getTime();
-        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1;
     }
 
     public static long dayLeft(long lastDate) {
