@@ -22,6 +22,7 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
+import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCompanyLike;
@@ -31,7 +32,6 @@ import com.ln.views.MyTextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -109,10 +109,12 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         holder.mRecyclerView.setVisibility(View.GONE);
         String strImages = item.getImages_link();
         if (strImages != null) {
-            List<String> listImages = new ArrayList<>();
+            List<LocalMedia> listImages = new ArrayList<>();
 
             String[] listStrImages = strImages.split(";");
-            listImages.addAll(Arrays.asList(listStrImages));
+            for (String path : listStrImages) {
+                listImages.add(new LocalMedia(path));
+            }
             GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
             holder.mRecyclerView.setAdapter(gridAdapter);
             holder.mRecyclerView.setVisibility(View.VISIBLE);

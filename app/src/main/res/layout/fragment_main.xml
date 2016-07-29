@@ -5,28 +5,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--<com.isseiaoki.simplecropview.CropImageView-->
-        <!--android:id="@+id/cropImageView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:paddingBottom="16dp"-->
-        <!--android:paddingLeft="16dp"-->
-        <!--android:paddingRight="16dp"-->
-        <!--android:paddingTop="16dp"-->
-        <!--custom:scv_background_color="@color/windowBackground"-->
-        <!--custom:scv_crop_mode="fit_image"-->
-        <!--custom:scv_frame_color="@color/colorAccent"-->
-        <!--custom:scv_frame_stroke_weight="1dp"-->
-        <!--custom:scv_guide_color="@color/colorAccent"-->
-        <!--custom:scv_guide_show_mode="show_always"-->
-        <!--custom:scv_guide_stroke_weight="1dp"-->
-        <!--custom:scv_handle_color="@color/colorAccent"-->
-        <!--custom:scv_handle_show_mode="show_always"-->
-        <!--custom:scv_handle_size="14dp"-->
-        <!--custom:scv_min_frame_size="50dp"-->
-        <!--custom:scv_overlay_color="@color/overlay"-->
-        <!--custom:scv_touch_padding="8dp" />-->
+    <com.isseiaoki.simplecropview.CropImageView
+        android:id="@+id/cropImageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        custom:scv_background_color="@color/windowBackground"
+        custom:scv_crop_mode="fit_image"
+        custom:scv_frame_color="@color/colorAccent"
+        custom:scv_frame_stroke_weight="1dp"
+        custom:scv_guide_color="@color/colorAccent"
+        custom:scv_guide_show_mode="show_always"
+        custom:scv_guide_stroke_weight="1dp"
+        custom:scv_handle_color="@color/colorAccent"
+        custom:scv_handle_show_mode="show_always"
+        custom:scv_handle_size="14dp"
+        custom:scv_min_frame_size="50dp"
+        custom:scv_overlay_color="@color/overlay"
+        custom:scv_touch_padding="8dp" />
 
     <View
         android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:padding="4dp"
-                android:text="3:4" />
+                android:text="@string/text_3_4" />
 
             <Button
                 android:id="@+id/button4_3"
@@ -88,7 +88,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:padding="4dp"
-                android:text="4:3" />
+                android:text="@string/text_4_3" />
 
             <Button
                 android:id="@+id/button9_16"
@@ -98,7 +98,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:padding="4dp"
-                android:text="9:16" />
+                android:text="@string/text_9_16" />
 
             <Button
                 android:id="@+id/button16_9"
@@ -108,7 +108,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:padding="4dp"
-                android:text="16:9" />
+                android:text="@string/text_16_9" />
 
             <Button
                 android:id="@+id/buttonCustom"
@@ -118,7 +118,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="8dp"
                 android:padding="4dp"
-                android:text="7:5" />
+                android:text="@string/text_7_5" />
 
             <Button
                 android:id="@+id/buttonFree"
@@ -128,7 +128,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:padding="4dp"
-                android:text="FREE" />
+                android:text="@string/free" />
 
             <Button
                 android:id="@+id/buttonCircle"
@@ -138,7 +138,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:padding="4dp"
-                android:text="CIRCLE" />
+                android:text="@string/circle" />
 
             <Button
                 android:id="@+id/buttonShowCircleButCropAsSquare"
@@ -148,7 +148,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 android:padding="4dp"
-                android:text="CIRCLE_SQUARE" />
+                android:text="@string/circle_square" />
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -163,8 +163,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/cropImageView"
-        android:layout_centerHorizontal="true"
         android:background="@color/windowBackground"
         android:orientation="horizontal">
 

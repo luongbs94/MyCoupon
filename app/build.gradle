@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 apply plugin: 'com.google.gms.google-services'
-
+apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 23
@@ -35,7 +35,9 @@ android {
         jcenter()
     }
 }
-
+ext {
+    permissionsDispatcherVersion = '2.1.2'
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -44,7 +46,7 @@ dependencies {
     }
 
     // google play
-    
+
 
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
@@ -61,8 +63,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.facebook.android:facebook-android-sdk:4.11.0'
     compile 'com.commit451:PhotoView:1.2.4'
-    compile 'com.isseiaoki:simplecropview:1.0.13'
-    compile 'com.yongchun:com.yongchun.imageselector:1.1.0'
+    compile 'com.isseiaoki:simplecropview:1.1.4'
     compile 'com.github.citux:datetimepicker:0.2.0'
     compile 'com.google.android.gms:play-services-auth:9.0.0'
     compile 'com.google.firebase:firebase-core:9.0.0'
@@ -71,6 +72,9 @@ dependencies {
 
     compile 'com.github.kenglxn.QRGen:android:2.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile "com.github.hotchemi:permissionsdispatcher:${permissionsDispatcherVersion}"
+    apt "com.github.hotchemi:permissionsdispatcher-processor:${permissionsDispatcherVersion}"
 
 }
 

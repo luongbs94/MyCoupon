@@ -21,11 +21,11 @@ import com.google.gson.Gson;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.images.activities.ImagesCheckActivity;
 import com.ln.model.Company;
 import com.ln.model.ItemImage;
 import com.ln.model.NewsOfCompany;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.yongchun.library.view.ImageSelectorActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,6 +54,7 @@ import retrofit2.Response;
 public class AddMessageActivity extends AppCompatActivity
         implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
 
+    private static final int REQUEST_IMAGE = 77;
     private final String TAG = getClass().getSimpleName();
 
     private static final int mSelectNumber = 9;
@@ -213,8 +214,8 @@ public class AddMessageActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == ImageSelectorActivity.REQUEST_IMAGE) {
-            List<String> images = (ArrayList<String>) data.getSerializableExtra(ImageSelectorActivity.REQUEST_OUTPUT);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE) {
+            List<String> images = (ArrayList<String>) data.getSerializableExtra(ImagesCheckActivity.REQUEST_OUTPUT);
 
             for (String s : images) {
                 if (!isExists(s)) {
@@ -282,7 +283,9 @@ public class AddMessageActivity extends AppCompatActivity
 
 
     private void onClickSelectImages() {
-        ImageSelectorActivity.start(AddMessageActivity.this, mSelectNumber, mMode, isShow, isPreview, isCrop);
+//        ImageSelectorActivity.start(AddMessageActivity.this, mSelectNumber, mMode, isShow, isPreview, isCrop);
+
+        startActivityForResult(new Intent(this, ImagesCheckActivity.class), REQUEST_IMAGE);
     }
 
     private void onClickAddMessages() {

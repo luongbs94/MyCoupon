@@ -17,6 +17,7 @@
         android:name="com.ln.app.MainApplication"
         android:allowBackup="true"
         android:excludeFromRecents="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -66,6 +67,7 @@
         <activity android:name=".customer.CouponCompanyOfClientActivity" />
         <activity android:name=".customer.CustomerLoginActivity" />
 
+        <activity android:name=".PreviewImagesActivity" />
         <!-- ======================== END ACTIVITY OF APP =============== -->
 
         <service android:name="com.ln.firebase.MyFirebaseMessagingService">
@@ -107,20 +109,6 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <!-- ===================== END FACEBOOK ================ -->
-        <activity
-            android:name="com.yongchun.library.view.ImageSelectorActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.yongchun.library.view.ImagePreviewActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.yongchun.library.view.ImageCropActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PreviewImagesActivity" />
-
-        <!-- CHECK NETWORK -->
-
         <receiver
             android:name="com.ln.broadcast.ConnectivityReceiver"
             android:enabled="true">
@@ -131,11 +119,14 @@
 
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar.Theme"></activity>
+            android:theme="@style/AppTheme.NoActionBar.Theme" />
+        <activity android:name="com.ln.images.activities.ImagesCropActivity" />
         <activity
-            android:name="com.ln.cropimages.activities.ImagesSelectActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name="com.ln.cropimages.activities.ImagesActivity"></activity>
+            android:name="com.ln.images.activities.ImagesCheckActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.ln.images.cropimage.CropActivity"
+            android:theme="@style/AppTheme.Light.NoActionBar" />
     </application>
 
 </manifest>

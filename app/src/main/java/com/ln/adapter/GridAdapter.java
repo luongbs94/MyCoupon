@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ln.app.MainApplication;
+import com.ln.images.models.LocalMedia;
 import com.ln.mycoupon.PreviewImagesActivity;
 import com.ln.mycoupon.R;
 import com.squareup.picasso.Picasso;
@@ -17,12 +18,12 @@ import com.squareup.picasso.Picasso;
 import java.io.Serializable;
 import java.util.List;
 
-public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
+class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<String> mListImages;
+    private List<LocalMedia> mListImages;
 
-    public GridAdapter(Context mContext, List<String> listImages) {
+    GridAdapter(Context mContext, List<LocalMedia> listImages) {
         this.mContext = mContext;
         mListImages = listImages;
     }
@@ -36,10 +37,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final GridAdapter.ViewHolder holder, int position) {
 
-        String strImage = mListImages.get(position);
-        if (strImage != null) {
+        LocalMedia item = mListImages.get(position);
+        if (item != null) {
             Picasso.with(mContext)
-                    .load(strImage)
+                    .load(item.getPath())
                     .into(holder.imageView);
         }
     }
@@ -65,7 +66,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                 Bundle bundle = new Bundle();
                 bundle.putInt(MainApplication.POSITION, this.getAdapterPosition());
                 bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) mListImages);
-                intent.putExtra(MainApplication.DATA, bundle);
+                intent.putExtras(bundle);
                 mContext.startActivity(intent);
             }
         }

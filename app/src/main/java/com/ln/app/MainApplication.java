@@ -65,11 +65,12 @@ public class MainApplication extends MultiDexApplication {
     public static final int START_QRCODE = 111;
     public static final String CONTENT_COUPON = "CONTENT_COUPON";
     public static final long TIME_SLEEP_SETTING = 500;
+    public static final String CROP_IMAGES = "CROP_IMAGES";
+    public static final String LINK_IMAGES = "LINK_IMAGES";
 
     private static MainApplication mInstances;
 
     private static final String ALLOWED_CHARACTERS = "0123456789qwertyuiopasdfghjklzxcvbnm";
-
 
     // apis normal
     private static LoveCouponAPI apiService;
@@ -113,7 +114,6 @@ public class MainApplication extends MultiDexApplication {
 //    public static AccountOflUser sShopDetail;
 
     public static boolean sIsAdmin = false;
-
 
     public static final String FILE_URI = "file_uri";
     public static final int GOOGLE_SIGN_IN = 100;

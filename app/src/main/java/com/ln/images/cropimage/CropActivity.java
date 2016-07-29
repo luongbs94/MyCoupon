@@ -1,23 +1,30 @@
-package com.ln.cropimages.activities;
+package com.ln.images.cropimage;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.ln.app.MainApplication;
+import com.ln.images.models.LocalMedia;
 import com.ln.mycoupon.R;
 
-public class ImagesActivity extends AppCompatActivity {
+public class CropActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_images);
+        setContentView(R.layout.activity_crop);
+
+        Bundle bundle = getIntent().getExtras();
+
+        LocalMedia item = (LocalMedia) bundle.getSerializable(MainApplication.LINK_IMAGES);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, MainFragment.getInstance())
+                    .add(R.id.container, MainFragment.getInstance(item.getPath()))
                     .commit();
         }
     }
@@ -34,8 +41,9 @@ public class ImagesActivity extends AppCompatActivity {
     }
 
     public void startResultActivity(Uri uri) {
-        if (isFinishing()) return;
-        // Start ResultActivity
-//        startActivity(ResultActivity.createIntent(this, uri));
+        Intent intent = getIntent();
+        intent.setData(uri);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

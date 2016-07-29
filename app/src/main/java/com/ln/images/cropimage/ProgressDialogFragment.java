@@ -1,4 +1,4 @@
-package com.ln.cropimages.activities;
+package com.ln.images.cropimage;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.yongchun.library.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ln.images.views.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
@@ -24,4 +24,4 @@
         android:text="@string/ic_close"
         android:textColor="@color/icon_heart"
         android:textSize="@dimen/size_20sp" />
-</com.yongchun.library.widget.SquareRelativeLayout>
+</com.ln.images.views.SquareRelativeLayout>

@@ -134,7 +134,27 @@
     <string name="time_shelf">40</string>
     <string name="fit_images">FIT IMAGE</string>
     <string name="square">SQUARE</string>
+    <string name="text_done" formated="false">Done(%1$S)</string>
+    <string name="take_camera">Take photo</string>
+    <string name="text_3_4">3:4</string>
+    <string name="text_4_3">4:3</string>
+    <string name="text_9_16">9:16</string>
+    <string name="text_16_9">16:9</string>
+    <string name="free">4:3</string>
+    <string name="text_7_5">7:5</string>
+    <string name="circle">CIRCLE</string>
+    <string name="circle_square">CIRCLE_SQUARE</string>
+    <string name="all_image">All images</string>
+    <string name="crop_images">Chose Images Crop</string>
 
+    <string name="button_allow">Allow</string>
+    <string name="button_deny">Deny</string>
+    <string name="permission_pick_rationale">READ_EXTERNAL_STORAGE permission is needed to pick image.</string>
+    <string name="permission_crop_rationale">WRITE_EXTERNAL_STORAGE permission is needed to save cropped image.</string>
+    <string name="permission_denied">Permission was denied. Please consider granting it in order to use all features.</string>
+    <string name="permission_denied_never_ask_again">Permission was denied with never ask again.</string>
+    <string name="external">SDcard</string>
+    <string name="internal">Internal storage</string>
 
     <string-array name="month">
         <item>1 month</item>

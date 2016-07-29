@@ -18,6 +18,7 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
+import com.ln.images.models.LocalMedia;
 import com.ln.model.AccountOflUser;
 import com.ln.model.Message;
 import com.ln.mycoupon.R;
@@ -27,7 +28,6 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,10 +102,12 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
         if (item.getImages_link() != null) {
             String strImages = item.getImages_link();
 
-            List<String> listImages = new ArrayList<>();
+            List<LocalMedia> listImages = new ArrayList<>();
 
             String[] listStrImages = strImages.split(";");
-            listImages.addAll(Arrays.asList(listStrImages));
+            for (String path : listStrImages) {
+                listImages.add(new LocalMedia(path));
+            }
             GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
             holder.mRecyclerView.setAdapter(gridAdapter);
             holder.mRecyclerView.setVisibility(View.VISIBLE);

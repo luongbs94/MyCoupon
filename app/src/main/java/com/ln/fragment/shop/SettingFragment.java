@@ -2,14 +2,15 @@ package com.ln.fragment.shop;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
@@ -18,7 +19,9 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,22 +29,24 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.isseiaoki.simplecropview.util.Utils;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
+import com.ln.images.activities.ImagesCropActivity;
 import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
-import com.yongchun.library.view.ImageCropActivity;
-import com.yongchun.library.view.ImageSelectorActivity;
 
-import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +60,7 @@ public class SettingFragment extends Fragment implements
         View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
 
+    private static final int START_CROP_IMAGES = 99;
     private LoveCouponAPI mLoveCouponAPI;
 
     private final String TAG = getClass().getSimpleName();
@@ -78,11 +84,18 @@ public class SettingFragment extends Fragment implements
     private boolean isChoseImages;
     private String mLogoBase64;
 
+    private ExecutorService mExecutor;
+
+    private Uri mUri;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mLoveCouponAPI = MainApplication.getAPI();
+        mExecutor = Executors.newSingleThreadExecutor();
+        mExecutor.submit(new LoadScaledImageTask(getActivity(), mUri, mImgLogo, calcImageSize()));
 
         String strCompany = MainApplication
                 .getPreferences()
@@ -222,30 +235,16 @@ public class SettingFragment extends Fragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d(TAG, "requestCode = " + requestCode + " - resultCode " + resultCode);
+        Log.d(TAG, "requestCode = " + requestCode
+                + " - resultCode " + resultCode
+                + " + " + Activity.RESULT_OK);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
+            if (requestCode == START_CROP_IMAGES) {
 
-                if (data != null) {
-                    Uri uri = data.getData();
-
-
-                    String path = getRealPathFromURI(uri);
-                    ImageCropActivity.startCrop(getActivity(), path);
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-//
-//                    Bitmap resize = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES,
-//                            MainApplication.WIDTH_IMAGES, true);
-//                    mImgLogo.setImageBitmap(resize);
-                    isChoseImages = true;
-
-                }
+                mUri = data.getData();
+                mExecutor.submit(new LoadScaledImageTask(getActivity(), mUri, mImgLogo, calcImageSize()));
+                Log.d(TAG, "data");
             }
-            if (requestCode == ImageCropActivity.REQUEST_CROP) {
-                String path = data.getStringExtra(ImageCropActivity.OUTPUT_PATH);
-                Glide.with(this).load(new File(path)).into(mImgLogo);
-            }
-
         } else {
             getShowMessage("User cancelled image capture");
         }
@@ -266,6 +265,10 @@ public class SettingFragment extends Fragment implements
                 onClickSaveCompany();
                 break;
             case R.id.img_logo_nav:
+
+                startActivityForResult(new Intent(getActivity(),
+                        ImagesCropActivity.class), START_CROP_IMAGES);
+
                 onClickOpenGallery();
                 break;
             case R.id.fab_done:
@@ -285,12 +288,14 @@ public class SettingFragment extends Fragment implements
 //        } else {
 //            getShowMessage("Driver do not Support");
 //        }
+//
+//        int mode = ImageSelectorActivity.MODE_SINGLE;
+//        boolean isShow = true;
+//        boolean isPreview = false;
+//        boolean isCrop = true;
+//        ImageSelectorActivity.start(getActivity(), 9, mode, isShow, isPreview, isCrop);
 
-        int mode = ImageSelectorActivity.MODE_SINGLE;
-        boolean isShow = true;
-        boolean isPreview = false;
-        boolean isCrop = true;
-        ImageSelectorActivity.start(getActivity(), 9, mode, isShow, isPreview, isCrop);
+
     }
 
 
@@ -542,21 +547,6 @@ public class SettingFragment extends Fragment implements
         }
     }
 
-    private String getRealPathFromURI(Uri contentURI) {
-        String result;
-        Cursor cursor = getActivity().getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) {
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-        return result;
-    }
-
-
     private void validatePassword(EditText user, EditText password, TextInputLayout inputPassword) {
         if (!user.getText().toString().trim().isEmpty() && password.getText().toString().trim().isEmpty()) {
             inputPassword.setErrorEnabled(true);
@@ -576,5 +566,49 @@ public class SettingFragment extends Fragment implements
 
     private void getShowMessage(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    public static class LoadScaledImageTask implements Runnable {
+        private Handler mHandler = new Handler(Looper.getMainLooper());
+        private Context context;
+        Uri uri;
+        ImageView imageView;
+        int width;
+
+        public LoadScaledImageTask(Context context, Uri uri, ImageView imageView, int width) {
+            this.context = context;
+            this.uri = uri;
+            this.imageView = imageView;
+            this.width = width;
+        }
+
+        @Override
+        public void run() {
+            final int exifRotation = Utils.getExifOrientation(context, uri);
+            int maxSize = Utils.getMaxSize();
+            int requestSize = Math.min(width, maxSize);
+            try {
+                final Bitmap sampledBitmap = Utils.decodeSampledBitmapFromUri(context, uri, requestSize);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageMatrix(Utils.getMatrixFromExifOrientation(exifRotation));
+                        imageView.setImageBitmap(sampledBitmap);
+                    }
+                });
+            } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public int calcImageSize() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        display.getMetrics(metrics);
+        return Math.min(Math.max(metrics.widthPixels, metrics.heightPixels), 2048);
     }
 }

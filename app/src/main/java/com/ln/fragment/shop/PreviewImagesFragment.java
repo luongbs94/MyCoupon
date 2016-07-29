@@ -25,8 +25,6 @@ public class PreviewImagesFragment extends Fragment {
 
     private View mView;
     private ImageView mImagePreview;
-    private String TAG = getClass().getSimpleName();
-
 
     public static PreviewImagesFragment getInstance(String path) {
         PreviewImagesFragment fragment = new PreviewImagesFragment();
@@ -35,11 +33,6 @@ public class PreviewImagesFragment extends Fragment {
         fragment.setArguments(bundle);
         return fragment;
     }
-
-
-    public PreviewImagesFragment() {
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
