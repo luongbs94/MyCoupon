@@ -15,7 +15,7 @@
         android:paddingRight="16dp"
         android:paddingTop="16dp"
         custom:scv_background_color="@color/windowBackground"
-        custom:scv_crop_mode="fit_image"
+        custom:scv_crop_mode="square"
         custom:scv_frame_color="@color/colorAccent"
         custom:scv_frame_stroke_weight="1dp"
         custom:scv_guide_color="@color/colorAccent"
@@ -48,7 +48,8 @@
             android:layout_height="48dp"
             android:orientation="horizontal"
             android:paddingLeft="4dp"
-            android:paddingRight="4dp">
+            android:paddingRight="4dp"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/buttonFitImage"

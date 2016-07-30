@@ -145,6 +145,7 @@ public class CouponTemplateAdapter
                 case R.id.txt_company_name:
                 case R.id.txt_price_coupon:
                 case R.id.txt_description:
+                case R.id.app_icon:
                     onClickBtnQRCode(this.getAdapterPosition());
                     break;
                 case R.id.image_more:

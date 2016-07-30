@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
 import com.ln.adapter.CouponTemplateClientAdapter;
 import com.ln.app.MainApplication;
@@ -26,6 +25,7 @@ import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
+import com.ln.views.RecyclerViewHeader;
 import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;

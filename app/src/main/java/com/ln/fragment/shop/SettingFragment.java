@@ -244,6 +244,7 @@ public class SettingFragment extends Fragment implements
                 mUri = data.getData();
                 mExecutor.submit(new LoadScaledImageTask(getActivity(), mUri, mImgLogo, calcImageSize()));
                 Log.d(TAG, "data");
+                isChoseImages = true;
             }
         } else {
             getShowMessage("User cancelled image capture");
@@ -269,7 +270,6 @@ public class SettingFragment extends Fragment implements
                 startActivityForResult(new Intent(getActivity(),
                         ImagesCropActivity.class), START_CROP_IMAGES);
 
-                onClickOpenGallery();
                 break;
             case R.id.fab_done:
                 onClickSaveCompany();
@@ -277,25 +277,6 @@ public class SettingFragment extends Fragment implements
             default:
                 break;
         }
-    }
-
-    private void onClickOpenGallery() {
-//        if (isDriverSupportCamera()) {
-//            Intent intent = new Intent();
-//            intent.setType("image/*");
-//            intent.setAction(Intent.ACTION_GET_CONTENT);
-//            startActivityForResult(intent, SELECT_PICTURE);
-//        } else {
-//            getShowMessage("Driver do not Support");
-//        }
-//
-//        int mode = ImageSelectorActivity.MODE_SINGLE;
-//        boolean isShow = true;
-//        boolean isPreview = false;
-//        boolean isCrop = true;
-//        ImageSelectorActivity.start(getActivity(), 9, mode, isShow, isPreview, isCrop);
-
-
     }
 
 

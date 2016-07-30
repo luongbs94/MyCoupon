@@ -46,7 +46,7 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
                 if (ConnectivityReceiver.isConnect()) {
                     ShareLinkContent content = new ShareLinkContent.Builder()
                             .setContentUrl(Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON))
-                            .setImageUrl(Uri.parse("http://188.166.179.187:3001/upload/ImageSelector_20160616_223027_19062016_010851.png"))
+                            .setImageUrl(Uri.parse(MainApplication.LINK_SHARE_IMAGE))
                             .setContentTitle(getString(R.string.share_love_coupon))
                             .setContentDescription(getString(R.string.description_love_coupon))
                             .build();
@@ -60,24 +60,25 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.image_email:
                 if (ConnectivityReceiver.isConnect()) {
-                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    Intent intent = new Intent(Intent.ACTION_SENDTO); // it's not ACTION_SEND
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_SUBJECT, "");
                     intent.putExtra(Intent.EXTRA_TEXT, "");
-                    intent.setData(Uri.parse("mailto:" + getString(R.string.support)));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    intent.setData(Uri.parse("mailto:" + MainApplication.EMAIL_LOVE_COUPON)); // or just "mailto:" for blank
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
+                    startActivity(Intent.createChooser(intent, "Send email..."));
                 } else {
                     getShowMessages(getActivity().getString(R.string.check_network));
                 }
+
                 break;
             case R.id.image_web:
-                if (ConnectivityReceiver.isConnect()) {
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON));
-                    startActivity(intent1);
-                } else {
+                if (!ConnectivityReceiver.isConnect()) {
                     getShowMessages(getActivity().getString(R.string.check_network));
+                    return;
                 }
+                Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON));
+                startActivity(intent1);
                 break;
             default:
                 break;

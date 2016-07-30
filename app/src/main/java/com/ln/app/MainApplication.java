@@ -74,8 +74,8 @@ public class MainApplication extends MultiDexApplication {
 
     // apis normal
     private static LoveCouponAPI apiService;
-    public static LoveCouponAPI apiService1;
-    public static LoveCouponAPI apiService2;
+    private static LoveCouponAPI apiService1;
+    private static LoveCouponAPI apiService2;
     private static LoveCouponAPI apiService3;
 
 
@@ -91,7 +91,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String CLIENT_DATA = "client_data";
     public static final String LOGIN_SHOP = "loginshop";
     public static final String SHOP_DATA = "shop_data";
-    public static SharedPreferences sharedPreferences;
+    private static SharedPreferences sharedPreferences;
 
 
     public static SharedPreferences.Editor editor;
@@ -108,8 +108,8 @@ public class MainApplication extends MultiDexApplication {
     private static final String URL_GET_POST = "http://188.166.199.25:3000";
     //    public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
     public static final String URL_UPDATE_IMAGE = "http://188.166.196.171:3001";
-    public static final String URL_GET_CITY = "http://freegeoip.net";
-    public static final String URL_GET_CITY2 = "http://ip-api.com";
+    private static final String URL_GET_CITY = "http://freegeoip.net";
+    private static final String URL_GET_CITY2 = "http://ip-api.com";
 
 //    public static AccountOflUser sShopDetail;
 
@@ -142,14 +142,14 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String FONT = "fonts/fontawesome-webfont.ttf";
     //    public static final String EMAIL_LOVE_COUPON = "support@lovecoupon.com";
-    public static final String EMAIL_LOVE_COUPON = "nhahv09021995@gmail.com";
+    public static final String EMAIL_LOVE_COUPON = "info@lovecoupon.com";
     public static final String WEB_SITE_LOVE_COUPON = "http://www.lovecoupon.com:8080";
-
+    public static final String LINK_SHARE_IMAGE = "http://188.166.199.25:3000/logo/love.jpg";
 
     public static final int NEWS_CUSTOMER = 0;
     public static final int NEWS_MORE = 1;
 
-    public static boolean isEnglish;
+    private static boolean isEnglish;
 
 
     @Override

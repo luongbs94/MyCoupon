@@ -24,7 +24,7 @@
         android:paddingTop="@dimen/size_8"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/size_20sp"
+        android:textSize="@dimen/size_24sp"
         android:textStyle="bold" />
 
     <TextView
@@ -34,6 +34,6 @@
         android:layout_marginTop="@dimen/size_4"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/size_18sp" />
+        android:textSize="@dimen/size_17sp" />
 
 </LinearLayout>

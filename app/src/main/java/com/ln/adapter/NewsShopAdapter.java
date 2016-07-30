@@ -75,7 +75,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         final Company company = new Gson().fromJson(strCompany, Company.class);
 
         if (company != null) {
-            holder.mTxtCompanyName.setText(company.getName());
+            if (company.getName() != null) {
+                holder.mTxtCompanyName.setText(company.getName());
+            }
             if (company.getLogo() != null) {
                 Glide.with(mContext)
                         .load(MainApplication.convertToBytes(company.getLogo()))
@@ -85,13 +87,22 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             }
         }
 
-        holder.mTxtTile.setText(item.getTitle());
-        holder.mTxtContent.setText(item.getContent());
+        if (item.getTitle() != null) {
+            holder.mTxtTile.setText(item.getTitle());
+        }
+        if (item.getContent() != null) {
+            holder.mTxtContent.setText(item.getContent());
+        }
 
         holder.mTxtLink.setVisibility(View.GONE);
-        if (item.getLink() != null) {
+        if (!item.getLink().isEmpty()) {
             holder.mTxtLink.setVisibility(View.VISIBLE);
-            holder.mTxtLink.setText(item.getLink());
+            if (item.getLink().contains("http")) {
+                holder.mTxtLink.setText(item.getLink());
+            } else {
+                String link = "http://" + item.getLink();
+                holder.mTxtLink.setText(link);
+            }
         }
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -182,7 +193,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                     onClickLikeNews(this.getAdapterPosition(), this);
                     break;
                 case R.id.linear_share:
-                    onClickShare(this.getAdapterPosition());
+                    onClickShare(this.getAdapterPosition(), this);
                     break;
                 case R.id.linear_delete:
                     onClickDeleteNews(this.getAdapterPosition());
@@ -242,39 +253,32 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
     }
 
-    private void onClickShare(int position) {
+    private void onClickShare(int position, ViewHolder holder) {
 
         NewsOfCompanyLike item = mListNews.get(position);
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         final Company company = new Gson().fromJson(strCompany, Company.class);
 
-        String logoLink;
-        if (company != null && company.getLogo_link() != null) {
-            logoLink = company.getLogo_link();
-        } else {
-            logoLink = "http://api.lovecoupon.com:3000/logo/7.jpg";
-        }
+        Uri uriLink = null;
+        if (!item.getLink().isEmpty()) {
 
-        Uri uri = Uri.parse(logoLink);
-        ShareLinkContent content;
-        if (item.getLink() != null) {
-            content = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(item.getLink()))
-                    .setContentTitle(item.getTitle())
-                    .setContentDescription(item.getContent())
-                    .setImageUrl(uri)
-                    .build();
+            if (item.getLink().contains("http")) {
+                uriLink = Uri.parse(item.getLink());
+            } else {
+                uriLink = Uri.parse("http://" + item.getLink());
+            }
         } else {
-            content = new ShareLinkContent.Builder()
-                    .setContentUrl(null)
-                    .setContentTitle(item.getTitle())
-                    .setContentDescription(item.getContent())
-                    .setImageUrl(uri)
-                    .build();
+            uriLink = Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON);
         }
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(uriLink)
+                .setContentTitle(item.getTitle())
+                .setContentDescription(item.getContent())
+                .setImageUrl(Uri.parse(company.getLogo_link()))
+                .build();
+
         mShareDialog.show(content);
-
     }
 
     private void deleteNewsOfCompany(final String idNews, final int positionNews) {

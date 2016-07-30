@@ -15,8 +15,6 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/size_10"
-            android:layout_marginRight="@dimen/size_10"
             android:clipToPadding="false"
             android:divider="@null"
             android:dividerHeight="4dp"
@@ -24,17 +22,18 @@
             android:focusable="true"
             android:layoutAnimation="@anim/list_anim"
             android:listSelector="@android:color/transparent"
-            android:paddingLeft="@dimen/size_5"
-            android:paddingRight="@dimen/size_5"
+            android:paddingLeft="@dimen/size_2"
+            android:paddingRight="@dimen/size_2"
             android:scrollbars="vertical" />
 
-        <com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader
+
+        <com.ln.views.RecyclerViewHeader
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|top">
 
             <include layout="@layout/nav_header_main" />
-        </com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader>
+        </com.ln.views.RecyclerViewHeader>
     </FrameLayout>
 </LinearLayout>

@@ -79,10 +79,15 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
             holder.mTxtTile.setText(item.getTitle());
         }
 
-        if (item.getLink() != null) {
-            holder.mTxtLink.setText(item.getLink());
-        } else {
-            holder.mTxtLink.setVisibility(View.GONE);
+        holder.mTxtLink.setVisibility(View.GONE);
+        if (!item.getLink().isEmpty()) {
+            holder.mTxtLink.setVisibility(View.VISIBLE);
+            if (item.getLink().contains("http")) {
+                holder.mTxtLink.setText(item.getLink());
+            } else {
+                String link = "http://" + item.getLink();
+                holder.mTxtLink.setText(link);
+            }
         }
         if (item.getName() != null) {
             holder.mTxtCompanyName.setText(item.getName());
@@ -209,13 +214,22 @@ public class NewsMoreAdapter extends RecyclerView.Adapter<NewsMoreAdapter.ViewHo
     }
 
     private void onClickShared(int position) {
+
         Message item = mListNews.get(position);
-        String link = null;
-        if (item.getLink() != null) {
-            link = item.getLink();
+
+        Uri uriLink = null;
+        if (!item.getLink().isEmpty()) {
+
+            if (item.getLink().contains("http")) {
+                uriLink = Uri.parse(item.getLink());
+            } else {
+                uriLink = Uri.parse("http://" + item.getLink());
+            }
+        } else {
+            uriLink = Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON);
         }
         ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse(link))
+                .setContentUrl(uriLink)
                 .setContentTitle(item.getTitle())
                 .setContentDescription(item.getContent())
                 .setImageUrl(Uri.parse(item.getLogo_link()))
