@@ -72,7 +72,6 @@ dependencies {
 
     compile 'com.github.kenglxn.QRGen:android:2.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.bartoszlipinski:recyclerviewheader2:2.0.1'
     compile "com.github.hotchemi:permissionsdispatcher:${permissionsDispatcherVersion}"
     apt "com.github.hotchemi:permissionsdispatcher-processor:${permissionsDispatcherVersion}"
 

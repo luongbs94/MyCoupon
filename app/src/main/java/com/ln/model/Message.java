@@ -13,11 +13,10 @@ public class Message implements Comparable<Message> {
     private String logo;
     private String logo_link;
     private String name;
+    private long last_date, created_date;
 
     private boolean isLike;
     private boolean isDelete;
-
-    private long last_date, created_date;
 
 
     public Message() {

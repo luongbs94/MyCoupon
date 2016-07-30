@@ -180,7 +180,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(manager);
-
+            mRecyclerView.setVisibility(View.GONE);
             (itemView.findViewById(R.id.linear_like)).setOnClickListener(this);
             (itemView.findViewById(R.id.linear_share)).setOnClickListener(this);
             (itemView.findViewById(R.id.linear_delete)).setOnClickListener(this);

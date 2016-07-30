@@ -63,70 +63,62 @@ public class RealmController {
     }
     /*================= START LIKE NEWS USER ================*/
 
+
     // add likeNews by id news
-    public void addLikeNewsCustomer(String idNews, int type, String idUser) {
+    public void addLikeNewsCustomer(String idNews, String idUser) {
 
         mRealm.beginTransaction();
-        LikeNews likeNews = mRealm.createObject(LikeNews.class);
-        likeNews.setIdUser(idUser);
-        likeNews.setIdNews(idNews);
-        likeNews.setType(type);
-        mRealm.commitTransaction();
-    }
-
-
-    // add DeleteNews by id news
-    public void addDeleteNewsByIdNews(String idNews, String idUser) {
-
-        mRealm.beginTransaction();
-        DeleteNews likeNews = mRealm.createObject(DeleteNews.class);
-        likeNews.setIdUser(idUser);
-        likeNews.setIdNews(idNews);
-        mRealm.commitTransaction();
-    }
-
-
-    // delete like news by id
-    public void deleteLikeNewsById(String idNews) {
-        mRealm.beginTransaction();
-        RealmResults<LikeNews> likeNewses = getListLikeNewsByIdNews(idNews);
-
-        if (!likeNewses.isEmpty()) {
-            for (LikeNews likeNews : likeNewses) {
-                likeNews.deleteFromRealm();
-            }
+        LikeNews item = getLikeNewsCustomerById(idNews);
+        if (item != null) {
+            item.deleteFromRealm();
         }
-
+        mRealm.copyToRealmOrUpdate(new LikeNews(idNews, idUser));
         mRealm.commitTransaction();
     }
 
-    // find all like news
+    public void deleteLikeNewsCustomer(String idNews) {
+        mRealm.beginTransaction();
+        LikeNews item = getLikeNewsCustomerById(idNews);
+        if (item != null) {
+            item.deleteFromRealm();
+        }
+        mRealm.commitTransaction();
+    }
+
+    private LikeNews getLikeNewsCustomerById(String idNews) {
+        return mRealm
+                .where(LikeNews.class)
+                .equalTo("idNews", idNews)
+                .findFirst();
+    }
+
     public RealmResults<LikeNews> getListLikeNews() {
         return mRealm.where(LikeNews.class).findAll();
     }
 
+    // add DeleteNews by id news
+    public void addDeleteNewsCustomer(String idNews, String idUser) {
 
-    // find all like news by id
-    public RealmResults<LikeNews> getListLikeNewsByIdNews(String idNews) {
-        return mRealm.where(LikeNews.class)
-                .equalTo(MainApplication.ID_NEWS, idNews)
-                .findAll();
+        mRealm.beginTransaction();
+        DeleteNews item = getDeleteNewsCustomerById(idNews);
+        if (item != null) {
+            item.deleteFromRealm();
+        }
+        mRealm.copyToRealmOrUpdate(new DeleteNews(idNews, idUser));
+        mRealm.commitTransaction();
     }
 
-
-    // find all delete news by id
-    public RealmResults<DeleteNews> getDeleteNewsById(String idNews) {
-
+    private DeleteNews getDeleteNewsCustomerById(String idNews) {
         return mRealm
                 .where(DeleteNews.class)
-                .equalTo(MainApplication.ID_NEWS, idNews)
-                .findAll();
+                .equalTo("idNews", idNews)
+                .findFirst();
     }
 
-
-    // find all delete news
     public RealmResults<DeleteNews> getListDeleteNews() {
-        return mRealm.where(DeleteNews.class).findAll();
+        return mRealm
+                .where(DeleteNews.class)
+                .findAll();
     }
 
     /*================== END DELETE NEWS USER ==================*/
@@ -227,16 +219,6 @@ public class RealmController {
         mRealm.beginTransaction();
         for (NewsOfCustomer news : listNews) {
             mRealm.copyToRealmOrUpdate(news);
-        }
-        mRealm.commitTransaction();
-    }
-
-    //
-    public void deleteListNewsOfCustomer() {
-        mRealm.beginTransaction();
-        RealmResults<NewsOfCustomer> listMessages = getListNewsOfCustomer();
-        for (NewsOfCustomer message : listMessages) {
-            message.deleteFromRealm();
         }
         mRealm.commitTransaction();
     }

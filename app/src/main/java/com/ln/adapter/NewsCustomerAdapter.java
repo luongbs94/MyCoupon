@@ -167,6 +167,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
             LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(manager);
+            mRecyclerView.setVisibility(View.GONE);
 
             textLastDate = (TextView) itemView.findViewById(R.id.text_last_date);
             textTimeShelf = (TextView) itemView.findViewById(R.id.text_time_shelf);
@@ -210,13 +211,13 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
             item.setLike(false);
-            MainApplication.mRealmController.deleteLikeNewsById(item.getMessage_id());
+            MainApplication.mRealmController.deleteLikeNewsCustomer(item.getMessage_id());
         } else {
             holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
             item.setLike(true);
-            MainApplication.mRealmController.addLikeNewsCustomer(item.getMessage_id(), mType, idUser);
+            MainApplication.mRealmController.addLikeNewsCustomer(item.getMessage_id(), idUser);
         }
     }
 
@@ -247,6 +248,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     private void onClickDeleteNews(int position, final ViewHolder holder) {
 
         final Message item = mListNews.get(position);
+
         String strAccount = MainApplication.getPreferences()
                 .getString(MainApplication.ACCOUNT_CUSTOMER, "");
         final String idUser = new Gson()
@@ -261,7 +263,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        MainApplication.mRealmController.addDeleteNewsByIdNews(item.getMessage_id(), idUser);
+                        MainApplication.mRealmController.addDeleteNewsCustomer(item.getMessage_id(), idUser);
                         mListNews.remove(holder.getAdapterPosition());
                         notifyDataSetChanged();
                     }

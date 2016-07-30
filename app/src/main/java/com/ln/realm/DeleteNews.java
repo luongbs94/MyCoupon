@@ -19,6 +19,11 @@ public class DeleteNews extends RealmObject {
     public DeleteNews() {
     }
 
+    public DeleteNews(String idNews, String idUser) {
+        this.idNews = idNews;
+        this.idUser = idUser;
+    }
+
     public String getIdUser() {
         return idUser;
     }

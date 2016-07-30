@@ -2,7 +2,6 @@ package com.ln.fragment.customer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ln.adapter.NewsCustomerAdapter;
@@ -42,17 +42,25 @@ import retrofit2.Response;
  */
 public class NewsCustomerFragment extends Fragment {
 
+    private final String TAG = getClass().getSimpleName();
+
     private LoveCouponAPI apiService;
-    private String TAG = getClass().getSimpleName();
+    private RealmController mRealmController;
 
     private RecyclerView mRecyclerNews;
     private SwipeRefreshLayout mSwipeContainer;
-
-    private RealmController mRealmController;
     private AccountOflUser account;
 
     private int mType;
+    private int mTypeNews = MainApplication.TYPE_NEWS;
 
+    public static NewsCustomerFragment getInstances(int typeNews) {
+        NewsCustomerFragment instances = new NewsCustomerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(MainApplication.ID_NEWS, typeNews);
+        instances.setArguments(bundle);
+        return instances;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,11 +68,10 @@ public class NewsCustomerFragment extends Fragment {
 
         apiService = MainApplication.getAPI();
         mRealmController = RealmController.with(this);
-        account = new Gson().fromJson(
-                MainApplication.getPreferences()
-                        .getString(MainApplication
-                                .ACCOUNT_CUSTOMER, ""),
-                AccountOflUser.class);
+        account = new Gson()
+                .fromJson(MainApplication
+                        .getPreferences()
+                        .getString(MainApplication.ACCOUNT_CUSTOMER, ""), AccountOflUser.class);
     }
 
     @Nullable
@@ -72,6 +79,8 @@ public class NewsCustomerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_customer_news, container, false);
+
+        mTypeNews = getArguments().getInt(MainApplication.ID_NEWS);
 
         mRecyclerNews = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerNews.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -107,60 +116,62 @@ public class NewsCustomerFragment extends Fragment {
 
     private void setListMessages() {
 
-        AccountOflUser account = new Gson().fromJson(
-                MainApplication.getPreferences()
-                        .getString(MainApplication
-                                .ACCOUNT_CUSTOMER, ""),
-                AccountOflUser.class);
-        List<NewsOfCustomer> mListNews = new ArrayList<>();
-        mListNews.addAll(mRealmController.getListNewsOfCustomer());
-
-        // set like news
-        List<LikeNews> listLike = mRealmController.getListLikeNews();
-        // list delete
-        List<DeleteNews> listDeleteNews = mRealmController.getListDeleteNews();
         List<Message> listMessage = new ArrayList<>();
-        for (NewsOfCustomer news : mListNews) {
-            listMessage.add(new Message(news));
+        Log.d(TAG, mTypeNews + "");
+        if (mTypeNews == MainApplication.TYPE_NEWS) {
+            List<NewsOfCustomer> listNews = mRealmController.getListNewsOfCustomer();
+            for (NewsOfCustomer news : listNews) {
+                listMessage.add(new Message(news));
+            }
+        } else if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
+            List<NewsOfMore> mListNews = mRealmController.getListNewsOfMore();
+            for (NewsOfMore news : mListNews) {
+                listMessage.add(new Message(news));
+                Log.d(TAG, "setListMessages " + news.getLogo_link());
+                Log.d(TAG, "setListMessages " + news.getMessage_id());
+                Log.d(TAG, "setListMessages " + " ========================= ");
+            }
         }
+
+
+        List<LikeNews> listLike = mRealmController.getListLikeNews();
+        List<DeleteNews> listDeleteNews = mRealmController.getListDeleteNews();
+
 
         for (LikeNews likeNews : listLike) {
 
-            for (Message newsOfLike : listMessage) {
-                if (newsOfLike.getMessage_id().equals(likeNews.getIdNews())
+            for (Message item : listMessage) {
+                if (item.getMessage_id().equals(likeNews.getIdNews())
                         && likeNews.getIdUser().equals(account.getId())) {
-                    newsOfLike.setLike(true);
+                    item.setLike(true);
                 }
             }
         }
 
         //set delete news
-
         for (DeleteNews deleteNews : listDeleteNews) {
-            for (Message newsOfLike : listMessage) {
-                if (newsOfLike.getMessage_id().equals(deleteNews.getIdNews())
-                        && deleteNews.getIdNews().equals(account.getId())) {
-                    newsOfLike.setDelete(true);
+            for (Message item : listMessage) {
+                if (item.getMessage_id().equals(deleteNews.getIdNews())) {
+                    item.setDelete(true);
                 }
             }
 
-            int size = mListNews.size() - 1;
+            int size = listMessage.size() - 1;
 
             for (int i = size; i >= 0; i--) {
-                if (mListNews.get(i).getMessage_id().equals(deleteNews.getIdNews())) {
-                    mListNews.remove(i);
+                if (listMessage.get(i).isDelete()) {
+                    listMessage.remove(i);
                 }
             }
         }
 
-        Log.d(TAG, "Size : " + mListNews.size());
         NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listMessage, this);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);
 
     }
 
-    public void getNewsOfCustomer() {
+    private void getNewsOfCustomer() {
 
 
         Call<List<NewsOfCustomer>> newsCustomer = apiService.getNewsByUserId(account.getId());
@@ -169,7 +180,6 @@ public class NewsCustomerFragment extends Fragment {
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-//                    mRealmController.deleteListNewsOfCustomer();
                     mRealmController.addListNewsOfCustomer(response.body());
                     setListMessages();
                     mSwipeContainer.setRefreshing(false);
@@ -185,7 +195,6 @@ public class NewsCustomerFragment extends Fragment {
                 mSwipeContainer.setRefreshing(false);
             }
         });
-
     }
 
     @Override
@@ -199,13 +208,10 @@ public class NewsCustomerFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_all_news:
                 mType = 0;
-                getSnackBar(getString(R.string.all_news));
                 getNewsOfCustomer();
                 return true;
-
             case R.id.menu_like_news:
                 mType = 1;
-                getSnackBar(getString(R.string.like_news));
                 getNewsLike();
                 return true;
             default:
@@ -215,28 +221,41 @@ public class NewsCustomerFragment extends Fragment {
 
     private void getNewsLike() {
 
-        String idUser = account.getId();
         List<LikeNews> listLikeNews = mRealmController.getListLikeNews();
         List<NewsOfCustomer> listNews = mRealmController.getListNewsOfCustomer();
         List<NewsOfMore> listNewsOfMores = mRealmController.getListNewsOfMore();
         List<Message> listMessage = new ArrayList<>();
+        List<DeleteNews> listDeleteNews = mRealmController.getListDeleteNews();
 
         for (LikeNews likeNews : listLikeNews) {
             for (NewsOfCustomer news : listNews) {
-                if (likeNews.getIdUser().equals(idUser) &&
-                        likeNews.getIdNews().equals(news.getMessage_id())) {
+                if (likeNews.getIdNews().equals(news.getMessage_id())) {
                     listMessage.add(new Message(news, true));
                 }
             }
 
             for (NewsOfMore newsOfMore : listNewsOfMores) {
-                if (likeNews.getIdUser().equals(idUser) &&
-                        likeNews.getIdNews().equals(newsOfMore.getMessage_id())) {
+                if (likeNews.getIdNews().equals(newsOfMore.getMessage_id())) {
                     listMessage.add(new Message(newsOfMore, true));
                 }
             }
         }
+        //set delete news
+        for (DeleteNews deleteNews : listDeleteNews) {
+            for (Message item : listMessage) {
+                if (item.getMessage_id().equals(deleteNews.getIdNews())) {
+                    item.setDelete(true);
+                }
+            }
 
+            int size = listMessage.size() - 1;
+
+            for (int i = size; i >= 0; i--) {
+                if (listMessage.get(i).isDelete()) {
+                    listMessage.remove(i);
+                }
+            }
+        }
         Collections.sort(listMessage);
         NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listMessage, this);
         mRecyclerNews.setAdapter(adapter);
@@ -244,6 +263,6 @@ public class NewsCustomerFragment extends Fragment {
     }
 
     private void getSnackBar(String s) {
-        Snackbar.make(mRecyclerNews, s, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 }

@@ -67,6 +67,8 @@ public class MainApplication extends MultiDexApplication {
     public static final long TIME_SLEEP_SETTING = 500;
     public static final String CROP_IMAGES = "CROP_IMAGES";
     public static final String LINK_IMAGES = "LINK_IMAGES";
+    public static final int TYPE_NEWS = 111;
+    public static final int TYPE_NEWS_MORE = 222;
 
     private static MainApplication mInstances;
 

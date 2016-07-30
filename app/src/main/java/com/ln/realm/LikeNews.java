@@ -16,7 +16,14 @@ public class LikeNews extends RealmObject {
     private String idNews;
     @Required
     private String idUser;
-    private int type;
+
+    public LikeNews() {
+    }
+
+    public LikeNews(String idNews, String idUser) {
+        this.idNews = idNews;
+        this.idUser = idUser;
+    }
 
     public String getIdUser() {
         return idUser;
@@ -32,13 +39,5 @@ public class LikeNews extends RealmObject {
 
     public void setIdNews(String idNews) {
         this.idNews = idNews;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 }

@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,7 +22,6 @@ import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.fragment.customer.CouponFragment;
-import com.ln.fragment.customer.MoreNewsFragment;
 import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.model.AccountOflUser;
@@ -136,11 +133,13 @@ public class CustomerMainActivity extends AppCompatActivity
                 break;
             case R.id.nav_new:
                 sTitle = getString(R.string.news);
-                fragment = new NewsCustomerFragment();
+                fragment = NewsCustomerFragment.getInstances(MainApplication.TYPE_NEWS);
+
                 break;
             case R.id.nav_new_more:
                 sTitle = getString(R.string.news_more);
-                fragment = new MoreNewsFragment();
+                fragment = NewsCustomerFragment.getInstances(MainApplication.TYPE_NEWS_MORE);
+
                 break;
             case R.id.menu_share:
                 sTitle = getString(R.string.love_coupon);
@@ -171,17 +170,22 @@ public class CustomerMainActivity extends AppCompatActivity
 
     private void startFragment(Fragment fragment) {
 
-        String backStateName = fragment.getClass().getName();
-        String fragmentTag = backStateName;
-        FragmentManager manager = getSupportFragmentManager();
-        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+//        String backStateName = fragment.getClass().getName();
+//        String fragmentTag = backStateName;
+//        FragmentManager manager = getSupportFragmentManager();
+//        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+//
+//        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
+//            FragmentTransaction ft = manager.beginTransaction();
+//            ft.replace(R.id.content_main, fragment, fragmentTag);
+//            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//            ft.commit();
+//        }
 
-        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
-            FragmentTransaction ft = manager.beginTransaction();
-            ft.replace(R.id.content_main, fragment, fragmentTag);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.commit();
-        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_main, fragment)
+                .commit();
     }
 
 
