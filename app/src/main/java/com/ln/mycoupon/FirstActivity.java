@@ -113,7 +113,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 getNewsOfCustomer(account.getId());
                 String city = preferences.getString(MainApplication.CITY_OF_USER, "");
                 getNewsMore(account.getId(), city);
-                updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
+     //           updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
                 startCustomer();
             }
         }

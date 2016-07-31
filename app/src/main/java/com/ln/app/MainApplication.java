@@ -14,17 +14,22 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.model.CityOfUser;
+import com.ln.model.User;
 import com.ln.realm.RealmController;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -346,5 +351,21 @@ public class MainApplication extends MultiDexApplication {
         }
         Log.d("getEnglish", local);
         return local;
+    }
+
+    public static void updateUserToken(String userId, String token, String device_os) {
+
+        Call<List<User>> call = apiService.updateUserToken(userId, token, device_os);
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> arg0, Response<List<User>> arg1) {
+                MainApplication.setIsAddToken(true);
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> arg0, Throwable arg1) {
+                Log.d("test", "updateUserToken " + "Failure");
+            }
+        });
     }
 }
