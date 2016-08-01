@@ -33,18 +33,16 @@ public class TestQRCode extends AppCompatActivity {
         setContentView(R.layout.activity_test_qrcode);
 
         apiService = MainApplication.getAPI();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle bundle = getIntent().getExtras();
-
         if (bundle != null) {
             value = bundle.getString(MainApplication.VALUE);
             duration = bundle.getInt(MainApplication.DURATION);
             coupon_template_id = bundle.getString(MainApplication.COUPON_TEMpLATE_ID);
             mContent = bundle.getString(MainApplication.CONTENT_COUPON);
             if (value != null) {
-                setTitle("QR Code - " + value + " coupon");
+                setTitle(getString(R.string.title_qr_code, value));
             }
         }
 
@@ -65,11 +63,9 @@ public class TestQRCode extends AppCompatActivity {
     private void generateQRCode(final String text) {
 
         addCoupon(text);
-
         Bitmap myBitmap = QRCode.from(text).bitmap();
         ((ImageView) findViewById(R.id.img_qr_code_image))
                 .setImageBitmap(myBitmap);
-
     }
 
     @Override

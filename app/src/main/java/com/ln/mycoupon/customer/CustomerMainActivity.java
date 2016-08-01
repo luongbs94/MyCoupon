@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -37,7 +38,6 @@ public class CustomerMainActivity extends AppCompatActivity
 
     private FloatingActionButton mFabButton;
     private DrawerLayout mDrawerLayout;
-    private TextView mTxtConnectNetwork;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,6 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         }
 
-        mTxtConnectNetwork = (TextView) findViewById(R.id.text_network);
         checkNetwork();
     }
 
@@ -216,12 +215,10 @@ public class CustomerMainActivity extends AppCompatActivity
     }
 
     private void showConnectNetWork(boolean isNetWork) {
-        if (mTxtConnectNetwork != null) {
-            if (isNetWork) {
-                mTxtConnectNetwork.setVisibility(View.GONE);
-            } else {
-                mTxtConnectNetwork.setVisibility(View.VISIBLE);
-            }
+
+        if (!isNetWork) {
+            Snackbar.make(findViewById(R.id.drawer_layout), R.string.check_network, Snackbar.LENGTH_INDEFINITE)
+                    .setAction("action", null).show();
         }
     }
 

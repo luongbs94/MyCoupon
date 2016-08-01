@@ -69,6 +69,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String LINK_IMAGES = "LINK_IMAGES";
     public static final int TYPE_NEWS = 111;
     public static final int TYPE_NEWS_MORE = 222;
+    public static final int WIDTH_IMAGES_NEWS = 450;
 
     private static MainApplication mInstances;
 

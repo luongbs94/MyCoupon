@@ -81,7 +81,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         }
 
         holder.mTxtLink.setVisibility(View.GONE);
-        if (!item.getLink().isEmpty()) {
+        if (item.getLink() != null && !item.getLink().isEmpty()) {
             holder.mTxtLink.setVisibility(View.VISIBLE);
             if (item.getLink().contains("http")) {
                 holder.mTxtLink.setText(item.getLink());

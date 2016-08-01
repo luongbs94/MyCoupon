@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ln.adapter.NewsCustomerAdapter;
@@ -173,28 +172,56 @@ public class NewsCustomerFragment extends Fragment {
 
     private void getNewsOfCustomer() {
 
+        if (mTypeNews == MainApplication.TYPE_NEWS) {
+            Call<List<NewsOfCustomer>> newsCustomer = apiService.getNewsByUserId(account.getId());
 
-        Call<List<NewsOfCustomer>> newsCustomer = apiService.getNewsByUserId(account.getId());
-
-        newsCustomer.enqueue(new Callback<List<NewsOfCustomer>>() {
-            @Override
-            public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
-                if (response.body() != null) {
-                    mRealmController.addListNewsOfCustomer(response.body());
-                    setListMessages();
-                    mSwipeContainer.setRefreshing(false);
-                    Log.d(TAG, "getNewsOfCustomer " + response.body().size());
-                } else {
-                    Log.d(TAG, "getNewsOfCustomer null");
+            newsCustomer.enqueue(new Callback<List<NewsOfCustomer>>() {
+                @Override
+                public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
+                    if (response.body() != null) {
+                        mRealmController.addListNewsOfCustomer(response.body());
+                        setListMessages();
+                        mSwipeContainer.setRefreshing(false);
+                        Log.d(TAG, "getNewsOfCustomer " + response.body().size());
+                    } else {
+                        Log.d(TAG, "getNewsOfCustomer null");
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
-                Log.d(TAG, "getNewsOfCustomer onFailure");
-                mSwipeContainer.setRefreshing(false);
-            }
-        });
+                @Override
+                public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
+                    Log.d(TAG, "getNewsOfCustomer onFailure");
+                    mSwipeContainer.setRefreshing(false);
+                }
+            });
+        } else if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
+
+            String city = MainApplication
+                    .getPreferences()
+                    .getString(MainApplication.CITY_OF_USER, "");
+            Call<List<NewsOfMore>> listNewsMore = apiService.getNewsMoreByUserId(account.getId(), city);
+            listNewsMore.enqueue(new Callback<List<NewsOfMore>>() {
+                @Override
+                public void onResponse(Call<List<NewsOfMore>> call, Response<List<NewsOfMore>> response) {
+                    if (response.body() != null) {
+                        mRealmController.addListNewsOfMore(response.body());
+                        setListMessages();
+                        mSwipeContainer.setRefreshing(false);
+                        Log.d(TAG, "getNewsOfCustomer " + response.body().size());
+                    } else {
+                        Log.d(TAG, "getNewsOfCustomer null");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<NewsOfMore>> call, Throwable t) {
+                    Log.d(TAG, "getNewsOfCustomer onFailure");
+                    mSwipeContainer.setRefreshing(false);
+                }
+            });
+        }
+
+
     }
 
     @Override
@@ -260,9 +287,5 @@ public class NewsCustomerFragment extends Fragment {
         NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listMessage, this);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);
-    }
-
-    private void getSnackBar(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 }

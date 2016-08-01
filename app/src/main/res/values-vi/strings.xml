@@ -122,6 +122,10 @@
     <string name="press_back_again">Nhấn back một lần nữa để thoát!</string>
 
     <string name="check_network">Bạn hãy kiểm tra lại mạng!</string>
+    <string name="coupon_used">Coupon đã được sử dụng!</string>
+    <string name="you_add_news_coupon">Bạn đã thêm một coupon mới!</string>
+
+
 
     <string-array name="month">
         <item>1 tháng</item>

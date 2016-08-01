@@ -57,12 +57,6 @@ public class AddMessageActivity extends AppCompatActivity
     private static final int REQUEST_IMAGE = 77;
     private final String TAG = getClass().getSimpleName();
 
-    private static final int mSelectNumber = 9;
-    private static final int mMode = 1;
-    private static final boolean isShow = true;
-    private static final boolean isPreview = true;
-    private static final boolean isCrop = false;
-
     private LoveCouponAPI mApiService;
     private LoveCouponAPI apiService;
 
@@ -283,8 +277,6 @@ public class AddMessageActivity extends AppCompatActivity
 
 
     private void onClickSelectImages() {
-//        ImageSelectorActivity.start(AddMessageActivity.this, mSelectNumber, mMode, isShow, isPreview, isCrop);
-
         startActivityForResult(new Intent(this, ImagesCheckActivity.class), REQUEST_IMAGE);
     }
 
@@ -325,8 +317,13 @@ public class AddMessageActivity extends AppCompatActivity
         options.inSampleSize = 8;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
-        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
-        Bitmap resized = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES, height, true);
+
+        if (bitmap.getWidth() > MainApplication.WIDTH_IMAGES_NEWS) {
+            int width, height;
+            width = MainApplication.WIDTH_IMAGES_NEWS;
+            height = width * bitmap.getHeight() / bitmap.getWidth();
+            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        }
 
         String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));
 
@@ -335,7 +332,7 @@ public class AddMessageActivity extends AppCompatActivity
         File resizedFile = new File(this.getCacheDir(), nameImages + "_" + timeStamp + ".png");
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
         FileOutputStream fos = null;

@@ -1,6 +1,6 @@
 package com.ln.mycoupon;
 
-import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -43,7 +43,6 @@ public class QRCodeActivity extends AppCompatActivity
 
     private LoveCouponAPI apiService;
     private AccountOflUser mAccountOflUser;
-    private ProgressDialog mProgressDialog;
     private boolean isCamera;
 
     @Override
@@ -57,9 +56,7 @@ public class QRCodeActivity extends AppCompatActivity
         String strCompany = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
         mAccountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mQRCodeReaderView = (QRCodeReaderView) findViewById(R.id.decoder_view);
         if (mQRCodeReaderView != null) {
@@ -138,12 +135,11 @@ public class QRCodeActivity extends AppCompatActivity
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                 if (response.body() == null) {
                     new MaterialDialog.Builder(QRCodeActivity.this)
-                            .title("Coupon")
-                            .content("Coupon đã được sử dụng")
-                            .positiveText(R.string.ok)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            .title(R.string.coupon)
+                            .content(R.string.coupon_used)
+                            .cancelListener(new DialogInterface.OnCancelListener() {
                                 @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                public void onCancel(DialogInterface dialog) {
                                     dialog.dismiss();
                                     Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
@@ -157,6 +153,23 @@ public class QRCodeActivity extends AppCompatActivity
                                     mQRCodeReaderView.getCameraManager().startPreview();
                                 }
                             })
+                            .positiveText(R.string.ok)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            isCamera = false;
+                                            mQRCodeReaderView.getCameraManager().startPreview();
+                                        }
+                                    }, 1000);
+
+                                    mQRCodeReaderView.getCameraManager().startPreview();
+                                }
+                            })
                             .show();
 
 
@@ -164,23 +177,14 @@ public class QRCodeActivity extends AppCompatActivity
                 } else {
 
                     final CompanyOfCustomer company = response.body().get(0);
-                    showDialog();
                     mRealmController.addCompanyOfCustomer(company);
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            Intent intent = getIntent();
-                            Bundle bundle = new Bundle();
-                            bundle.putString(MainApplication.ID_COMPANY, company.getCompany_id());
-                            intent.putExtras(bundle);
-                            setResult(RESULT_OK, intent);
-                            Toast.makeText(QRCodeActivity.this, "Ban da them 1 coupon moi", Toast.LENGTH_SHORT).show();
-                            hideDialog();
-                            finish();
-                        }
-                    }, MainApplication.TIME_SLEEP);
+                    Intent intent = getIntent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(MainApplication.ID_COMPANY, company.getCompany_id());
+                    intent.putExtras(bundle);
+                    setResult(RESULT_OK, intent);
+                    Toast.makeText(QRCodeActivity.this, getString(R.string.you_add_news_coupon), Toast.LENGTH_SHORT).show();
+                    finish();
 
                     Log.d(TAG, "CompanyOfCustomer " + response.body());
                 }
@@ -192,19 +196,5 @@ public class QRCodeActivity extends AppCompatActivity
 
             }
         });
-    }
-
-    private void showDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
-        }
-        mProgressDialog.show();
-    }
-
-    private void hideDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
     }
 }

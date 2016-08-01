@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -171,7 +172,7 @@ public class ShopMainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_coupon:
                 currentPosition = 0;
-                sTitle = getString(R.string.my_coupon);
+                sTitle = getString(R.string.coupon);
                 fragment = new CouponFragment();
                 break;
             case R.id.nav_new:
@@ -328,10 +329,9 @@ public class ShopMainActivity extends AppCompatActivity
     }
 
     private void showCheckNetwork(boolean isNetwork) {
-        if (isNetwork) {
-            findViewById(R.id.text_network).setVisibility(View.GONE);
-        } else {
-            findViewById(R.id.text_network).setVisibility(View.VISIBLE);
+        if (!isNetwork) {
+            Snackbar.make(findViewById(R.id.drawer_layout), R.string.check_network, Snackbar.LENGTH_INDEFINITE)
+                    .setAction("action", null).show();
         }
     }
 

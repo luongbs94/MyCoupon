@@ -43,7 +43,7 @@
 
     <string name="title_delete_coupon">Delete coupon</string>
     <string name="content_delete_coupon">Are you sure you want to delete this coupon?</string>
-    <string name="ok">Confirm</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="qrcode">Scan Coupon</string>
     <string name="name_company">Company name</string>
@@ -72,8 +72,6 @@
     <string name="time_news">May 20, 2016</string>
     <string name="share">Share</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create">CREATE</string>
     <string name="used">USED</string>
     <string name="add">AddMessage</string>
@@ -83,7 +81,7 @@
     <string name="share_news">Share</string>
     <string name="more">More</string>
     <string name="show_images">Images</string>
-    <string name="coupon_of">Coupon\\</string>
+    <string name="coupon_of">Coupon</string>
     <string name="login_fails">Account or password is incorrect</string>
     <string name="login_google_fails">Sign google fails</string>
     <string name="google_login">google+</string>
@@ -106,11 +104,12 @@
 
     <string name="agree">Agree</string>
     <string name="disagree">Disagree</string>
-    <string name="delete_news_success">ou have successfully deleted a new message!</string>
+    <string name="delete_news_success">Message is deleted</string>
     <string name="all_news">All News</string>
     <string name="history_news">Delete News</string>
-    <string name="share_love_coupon">A convenient truth is that the application for the goods!</string>
-    <string name="description_love_coupon">We do everything free!</string>
+    <string name="share_love_coupon">The app for shop and beloved customers!</string>
+    <string name="description_love_coupon">With LoveCoupon, the shops can reward coupons and send promotions to beloved customers easily
+, the customers do not need to bring paper coupons and never miss any promotions from favorite shops. </string>
 
     <string name="face_image">https://graph.facebook.com/%1$s/picture?type=large</string>
     <string name="like_news">Like News</string>
@@ -120,7 +119,7 @@
     <string name="changedate">Change</string>
 
     <string name="news_more">Other News</string>
-    <string name="no_data_display">Dont have any coupon</string>
+    <string name="no_data_display">Do not have any coupon</string>
 
     <string name="delete_news_error">Delete Message Error</string>
     <string name="date_menu">AUG 10, 2016</string>
@@ -128,7 +127,7 @@
     <string name="save_running">Saving...</string>
     <string name="delete_coupon">Delete Coupon</string>
     <string name="post">Post</string>
-    <string name="time_coupon_template" formated="false">%1$s day</string>
+    <string name="time_coupon_template" formated="false">%1$s days</string>
     <string name="press_back_again">Press back one again to exits!</string>
     <string name="check_network">Please, You check network</string>
     <string name="time_shelf">40</string>
@@ -156,6 +155,10 @@
     <string name="external">SDcard</string>
     <string name="internal">Internal storage</string>
     <string name="message_max_num">Up to %1$s photos can be selected</string>
+    <string name="coupon">Coupon</string>
+    <string name="coupon_used">Coupon was used!</string>
+    <string name="you_add_news_coupon">You have add new coupon!</string>
+    <string name="title_qr_code">QR Code  %1$S coupon</string>
 
     <string-array name="month">
         <item>1 month</item>
