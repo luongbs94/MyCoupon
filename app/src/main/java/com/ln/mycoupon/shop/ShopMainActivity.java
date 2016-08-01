@@ -3,6 +3,10 @@ package com.ln.mycoupon.shop;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -42,6 +46,7 @@ public class ShopMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         OnClickSetInformation, View.OnClickListener, ConnectivityReceiverListener {
 
+    private static final int NETWORK = 100;
     private final String TAG = getClass().getSimpleName();
 
     private int currentPosition = 0;
@@ -52,6 +57,7 @@ public class ShopMainActivity extends AppCompatActivity
 
     private ImageView mImageLogo;
     private TextView mTxtNameCompany;
+    private Snackbar mSnackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,18 @@ public class ShopMainActivity extends AppCompatActivity
         setContentView(R.layout.activity_shop_main);
 
         checkNetwork();
+
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == NETWORK) {
+                    if (mSnackbar != null) {
+                        mSnackbar.dismiss();
+                    }
+                }
+            }
+        };
 
         String strCompany = getSharedPreferences(MainApplication.SHARED_PREFERENCE,
                 MODE_PRIVATE).getString(MainApplication.COMPANY_SHOP, "");
@@ -328,10 +346,30 @@ public class ShopMainActivity extends AppCompatActivity
         showCheckNetwork(isConnect);
     }
 
+    private Handler handler;
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            boolean isNetwork = ConnectivityReceiver.isConnect();
+            while (!isNetwork) {
+                SystemClock.sleep(100);
+                isNetwork = ConnectivityReceiver.isConnect();
+            }
+
+            Message message = new Message();
+            message.what = NETWORK;
+            message.setTarget(handler);
+            message.sendToTarget();
+        }
+    };
+
     private void showCheckNetwork(boolean isNetwork) {
         if (!isNetwork) {
-            Snackbar.make(findViewById(R.id.drawer_layout), R.string.check_network, Snackbar.LENGTH_INDEFINITE)
-                    .setAction("action", null).show();
+            mSnackbar = Snackbar.make(findViewById(R.id.drawer_layout), R.string.check_network, Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Ok", null);
+            mSnackbar.show();
+
+            new Thread(runnable).start();
         }
     }
 
