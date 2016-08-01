@@ -119,5 +119,10 @@
         <item name="android:textAppearanceSmall">@style/TextAppearance.Small</item>
     </style>
 
+    <style name="NavigationDrawerStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#607D8B</item>
+    </style>
+
 
 </resources>

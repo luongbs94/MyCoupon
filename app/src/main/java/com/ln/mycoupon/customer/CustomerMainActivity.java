@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,9 +31,15 @@ import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.model.AccountOflUser;
+import com.ln.model.User;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -63,6 +70,20 @@ public class CustomerMainActivity extends AppCompatActivity
                 }
             }
         };
+
+
+        AccountOflUser account = new Gson()
+                .fromJson(MainApplication
+                        .getPreferences()
+                        .getString(MainApplication.ACCOUNT_CUSTOMER, ""), AccountOflUser.class);
+
+        MainApplication.updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
+
+        Log.d("MyFirebaseIIDService",account.getId() + "  " +  MainApplication.getDeviceToken());
+
+
+
+
 
         sTitle = getString(R.string.my_coupon);
 
@@ -135,6 +156,8 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         }
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
