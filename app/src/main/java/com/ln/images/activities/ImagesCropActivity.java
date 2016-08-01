@@ -17,6 +17,8 @@ import com.ln.images.models.LocalMedia;
 import com.ln.images.models.ScreenUtils;
 import com.ln.mycoupon.R;
 
+import org.parceler.Parcels;
+
 public class ImagesCropActivity extends AppCompatActivity implements ImagesCropAdapter.OnClickCropImages {
 
     private static final int CROP_IMAGES = 9999;
@@ -93,7 +95,7 @@ public class ImagesCropActivity extends AppCompatActivity implements ImagesCropA
     public void clickNextCropImages(LocalMedia localMedia) {
         Intent intent = new Intent(this, CropActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(MainApplication.LINK_IMAGES, localMedia);
+        bundle.putParcelable(MainApplication.LINK_IMAGES, Parcels.wrap(localMedia));
         intent.putExtras(bundle);
         startActivityForResult(intent, CROP_IMAGES);
     }

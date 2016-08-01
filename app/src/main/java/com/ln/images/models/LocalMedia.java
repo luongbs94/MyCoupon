@@ -1,26 +1,23 @@
 package com.ln.images.models;
 
 
-import android.os.Parcel;
-
-import java.io.Serializable;
+import org.parceler.Parcel;
 
 /**
  * Created by dee on 2015/8/5.
  * <></>
  */
-public class LocalMedia implements Serializable {
+@Parcel
+public class LocalMedia {
 
-    private String path;
+    public String path;
+
+    public LocalMedia() {
+    }
 
     public LocalMedia(String path) {
         this.path = path;
     }
-
-    public LocalMedia(Parcel in) {
-        path = in.readString();
-    }
-
 
     public String getPath() {
         return path;

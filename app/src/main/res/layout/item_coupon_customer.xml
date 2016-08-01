@@ -80,7 +80,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/size_16"
+                android:layout_marginLeft="@dimen/size_4"
                 android:layout_marginRight="@dimen/size_16"
+                android:layout_marginStart="@dimen/size_4"
                 android:gravity="bottom"
                 android:text="@string/date_menu"
                 android:textColor="@color/color_prices" />

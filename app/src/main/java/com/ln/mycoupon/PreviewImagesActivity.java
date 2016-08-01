@@ -12,6 +12,8 @@ import com.ln.app.MainApplication;
 import com.ln.fragment.shop.PreviewImagesFragment;
 import com.ln.images.models.LocalMedia;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class PreviewImagesActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mPosition = bundle.getInt(MainApplication.POSITION);
-            mListImages = (List<LocalMedia>) bundle.getSerializable(MainApplication.LIST_IMAGES);
+            mListImages = Parcels.unwrap(bundle.getParcelable(MainApplication.LIST_IMAGES));
         }
     }
 

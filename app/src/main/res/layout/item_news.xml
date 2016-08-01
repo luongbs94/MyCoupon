@@ -155,7 +155,6 @@
         android:layout_marginLeft="@dimen/size_15"
         android:layout_marginRight="@dimen/size_15"
         android:layout_marginTop="@dimen/size_4"
-        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/size_5"
         android:paddingRight="@dimen/size_5">
@@ -163,15 +162,20 @@
         <com.ln.views.IconTextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:textSize="@dimen/size_16sp"
+            android:paddingBottom="@dimen/size_2"
             android:text="@string/icon_clock" />
 
         <com.ln.views.MyTextView
             android:id="@+id/text_last_date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/size_5"
             android:layout_marginLeft="@dimen/size_5"
+            android:layout_marginRight="@dimen/size_5"
             android:layout_marginStart="@dimen/size_5"
-            android:paddingBottom="@dimen/size_4"
+            android:gravity="bottom"
             android:text="@string/time_news" />
 
         <com.ln.views.IconTextView
@@ -179,15 +183,17 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/size_8"
             android:layout_marginStart="@dimen/size_8"
+            android:paddingBottom="@dimen/size_2"
+            android:gravity="bottom"
             android:text="@string/icon_bell" />
 
         <com.ln.views.MyTextView
             android:id="@+id/text_time_shelf"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/size_5"
             android:layout_marginStart="@dimen/size_5"
-            android:paddingBottom="@dimen/size_4"
+            android:gravity="bottom"
             android:text="@string/time_shelf" />
     </LinearLayout>
 
@@ -206,7 +212,8 @@
         android:listSelector="@android:color/transparent"
         android:paddingLeft="@dimen/size_5"
         android:paddingRight="@dimen/size_5"
-        android:scrollbars="horizontal" />
+        android:scrollbars="horizontal"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="match_parent"
