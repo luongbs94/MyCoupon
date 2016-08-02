@@ -82,19 +82,11 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
                                 .Builder(CouponCompanyOfClientActivity.this)
                                 .content(R.string.delete_coupon)
                                 .positiveText(R.string.agree)
-                                .negativeText(R.string.disagree)
                                 .positiveColor(getResources().getColor(R.color.title_bg))
-                                .negativeColor(getResources().getColor(R.color.title_bg))
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                         deleteCoupon(position);
-                                    }
-                                })
-                                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        dialog.dismiss();
                                     }
                                 })
                                 .show();

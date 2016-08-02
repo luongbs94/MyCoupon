@@ -52,7 +52,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void initViews() {
-
         findViewById(R.id.shop).setOnClickListener(this);
         findViewById(R.id.customer).setOnClickListener(this);
     }
@@ -94,8 +93,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
         if (isShop && !isCustomer) {
 
-            String strCompany = preferences.getString
-                    (MainApplication.COMPANY_SHOP, "");
+            String strCompany = preferences.getString(MainApplication.COMPANY_SHOP, "");
             Company company = new Gson().fromJson(strCompany, Company.class);
 
             if (company != null && company.getCompany_id() != null) {
@@ -117,15 +115,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 startCustomer();
             }
         }
-//
-//        Date now = new Date();
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z'('Z')'", Locale.getDefault());
-//        //Convert the date from the local timezone to UTC timezone
-//        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        String dateFormatInUTC = formatter.format(now);
-//
-//        // Date now = new Date();
-//        Log.d(TAG, dateFormatInUTC);
     }
 
 
@@ -227,7 +216,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<CouponTemplate>> call, Response<List<CouponTemplate>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteCouponTemplate();
                     mRealmController.addListCouponTemplate(response.body());
                     Log.d(TAG, "getCouponTemplateOfShop " + response.body().size());
                 } else {

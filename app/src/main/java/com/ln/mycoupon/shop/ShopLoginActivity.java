@@ -245,8 +245,8 @@ public class ShopLoginActivity extends AppCompatActivity
         writeSharePreferences(MainApplication.LOGIN_CLIENT, false);
         writeSharePreferences(MainApplication.OFF_LINE, false);
 
-        getCouponTemplate(company.getCompany_id());     //  get list coupon template of company
-        getNewsByCompanyId(company.getCompany_id());    // get list news of company
+        getCouponTemplate(company.getCompany_id());
+        getNewsByCompanyId(company.getCompany_id());
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -279,7 +279,6 @@ public class ShopLoginActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // integrator login google save state google login
     private void signInGoogleSuccess(GoogleSignInAccount account) {
 
         if (account.getId() != null && account.getIdToken() != null) {
@@ -391,7 +390,6 @@ public class ShopLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<CouponTemplate>> call,
                                    Response<List<CouponTemplate>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteCouponTemplate();
                     mRealmController.addListCouponTemplate(response.body());
                     Log.d(TAG, "getCouponTemplate  " + response.body().size());
                 } else {
