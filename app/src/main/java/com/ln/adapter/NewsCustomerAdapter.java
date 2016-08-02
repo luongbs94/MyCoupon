@@ -56,7 +56,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater
                 .from(mContext)
-                .inflate(R.layout.item_news, parent, false));
+                .inflate(R.layout.item_news_customer, parent, false));
     }
 
     @Override

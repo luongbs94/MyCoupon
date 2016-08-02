@@ -12,7 +12,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.ln.api.LoveCouponAPI;
 import com.ln.broadcast.ConnectivityReceiver;
-import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.model.CityOfUser;
 import com.ln.model.User;
 import com.ln.realm.RealmController;
@@ -74,7 +73,11 @@ public class MainApplication extends MultiDexApplication {
     public static final String LINK_IMAGES = "LINK_IMAGES";
     public static final int TYPE_NEWS = 111;
     public static final int TYPE_NEWS_MORE = 222;
-    public static final int WIDTH_IMAGES_NEWS = 450;
+    public static final int WIDTH_IMAGES_NEWS = 700;
+    public static final String IMAGE_ADD_NEWS = "IMAGE_ADD_NEWS";
+    public static final String WHAT_ADD_MESSAGES = "WHAT_ADD_MESSAGES";
+    public static final int WHAT_SHOP_MAIN_ADD_NEWS = 211;
+    public static final int WHAT_UPDATE_NEWS = 212;
 
     private static MainApplication mInstances;
 
@@ -300,7 +303,7 @@ public class MainApplication extends MultiDexApplication {
         return mInstances;
     }
 
-    public void setConnectivityListener(ConnectivityReceiverListener listener) {
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
         ConnectivityReceiver.mListener = listener;
     }
 

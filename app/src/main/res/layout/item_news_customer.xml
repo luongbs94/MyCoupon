@@ -297,24 +297,8 @@
                 android:gravity="center_vertical"
                 android:text="@string/ic_delete"
                 android:textColor="@color/icon_heart"
-                android:textSize="@dimen/size_18sp"
-                android:visibility="gone" />
+                android:textSize="@dimen/size_18sp" />
 
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/size_6"
-                android:layout_marginRight="@dimen/size_6"
-                android:contentDescription="@null"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_more_vert_black_24dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/more" />
         </LinearLayout>
     </LinearLayout>
 

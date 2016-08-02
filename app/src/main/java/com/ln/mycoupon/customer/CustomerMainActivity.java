@@ -26,24 +26,17 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
-import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.model.AccountOflUser;
-import com.ln.model.User;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
-
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ConnectivityReceiverListener {
+        ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static final int NETWORK = 1000;
     private static String sTitle;
@@ -79,10 +72,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
         MainApplication.updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
 
-        Log.d("MyFirebaseIIDService",account.getId() + "  " +  MainApplication.getDeviceToken());
-
-
-
+        Log.d("MyFirebaseIIDService", account.getId() + "  " + MainApplication.getDeviceToken());
 
 
         sTitle = getString(R.string.my_coupon);
@@ -156,7 +146,6 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         }
     }
-
 
 
     @SuppressWarnings("StatementWithEmptyBody")

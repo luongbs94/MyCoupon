@@ -159,6 +159,7 @@
     <string name="coupon_used">Coupon was used!</string>
     <string name="you_add_news_coupon">You have add new coupon!</string>
     <string name="title_qr_code">QR Code  %1$S coupon</string>
+    <string name="edit_news">Edit</string>
 
     <string-array name="month">
         <item>1 month</item>

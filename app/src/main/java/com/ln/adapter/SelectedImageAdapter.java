@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ln.model.ItemImage;
+import com.ln.images.models.LocalMedia;
 import com.ln.mycoupon.R;
 import com.squareup.picasso.Picasso;
 
@@ -22,10 +22,10 @@ import java.util.List;
 public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<ItemImage> mListImages;
+    private List<LocalMedia> mListImages;
     private OnClickRemoveImages mOnClick;
 
-    public SelectedImageAdapter(Context mContext, List<ItemImage> mListImages) {
+    public SelectedImageAdapter(Context mContext, List<LocalMedia> mListImages) {
         this.mContext = mContext;
         this.mListImages = mListImages;
     }

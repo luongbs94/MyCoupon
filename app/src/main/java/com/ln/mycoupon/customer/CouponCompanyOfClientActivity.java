@@ -19,7 +19,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.ln.adapter.CouponTemplateClientAdapter;
 import com.ln.app.MainApplication;
-import com.ln.interfaces.OnClickRecyclerView;
 import com.ln.interfaces.RecyclerViewListener;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
@@ -75,31 +74,32 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         RecyclerView mRecyclerCoupon = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerCoupon.setHasFixedSize(true);
         mRecyclerCoupon.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerCoupon.addOnItemTouchListener(new RecyclerViewListener(this, new OnClickRecyclerView() {
-            @Override
-            public void onClick(View view, final int position) {
-                new MaterialDialog
-                        .Builder(CouponCompanyOfClientActivity.this)
-                        .content(R.string.delete_coupon)
-                        .positiveText(R.string.agree)
-                        .negativeText(R.string.disagree)
-                        .positiveColor(getResources().getColor(R.color.title_bg))
-                        .negativeColor(getResources().getColor(R.color.title_bg))
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                deleteCoupon(position);
-                            }
-                        })
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .show();
-            }
-        }));
+        mRecyclerCoupon.addOnItemTouchListener(new RecyclerViewListener(this,
+                new RecyclerViewListener.OnClickRecyclerView() {
+                    @Override
+                    public void onClick(View view, final int position) {
+                        new MaterialDialog
+                                .Builder(CouponCompanyOfClientActivity.this)
+                                .content(R.string.delete_coupon)
+                                .positiveText(R.string.agree)
+                                .negativeText(R.string.disagree)
+                                .positiveColor(getResources().getColor(R.color.title_bg))
+                                .negativeColor(getResources().getColor(R.color.title_bg))
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        deleteCoupon(position);
+                                    }
+                                })
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                }));
         adapter = new CouponTemplateClientAdapter(this, mCompanyOfCustomer);
         mRecyclerCoupon.setAdapter(adapter);
 

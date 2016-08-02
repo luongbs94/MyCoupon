@@ -40,7 +40,6 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.images.activities.ImagesCropActivity;
-import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
@@ -591,5 +590,10 @@ public class SettingFragment extends Fragment implements
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         display.getMetrics(metrics);
         return Math.min(Math.max(metrics.widthPixels, metrics.heightPixels), 2048);
+    }
+
+    public interface OnClickSetInformation {
+
+        void onClickSetInformation(String logo, String name, String address);
     }
 }

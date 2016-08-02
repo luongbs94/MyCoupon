@@ -29,13 +29,11 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
-import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.fragment.shop.CouponFragment;
 import com.ln.fragment.shop.HistoryFragment;
 import com.ln.fragment.shop.NewsFragment;
 import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.ShareFragment;
-import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
@@ -44,7 +42,7 @@ import com.ln.mycoupon.R;
 
 public class ShopMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        OnClickSetInformation, View.OnClickListener, ConnectivityReceiverListener {
+        SettingFragment.OnClickSetInformation, View.OnClickListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static final int NETWORK = 100;
     private final String TAG = getClass().getSimpleName();
@@ -289,6 +287,9 @@ public class ShopMainActivity extends AppCompatActivity
                     boolean isNetwork1 = ConnectivityReceiver.isConnect();
                     if (isNetwork1) {
                         Intent intent1 = new Intent(ShopMainActivity.this, AddMessageActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(MainApplication.WHAT_ADD_MESSAGES, MainApplication.WHAT_SHOP_MAIN_ADD_NEWS);
+                        intent1.putExtras(bundle);
                         startActivityForResult(intent1, MainApplication.ADD_MESSAGES);
                     } else {
                         getShowMessages(getString(R.string.check_network));
