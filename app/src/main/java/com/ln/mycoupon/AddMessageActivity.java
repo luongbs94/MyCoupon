@@ -28,7 +28,7 @@ import com.ln.images.activities.ImagesCheckActivity;
 import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
-import com.rengwuxian.materialedittext.MaterialEditText;
+import com.ln.views.MaterialEditText;
 
 import org.parceler.Parcels;
 

@@ -22,7 +22,7 @@
                 android:layout_margin="10dp"
                 android:orientation="vertical">
 
-                <EditText
+                <com.ln.views.MaterialEditText
                     android:id="@+id/name_company"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                     android:textColor="@drawable/text_color"
                     android:textSize="@dimen/size_18sp" />
 
-                <EditText
+                <com.ln.views.MaterialEditText
                     android:id="@+id/address_company"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

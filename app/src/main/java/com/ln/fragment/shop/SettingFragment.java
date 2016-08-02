@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -28,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +41,7 @@ import com.ln.images.activities.ImagesCropActivity;
 import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
+import com.ln.views.MaterialEditText;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -64,10 +63,8 @@ public class SettingFragment extends Fragment implements
 
     private final String TAG = getClass().getSimpleName();
 
-    private TextInputLayout mInputUser1, mInputUser2, mInputPassword1, mInputPassword2;
-    private EditText mEdtNameCompany, mEdtAddress, mEdtPassword1, mEdtUser2, mEdtPassword2;
+    private MaterialEditText mEdtNameCompany, mEdtAddress, mEdtPassword1, mEdtUser1, mEdtUser2, mEdtPassword2;
     private CheckBox checkBox, checkBox1;
-    private EditText mEdtUser1;
     private CardView mCardView;
     private CircleImageView mImgLogo;
     private TextView mTxtNameCompany, mTxtAddress;
@@ -135,13 +132,13 @@ public class SettingFragment extends Fragment implements
             mFabDoneSave.setVisibility(View.GONE);
         }
 
-        mEdtNameCompany = (EditText) v.findViewById(R.id.name_company);
-        mEdtAddress = (EditText) v.findViewById(R.id.address_company);
-        mEdtUser1 = (EditText) v.findViewById(R.id.username1);
-        mEdtPassword1 = (EditText) v.findViewById(R.id.password1);
+        mEdtNameCompany = (MaterialEditText) v.findViewById(R.id.name_company);
+        mEdtAddress = (MaterialEditText) v.findViewById(R.id.address_company);
+        mEdtUser1 = (MaterialEditText) v.findViewById(R.id.username1);
+        mEdtPassword1 = (MaterialEditText) v.findViewById(R.id.password1);
 
-        mEdtUser2 = (EditText) v.findViewById(R.id.username2);
-        mEdtPassword2 = (EditText) v.findViewById(R.id.password2);
+        mEdtUser2 = (MaterialEditText) v.findViewById(R.id.username2);
+        mEdtPassword2 = (MaterialEditText) v.findViewById(R.id.password2);
 
         checkBox = (CheckBox) v.findViewById(R.id.check_admin1);
         checkBox1 = (CheckBox) v.findViewById(R.id.check_admin2);
@@ -151,10 +148,6 @@ public class SettingFragment extends Fragment implements
         mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_nav);
         mTxtAddress = (TextView) v.findViewById(R.id.txt_email_nav);
 
-        mInputUser1 = (TextInputLayout) v.findViewById(R.id.input_user1);
-        mInputUser2 = (TextInputLayout) v.findViewById(R.id.input_user2);
-        mInputPassword1 = (TextInputLayout) v.findViewById(R.id.input_password1);
-        mInputPassword2 = (TextInputLayout) v.findViewById(R.id.input_password2);
     }
 
 
@@ -216,17 +209,17 @@ public class SettingFragment extends Fragment implements
 
         mCardView.setOnClickListener(this);
         mImgLogo.setOnClickListener(this);
-        mEdtNameCompany.addTextChangedListener(new Events(mEdtNameCompany, null));
-        mEdtAddress.addTextChangedListener(new Events(mEdtAddress, null));
+        mEdtNameCompany.addTextChangedListener(new Events(mEdtNameCompany));
+        mEdtAddress.addTextChangedListener(new Events(mEdtAddress));
 
         mFabDoneSave.setOnClickListener(this);
         mChbShowPass.setOnCheckedChangeListener(this);
 
-        mEdtUser1.addTextChangedListener(new Events(mEdtUser1, mInputUser1));
-        mEdtUser2.addTextChangedListener(new Events(mEdtUser2, mInputUser2));
+        mEdtUser1.addTextChangedListener(new Events(mEdtUser1));
+        mEdtUser2.addTextChangedListener(new Events(mEdtUser2));
 
-        mEdtPassword1.addTextChangedListener(new Events(mEdtPassword1, mInputPassword1));
-        mEdtPassword2.addTextChangedListener(new Events(mEdtPassword2, mInputPassword2));
+        mEdtPassword1.addTextChangedListener(new Events(mEdtPassword1));
+        mEdtPassword2.addTextChangedListener(new Events(mEdtPassword2));
     }
 
 
@@ -268,7 +261,6 @@ public class SettingFragment extends Fragment implements
 
                 startActivityForResult(new Intent(getActivity(),
                         ImagesCropActivity.class), START_CROP_IMAGES);
-
                 break;
             case R.id.fab_done:
                 onClickSaveCompany();
@@ -320,7 +312,6 @@ public class SettingFragment extends Fragment implements
                 public void onResponse(Call<Integer> call, Response<Integer> response) {
 
                     if (response.body() == 1) {
-                        mInputUser1.setErrorEnabled(false);
 
                         Call<Integer> call2 = mLoveCouponAPI.isExists(company.getCompany_id(), user2);
                         call2.enqueue(new Callback<Integer>() {
@@ -328,13 +319,10 @@ public class SettingFragment extends Fragment implements
                             public void onResponse(Call<Integer> call, Response<Integer> response) {
 
                                 if (response.body() == 1) {
-                                    mInputUser2.setErrorEnabled(false);
                                     createSave(name, address, mLogoBase64, companyTemplate);
 
                                 } else {
-                                    mInputUser2.setError(getString(R.string.account_exists));
-                                    mInputUser2.setErrorEnabled(true);
-                                    mInputUser2.setError(getString(R.string.account_exists));
+                                    mEdtUser2.setError(getString(R.string.account_exists));
                                     requestFocus(mEdtUser2);
 
                                     hideProgressDialog();
@@ -349,9 +337,7 @@ public class SettingFragment extends Fragment implements
 
 
                     } else {
-                        mInputUser1.setError(getString(R.string.account_exists));
-                        mInputUser1.setErrorEnabled(true);
-                        mInputUser1.setError(getString(R.string.account_exists));
+                        mEdtUser1.setError(getString(R.string.account_exists));
                         requestFocus(mEdtUser1);
 
                         hideProgressDialog();
@@ -443,11 +429,9 @@ public class SettingFragment extends Fragment implements
     private class Events implements TextWatcher {
 
         private View view;
-        private TextInputLayout textInputLayout;
 
-        public Events(View editText, TextInputLayout textInputLayout) {
+        Events(View editText) {
             this.view = editText;
-            this.textInputLayout = textInputLayout;
         }
 
         @Override
@@ -465,10 +449,10 @@ public class SettingFragment extends Fragment implements
 
             switch (view.getId()) {
                 case R.id.username1:
-                    validateUser(mEdtUser1, mEdtUser2, mEdtPassword1, mInputUser1, mInputPassword1);
+                    validateUser(mEdtUser1, mEdtUser2, mEdtPassword1);
                     break;
                 case R.id.username2:
-                    validateUser(mEdtUser2, mEdtUser1, mEdtPassword2, mInputUser2, mInputPassword2);
+                    validateUser(mEdtUser2, mEdtUser1, mEdtPassword2);
                     break;
                 case R.id.name_company:
                     mTxtNameCompany.setText(editable.toString());
@@ -477,10 +461,10 @@ public class SettingFragment extends Fragment implements
                     mTxtAddress.setText(editable.toString());
                     break;
                 case R.id.password1:
-                    validatePassword(mEdtUser1, (EditText) view, textInputLayout);
+                    validatePassword(mEdtUser1, (MaterialEditText) view);
                     break;
                 case R.id.password2:
-                    validatePassword(mEdtUser2, (EditText) view, textInputLayout);
+                    validatePassword(mEdtUser2, (MaterialEditText) view);
                     break;
                 default:
                     break;
@@ -489,30 +473,20 @@ public class SettingFragment extends Fragment implements
 
     }
 
-    private void validateUser(EditText editText,
-                              EditText editText2, EditText edtPassword,
-                              TextInputLayout textInputLayout,
-                              TextInputLayout password) {
+    private void validateUser(MaterialEditText editText,
+                              MaterialEditText editText2, MaterialEditText edtPassword) {
 
         String text = editText.getText().toString().trim();
         String text2 = editText2.getText().toString().trim();
 
         if (text.equals(text2)) {
-            textInputLayout.setError(getString(R.string.user1OtherUser2));
-            textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(getString(R.string.user1OtherUser2));
+            editText.setError(getString(R.string.user1OtherUser2));
             requestFocus(editText);
         }
 
-        if (!text.equals(text2)) {
-            textInputLayout.setErrorEnabled(false);
-        }
         if (!text.isEmpty() && edtPassword.getText().toString().trim().isEmpty()) {
-            password.setErrorEnabled(true);
-            password.setError(getString(R.string.enter_password));
+            edtPassword.setError(getString(R.string.enter_password));
             Log.d(TAG, "1");
-        } else {
-            password.setErrorEnabled(false);
         }
     }
 
@@ -527,13 +501,10 @@ public class SettingFragment extends Fragment implements
         }
     }
 
-    private void validatePassword(EditText user, EditText password, TextInputLayout inputPassword) {
+    private void validatePassword(MaterialEditText user, MaterialEditText password) {
         if (!user.getText().toString().trim().isEmpty() && password.getText().toString().trim().isEmpty()) {
-            inputPassword.setErrorEnabled(true);
-            inputPassword.setError(getString(R.string.enter_password));
+            password.setError(getString(R.string.enter_password));
             requestFocus(password);
-        } else {
-            inputPassword.setErrorEnabled(false);
         }
     }
 
@@ -555,7 +526,7 @@ public class SettingFragment extends Fragment implements
         ImageView imageView;
         int width;
 
-        public LoadScaledImageTask(Context context, Uri uri, ImageView imageView, int width) {
+        LoadScaledImageTask(Context context, Uri uri, ImageView imageView, int width) {
             this.context = context;
             this.uri = uri;
             this.imageView = imageView;
