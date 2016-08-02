@@ -23,6 +23,7 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
 
     private Context mContext;
     private List<ItemImage> mListImages;
+    private OnClickRemoveImages mOnClick;
 
     public SelectedImageAdapter(Context mContext, List<ItemImage> mListImages) {
         this.mContext = mContext;
@@ -46,6 +47,9 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (mOnClick != null) {
+                    mOnClick.remove(holder.getAdapterPosition());
+                }
                 mListImages.remove(holder.getAdapterPosition());
                 notifyDataSetChanged();
             }
@@ -68,5 +72,13 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
             mImages = (ImageView) itemView.findViewById(R.id.picture);
             mDelete = (TextView) itemView.findViewById(R.id.check);
         }
+    }
+
+    public void setOnClickRemoveImages(OnClickRemoveImages onClick) {
+        mOnClick = onClick;
+    }
+
+    public interface OnClickRemoveImages {
+        void remove(int position);
     }
 }

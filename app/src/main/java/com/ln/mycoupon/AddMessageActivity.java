@@ -4,6 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +29,8 @@ import com.ln.model.Company;
 import com.ln.model.ItemImage;
 import com.ln.model.NewsOfCompany;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -52,7 +57,7 @@ import retrofit2.Response;
  * <></>
  */
 public class AddMessageActivity extends AppCompatActivity
-        implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
+        implements DatePickerDialog.OnDateSetListener, View.OnClickListener, SelectedImageAdapter.OnClickRemoveImages {
 
     private static final int REQUEST_IMAGE = 77;
     private final String TAG = getClass().getSimpleName();
@@ -107,6 +112,7 @@ public class AddMessageActivity extends AppCompatActivity
         mRecyclerViewImages.setHasFixedSize(true);
 
         mSelectedImageAdapter = new SelectedImageAdapter(this, mListImagesSelected);
+        mSelectedImageAdapter.setOnClickRemoveImages(this);
         mRecyclerViewImages.setAdapter(mSelectedImageAdapter);
 
     }
@@ -209,7 +215,7 @@ public class AddMessageActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE) {
-            List<String> images = (ArrayList<String>) data.getSerializableExtra(MainApplication.LIST_IMAGES);
+            List<String> images = Parcels.unwrap(data.getExtras().getParcelable(MainApplication.LIST_IMAGES));
 
             for (String s : images) {
                 if (!isExists(s)) {
@@ -261,7 +267,7 @@ public class AddMessageActivity extends AppCompatActivity
                 onClickAddMessages();
                 break;
             case R.id.img_selected_images:
-                onClickSelectImages();
+                startActivityForResult(new Intent(this, ImagesCheckActivity.class), REQUEST_IMAGE);
                 break;
             case R.id.text_change_date:
                 DatePickerDialog.newInstance(AddMessageActivity.this,
@@ -273,11 +279,6 @@ public class AddMessageActivity extends AppCompatActivity
             default:
                 break;
         }
-    }
-
-
-    private void onClickSelectImages() {
-        startActivityForResult(new Intent(this, ImagesCheckActivity.class), REQUEST_IMAGE);
     }
 
     private void onClickAddMessages() {
@@ -319,10 +320,7 @@ public class AddMessageActivity extends AppCompatActivity
 
 
         if (bitmap.getWidth() > MainApplication.WIDTH_IMAGES_NEWS) {
-            int width, height;
-            width = MainApplication.WIDTH_IMAGES_NEWS;
-            height = width * bitmap.getHeight() / bitmap.getWidth();
-            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+            bitmap = scaleImages(bitmap, MainApplication.WIDTH_IMAGES_NEWS);
         }
 
         String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));
@@ -335,9 +333,8 @@ public class AddMessageActivity extends AppCompatActivity
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
-        FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(resizedFile);
+            FileOutputStream fos = new FileOutputStream(resizedFile);
             fos.write(byteArray);
             fos.flush();
             fos.close();
@@ -386,7 +383,33 @@ public class AddMessageActivity extends AppCompatActivity
         });
     }
 
+    public Bitmap scaleImages(Bitmap bitmap, int width) {
+
+
+        float ratioX = width / (float) bitmap.getWidth();
+        int height = (int) ratioX * bitmap.getHeight();
+        Bitmap scaledBitmap = Bitmap.createBitmap(width, height,
+                Bitmap.Config.ARGB_8888);
+        float middleX = width / 2.0f;
+        float middleY = height / 2.0f;
+
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(ratioX, ratioX, middleX, middleY);
+
+        Canvas canvas = new Canvas(scaledBitmap);
+        canvas.setMatrix(scaleMatrix);
+        canvas.drawBitmap(bitmap, middleX - bitmap.getWidth() / 2, middleY - bitmap.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
+
+        return scaledBitmap;
+
+    }
+
     private void getShowMessages(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void remove(int position) {
+        mListStrImages.remove(position);
     }
 }

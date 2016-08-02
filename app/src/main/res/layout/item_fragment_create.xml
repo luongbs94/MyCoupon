@@ -18,8 +18,8 @@
 
     <com.ln.views.CircleImageView
         android:id="@+id/img_logo_coupon"
-        android:layout_width="@dimen/size_72"
-        android:layout_height="@dimen/size_72"
+        android:layout_width="@dimen/size_82"
+        android:layout_height="@dimen/size_82"
         android:layout_gravity="center_horizontal"
         android:layout_marginEnd="@dimen/size_8"
         android:layout_marginRight="@dimen/size_8"

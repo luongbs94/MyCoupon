@@ -15,7 +15,8 @@ import com.ln.mycoupon.PreviewImagesActivity;
 import com.ln.mycoupon.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
+import org.parceler.Parcels;
+
 import java.util.List;
 
 class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
@@ -66,7 +67,7 @@ class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                 Intent intent = new Intent(mContext, PreviewImagesActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt(MainApplication.POSITION, this.getAdapterPosition());
-                bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) mListImages);
+                bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(mListImages));
                 intent.putExtras(bundle);
                 mContext.startActivity(intent);
             }
