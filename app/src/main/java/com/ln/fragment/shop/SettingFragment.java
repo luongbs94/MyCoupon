@@ -42,6 +42,7 @@ import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
 import com.ln.views.MaterialEditText;
+import com.orhanobut.logger.Logger;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -63,7 +64,8 @@ public class SettingFragment extends Fragment implements
 
     private final String TAG = getClass().getSimpleName();
 
-    private MaterialEditText mEdtNameCompany, mEdtAddress, mEdtPassword1, mEdtUser1, mEdtUser2, mEdtPassword2;
+    private MaterialEditText mEdtNameCompany, mEdtAddress,
+            mEdtPassword1, mEdtUser1, mEdtUser2, mEdtPassword2;
     private CheckBox checkBox, checkBox1;
     private CardView mCardView;
     private CircleImageView mImgLogo;
@@ -84,6 +86,7 @@ public class SettingFragment extends Fragment implements
 
     private Uri mUri;
 
+    private boolean isAccount1, isAccount2;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -220,6 +223,48 @@ public class SettingFragment extends Fragment implements
 
         mEdtPassword1.addTextChangedListener(new Events(mEdtPassword1));
         mEdtPassword2.addTextChangedListener(new Events(mEdtPassword2));
+
+        mEdtUser1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (!mEdtUser1.getText().toString().trim().isEmpty() &&
+                            !mEdtPassword1.getText().toString().trim().isEmpty()) {
+                        checkAccount1();
+                    }
+                }
+            }
+        });
+
+        mEdtUser2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!mEdtUser2.getText().toString().trim().isEmpty() &&
+                        !mEdtPassword2.getText().toString().trim().isEmpty()) {
+                    checkAccount2();
+                }
+            }
+        });
+
+        mEdtPassword1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!mEdtUser1.getText().toString().trim().isEmpty() &&
+                        !mEdtPassword1.getText().toString().trim().isEmpty()) {
+                    checkAccount1();
+                }
+            }
+        });
+
+        mEdtPassword2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!mEdtUser2.getText().toString().trim().isEmpty() &&
+                        !mEdtPassword2.getText().toString().trim().isEmpty()) {
+                    checkAccount2();
+                }
+            }
+        });
     }
 
 
@@ -258,7 +303,6 @@ public class SettingFragment extends Fragment implements
                 onClickSaveCompany();
                 break;
             case R.id.img_logo_nav:
-
                 startActivityForResult(new Intent(getActivity(),
                         ImagesCropActivity.class), START_CROP_IMAGES);
                 break;
@@ -274,85 +318,141 @@ public class SettingFragment extends Fragment implements
     private void onClickSaveCompany() {
 
         boolean isNetwork = ConnectivityReceiver.isConnect();
-        if (isNetwork) {
-            showProgressDialog();
-            final String name = mEdtNameCompany.getText().toString();
-            final String address = mEdtAddress.getText().toString();
-
-            mLogoBase64 = MainApplication.FIRST_BASE64
-                    + MainApplication.convertToBitmap(mImgLogo);
-
-
-            final String user1 = mEdtUser1.getText().toString().trim();
-            final String user2 = mEdtUser2.getText().toString().trim();
-
-
-            final Company companyTemplate = new Company(company.getCompany_id(),
-                    company.getName(), company.getAddress(),
-                    company.getLogo(), company.getCreated_date(),
-                    company.getUser_id(), company.getUser1(),
-                    company.getPass1(), company.getUser1_admin(),
-                    company.getUser2(), company.getPass2(),
-                    company.getUser2_admin(), company.getLogo_link(),
-                    company.getCity(), company.getCountry_name());
-
-            companyTemplate.setName(name);
-            companyTemplate.setAddress(address);
-            companyTemplate.setLogo(null);
-            if (isChoseImages) {
-                companyTemplate.setLogo(mLogoBase64);
-            }
-            companyTemplate.setUser1(user1);
-            companyTemplate.setUser2(user2);
-
-
-            Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
-            call.enqueue(new Callback<Integer>() {
-                @Override
-                public void onResponse(Call<Integer> call, Response<Integer> response) {
-
-                    if (response.body() == 1) {
-
-                        Call<Integer> call2 = mLoveCouponAPI.isExists(company.getCompany_id(), user2);
-                        call2.enqueue(new Callback<Integer>() {
-                            @Override
-                            public void onResponse(Call<Integer> call, Response<Integer> response) {
-
-                                if (response.body() == 1) {
-                                    createSave(name, address, mLogoBase64, companyTemplate);
-
-                                } else {
-                                    mEdtUser2.setError(getString(R.string.account_exists));
-                                    requestFocus(mEdtUser2);
-
-                                    hideProgressDialog();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<Integer> call, Throwable t) {
-                                Log.d(TAG, "isCheckAccountExists " + t.toString());
-                            }
-                        });
-
-
-                    } else {
-                        mEdtUser1.setError(getString(R.string.account_exists));
-                        requestFocus(mEdtUser1);
-
-                        hideProgressDialog();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Integer> call, Throwable t) {
-                    Log.d(TAG, "isCheckAccountExists " + t.toString());
-                }
-            });
-        } else {
+        if (!isNetwork) {
             getShowMessage(getString(R.string.check_network));
+            return;
+        }
+        if (!isAccount1 || !isAccount2) {
+            getShowMessage(getString(R.string.check_account));
+            return;
         }
 
+        showProgressDialog();
+        final String name = mEdtNameCompany.getText().toString();
+        final String address = mEdtAddress.getText().toString();
+
+        mLogoBase64 = MainApplication.FIRST_BASE64
+                + MainApplication.convertToBitmap(mImgLogo);
+
+
+        final String user1 = mEdtUser1.getText().toString().trim();
+        final String user2 = mEdtUser2.getText().toString().trim();
+
+
+        final Company companyTemplate = new Company(company.getCompany_id(),
+                company.getName(), company.getAddress(),
+                company.getLogo(), company.getCreated_date(),
+                company.getUser_id(), company.getUser1(),
+                company.getPass1(), company.getUser1_admin(),
+                company.getUser2(), company.getPass2(),
+                company.getUser2_admin(), company.getLogo_link(),
+                company.getCity(), company.getCountry_name());
+
+        companyTemplate.setName(name);
+        companyTemplate.setAddress(address);
+        companyTemplate.setLogo(null);
+        if (isChoseImages) {
+            companyTemplate.setLogo(mLogoBase64);
+        }
+        companyTemplate.setUser1(user1);
+        companyTemplate.setUser2(user2);
+        createSave(name, address, mLogoBase64, companyTemplate);
+
+//        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
+//        call.enqueue(new Callback<Integer>() {
+//            @Override
+//            public void onResponse(Call<Integer> call, Response<Integer> response) {
+//
+//                if (response.body() == 1) {
+//
+//                    Call<Integer> call2 = mLoveCouponAPI.isExists(company.getCompany_id(), user2);
+//                    call2.enqueue(new Callback<Integer>() {
+//                        @Override
+//                        public void onResponse(Call<Integer> call, Response<Integer> response) {
+//
+//                            if (response.body() == 1) {
+//                                createSave(name, address, mLogoBase64, companyTemplate);
+//
+//                            } else {
+//                                mEdtUser2.setError(getString(R.string.account_exists));
+//                                requestFocus(mEdtUser2);
+//
+//                                hideProgressDialog();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<Integer> call, Throwable t) {
+//                            Log.d(TAG, "isCheckAccountExists " + t.toString());
+//                        }
+//                    });
+//
+//
+//                } else {
+//                    mEdtUser1.setError(getString(R.string.account_exists));
+//                    requestFocus(mEdtUser1);
+//
+//                    hideProgressDialog();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Integer> call, Throwable t) {
+//                Log.d(TAG, "isCheckAccountExists " + t.toString());
+//            }
+//        });
+    }
+
+    private void checkAccount1() {
+
+        String user = mEdtUser1.getText().toString().trim();
+        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+
+                if (response.body() == 0) {
+                    mEdtUser1.setError(getString(R.string.account_exists));
+                    requestFocus(mEdtUser1);
+                    isAccount1 = false;
+                } else {
+                    isAccount1 = true;
+                }
+
+                Logger.d(response.body() + "");
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d(TAG, "isCheckAccountExists " + t.toString());
+            }
+        });
+    }
+
+    private void checkAccount2() {
+
+        String user = mEdtUser2.getText().toString().trim();
+        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+
+                if (response.body() == 0) {
+                    mEdtUser2.setError(getString(R.string.account_exists));
+                    requestFocus(mEdtUser2);
+                    isAccount2 = false;
+                } else {
+                    isAccount2 = true;
+                }
+
+                Logger.d(response.body() + "");
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d(TAG, "isCheckAccountExists " + t.toString());
+            }
+        });
     }
 
     private void createSave(final String name, final String address,

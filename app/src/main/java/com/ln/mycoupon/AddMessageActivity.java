@@ -113,8 +113,6 @@ public class AddMessageActivity extends AppCompatActivity
 
             }
         }
-
-
     }
 
     private void initViews() {
