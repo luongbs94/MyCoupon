@@ -39,6 +39,7 @@ import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
+import com.orhanobut.logger.Logger;
 
 public class ShopMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -56,6 +57,8 @@ public class ShopMainActivity extends AppCompatActivity
     private ImageView mImageLogo;
     private TextView mTxtNameCompany;
     private Snackbar mSnackbar;
+
+    private int mStartNotificatioin = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,9 @@ public class ShopMainActivity extends AppCompatActivity
             Log.d(TAG, "Company " + company.getLogo_link());
             Log.d(TAG, "Company " + company.getAddress());
         }
+
+
+        getDataFromIntent();
 
         sTitle = getString(R.string.my_coupon);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -145,8 +151,9 @@ public class ShopMainActivity extends AppCompatActivity
 //        if (!MainApplication.sIsAdmin) {
 //            mFbButton.setVisibility(View.GONE);
 //        }
-
-        if (company != null && company.getName() != null) {
+        if (mStartNotificatioin == MainApplication.NOTIFICATION) {
+            startFragment(new NewsFragment());
+        } else if (company != null && company.getName() != null) {
             startFragment(new CouponFragment());
         } else {
             startFragment(new SettingFragment());
@@ -157,6 +164,16 @@ public class ShopMainActivity extends AppCompatActivity
         if (MainApplication.sIsAdmin) {
             mFbButton.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void getDataFromIntent() {
+        try {
+            Intent intent = getIntent();
+            mStartNotificatioin = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
+        } catch (NullPointerException e) {
+            Logger.d("intent null " + e.toString());
+        }
+
     }
 
     private boolean isClose;

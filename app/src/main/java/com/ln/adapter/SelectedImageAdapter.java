@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ln.images.models.LocalMedia;
 import com.ln.mycoupon.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -40,10 +40,16 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        Picasso.with(mContext)
-                .load(new File(mListImages.get(position).getPath()))
-                .into(holder.mImages);
-
+        LocalMedia item = mListImages.get(position);
+        if (item.getPath().contains("http")) {
+            Picasso.with(mContext)
+                    .load(item.getPath())
+                    .into(holder.mImages);
+        } else {
+            Glide.with(mContext)
+                    .load(item.getPath())
+                    .into(holder.mImages);
+        }
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

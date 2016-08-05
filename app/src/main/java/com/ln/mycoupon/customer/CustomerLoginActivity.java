@@ -37,6 +37,7 @@ import com.ln.model.User;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
+import com.orhanobut.logger.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +55,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private LoveCouponAPI mCouponAPI;
     private RealmController mRealm;
+    private int mStartNotification = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +67,19 @@ public class CustomerLoginActivity extends AppCompatActivity
         mRealm = MainApplication.mRealmController;
 
 
+        getDataFromIntent();
         initViews();
         addEvents();
+    }
+
+    private void getDataFromIntent() {
+        try {
+            Intent intent = getIntent();
+            mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
+        } catch (NullPointerException e) {
+            Logger.d("Intent null");
+        }
+
     }
 
     private void initViews() {
@@ -133,7 +146,6 @@ public class CustomerLoginActivity extends AppCompatActivity
                             updateUserToken(accountOflUser.getId(), MainApplication.getDeviceToken(), "android");
                             LoginManager.getInstance().logOut();
                             Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
-                            start();
                         }
                     }
 
@@ -221,7 +233,6 @@ public class CustomerLoginActivity extends AppCompatActivity
         getNewsOfCustomer(account.getId());
         getNewsMore(account.getId(), mCity);
         updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
-        start();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -249,7 +260,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
                     writeSharePreferences(MainApplication.LOGIN_SHOP, false);
                     writeSharePreferences(MainApplication.LOGIN_CLIENT, true);
-
+                    start();
                 } else {
                     Log.d(TAG, "getCompanyByUserId " + "null");
                 }
@@ -281,6 +292,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     public void start() {
         Intent intent = new Intent(CustomerLoginActivity.this, CustomerMainActivity.class);
+        intent.putExtra(MainApplication.PUSH_NOTIFICATION, mStartNotification);
         startActivity(intent);
         finish();
     }

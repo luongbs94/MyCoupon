@@ -29,6 +29,7 @@ import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
 import com.ln.views.MaterialEditText;
+import com.orhanobut.logger.Logger;
 
 import org.parceler.Parcels;
 
@@ -106,10 +107,29 @@ public class AddMessageActivity extends AppCompatActivity
             if (mType == MainApplication.WHAT_UPDATE_NEWS) {
                 String idNews = bundle.getString(MainApplication.DATA);
                 NewsOfCompany news = MainApplication.mRealmController.getNewsOfCompanyById(idNews);
-                mNewsOfCompany = new NewsOfCompany(news.getMessage_id(),
-                        news.getContent(), news.getCompany_id(),
-                        news.getLast_date(), news.getTitle(),
-                        news.getLink(), news.getImages_link());
+                try {
+                    mNewsOfCompany = new NewsOfCompany(news.getMessage_id(),
+                            news.getContent(), news.getCompany_id(),
+                            news.getLast_date(), news.getTitle(),
+                            news.getLink(), news.getImages_link());
+
+                    if (news.getImages_link() != null) {
+                        String imagesLink = news.getImages_link();
+                        String[] strImage = imagesLink.split(";");
+                        for (String path : strImage) {
+                            mListLocalImages.add(new LocalMedia(path));
+                            mListStringSelectImages.add(path);
+
+                            Logger.d(path);
+                        }
+
+                        mIsShowRecyclerView = true;
+                        findViewById(R.id.rec_select_images).setVisibility(View.VISIBLE);
+                    }
+
+                } catch (NullPointerException e) {
+                    Logger.d(e.toString());
+                }
 
             }
         }
@@ -255,9 +275,7 @@ public class AddMessageActivity extends AppCompatActivity
             for (String s : images) {
                 if (!isExists(s)) {
                     mListStringSelectImages.add(s);
-                    LocalMedia itemImage = new LocalMedia(createFile(s));
-
-                    mListLocalImages.add(itemImage);
+                    mListLocalImages.add(new LocalMedia(createFile(s)));
                     mIsShowRecyclerView = true;
                 } else {
                     getShowMessages(getString(R.string.images_chose_is_exists));
@@ -325,8 +343,15 @@ public class AddMessageActivity extends AppCompatActivity
         if (title.length() > 0 && content.length() > 0) {
             showProgressDialog();
             for (LocalMedia itemImage : mListLocalImages) {
-                String str = itemImage.getPath().substring(itemImage.getPath().lastIndexOf("/") + 1);
-                String url = MainApplication.URL_UPDATE_IMAGE + "/upload/" + str;
+                String url;
+                if (itemImage.getPath().contains("http")) {
+                    url = itemImage.getPath();
+                } else {
+                    String str = itemImage.getPath().substring(itemImage.getPath().lastIndexOf("/") + 1);
+                    url = MainApplication.URL_UPDATE_IMAGE + "/upload/" + str;
+
+                }
+
                 if (mLinkImageNews != null && mLinkImageNews.length() > 0) {
                     mLinkImageNews += ";" + url;
                 } else {
@@ -337,7 +362,9 @@ public class AddMessageActivity extends AppCompatActivity
             }
 
             for (LocalMedia itemImage : mListLocalImages) {
-                uploadFile(itemImage.getPath());
+                if (!itemImage.getPath().contains("http")) {
+                    uploadFile(itemImage.getPath());
+                }
             }
 
             addNews(title, content, link);
@@ -355,11 +382,11 @@ public class AddMessageActivity extends AppCompatActivity
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
         Log.d(TAG, bitmap.getWidth() + " -" + bitmap.getHeight());
-        bitmap = scaleImages(bitmap, MainApplication.WIDTH_IMAGES_NEWS);
+//        bitmap = scaleImages(bitmap, MainApplication.WIDTH_IMAGES_NEWS);
 
-//        if (bitmap.getWidth() > MainApplication.WIDTH_IMAGES_NEWS) {
-//            bitmap = scaleImages(bitmap, MainApplication.WIDTH_IMAGES_NEWS);
-//        }
+        if (bitmap.getWidth() > MainApplication.WIDTH_IMAGES_NEWS) {
+            bitmap = scaleImages(bitmap, MainApplication.WIDTH_IMAGES_NEWS);
+        }
 
         String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));
 

@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -60,6 +62,7 @@ public class SettingFragment extends Fragment implements
         CompoundButton.OnCheckedChangeListener {
 
     private static final int START_CROP_IMAGES = 99;
+    private static final int IS_CHECK_FOCUS = 999;
     private LoveCouponAPI mLoveCouponAPI;
 
     private final String TAG = getClass().getSimpleName();
@@ -87,6 +90,8 @@ public class SettingFragment extends Fragment implements
     private Uri mUri;
 
     private boolean isAccount1, isAccount2;
+    private boolean isCheckFocus = true;
+    private Handler mHandle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,6 +119,20 @@ public class SettingFragment extends Fragment implements
 
         View v = inflater.inflate(R.layout.fragment_setting, container, false);
         mLoveCouponAPI = MainApplication.getAPI();
+
+        mHandle = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == IS_CHECK_FOCUS) {
+                    if (!isAccount1 || !isAccount2) {
+                        getShowMessage(getString(R.string.check_account));
+                        return;
+                    }
+                    save();
+                }
+            }
+        };
 
         initViews(v);
         init();
@@ -159,11 +178,17 @@ public class SettingFragment extends Fragment implements
         if (company.getName() != null) {
             mEdtNameCompany.setText(company.getName());
             mTxtNameCompany.setText(company.getName());
+        } else {
+            mEdtNameCompany.setText("");
+            mTxtNameCompany.setText("");
         }
 
         if (company.getAddress() != null) {
             mEdtAddress.setText(company.getAddress());
             mTxtAddress.setText(company.getAddress());
+        } else {
+            mEdtAddress.setText("");
+            mTxtAddress.setText("");
         }
 
         if (company.getLogo() != null) {
@@ -177,6 +202,8 @@ public class SettingFragment extends Fragment implements
 
         if (company.getUser1() != null) {
             mEdtUser1.setText(company.getUser1());
+        } else {
+            mEdtUser1.setText("");
         }
 
         if (company.getUser2() != null) {
@@ -185,10 +212,14 @@ public class SettingFragment extends Fragment implements
 
         if (company.getPass1() != null) {
             mEdtPassword1.setText(company.getPass1());
+        } else {
+            mEdtPassword1.setText("");
         }
 
         if (company.getPass2() != null) {
             mEdtPassword2.setText(company.getPass2());
+        } else {
+            mEdtPassword2.setText("");
         }
 
         if (company.getUser1_admin() != null) {
@@ -228,10 +259,7 @@ public class SettingFragment extends Fragment implements
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (!mEdtUser1.getText().toString().trim().isEmpty() &&
-                            !mEdtPassword1.getText().toString().trim().isEmpty()) {
-                        checkAccount1();
-                    }
+                    checkAccount1();
                 }
             }
         });
@@ -239,28 +267,7 @@ public class SettingFragment extends Fragment implements
         mEdtUser2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!mEdtUser2.getText().toString().trim().isEmpty() &&
-                        !mEdtPassword2.getText().toString().trim().isEmpty()) {
-                    checkAccount2();
-                }
-            }
-        });
-
-        mEdtPassword1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!mEdtUser1.getText().toString().trim().isEmpty() &&
-                        !mEdtPassword1.getText().toString().trim().isEmpty()) {
-                    checkAccount1();
-                }
-            }
-        });
-
-        mEdtPassword2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!mEdtUser2.getText().toString().trim().isEmpty() &&
-                        !mEdtPassword2.getText().toString().trim().isEmpty()) {
+                if (!hasFocus) {
                     checkAccount2();
                 }
             }
@@ -322,41 +329,32 @@ public class SettingFragment extends Fragment implements
             getShowMessage(getString(R.string.check_network));
             return;
         }
-        if (!isAccount1 || !isAccount2) {
-            getShowMessage(getString(R.string.check_account));
-            return;
+
+        if (mEdtUser1.isFocused() || mEdtUser2.isFocused()) {
+            if (mEdtUser1.isFocused()) {
+                isAccount1 = false;
+                isCheckFocus = false;
+                new Thread(runnableCheckFocus).start();
+                checkAccount1();
+            }
+
+            if (mEdtUser2.isFocused()) {
+                isAccount2 = false;
+                isCheckFocus = false;
+                new Thread(runnableCheckFocus).start();
+                checkAccount2();
+            }
+
+
+        } else {
+            if (!isAccount1 || !isAccount2) {
+                getShowMessage(getString(R.string.check_account));
+                return;
+            }
+
+            save();
         }
 
-        showProgressDialog();
-        final String name = mEdtNameCompany.getText().toString();
-        final String address = mEdtAddress.getText().toString();
-
-        mLogoBase64 = MainApplication.FIRST_BASE64
-                + MainApplication.convertToBitmap(mImgLogo);
-
-
-        final String user1 = mEdtUser1.getText().toString().trim();
-        final String user2 = mEdtUser2.getText().toString().trim();
-
-
-        final Company companyTemplate = new Company(company.getCompany_id(),
-                company.getName(), company.getAddress(),
-                company.getLogo(), company.getCreated_date(),
-                company.getUser_id(), company.getUser1(),
-                company.getPass1(), company.getUser1_admin(),
-                company.getUser2(), company.getPass2(),
-                company.getUser2_admin(), company.getLogo_link(),
-                company.getCity(), company.getCountry_name());
-
-        companyTemplate.setName(name);
-        companyTemplate.setAddress(address);
-        companyTemplate.setLogo(null);
-        if (isChoseImages) {
-            companyTemplate.setLogo(mLogoBase64);
-        }
-        companyTemplate.setUser1(user1);
-        companyTemplate.setUser2(user2);
-        createSave(name, address, mLogoBase64, companyTemplate);
 
 //        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
 //        call.enqueue(new Callback<Integer>() {
@@ -371,7 +369,7 @@ public class SettingFragment extends Fragment implements
 //                        public void onResponse(Call<Integer> call, Response<Integer> response) {
 //
 //                            if (response.body() == 1) {
-//                                createSave(name, address, mLogoBase64, companyTemplate);
+//                                createSave(name, address, mLogoBase64, template);
 //
 //                            } else {
 //                                mEdtUser2.setError(getString(R.string.account_exists));
@@ -403,6 +401,41 @@ public class SettingFragment extends Fragment implements
 //        });
     }
 
+    private void save() {
+        showProgressDialog();
+        final String name = mEdtNameCompany.getText().toString();
+        final String address = mEdtAddress.getText().toString();
+
+        mLogoBase64 = MainApplication.FIRST_BASE64
+                + MainApplication.convertToBitmap(mImgLogo);
+
+
+        final String user1 = mEdtUser1.getText().toString().trim();
+        final String user2 = mEdtUser2.getText().toString().trim();
+
+
+        final Company template = new Company(company.getCompany_id(),
+                company.getName(), company.getAddress(),
+                company.getLogo(), company.getCreated_date(),
+                company.getUser_id(), company.getUser1(),
+                company.getPass1(), company.getUser1_admin(),
+                company.getUser2(), company.getPass2(),
+                company.getUser2_admin(), company.getLogo_link(),
+                company.getCity(), company.getCountry_name());
+
+        template.setName(name);
+        template.setAddress(address);
+        template.setLogo(null);
+        if (isChoseImages) {
+            template.setLogo(mLogoBase64);
+        }
+        template.setUser1(user1);
+        template.setUser2(user2);
+        template.setPass1(mEdtPassword1.getText().toString().trim());
+        template.setPass2(mEdtPassword2.getText().toString().trim());
+        createSave(name, address, mLogoBase64, template);
+    }
+
     private void checkAccount1() {
 
         String user = mEdtUser1.getText().toString().trim();
@@ -411,15 +444,18 @@ public class SettingFragment extends Fragment implements
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
 
-                if (response.body() == 0) {
+                if (response.body() == 1) {
+                    isAccount1 = true;
+                } else {
                     mEdtUser1.setError(getString(R.string.account_exists));
                     requestFocus(mEdtUser1);
                     isAccount1 = false;
-                } else {
-                    isAccount1 = true;
                 }
 
                 Logger.d(response.body() + "");
+                if (!isCheckFocus) {
+                    isCheckFocus = true;
+                }
             }
 
             @Override
@@ -437,15 +473,18 @@ public class SettingFragment extends Fragment implements
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
 
-                if (response.body() == 0) {
+                if (response.body() == 1) {
+                    isAccount2 = true;
+                } else {
                     mEdtUser2.setError(getString(R.string.account_exists));
                     requestFocus(mEdtUser2);
                     isAccount2 = false;
-                } else {
-                    isAccount2 = true;
                 }
 
                 Logger.d(response.body() + "");
+                if (!isCheckFocus) {
+                    isCheckFocus = true;
+                }
             }
 
             @Override
@@ -649,8 +688,6 @@ public class SettingFragment extends Fragment implements
                 });
             } catch (OutOfMemoryError e) {
                 e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
 
@@ -664,7 +701,21 @@ public class SettingFragment extends Fragment implements
     }
 
     public interface OnClickSetInformation {
-
         void onClickSetInformation(String logo, String name, String address);
     }
+
+    private Runnable runnableCheckFocus = new Runnable() {
+        @Override
+        public void run() {
+            while (!isCheckFocus) {
+                SystemClock.sleep(50);
+            }
+
+            Message message = new Message();
+            message.what = IS_CHECK_FOCUS;
+            message.setTarget(mHandle);
+            message.sendToTarget();
+        }
+    };
+
 }

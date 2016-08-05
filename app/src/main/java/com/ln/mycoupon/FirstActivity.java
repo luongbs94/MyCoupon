@@ -24,6 +24,7 @@ import com.ln.mycoupon.customer.CustomerMainActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.mycoupon.shop.ShopMainActivity;
 import com.ln.realm.RealmController;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     private final String TAG = getClass().getSimpleName();
     private LoveCouponAPI mCouponAPI;
     private RealmController mRealmController;
+    private int mStartNotification = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         mRealmController = MainApplication.mRealmController;
 
         getCityOfAccount();
+        getDataFromIntent();
         initViews();
         setLogin();
     }
@@ -59,24 +62,28 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void onClickLoginShop() {
         Intent intent = new Intent(FirstActivity.this, ShopLoginActivity.class);
+        intent.putExtra(MainApplication.PUSH_NOTIFICATION, mStartNotification);
         startActivity(intent);
         finish();
     }
 
     private void onClickLoginCustomer() {
         Intent intent = new Intent(FirstActivity.this, CustomerLoginActivity.class);
+        intent.putExtra(MainApplication.PUSH_NOTIFICATION, mStartNotification);
         startActivity(intent);
         finish();
     }
 
     private void startShop() {
         Intent intent = new Intent(FirstActivity.this, ShopMainActivity.class);
+        intent.putExtra(MainApplication.PUSH_NOTIFICATION, mStartNotification);
         startActivity(intent);
         finish();
     }
 
     private void startCustomer() {
         Intent intent = new Intent(FirstActivity.this, CustomerMainActivity.class);
+        intent.putExtra(MainApplication.PUSH_NOTIFICATION, mStartNotification);
         startActivity(intent);
         finish();
     }
@@ -108,11 +115,11 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             AccountOflUser account = new Gson().fromJson(strCompany, AccountOflUser.class);
             if (account != null) {
                 getCompanyOfCustomer(account.getId());
+                startCustomer();
                 getNewsOfCustomer(account.getId());
                 String city = preferences.getString(MainApplication.CITY_OF_USER, "");
                 getNewsMore(account.getId(), city);
                 //           updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
-                startCustomer();
             }
         }
     }
@@ -131,7 +138,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 if (response.body() != null) {
 //                    mRealmController.deleteListCompanyCustomer();
                     mRealmController.addListCompanyCustomer(response.body());
-
                     Log.d(TAG, "getCompanyOfCustomer + " + response.body().size());
                 } else {
                     Log.d(TAG, "getCompanyOfCustomer + " + "null");
@@ -326,6 +332,19 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 break;
             default:
                 break;
+        }
+    }
+
+    public void getDataFromIntent() {
+        try {
+
+            Intent intent = getIntent();
+            if (intent != null) {
+                mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
+            }
+
+        } catch (NullPointerException e) {
+            Logger.d("intent null");
         }
     }
 }

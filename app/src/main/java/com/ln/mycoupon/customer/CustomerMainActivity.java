@@ -33,6 +33,7 @@ import com.ln.model.AccountOflUser;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
+import com.orhanobut.logger.Logger;
 
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -44,6 +45,7 @@ public class CustomerMainActivity extends AppCompatActivity
     private FloatingActionButton mFabButton;
     private DrawerLayout mDrawerLayout;
     private Snackbar mSnackbar;
+    private int mStartNotification = 1;
 
 
     @Override
@@ -74,6 +76,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
         Log.d("MyFirebaseIIDService", account.getId() + "  " + MainApplication.getDeviceToken());
 
+        getDataFromIntent();
 
         sTitle = getString(R.string.my_coupon);
 
@@ -110,8 +113,12 @@ public class CustomerMainActivity extends AppCompatActivity
         ImageView imageView = (ImageView) headerView.findViewById(R.id.img_logo_customer_nav);
         TextView txt = (TextView) headerView.findViewById(R.id.txt_name_customer_nav);
 
+        if (mStartNotification == MainApplication.NOTIFICATION) {
+            startFragment(new NewsCustomerFragment());
+        } else {
+            startFragment(new CouponFragment());
+        }
 
-        startFragment(new CouponFragment());
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
         AccountOflUser accountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
@@ -127,6 +134,15 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         }
 
+    }
+
+    private void getDataFromIntent() {
+        try {
+            Intent intent = getIntent();
+            mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
+        } catch (NullPointerException e) {
+            Logger.d("intent null " + e.toString());
+        }
     }
 
     private boolean isClose;
