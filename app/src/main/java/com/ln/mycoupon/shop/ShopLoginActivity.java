@@ -61,8 +61,6 @@ public class ShopLoginActivity extends AppCompatActivity
     private LoveCouponAPI mCouponAPI;
     private RealmController mRealmController;
 
-    private EditText mEdtUsername, mEdtPassword;
-
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager mCallbackManager;
 
@@ -75,18 +73,19 @@ public class ShopLoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_login);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        mCallbackManager = CallbackManager.Factory.create();
-
-        mCouponAPI = MainApplication.getAPI();
-        mRealmController = MainApplication.mRealmController;
-
         getDataFromIntent();
         initViews();
         addEvents();
     }
 
     private void getDataFromIntent() {
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        mCallbackManager = CallbackManager.Factory.create();
+
+        mCouponAPI = MainApplication.getAPI();
+        mRealmController = RealmController.with(this);
+
         try {
             Intent intent = getIntent();
             mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
@@ -100,11 +99,6 @@ public class ShopLoginActivity extends AppCompatActivity
 
         setTitle(R.string.login);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mEdtUsername = (EditText) findViewById(R.id.username);
-        mEdtPassword = (EditText) findViewById(R.id.password);
-
-        /* ================== START FACEBOOK ==================*/
 
         LoginManager.getInstance().registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -134,18 +128,15 @@ public class ShopLoginActivity extends AppCompatActivity
 
                     @Override
                     public void onCancel() {
-                        Log.d(TAG, "FACEBOOK - onCancel");
+                        Logger.d("FACEBOOK - onCancel");
                     }
 
                     @Override
                     public void onError(FacebookException error) {
-                        Log.d(TAG, "FACEBOOK - onError" + error.toString());
+                        Logger.d("FACEBOOK - onError" + error.toString());
                     }
                 });
 
-        /* ===================== END FACEBOOK ====================*/
-
-        /*=============== START GOOGLE ===========*/
 
         GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -156,8 +147,6 @@ public class ShopLoginActivity extends AppCompatActivity
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
                 .build();
-
-        /* ===================== END GOOGLE ==================*/
     }
 
 
@@ -335,8 +324,11 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void onClickLogin() {
 
-        String user = mEdtUsername.getText().toString();
-        String password = mEdtPassword.getText().toString();
+        String user = ((EditText) findViewById(R.id.username))
+                .getText().toString().trim();
+
+        String password = ((EditText) findViewById(R.id.password))
+                .getText().toString().trim();
 
         if (user.length() > 0 && password.length() > 0) {
             showProgressDialog();
@@ -364,7 +356,6 @@ public class ShopLoginActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
-//                    mRealmController.deleteListNewsOfCompany();
                     mRealmController.addListNewsOfCompany(response.body());
                     Log.d(TAG, "getNewsByCompanyId " + response.body().size());
                 } else {

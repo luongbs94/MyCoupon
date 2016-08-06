@@ -114,7 +114,7 @@ public class CustomerMainActivity extends AppCompatActivity
         TextView txt = (TextView) headerView.findViewById(R.id.txt_name_customer_nav);
 
         if (mStartNotification == MainApplication.NOTIFICATION) {
-            startFragment(new NewsCustomerFragment());
+            startFragment(NewsCustomerFragment.getInstances(MainApplication.TYPE_NEWS));
         } else {
             startFragment(new CouponFragment());
         }
@@ -247,6 +247,11 @@ public class CustomerMainActivity extends AppCompatActivity
         if (resultCode == RESULT_OK) {
             if (requestCode == MainApplication.START_QRCODE) {
                 Bundle bundle = data.getExtras();
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
+
+                if (fragment instanceof CouponFragment) {
+                    ((CouponFragment) fragment).setListCompanyCustomer();
+                }
                 Intent intent = new Intent(this, CouponCompanyOfClientActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);

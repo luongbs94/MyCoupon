@@ -35,7 +35,6 @@ import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -171,7 +170,7 @@ public class AddMessageActivity extends AppCompatActivity
 
             if (mNewsOfCompany.getLast_date() != 0) {
                 SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-                if (!MainApplication.getLanguage()) {
+                if (!MainApplication.isEnglish()) {
                     mDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 }
 
@@ -186,7 +185,7 @@ public class AddMessageActivity extends AppCompatActivity
 
         mCalendar.set(year, monthOfYear, dayOfMonth);
         SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-        if (!MainApplication.getLanguage()) {
+        if (!MainApplication.isEnglish()) {
             mDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         }
 
@@ -403,11 +402,8 @@ public class AddMessageActivity extends AppCompatActivity
             fos.write(byteArray);
             fos.flush();
             fos.close();
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, e.toString());
         } catch (IOException e) {
             Log.d(TAG, e.toString());
-
         }
 
         return resizedFile.getAbsolutePath();

@@ -111,7 +111,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        if (MainApplication.getLanguage()) {
+        if (MainApplication.isEnglish()) {
             fmt = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         }
 

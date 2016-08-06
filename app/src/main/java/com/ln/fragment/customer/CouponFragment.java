@@ -44,8 +44,6 @@ public class CouponFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
     private List<CompanyOfCustomer> mListCompanyCustomer = new ArrayList<>();
 
-    public CouponFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,9 +99,10 @@ public class CouponFragment extends Fragment {
     }
 
 
-    private void setListCompanyCustomer() {
+    public void setListCompanyCustomer() {
 
-        mListCompanyCustomer = mRealmController.getListCompanyCustomer();
+        mListCompanyCustomer = new ArrayList<>();
+        mListCompanyCustomer.addAll(mRealmController.getListCompanyCustomer());
         CouponShopAdapter adapter = new CouponShopAdapter(getActivity(), mListCompanyCustomer);
         mRecCoupon.setAdapter(adapter);
         Log.d(TAG, "setListCompanyCustomer " + mListCompanyCustomer.size());

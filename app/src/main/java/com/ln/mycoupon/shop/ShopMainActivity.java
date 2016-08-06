@@ -279,7 +279,8 @@ public class ShopMainActivity extends AppCompatActivity
             Glide.with(this)
                     .load(MainApplication.convertToBytes(logo))
                     .asBitmap()
-                    .placeholder(R.drawable.ic_logo_blank).into(mImageLogo);
+                    .placeholder(R.drawable.ic_logo_blank)
+                    .into(mImageLogo);
         }
 
         if (mTxtNameCompany != null) {

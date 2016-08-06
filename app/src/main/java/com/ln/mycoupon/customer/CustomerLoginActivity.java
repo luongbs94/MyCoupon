@@ -378,7 +378,6 @@ public class CustomerLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<NewsOfMore>> call,
                                    Response<List<NewsOfMore>> response) {
                 if (response.body() != null) {
-                    mRealm.deleteListNewsOfMore();
                     mRealm.addListNewsOfMore(response.body());
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {

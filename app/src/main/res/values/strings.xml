@@ -15,7 +15,7 @@
     <string name="you_are">You are</string>
     <string name="shop">Shop</string>
     <string name="customer">Customer</string>
-    <string name="not_fill_login">information</string>
+    <string name="not_fill_login">Your user or password do not match</string>
     <string name="title_activity_test_qrcode">TestQRCode</string>
     <string name="reload">Other Code</string>
     <string name="exit">Log out</string>
