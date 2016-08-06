@@ -75,6 +75,9 @@ dependencies {
     compile "com.github.hotchemi:permissionsdispatcher:${permissionsDispatcherVersion}"
     apt "com.github.hotchemi:permissionsdispatcher-processor:${permissionsDispatcherVersion}"
 
+    compile ('eu.livotov.labs.android:CAMView:2.0.1@aar') {transitive=true}
+
+
 }
 
 
