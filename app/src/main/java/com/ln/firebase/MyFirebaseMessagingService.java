@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
 
@@ -55,6 +56,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void sendNotification(String messageBody, String title) {
         Intent intent = new Intent(this, FirstActivity.class);
+        intent.putExtra(MainApplication.PUSH_NOTIFICATION, MainApplication.NOTIFICATION);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

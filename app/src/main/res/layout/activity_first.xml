@@ -44,7 +44,7 @@
                 android:background="@drawable/btn_login"
                 android:text="@string/shop"
                 android:textColor="@color/white"
-                android:textScaleX="1.2" />
+                android:textScaleX="1.1" />
 
             <Button
                 android:id="@+id/customer"
@@ -54,7 +54,7 @@
                 android:background="@drawable/btn_login"
                 android:text="@string/customer"
                 android:textColor="@color/white"
-                android:textScaleX="1.2" />
+                android:textScaleX="1.1" />
 
         </LinearLayout>
     </LinearLayout>

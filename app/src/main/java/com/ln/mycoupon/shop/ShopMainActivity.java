@@ -3,8 +3,13 @@ package com.ln.mycoupon.shop;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -24,23 +29,23 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
-import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.fragment.shop.CouponFragment;
 import com.ln.fragment.shop.HistoryFragment;
 import com.ln.fragment.shop.NewsFragment;
 import com.ln.fragment.shop.SettingFragment;
 import com.ln.fragment.shop.ShareFragment;
-import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
+import com.orhanobut.logger.Logger;
 
 public class ShopMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        OnClickSetInformation, View.OnClickListener, ConnectivityReceiverListener {
+        SettingFragment.OnClickSetInformation, View.OnClickListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
+    private static final int NETWORK = 100;
     private final String TAG = getClass().getSimpleName();
 
     private int currentPosition = 0;
@@ -51,6 +56,9 @@ public class ShopMainActivity extends AppCompatActivity
 
     private ImageView mImageLogo;
     private TextView mTxtNameCompany;
+    private Snackbar mSnackbar;
+
+    private int mStartNotificatioin = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +66,18 @@ public class ShopMainActivity extends AppCompatActivity
         setContentView(R.layout.activity_shop_main);
 
         checkNetwork();
+
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == NETWORK) {
+                    if (mSnackbar != null) {
+                        mSnackbar.dismiss();
+                    }
+                }
+            }
+        };
 
         String strCompany = getSharedPreferences(MainApplication.SHARED_PREFERENCE,
                 MODE_PRIVATE).getString(MainApplication.COMPANY_SHOP, "");
@@ -78,6 +98,9 @@ public class ShopMainActivity extends AppCompatActivity
             Log.d(TAG, "Company " + company.getLogo_link());
             Log.d(TAG, "Company " + company.getAddress());
         }
+
+
+        getDataFromIntent();
 
         sTitle = getString(R.string.my_coupon);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -128,8 +151,9 @@ public class ShopMainActivity extends AppCompatActivity
 //        if (!MainApplication.sIsAdmin) {
 //            mFbButton.setVisibility(View.GONE);
 //        }
-
-        if (company != null && company.getName() != null) {
+        if (mStartNotificatioin == MainApplication.NOTIFICATION) {
+            startFragment(new NewsFragment());
+        } else if (company != null && company.getName() != null) {
             startFragment(new CouponFragment());
         } else {
             startFragment(new SettingFragment());
@@ -140,6 +164,16 @@ public class ShopMainActivity extends AppCompatActivity
         if (MainApplication.sIsAdmin) {
             mFbButton.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void getDataFromIntent() {
+        try {
+            Intent intent = getIntent();
+            mStartNotificatioin = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
+        } catch (NullPointerException e) {
+            Logger.d("intent null " + e.toString());
+        }
+
     }
 
     private boolean isClose;
@@ -171,7 +205,7 @@ public class ShopMainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_coupon:
                 currentPosition = 0;
-                sTitle = getString(R.string.my_coupon);
+                sTitle = getString(R.string.coupon);
                 fragment = new CouponFragment();
                 break;
             case R.id.nav_new:
@@ -270,6 +304,9 @@ public class ShopMainActivity extends AppCompatActivity
                     boolean isNetwork1 = ConnectivityReceiver.isConnect();
                     if (isNetwork1) {
                         Intent intent1 = new Intent(ShopMainActivity.this, AddMessageActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(MainApplication.WHAT_ADD_MESSAGES, MainApplication.WHAT_SHOP_MAIN_ADD_NEWS);
+                        intent1.putExtras(bundle);
                         startActivityForResult(intent1, MainApplication.ADD_MESSAGES);
                     } else {
                         getShowMessages(getString(R.string.check_network));
@@ -327,11 +364,30 @@ public class ShopMainActivity extends AppCompatActivity
         showCheckNetwork(isConnect);
     }
 
+    private Handler handler;
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            boolean isNetwork = ConnectivityReceiver.isConnect();
+            while (!isNetwork) {
+                SystemClock.sleep(100);
+                isNetwork = ConnectivityReceiver.isConnect();
+            }
+
+            Message message = new Message();
+            message.what = NETWORK;
+            message.setTarget(handler);
+            message.sendToTarget();
+        }
+    };
+
     private void showCheckNetwork(boolean isNetwork) {
-        if (isNetwork) {
-            findViewById(R.id.text_network).setVisibility(View.GONE);
-        } else {
-            findViewById(R.id.text_network).setVisibility(View.VISIBLE);
+        if (!isNetwork) {
+            mSnackbar = Snackbar.make(findViewById(R.id.drawer_layout), R.string.check_network, Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Ok", null);
+            mSnackbar.show();
+
+            new Thread(runnable).start();
         }
     }
 

@@ -22,6 +22,8 @@ import com.ln.images.models.LocalMedia;
 import com.ln.images.models.ScreenUtils;
 import com.ln.mycoupon.R;
 
+import org.parceler.Parcels;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +73,7 @@ public class ImagesCheckActivity extends AppCompatActivity {
                 boolean enable = selectImages.size() != 0;
                 mTextDone.setEnabled(enable);
                 if (enable) {
-                    mTextDone.setText(getString(R.string.text_done, selectImages.size(), maxSelectNum));
+                    mTextDone.setText(getString(R.string.text_done, selectImages.size() + ""));
 
                 } else {
                     mTextDone.setText(getString(R.string.text_done, 0 + ""));
@@ -121,7 +123,7 @@ public class ImagesCheckActivity extends AppCompatActivity {
     private void onResult(ArrayList<String> images) {
         Intent intent = getIntent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(MainApplication.LIST_IMAGES, images);
+        bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(images));
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();

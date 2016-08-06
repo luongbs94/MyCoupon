@@ -38,6 +38,7 @@ import com.ln.model.NewsOfCompany;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
+import com.orhanobut.logger.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,6 +68,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private ProgressDialog mProgressDialog;
 
+    private int mStartNotification = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,16 +81,25 @@ public class ShopLoginActivity extends AppCompatActivity
         mCouponAPI = MainApplication.getAPI();
         mRealmController = MainApplication.mRealmController;
 
+        getDataFromIntent();
         initViews();
         addEvents();
+    }
+
+    private void getDataFromIntent() {
+        try {
+            Intent intent = getIntent();
+            mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
+
+        } catch (NullPointerException e) {
+            Logger.d("Intent null " + e.toString());
+        }
     }
 
     private void initViews() {
 
         setTitle(R.string.login);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mEdtUsername = (EditText) findViewById(R.id.username);
         mEdtPassword = (EditText) findViewById(R.id.password);
@@ -202,7 +213,7 @@ public class ShopLoginActivity extends AppCompatActivity
                             hideProgressDialog();
                             getShowMessages(getString(R.string.login_fails));
                         }
-                    }, MainApplication.TIME_SLEEP);
+                    }, MainApplication.TIME_SLEEP_SETTING);
 
                     Log.d(TAG, "getCompanyProfile " + "null");
                 }
@@ -245,21 +256,8 @@ public class ShopLoginActivity extends AppCompatActivity
         writeSharePreferences(MainApplication.LOGIN_CLIENT, false);
         writeSharePreferences(MainApplication.OFF_LINE, false);
 
-        getCouponTemplate(company.getCompany_id());     //  get list coupon template of company
-        getNewsByCompanyId(company.getCompany_id());    // get list news of company
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideProgressDialog();
-                Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
-                startActivity(intent);
-                finish();
-
-            }
-        }, MainApplication.TIME_SLEEP);
-
+        getCouponTemplate(company.getCompany_id());
+        getNewsByCompanyId(company.getCompany_id());
 
     }
 
@@ -279,7 +277,6 @@ public class ShopLoginActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // integrator login google save state google login
     private void signInGoogleSuccess(GoogleSignInAccount account) {
 
         if (account.getId() != null && account.getIdToken() != null) {
@@ -391,8 +388,19 @@ public class ShopLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<CouponTemplate>> call,
                                    Response<List<CouponTemplate>> response) {
                 if (response.body() != null) {
-                    mRealmController.deleteCouponTemplate();
                     mRealmController.addListCouponTemplate(response.body());
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideProgressDialog();
+                            Intent intent = new Intent(ShopLoginActivity.this, ShopMainActivity.class);
+                            intent.putExtra(MainApplication.PUSH_NOTIFICATION, mStartNotification);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, MainApplication.TIME_SLEEP_SETTING);
                     Log.d(TAG, "getCouponTemplate  " + response.body().size());
                 } else {
                     Log.d(TAG, "getCouponTemplate  " + "null");

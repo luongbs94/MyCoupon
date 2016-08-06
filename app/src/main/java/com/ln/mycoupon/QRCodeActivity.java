@@ -1,6 +1,6 @@
 package com.ln.mycoupon;
 
-import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -24,6 +23,8 @@ import com.ln.realm.RealmController;
 
 import java.util.List;
 
+import eu.livotov.labs.android.camview.ScannerLiveView;
+import eu.livotov.labs.android.camview.scanner.decoder.zxing.ZXDecoder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,18 +33,16 @@ import retrofit2.Response;
  * Created by luongnguyen on 4/13/16.
  * <></>
  */
-public class QRCodeActivity extends AppCompatActivity
-        implements QRCodeReaderView.OnQRCodeReadListener {
+public class QRCodeActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getSimpleName();
     private RealmController mRealmController;
 
 
-    private QRCodeReaderView mQRCodeReaderView;
+    private ScannerLiveView mQRCodeReaderView;
 
     private LoveCouponAPI apiService;
     private AccountOflUser mAccountOflUser;
-    private ProgressDialog mProgressDialog;
     private boolean isCamera;
 
     @Override
@@ -57,46 +56,59 @@ public class QRCodeActivity extends AppCompatActivity
         String strCompany = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
         mAccountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mQRCodeReaderView = (QRCodeReaderView) findViewById(R.id.decoder_view);
-        if (mQRCodeReaderView != null) {
-            mQRCodeReaderView.setOnQRCodeReadListener(this);
-        }
+        mQRCodeReaderView = (ScannerLiveView) findViewById(R.id.decoder_view);
+
+        mQRCodeReaderView.setScannerViewEventListener(new ScannerLiveView.ScannerViewEventListener()
+        {
+            @Override
+            public void onScannerStarted(ScannerLiveView scanner)
+            {
+                Toast.makeText(QRCodeActivity.this,"Scanner Started",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onScannerStopped(ScannerLiveView scanner)
+            {
+               // Toast.makeText(QRCodeActivity.this,"Scanner Stopped",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onScannerError(Throwable err)
+            {
+          //      Toast.makeText(QRCodeActivity.this,"Scanner Error: " + err.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCodeScanned(String data)
+            {
+                Toast.makeText(QRCodeActivity.this, data, Toast.LENGTH_SHORT).show();
+                if (!isCamera) {
+                    isCamera = true;
+                    mQRCodeReaderView.stopScanner();
+                    updateCoupon(data);
+                }
+            }
+        });
+
     }
 
-    @Override
-    public void onQRCodeRead(String text, PointF[] points) {
-        mQRCodeReaderView.getCameraManager().stopPreview();
-        if (!isCamera) {
-            isCamera = true;
-            updateCoupon(text);
-        }
-
-        Log.d(TAG, "onQRCodeRead " + text);
-    }
-
-
-    @Override
-    public void cameraNotFound() {
-    }
-
-    @Override
-    public void QRCodeNotFoundOnCamImage() {
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mQRCodeReaderView.getCameraManager().startPreview();
+        ZXDecoder decoder = new ZXDecoder();
+        decoder.setScanAreaPercent(0.5);
+        mQRCodeReaderView.setDecoder(decoder);
+        mQRCodeReaderView.startScanner();
+   //     mQRCodeReaderView.getCameraManager().startPreview();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mQRCodeReaderView.getCameraManager().stopPreview();
+        mQRCodeReaderView.stopScanner();
     }
 
 
@@ -138,8 +150,24 @@ public class QRCodeActivity extends AppCompatActivity
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                 if (response.body() == null) {
                     new MaterialDialog.Builder(QRCodeActivity.this)
-                            .title("Coupon")
-                            .content("Coupon đã được sử dụng")
+                            .title(R.string.coupon)
+                            .content(R.string.coupon_used)
+                            .cancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    dialog.dismiss();
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            isCamera = false;
+                                            mQRCodeReaderView.startScanner();
+                                        }
+                                    }, 1500);
+
+                                    mQRCodeReaderView.startScanner();
+                                }
+                            })
                             .positiveText(R.string.ok)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
@@ -150,11 +178,11 @@ public class QRCodeActivity extends AppCompatActivity
                                         @Override
                                         public void run() {
                                             isCamera = false;
-                                            mQRCodeReaderView.getCameraManager().startPreview();
+                                            mQRCodeReaderView.startScanner();
                                         }
-                                    }, 1500);
+                                    }, 1000);
 
-                                    mQRCodeReaderView.getCameraManager().startPreview();
+                                    mQRCodeReaderView.startScanner();
                                 }
                             })
                             .show();
@@ -164,23 +192,14 @@ public class QRCodeActivity extends AppCompatActivity
                 } else {
 
                     final CompanyOfCustomer company = response.body().get(0);
-                    showDialog();
                     mRealmController.addCompanyOfCustomer(company);
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            Intent intent = getIntent();
-                            Bundle bundle = new Bundle();
-                            bundle.putString(MainApplication.ID_COMPANY, company.getCompany_id());
-                            intent.putExtras(bundle);
-                            setResult(RESULT_OK, intent);
-                            Toast.makeText(QRCodeActivity.this, "Ban da them 1 coupon moi", Toast.LENGTH_SHORT).show();
-                            hideDialog();
-                            finish();
-                        }
-                    }, MainApplication.TIME_SLEEP);
+                    Intent intent = getIntent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(MainApplication.ID_COMPANY, company.getCompany_id());
+                    intent.putExtras(bundle);
+                    setResult(RESULT_OK, intent);
+                    Toast.makeText(QRCodeActivity.this, getString(R.string.you_add_news_coupon), Toast.LENGTH_SHORT).show();
+                    finish();
 
                     Log.d(TAG, "CompanyOfCustomer " + response.body());
                 }
@@ -192,19 +211,5 @@ public class QRCodeActivity extends AppCompatActivity
 
             }
         });
-    }
-
-    private void showDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
-        }
-        mProgressDialog.show();
-    }
-
-    private void hideDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
     }
 }

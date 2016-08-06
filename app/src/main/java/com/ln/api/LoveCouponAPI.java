@@ -121,4 +121,7 @@ public interface LoveCouponAPI {
 
     @GET("/get_news_more_by_user_id")
     Call<List<NewsOfMore>> getNewsMoreByUserId(@Query("user_id") String user_id, @Query("city") String city);
+
+    @POST("/updateMessage")
+    Call<Integer> updateMessages(@Body NewsOfCompany news);
 }

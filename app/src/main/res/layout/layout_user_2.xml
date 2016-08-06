@@ -14,41 +14,29 @@
         android:layout_margin="10dp"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_user2"
+        <com.ln.views.MaterialEditText
+            android:id="@+id/username2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:hint="@string/username2"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/size_12dp"
+            android:paddingTop="@dimen/size_12dp"
+            android:textColor="@drawable/text_color"
+            android:textSize="@dimen/size_18sp" />
 
-            <EditText
-                android:id="@+id/username2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/username2"
-                android:maxLines="1"
-                android:paddingBottom="@dimen/size_12dp"
-                android:paddingTop="@dimen/size_12dp"
-                android:textColor="@drawable/text_color"
-                android:textSize="@dimen/size_18sp" />
 
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_password2"
+        <com.ln.views.MaterialEditText
+            android:id="@+id/password2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:paddingBottom="@dimen/size_12dp"
+            android:paddingTop="@dimen/size_12dp"
+            android:textColor="@drawable/text_color"
+            android:textSize="@dimen/size_18sp" />
 
-            <EditText
-                android:id="@+id/password2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:paddingBottom="@dimen/size_12dp"
-                android:paddingTop="@dimen/size_12dp"
-                android:textColor="@drawable/text_color"
-                android:textSize="@dimen/size_18sp" />
-
-        </android.support.design.widget.TextInputLayout>
 
         <CheckBox
             android:id="@+id/check_admin2"

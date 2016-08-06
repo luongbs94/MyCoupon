@@ -1,13 +1,17 @@
 package com.ln.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -26,6 +30,7 @@ import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCompanyLike;
+import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
@@ -95,7 +100,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
 
         holder.mTxtLink.setVisibility(View.GONE);
-        if (!item.getLink().isEmpty()) {
+        if (item.getLink() != null && !item.getLink().isEmpty()) {
             holder.mTxtLink.setVisibility(View.VISIBLE);
             if (item.getLink().contains("http")) {
                 holder.mTxtLink.setText(item.getLink());
@@ -196,12 +201,35 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                     onClickShare(this.getAdapterPosition(), this);
                     break;
                 case R.id.linear_delete:
-                    onClickDeleteNews(this.getAdapterPosition());
+                    onClickMoreNews(this.getAdapterPosition(), v);
                     break;
                 default:
                     break;
             }
         }
+    }
+
+    private void onClickMoreNews(final int position, View view) {
+        PopupMenu popupMenu = new PopupMenu(mContext, view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_news, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.menu_edit_news) {
+                    Intent intent = new Intent(mContext, AddMessageActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(MainApplication.WHAT_ADD_MESSAGES, MainApplication.WHAT_UPDATE_NEWS);
+                    bundle.putString(MainApplication.DATA, mListNews.get(position).getMessage_id());
+                    intent.putExtras(bundle);
+                    mContext.startActivity(intent);
+                } else if (item.getItemId() == R.id.menu_delete_news) {
+                    onClickDeleteNews(position);
+                }
+                return false;
+            }
+        });
+
+        popupMenu.show();
     }
 
     private void onClickDeleteNews(final int position) {

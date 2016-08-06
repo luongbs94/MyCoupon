@@ -2,8 +2,13 @@ package com.ln.mycoupon.customer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,36 +26,45 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
-import com.ln.broadcast.ConnectivityReceiverListener;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.model.AccountOflUser;
-import com.ln.model.User;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
+import com.orhanobut.logger.Logger;
 
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ConnectivityReceiverListener {
+        ConnectivityReceiver.ConnectivityReceiverListener {
 
+    private static final int NETWORK = 1000;
     private static String sTitle;
 
     private FloatingActionButton mFabButton;
     private DrawerLayout mDrawerLayout;
-    private TextView mTxtConnectNetwork;
+    private Snackbar mSnackbar;
+    private int mStartNotification = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
 
+        checkNetwork();
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == NETWORK) {
+                    if (mSnackbar != null) {
+                        mSnackbar.dismiss();
+                    }
+                }
+            }
+        };
 
 
         AccountOflUser account = new Gson()
@@ -60,11 +74,9 @@ public class CustomerMainActivity extends AppCompatActivity
 
         MainApplication.updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
 
-        Log.d("MyFirebaseIIDService",account.getId() + "  " +  MainApplication.getDeviceToken());
+        Log.d("MyFirebaseIIDService", account.getId() + "  " + MainApplication.getDeviceToken());
 
-
-
-
+        getDataFromIntent();
 
         sTitle = getString(R.string.my_coupon);
 
@@ -101,8 +113,12 @@ public class CustomerMainActivity extends AppCompatActivity
         ImageView imageView = (ImageView) headerView.findViewById(R.id.img_logo_customer_nav);
         TextView txt = (TextView) headerView.findViewById(R.id.txt_name_customer_nav);
 
+        if (mStartNotification == MainApplication.NOTIFICATION) {
+            startFragment(new NewsCustomerFragment());
+        } else {
+            startFragment(new CouponFragment());
+        }
 
-        startFragment(new CouponFragment());
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
         AccountOflUser accountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
@@ -118,8 +134,15 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         }
 
-        mTxtConnectNetwork = (TextView) findViewById(R.id.text_network);
-        checkNetwork();
+    }
+
+    private void getDataFromIntent() {
+        try {
+            Intent intent = getIntent();
+            mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
+        } catch (NullPointerException e) {
+            Logger.d("intent null " + e.toString());
+        }
     }
 
     private boolean isClose;
@@ -139,7 +162,6 @@ public class CustomerMainActivity extends AppCompatActivity
             }
         }
     }
-
 
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -235,16 +257,33 @@ public class CustomerMainActivity extends AppCompatActivity
 
     private void checkNetwork() {
         boolean isNetWork = ConnectivityReceiver.isConnect();
-        showConnectNetWork(isNetWork);
+        showCheckNetwork(isNetWork);
     }
 
-    private void showConnectNetWork(boolean isNetWork) {
-        if (mTxtConnectNetwork != null) {
-            if (isNetWork) {
-                mTxtConnectNetwork.setVisibility(View.GONE);
-            } else {
-                mTxtConnectNetwork.setVisibility(View.VISIBLE);
+    private Handler handler;
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            boolean isNetwork = ConnectivityReceiver.isConnect();
+            while (!isNetwork) {
+                SystemClock.sleep(100);
+                isNetwork = ConnectivityReceiver.isConnect();
             }
+
+            Message message = new Message();
+            message.what = NETWORK;
+            message.setTarget(handler);
+            message.sendToTarget();
+        }
+    };
+
+    private void showCheckNetwork(boolean isNetwork) {
+        if (!isNetwork) {
+            mSnackbar = Snackbar.make(findViewById(R.id.drawer_layout), R.string.check_network, Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Ok", null);
+            mSnackbar.show();
+
+            new Thread(runnable).start();
         }
     }
 

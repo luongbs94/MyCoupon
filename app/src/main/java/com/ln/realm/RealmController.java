@@ -185,23 +185,27 @@ public class RealmController {
     public void addListNewsOfCompany(List<NewsOfCompany> listMessage) {
 
         mRealm.beginTransaction();
+
+        List<NewsOfCompany> listNews = getListNewsOfCompany();
+        // delete all news
+        if (listNews != null) {
+            for (NewsOfCompany news : listNews) {
+                news.deleteFromRealm();
+            }
+        }
+
+        // add list all news
         for (NewsOfCompany NewsOfCompany : listMessage) {
             mRealm.copyToRealmOrUpdate(NewsOfCompany);
         }
         mRealm.commitTransaction();
     }
 
-    public void deleteListNewsOfCompany() {
-        mRealm.beginTransaction();
-        RealmResults<NewsOfCompany> listMessages = getListNewsOfCompany();
-        for (NewsOfCompany message : listMessages) {
-            message.deleteFromRealm();
-        }
-        mRealm.commitTransaction();
-    }
 
     public RealmResults<NewsOfCompany> getListNewsOfCompany() {
-        return mRealm.where(NewsOfCompany.class).findAll();
+        return mRealm
+                .where(NewsOfCompany.class)
+                .findAll();
     }
 
     public NewsOfCompany getNewsOfCompanyById(String idNews) {
@@ -214,12 +218,23 @@ public class RealmController {
 
 
     /* ====================== START SAVE NEWS  CUSTOMER =================*/
-    public void addListNewsOfCustomer(List<NewsOfCustomer> listNews) {
+    public void addListNewsOfCustomer(List<NewsOfCustomer> listMessages) {
 
         mRealm.beginTransaction();
-        for (NewsOfCustomer news : listNews) {
+
+        // delete list newsOfCustomer
+        List<NewsOfCustomer> listNews = getListNewsOfCustomer();
+        if (listNews != null) {
+            for (NewsOfCustomer news : listNews) {
+                news.deleteFromRealm();
+            }
+        }
+
+        // add list all news
+        for (NewsOfCustomer news : listMessages) {
             mRealm.copyToRealmOrUpdate(news);
         }
+
         mRealm.commitTransaction();
     }
 
@@ -233,26 +248,21 @@ public class RealmController {
     public void addListCouponTemplate(List<CouponTemplate> listCouponTemplate) {
         mRealm.beginTransaction();
 
+        // delete all coupon template
+        List<CouponTemplate> listCoupon = getListCouponTemplate();
+        if (listCoupon != null) {
+            for (CouponTemplate coupon : listCoupon) {
+                coupon.deleteFromRealm();
+            }
+        }
+
+        // add all list coupon
         for (CouponTemplate template : listCouponTemplate) {
-//            CouponTemplate coupon = mRealm.createObject(CouponTemplate.class);
-//            coupon.setCouponTemplate(template.getCoupon_template_id(), template.getContent(),
-//                    template.getDuration(), template.getCreated_date(),
-//                    template.getCompany_id(), template.getValue());
             mRealm.copyToRealmOrUpdate(template);
         }
         mRealm.commitTransaction();
     }
 
-    public void deleteCouponTemplate() {
-        mRealm.beginTransaction();
-        List<CouponTemplate> couponTemplateList = getListCouponTemplate();
-        if (couponTemplateList != null) {
-            for (CouponTemplate coupon : couponTemplateList) {
-                coupon.deleteFromRealm();
-            }
-        }
-        mRealm.commitTransaction();
-    }
 
     public void deleteCouponTemplateById(String id) {
         mRealm.beginTransaction();
@@ -264,11 +274,16 @@ public class RealmController {
     }
 
     public RealmResults<CouponTemplate> getListCouponTemplate() {
-        return mRealm.where(CouponTemplate.class).findAll();
+        return mRealm
+                .where(CouponTemplate.class)
+                .findAll();
     }
 
     private CouponTemplate getCouponTemplateById(String id) {
-        return mRealm.where(CouponTemplate.class).equalTo("coupon_template_id", id).findFirst();
+        return mRealm
+                .where(CouponTemplate.class)
+                .equalTo("coupon_template_id", id)
+                .findFirst();
     }
 
 
@@ -326,20 +341,6 @@ public class RealmController {
         mRealm.commitTransaction();
     }
 
-    public void deleteListCompanyCustomer() {
-
-        mRealm.beginTransaction();
-        List<CompanyOfCustomer> mListCompany = getListCompanyCustomer();
-        for (CompanyOfCustomer company : mListCompany) {
-            company.deleteFromRealm();
-        }
-
-        List<Coupon> listCoupon = getListCoupon();
-        for (Coupon coupon : listCoupon) {
-            coupon.deleteFromRealm();
-        }
-        mRealm.commitTransaction();
-    }
 
     public RealmResults<CompanyOfCustomer> getListCompanyCustomer() {
         return mRealm.where(CompanyOfCustomer.class).findAll();

@@ -10,6 +10,8 @@ import com.ln.app.MainApplication;
 import com.ln.images.models.LocalMedia;
 import com.ln.mycoupon.R;
 
+import org.parceler.Parcels;
+
 public class CropActivity extends AppCompatActivity {
 
     @Override
@@ -19,7 +21,7 @@ public class CropActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        LocalMedia item = (LocalMedia) bundle.getSerializable(MainApplication.LINK_IMAGES);
+        LocalMedia item = Parcels.unwrap(bundle.getParcelable(MainApplication.LINK_IMAGES));
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()

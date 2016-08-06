@@ -2,15 +2,18 @@ package com.ln.mycoupon;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -22,10 +25,13 @@ import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.images.activities.ImagesCheckActivity;
+import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
-import com.ln.model.ItemImage;
 import com.ln.model.NewsOfCompany;
-import com.rengwuxian.materialedittext.MaterialEditText;
+import com.ln.views.MaterialEditText;
+import com.orhanobut.logger.Logger;
+
+import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -52,16 +58,10 @@ import retrofit2.Response;
  * <></>
  */
 public class AddMessageActivity extends AppCompatActivity
-        implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
+        implements DatePickerDialog.OnDateSetListener, View.OnClickListener, SelectedImageAdapter.OnClickRemoveImages {
 
     private static final int REQUEST_IMAGE = 77;
     private final String TAG = getClass().getSimpleName();
-
-    private static final int mSelectNumber = 9;
-    private static final int mMode = 1;
-    private static final boolean isShow = true;
-    private static final boolean isPreview = true;
-    private static final boolean isCrop = false;
 
     private LoveCouponAPI mApiService;
     private LoveCouponAPI apiService;
@@ -70,8 +70,8 @@ public class AddMessageActivity extends AppCompatActivity
     private RecyclerView mRecyclerViewImages;
 
 
-    private List<ItemImage> mListImagesSelected = new ArrayList<>();
-    private List<String> mListStrImages = new ArrayList<>();
+    private List<LocalMedia> mListLocalImages;
+    private List<String> mListStringSelectImages;
     private SelectedImageAdapter mSelectedImageAdapter;
 
     private boolean mIsShowRecyclerView;
@@ -83,13 +83,56 @@ public class AddMessageActivity extends AppCompatActivity
     private long mTimeLong;
     private Calendar mCalendar;
 
+    private static int mType;
+    private NewsOfCompany mNewsOfCompany;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_message);
 
+        initData();
         initViews();
         addEvents();
+    }
+
+    private void initData() {
+
+        mListLocalImages = new ArrayList<>();
+        mListStringSelectImages = new ArrayList<>();
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            mType = bundle.getInt(MainApplication.WHAT_ADD_MESSAGES);
+            if (mType == MainApplication.WHAT_UPDATE_NEWS) {
+                String idNews = bundle.getString(MainApplication.DATA);
+                NewsOfCompany news = MainApplication.mRealmController.getNewsOfCompanyById(idNews);
+                try {
+                    mNewsOfCompany = new NewsOfCompany(news.getMessage_id(),
+                            news.getContent(), news.getCompany_id(),
+                            news.getLast_date(), news.getTitle(),
+                            news.getLink(), news.getImages_link());
+
+                    if (news.getImages_link() != null) {
+                        String imagesLink = news.getImages_link();
+                        String[] strImage = imagesLink.split(";");
+                        for (String path : strImage) {
+                            mListLocalImages.add(new LocalMedia(path));
+                            mListStringSelectImages.add(path);
+
+                            Logger.d(path);
+                        }
+
+                        mIsShowRecyclerView = true;
+                        findViewById(R.id.rec_select_images).setVisibility(View.VISIBLE);
+                    }
+
+                } catch (NullPointerException e) {
+                    Logger.d(e.toString());
+                }
+
+            }
+        }
     }
 
     private void initViews() {
@@ -107,14 +150,35 @@ public class AddMessageActivity extends AppCompatActivity
 
         lastDate = (TextView) findViewById(R.id.date_add_message);
 
-
         mRecyclerViewImages = (RecyclerView) findViewById(R.id.rec_select_images);
         mRecyclerViewImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mRecyclerViewImages.setHasFixedSize(true);
 
-        mSelectedImageAdapter = new SelectedImageAdapter(this, mListImagesSelected);
+        mSelectedImageAdapter = new SelectedImageAdapter(this, mListLocalImages);
+        mSelectedImageAdapter.setOnClickRemoveImages(this);
         mRecyclerViewImages.setAdapter(mSelectedImageAdapter);
 
+        if (mNewsOfCompany != null) {
+            if (mNewsOfCompany.getTitle() != null) {
+                mTxtTitle.setText(mNewsOfCompany.getTitle());
+            }
+            if (mNewsOfCompany.getContent() != null) {
+                mTxtContent.setText(mNewsOfCompany.getContent());
+            }
+            if (mNewsOfCompany.getLink() != null) {
+                mTxtLink.setText(mNewsOfCompany.getLink());
+            }
+
+            if (mNewsOfCompany.getLast_date() != 0) {
+                SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+                if (!MainApplication.getLanguage()) {
+                    mDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                }
+
+                lastDate.setText(mDateFormat.format(mNewsOfCompany.getLast_date()));
+                mCalendar.setTimeInMillis(mNewsOfCompany.getLast_date());
+            }
+        }
     }
 
     @Override
@@ -137,34 +201,25 @@ public class AddMessageActivity extends AppCompatActivity
         findViewById(R.id.img_selected_images).setOnClickListener(this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_add_news, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.menu_add:
-                onClickAddMessages();
-                return true;
-            case android.R.id.home:
-                Intent intent = new Intent();
-                setResult(3, intent);
-                finish();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent();
+            setResult(3, intent);
+            finish();
+            return true;
         }
+        return super.onContextItemSelected(item);
+
     }
 
     private void addNews(final String title, final String content, final String link) {
 
         String idNews = MainApplication.getRandomString(MainApplication.SIZE_ID);
 
-        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        final String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company mCompany = new Gson().fromJson(strCompany, Company.class);
 
         String idCompany = mCompany.getCompany_id();
@@ -198,7 +253,7 @@ public class AddMessageActivity extends AppCompatActivity
                             getShowMessages(getString(R.string.add_message_success));
                             finish();
                         }
-                    }, MainApplication.TIME_SLEEP);
+                    }, MainApplication.TIME_SLEEP_SETTING);
                 } else {
                     getShowMessages(getString(R.string.add_message_fail));
                 }
@@ -215,13 +270,12 @@ public class AddMessageActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE) {
-            List<String> images = (ArrayList<String>) data.getSerializableExtra(MainApplication.LIST_IMAGES);
+            List<String> images = Parcels.unwrap(data.getExtras().getParcelable(MainApplication.LIST_IMAGES));
 
             for (String s : images) {
                 if (!isExists(s)) {
-                    mListStrImages.add(s);
-                    ItemImage itemImage = new ItemImage(createFile(s));
-                    mListImagesSelected.add(itemImage);
+                    mListStringSelectImages.add(s);
+                    mListLocalImages.add(new LocalMedia(createFile(s)));
                     mIsShowRecyclerView = true;
                 } else {
                     getShowMessages(getString(R.string.images_chose_is_exists));
@@ -237,7 +291,7 @@ public class AddMessageActivity extends AppCompatActivity
     }
 
     private boolean isExists(String s) {
-        for (String itemImage : mListStrImages) {
+        for (String itemImage : mListStringSelectImages) {
             if (itemImage.equals(s)) {
                 return true;
             }
@@ -267,7 +321,7 @@ public class AddMessageActivity extends AppCompatActivity
                 onClickAddMessages();
                 break;
             case R.id.img_selected_images:
-                onClickSelectImages();
+                startActivityForResult(new Intent(this, ImagesCheckActivity.class), REQUEST_IMAGE);
                 break;
             case R.id.text_change_date:
                 DatePickerDialog.newInstance(AddMessageActivity.this,
@@ -281,13 +335,6 @@ public class AddMessageActivity extends AppCompatActivity
         }
     }
 
-
-    private void onClickSelectImages() {
-//        ImageSelectorActivity.start(AddMessageActivity.this, mSelectNumber, mMode, isShow, isPreview, isCrop);
-
-        startActivityForResult(new Intent(this, ImagesCheckActivity.class), REQUEST_IMAGE);
-    }
-
     private void onClickAddMessages() {
 
         String title = mTxtTitle.getText().toString();
@@ -295,9 +342,16 @@ public class AddMessageActivity extends AppCompatActivity
         String link = mTxtLink.getText().toString();
         if (title.length() > 0 && content.length() > 0) {
             showProgressDialog();
-            for (ItemImage itemImage : mListImagesSelected) {
-                String str = itemImage.getPath().substring(itemImage.getPath().lastIndexOf("/") + 1);
-                String url = MainApplication.URL_UPDATE_IMAGE + "/upload/" + str;
+            for (LocalMedia itemImage : mListLocalImages) {
+                String url;
+                if (itemImage.getPath().contains("http")) {
+                    url = itemImage.getPath();
+                } else {
+                    String str = itemImage.getPath().substring(itemImage.getPath().lastIndexOf("/") + 1);
+                    url = MainApplication.URL_UPDATE_IMAGE + "/upload/" + str;
+
+                }
+
                 if (mLinkImageNews != null && mLinkImageNews.length() > 0) {
                     mLinkImageNews += ";" + url;
                 } else {
@@ -307,8 +361,10 @@ public class AddMessageActivity extends AppCompatActivity
                 Log.d(TAG, "linkImages : " + url);
             }
 
-            for (ItemImage itemImage : mListImagesSelected) {
-                uploadFile(itemImage.getPath());
+            for (LocalMedia itemImage : mListLocalImages) {
+                if (!itemImage.getPath().contains("http")) {
+                    uploadFile(itemImage.getPath());
+                }
             }
 
             addNews(title, content, link);
@@ -325,8 +381,12 @@ public class AddMessageActivity extends AppCompatActivity
         options.inSampleSize = 8;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
-        int height = MainApplication.WIDTH_IMAGES * bitmap.getHeight() / bitmap.getWidth();
-        Bitmap resized = Bitmap.createScaledBitmap(bitmap, MainApplication.WIDTH_IMAGES, height, true);
+        Log.d(TAG, bitmap.getWidth() + " -" + bitmap.getHeight());
+//        bitmap = scaleImages(bitmap, MainApplication.WIDTH_IMAGES_NEWS);
+
+        if (bitmap.getWidth() > MainApplication.WIDTH_IMAGES_NEWS) {
+            bitmap = scaleImages(bitmap, MainApplication.WIDTH_IMAGES_NEWS);
+        }
 
         String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));
 
@@ -335,12 +395,11 @@ public class AddMessageActivity extends AppCompatActivity
         File resizedFile = new File(this.getCacheDir(), nameImages + "_" + timeStamp + ".png");
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
-        FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(resizedFile);
+            FileOutputStream fos = new FileOutputStream(resizedFile);
             fos.write(byteArray);
             fos.flush();
             fos.close();
@@ -389,7 +448,38 @@ public class AddMessageActivity extends AppCompatActivity
         });
     }
 
+    public Bitmap scaleImages(Bitmap bitmap, int width) {
+
+
+        float ratioX = width / (float) bitmap.getWidth();
+        int height = (int) (ratioX * bitmap.getHeight());
+        Bitmap scaledBitmap = Bitmap.createBitmap(width, height,
+                Bitmap.Config.ARGB_8888);
+        float middleX = width / 2.0f;
+        float middleY = height / 2.0f;
+
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(ratioX, ratioX, middleX, middleY);
+
+        Canvas canvas = new Canvas(scaledBitmap);
+        canvas.setMatrix(scaleMatrix);
+        canvas.drawBitmap(bitmap, middleX - bitmap.getWidth() / 2, middleY - bitmap.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
+
+        return scaledBitmap;
+    }
+
+    private void writePreferences(String key, String value) {
+        SharedPreferences.Editor editor = MainApplication.getPreferences().edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
     private void getShowMessages(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void remove(int position) {
+        mListStringSelectImages.remove(position);
     }
 }

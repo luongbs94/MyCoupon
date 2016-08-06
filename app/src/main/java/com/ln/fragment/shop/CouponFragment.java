@@ -113,7 +113,6 @@ public class CouponFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<CouponTemplate>> call, Response<List<CouponTemplate>> response) {
                     if (response.body() != null) {
-                        mRealmController.deleteCouponTemplate();
                         mRealmController.addListCouponTemplate(response.body());
                         setCouponTemplate();
                         swipeContainer.setRefreshing(false);

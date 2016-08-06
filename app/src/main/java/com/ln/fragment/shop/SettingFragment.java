@@ -11,9 +11,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -28,7 +29,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,10 +40,11 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.images.activities.ImagesCropActivity;
-import com.ln.interfaces.OnClickSetInformation;
 import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
+import com.ln.views.MaterialEditText;
+import com.orhanobut.logger.Logger;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,14 +62,14 @@ public class SettingFragment extends Fragment implements
         CompoundButton.OnCheckedChangeListener {
 
     private static final int START_CROP_IMAGES = 99;
+    private static final int IS_CHECK_FOCUS = 999;
     private LoveCouponAPI mLoveCouponAPI;
 
     private final String TAG = getClass().getSimpleName();
 
-    private TextInputLayout mInputUser1, mInputUser2, mInputPassword1, mInputPassword2;
-    private EditText mEdtNameCompany, mEdtAddress, mEdtPassword1, mEdtUser2, mEdtPassword2;
+    private MaterialEditText mEdtNameCompany, mEdtAddress,
+            mEdtPassword1, mEdtUser1, mEdtUser2, mEdtPassword2;
     private CheckBox checkBox, checkBox1;
-    private EditText mEdtUser1;
     private CardView mCardView;
     private CircleImageView mImgLogo;
     private TextView mTxtNameCompany, mTxtAddress;
@@ -88,6 +89,9 @@ public class SettingFragment extends Fragment implements
 
     private Uri mUri;
 
+    private boolean isAccount1, isAccount2;
+    private boolean isCheckFocus = true;
+    private Handler mHandle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,6 +120,20 @@ public class SettingFragment extends Fragment implements
         View v = inflater.inflate(R.layout.fragment_setting, container, false);
         mLoveCouponAPI = MainApplication.getAPI();
 
+        mHandle = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == IS_CHECK_FOCUS) {
+                    if (!isAccount1 || !isAccount2) {
+                        getShowMessage(getString(R.string.check_account));
+                        return;
+                    }
+                    save();
+                }
+            }
+        };
+
         initViews(v);
         init();
         addEvents();
@@ -136,13 +154,13 @@ public class SettingFragment extends Fragment implements
             mFabDoneSave.setVisibility(View.GONE);
         }
 
-        mEdtNameCompany = (EditText) v.findViewById(R.id.name_company);
-        mEdtAddress = (EditText) v.findViewById(R.id.address_company);
-        mEdtUser1 = (EditText) v.findViewById(R.id.username1);
-        mEdtPassword1 = (EditText) v.findViewById(R.id.password1);
+        mEdtNameCompany = (MaterialEditText) v.findViewById(R.id.name_company);
+        mEdtAddress = (MaterialEditText) v.findViewById(R.id.address_company);
+        mEdtUser1 = (MaterialEditText) v.findViewById(R.id.username1);
+        mEdtPassword1 = (MaterialEditText) v.findViewById(R.id.password1);
 
-        mEdtUser2 = (EditText) v.findViewById(R.id.username2);
-        mEdtPassword2 = (EditText) v.findViewById(R.id.password2);
+        mEdtUser2 = (MaterialEditText) v.findViewById(R.id.username2);
+        mEdtPassword2 = (MaterialEditText) v.findViewById(R.id.password2);
 
         checkBox = (CheckBox) v.findViewById(R.id.check_admin1);
         checkBox1 = (CheckBox) v.findViewById(R.id.check_admin2);
@@ -152,10 +170,6 @@ public class SettingFragment extends Fragment implements
         mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_nav);
         mTxtAddress = (TextView) v.findViewById(R.id.txt_email_nav);
 
-        mInputUser1 = (TextInputLayout) v.findViewById(R.id.input_user1);
-        mInputUser2 = (TextInputLayout) v.findViewById(R.id.input_user2);
-        mInputPassword1 = (TextInputLayout) v.findViewById(R.id.input_password1);
-        mInputPassword2 = (TextInputLayout) v.findViewById(R.id.input_password2);
     }
 
 
@@ -164,11 +178,17 @@ public class SettingFragment extends Fragment implements
         if (company.getName() != null) {
             mEdtNameCompany.setText(company.getName());
             mTxtNameCompany.setText(company.getName());
+        } else {
+            mEdtNameCompany.setText("");
+            mTxtNameCompany.setText("");
         }
 
         if (company.getAddress() != null) {
             mEdtAddress.setText(company.getAddress());
             mTxtAddress.setText(company.getAddress());
+        } else {
+            mEdtAddress.setText("");
+            mTxtAddress.setText("");
         }
 
         if (company.getLogo() != null) {
@@ -182,6 +202,8 @@ public class SettingFragment extends Fragment implements
 
         if (company.getUser1() != null) {
             mEdtUser1.setText(company.getUser1());
+        } else {
+            mEdtUser1.setText("");
         }
 
         if (company.getUser2() != null) {
@@ -190,10 +212,14 @@ public class SettingFragment extends Fragment implements
 
         if (company.getPass1() != null) {
             mEdtPassword1.setText(company.getPass1());
+        } else {
+            mEdtPassword1.setText("");
         }
 
         if (company.getPass2() != null) {
             mEdtPassword2.setText(company.getPass2());
+        } else {
+            mEdtPassword2.setText("");
         }
 
         if (company.getUser1_admin() != null) {
@@ -217,17 +243,35 @@ public class SettingFragment extends Fragment implements
 
         mCardView.setOnClickListener(this);
         mImgLogo.setOnClickListener(this);
-        mEdtNameCompany.addTextChangedListener(new Events(mEdtNameCompany, null));
-        mEdtAddress.addTextChangedListener(new Events(mEdtAddress, null));
+        mEdtNameCompany.addTextChangedListener(new Events(mEdtNameCompany));
+        mEdtAddress.addTextChangedListener(new Events(mEdtAddress));
 
         mFabDoneSave.setOnClickListener(this);
         mChbShowPass.setOnCheckedChangeListener(this);
 
-        mEdtUser1.addTextChangedListener(new Events(mEdtUser1, mInputUser1));
-        mEdtUser2.addTextChangedListener(new Events(mEdtUser2, mInputUser2));
+        mEdtUser1.addTextChangedListener(new Events(mEdtUser1));
+        mEdtUser2.addTextChangedListener(new Events(mEdtUser2));
 
-        mEdtPassword1.addTextChangedListener(new Events(mEdtPassword1, mInputPassword1));
-        mEdtPassword2.addTextChangedListener(new Events(mEdtPassword2, mInputPassword2));
+        mEdtPassword1.addTextChangedListener(new Events(mEdtPassword1));
+        mEdtPassword2.addTextChangedListener(new Events(mEdtPassword2));
+
+        mEdtUser1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    checkAccount1();
+                }
+            }
+        });
+
+        mEdtUser2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    checkAccount2();
+                }
+            }
+        });
     }
 
 
@@ -266,10 +310,8 @@ public class SettingFragment extends Fragment implements
                 onClickSaveCompany();
                 break;
             case R.id.img_logo_nav:
-
                 startActivityForResult(new Intent(getActivity(),
                         ImagesCropActivity.class), START_CROP_IMAGES);
-
                 break;
             case R.id.fab_done:
                 onClickSaveCompany();
@@ -283,91 +325,173 @@ public class SettingFragment extends Fragment implements
     private void onClickSaveCompany() {
 
         boolean isNetwork = ConnectivityReceiver.isConnect();
-        if (isNetwork) {
-            showProgressDialog();
-            final String name = mEdtNameCompany.getText().toString();
-            final String address = mEdtAddress.getText().toString();
-
-            mLogoBase64 = MainApplication.FIRST_BASE64
-                    + MainApplication.convertToBitmap(mImgLogo);
-
-
-            final String user1 = mEdtUser1.getText().toString().trim();
-            final String user2 = mEdtUser2.getText().toString().trim();
-
-
-            final Company companyTemplate = new Company(company.getCompany_id(),
-                    company.getName(), company.getAddress(),
-                    company.getLogo(), company.getCreated_date(),
-                    company.getUser_id(), company.getUser1(),
-                    company.getPass1(), company.getUser1_admin(),
-                    company.getUser2(), company.getPass2(),
-                    company.getUser2_admin(), company.getLogo_link(),
-                    company.getCity(), company.getCountry_name());
-
-            companyTemplate.setName(name);
-            companyTemplate.setAddress(address);
-            companyTemplate.setLogo(null);
-            if (isChoseImages) {
-                companyTemplate.setLogo(mLogoBase64);
-            }
-            companyTemplate.setUser1(user1);
-            companyTemplate.setUser2(user2);
-
-
-            Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
-            call.enqueue(new Callback<Integer>() {
-                @Override
-                public void onResponse(Call<Integer> call, Response<Integer> response) {
-
-                    if (response.body() == 1) {
-                        mInputUser1.setErrorEnabled(false);
-
-                        Call<Integer> call2 = mLoveCouponAPI.isExists(company.getCompany_id(), user2);
-                        call2.enqueue(new Callback<Integer>() {
-                            @Override
-                            public void onResponse(Call<Integer> call, Response<Integer> response) {
-
-                                if (response.body() == 1) {
-                                    mInputUser2.setErrorEnabled(false);
-                                    createSave(name, address, mLogoBase64, companyTemplate);
-
-                                } else {
-                                    mInputUser2.setError(getString(R.string.account_exists));
-                                    mInputUser2.setErrorEnabled(true);
-                                    mInputUser2.setError(getString(R.string.account_exists));
-                                    requestFocus(mEdtUser2);
-
-                                    hideProgressDialog();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<Integer> call, Throwable t) {
-                                Log.d(TAG, "isCheckAccountExists " + t.toString());
-                            }
-                        });
-
-
-                    } else {
-                        mInputUser1.setError(getString(R.string.account_exists));
-                        mInputUser1.setErrorEnabled(true);
-                        mInputUser1.setError(getString(R.string.account_exists));
-                        requestFocus(mEdtUser1);
-
-                        hideProgressDialog();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Integer> call, Throwable t) {
-                    Log.d(TAG, "isCheckAccountExists " + t.toString());
-                }
-            });
-        } else {
+        if (!isNetwork) {
             getShowMessage(getString(R.string.check_network));
+            return;
         }
 
+        if (mEdtUser1.isFocused() || mEdtUser2.isFocused()) {
+            if (mEdtUser1.isFocused()) {
+                isAccount1 = false;
+                isCheckFocus = false;
+                new Thread(runnableCheckFocus).start();
+                checkAccount1();
+            }
+
+            if (mEdtUser2.isFocused()) {
+                isAccount2 = false;
+                isCheckFocus = false;
+                new Thread(runnableCheckFocus).start();
+                checkAccount2();
+            }
+
+
+        } else {
+            if (!isAccount1 || !isAccount2) {
+                getShowMessage(getString(R.string.check_account));
+                return;
+            }
+
+            save();
+        }
+
+
+//        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
+//        call.enqueue(new Callback<Integer>() {
+//            @Override
+//            public void onResponse(Call<Integer> call, Response<Integer> response) {
+//
+//                if (response.body() == 1) {
+//
+//                    Call<Integer> call2 = mLoveCouponAPI.isExists(company.getCompany_id(), user2);
+//                    call2.enqueue(new Callback<Integer>() {
+//                        @Override
+//                        public void onResponse(Call<Integer> call, Response<Integer> response) {
+//
+//                            if (response.body() == 1) {
+//                                createSave(name, address, mLogoBase64, template);
+//
+//                            } else {
+//                                mEdtUser2.setError(getString(R.string.account_exists));
+//                                requestFocus(mEdtUser2);
+//
+//                                hideProgressDialog();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<Integer> call, Throwable t) {
+//                            Log.d(TAG, "isCheckAccountExists " + t.toString());
+//                        }
+//                    });
+//
+//
+//                } else {
+//                    mEdtUser1.setError(getString(R.string.account_exists));
+//                    requestFocus(mEdtUser1);
+//
+//                    hideProgressDialog();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Integer> call, Throwable t) {
+//                Log.d(TAG, "isCheckAccountExists " + t.toString());
+//            }
+//        });
+    }
+
+    private void save() {
+        showProgressDialog();
+        final String name = mEdtNameCompany.getText().toString();
+        final String address = mEdtAddress.getText().toString();
+
+        mLogoBase64 = MainApplication.FIRST_BASE64
+                + MainApplication.convertToBitmap(mImgLogo);
+
+
+        final String user1 = mEdtUser1.getText().toString().trim();
+        final String user2 = mEdtUser2.getText().toString().trim();
+
+
+        final Company template = new Company(company.getCompany_id(),
+                company.getName(), company.getAddress(),
+                company.getLogo(), company.getCreated_date(),
+                company.getUser_id(), company.getUser1(),
+                company.getPass1(), company.getUser1_admin(),
+                company.getUser2(), company.getPass2(),
+                company.getUser2_admin(), company.getLogo_link(),
+                company.getCity(), company.getCountry_name());
+
+        template.setName(name);
+        template.setAddress(address);
+        template.setLogo(null);
+        if (isChoseImages) {
+            template.setLogo(mLogoBase64);
+        }
+        template.setUser1(user1);
+        template.setUser2(user2);
+        template.setPass1(mEdtPassword1.getText().toString().trim());
+        template.setPass2(mEdtPassword2.getText().toString().trim());
+        createSave(name, address, mLogoBase64, template);
+    }
+
+    private void checkAccount1() {
+
+        String user = mEdtUser1.getText().toString().trim();
+        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+
+                if (response.body() == 1) {
+                    isAccount1 = true;
+                } else {
+                    mEdtUser1.setError(getString(R.string.account_exists));
+                    requestFocus(mEdtUser1);
+                    isAccount1 = false;
+                }
+
+                Logger.d(response.body() + "");
+                if (!isCheckFocus) {
+                    isCheckFocus = true;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d(TAG, "isCheckAccountExists " + t.toString());
+            }
+        });
+    }
+
+    private void checkAccount2() {
+
+        String user = mEdtUser2.getText().toString().trim();
+        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+
+                if (response.body() == 1) {
+                    isAccount2 = true;
+                } else {
+                    mEdtUser2.setError(getString(R.string.account_exists));
+                    requestFocus(mEdtUser2);
+                    isAccount2 = false;
+                }
+
+                Logger.d(response.body() + "");
+                if (!isCheckFocus) {
+                    isCheckFocus = true;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d(TAG, "isCheckAccountExists " + t.toString());
+            }
+        });
     }
 
     private void createSave(final String name, final String address,
@@ -444,11 +568,9 @@ public class SettingFragment extends Fragment implements
     private class Events implements TextWatcher {
 
         private View view;
-        private TextInputLayout textInputLayout;
 
-        public Events(View editText, TextInputLayout textInputLayout) {
+        Events(View editText) {
             this.view = editText;
-            this.textInputLayout = textInputLayout;
         }
 
         @Override
@@ -466,10 +588,10 @@ public class SettingFragment extends Fragment implements
 
             switch (view.getId()) {
                 case R.id.username1:
-                    validateUser(mEdtUser1, mEdtUser2, mEdtPassword1, mInputUser1, mInputPassword1);
+                    validateUser(mEdtUser1, mEdtUser2, mEdtPassword1);
                     break;
                 case R.id.username2:
-                    validateUser(mEdtUser2, mEdtUser1, mEdtPassword2, mInputUser2, mInputPassword2);
+                    validateUser(mEdtUser2, mEdtUser1, mEdtPassword2);
                     break;
                 case R.id.name_company:
                     mTxtNameCompany.setText(editable.toString());
@@ -478,10 +600,10 @@ public class SettingFragment extends Fragment implements
                     mTxtAddress.setText(editable.toString());
                     break;
                 case R.id.password1:
-                    validatePassword(mEdtUser1, (EditText) view, textInputLayout);
+                    validatePassword(mEdtUser1, (MaterialEditText) view);
                     break;
                 case R.id.password2:
-                    validatePassword(mEdtUser2, (EditText) view, textInputLayout);
+                    validatePassword(mEdtUser2, (MaterialEditText) view);
                     break;
                 default:
                     break;
@@ -490,30 +612,20 @@ public class SettingFragment extends Fragment implements
 
     }
 
-    private void validateUser(EditText editText,
-                              EditText editText2, EditText edtPassword,
-                              TextInputLayout textInputLayout,
-                              TextInputLayout password) {
+    private void validateUser(MaterialEditText editText,
+                              MaterialEditText editText2, MaterialEditText edtPassword) {
 
         String text = editText.getText().toString().trim();
         String text2 = editText2.getText().toString().trim();
 
         if (text.equals(text2)) {
-            textInputLayout.setError(getString(R.string.user1OtherUser2));
-            textInputLayout.setErrorEnabled(true);
-            textInputLayout.setError(getString(R.string.user1OtherUser2));
+            editText.setError(getString(R.string.user1OtherUser2));
             requestFocus(editText);
         }
 
-        if (!text.equals(text2)) {
-            textInputLayout.setErrorEnabled(false);
-        }
         if (!text.isEmpty() && edtPassword.getText().toString().trim().isEmpty()) {
-            password.setErrorEnabled(true);
-            password.setError(getString(R.string.enter_password));
+            edtPassword.setError(getString(R.string.enter_password));
             Log.d(TAG, "1");
-        } else {
-            password.setErrorEnabled(false);
         }
     }
 
@@ -528,13 +640,10 @@ public class SettingFragment extends Fragment implements
         }
     }
 
-    private void validatePassword(EditText user, EditText password, TextInputLayout inputPassword) {
+    private void validatePassword(MaterialEditText user, MaterialEditText password) {
         if (!user.getText().toString().trim().isEmpty() && password.getText().toString().trim().isEmpty()) {
-            inputPassword.setErrorEnabled(true);
-            inputPassword.setError(getString(R.string.enter_password));
+            password.setError(getString(R.string.enter_password));
             requestFocus(password);
-        } else {
-            inputPassword.setErrorEnabled(false);
         }
     }
 
@@ -556,7 +665,7 @@ public class SettingFragment extends Fragment implements
         ImageView imageView;
         int width;
 
-        public LoadScaledImageTask(Context context, Uri uri, ImageView imageView, int width) {
+        LoadScaledImageTask(Context context, Uri uri, ImageView imageView, int width) {
             this.context = context;
             this.uri = uri;
             this.imageView = imageView;
@@ -579,8 +688,6 @@ public class SettingFragment extends Fragment implements
                 });
             } catch (OutOfMemoryError e) {
                 e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
 
@@ -592,4 +699,23 @@ public class SettingFragment extends Fragment implements
         display.getMetrics(metrics);
         return Math.min(Math.max(metrics.widthPixels, metrics.heightPixels), 2048);
     }
+
+    public interface OnClickSetInformation {
+        void onClickSetInformation(String logo, String name, String address);
+    }
+
+    private Runnable runnableCheckFocus = new Runnable() {
+        @Override
+        public void run() {
+            while (!isCheckFocus) {
+                SystemClock.sleep(50);
+            }
+
+            Message message = new Message();
+            message.what = IS_CHECK_FOCUS;
+            message.setTarget(mHandle);
+            message.sendToTarget();
+        }
+    };
+
 }
