@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -24,6 +23,8 @@ import com.ln.realm.RealmController;
 
 import java.util.List;
 
+import eu.livotov.labs.android.camview.ScannerLiveView;
+import eu.livotov.labs.android.camview.scanner.decoder.zxing.ZXDecoder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,14 +33,13 @@ import retrofit2.Response;
  * Created by luongnguyen on 4/13/16.
  * <></>
  */
-public class QRCodeActivity extends AppCompatActivity
-        implements QRCodeReaderView.OnQRCodeReadListener {
+public class QRCodeActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getSimpleName();
     private RealmController mRealmController;
 
 
-    private QRCodeReaderView mQRCodeReaderView;
+    private ScannerLiveView mQRCodeReaderView;
 
     private LoveCouponAPI apiService;
     private AccountOflUser mAccountOflUser;
@@ -58,42 +58,57 @@ public class QRCodeActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mQRCodeReaderView = (QRCodeReaderView) findViewById(R.id.decoder_view);
-        if (mQRCodeReaderView != null) {
-            mQRCodeReaderView.setOnQRCodeReadListener(this);
-        }
+        mQRCodeReaderView = (ScannerLiveView) findViewById(R.id.decoder_view);
+
+        mQRCodeReaderView.setScannerViewEventListener(new ScannerLiveView.ScannerViewEventListener()
+        {
+            @Override
+            public void onScannerStarted(ScannerLiveView scanner)
+            {
+                Toast.makeText(QRCodeActivity.this,"Scanner Started",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onScannerStopped(ScannerLiveView scanner)
+            {
+               // Toast.makeText(QRCodeActivity.this,"Scanner Stopped",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onScannerError(Throwable err)
+            {
+          //      Toast.makeText(QRCodeActivity.this,"Scanner Error: " + err.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCodeScanned(String data)
+            {
+                Toast.makeText(QRCodeActivity.this, data, Toast.LENGTH_SHORT).show();
+                if (!isCamera) {
+                    isCamera = true;
+                    mQRCodeReaderView.stopScanner();
+                    updateCoupon(data);
+                }
+            }
+        });
+
     }
 
-    @Override
-    public void onQRCodeRead(String text, PointF[] points) {
-        mQRCodeReaderView.getCameraManager().stopPreview();
-        if (!isCamera) {
-            isCamera = true;
-            updateCoupon(text);
-        }
-
-        Log.d(TAG, "onQRCodeRead " + text);
-    }
-
-
-    @Override
-    public void cameraNotFound() {
-    }
-
-    @Override
-    public void QRCodeNotFoundOnCamImage() {
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mQRCodeReaderView.getCameraManager().startPreview();
+        ZXDecoder decoder = new ZXDecoder();
+        decoder.setScanAreaPercent(0.5);
+        mQRCodeReaderView.setDecoder(decoder);
+        mQRCodeReaderView.startScanner();
+   //     mQRCodeReaderView.getCameraManager().startPreview();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mQRCodeReaderView.getCameraManager().stopPreview();
+        mQRCodeReaderView.stopScanner();
     }
 
 
@@ -146,11 +161,11 @@ public class QRCodeActivity extends AppCompatActivity
                                         @Override
                                         public void run() {
                                             isCamera = false;
-                                            mQRCodeReaderView.getCameraManager().startPreview();
+                                            mQRCodeReaderView.startScanner();
                                         }
                                     }, 1500);
 
-                                    mQRCodeReaderView.getCameraManager().startPreview();
+                                    mQRCodeReaderView.startScanner();
                                 }
                             })
                             .positiveText(R.string.ok)
@@ -163,11 +178,11 @@ public class QRCodeActivity extends AppCompatActivity
                                         @Override
                                         public void run() {
                                             isCamera = false;
-                                            mQRCodeReaderView.getCameraManager().startPreview();
+                                            mQRCodeReaderView.startScanner();
                                         }
                                     }, 1000);
 
-                                    mQRCodeReaderView.getCameraManager().startPreview();
+                                    mQRCodeReaderView.startScanner();
                                 }
                             })
                             .show();
