@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QRCodeActivity">
+    tools:context=".QRCodeActivity"
+    android:background="#000000">
 
     <eu.livotov.labs.android.camview.ScannerLiveView
         android:id="@+id/decoder_view"
