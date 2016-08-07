@@ -1,11 +1,14 @@
 package com.ln.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ln.model.Coupon;
@@ -41,7 +44,7 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Coupon item = mListCoupons.get(position);
+        final Coupon item = mListCoupons.get(position);
         if (item.getUser_image_link() != null) {
             Picasso.with(mContext)
                     .load(item.getUser_image_link())
@@ -62,6 +65,27 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
         SimpleDateFormat fmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
         Date date = new Date(item.getCreated_date());
         holder.mTxtDate.setText(fmt.format(date));
+
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                try{
+                    String link = "";
+                    if(item.getUser_social().equals("facebook")){
+                        link = "https://facebook.com/" + item.getUser_id();
+                    }else if(item.getUser_social().equals("google")){
+                        link = "'https://plus.google.com/" + item.getUser_id();
+                    }
+
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                    mContext.startActivity(i);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
     @Override
@@ -73,6 +97,7 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
 
         private ImageView mImgLogo;
         private TextView mTxtCompanyName, mTxtPrice, mTxtDate;
+        private LinearLayout linearLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -80,6 +105,7 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
             mTxtCompanyName = (TextView) itemView.findViewById(R.id.txt_company_name_coupon);
             mTxtDate = (TextView) itemView.findViewById(R.id.txt_date_coupon);
             mTxtPrice = (TextView) itemView.findViewById(R.id.txt_price_coupon);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.layout_user);
         }
     }
 }
