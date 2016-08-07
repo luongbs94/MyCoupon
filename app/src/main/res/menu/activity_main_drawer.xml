@@ -5,7 +5,7 @@
         <item
             android:id="@+id/nav_coupon"
             android:icon="@drawable/ic_tag"
-            android:title="@string/my_coupon" />
+            android:title="@string/coupon" />
         <item
             android:id="@+id/nav_new"
             android:icon="@drawable/ic_noti"

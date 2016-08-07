@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -58,7 +59,7 @@ public class ShopMainActivity extends AppCompatActivity
     private TextView mTxtNameCompany;
     private Snackbar mSnackbar;
 
-    private int mStartNotificatioin = 1;
+    private int mStartNotification = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +152,7 @@ public class ShopMainActivity extends AppCompatActivity
 //        if (!MainApplication.sIsAdmin) {
 //            mFbButton.setVisibility(View.GONE);
 //        }
-        if (mStartNotificatioin == MainApplication.NOTIFICATION) {
+        if (mStartNotification == MainApplication.NOTIFICATION) {
             startFragment(new NewsFragment());
         } else if (company != null && company.getName() != null) {
             startFragment(new CouponFragment());
@@ -169,7 +170,7 @@ public class ShopMainActivity extends AppCompatActivity
     private void getDataFromIntent() {
         try {
             Intent intent = getIntent();
-            mStartNotificatioin = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
+            mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
         } catch (NullPointerException e) {
             Logger.d("intent null " + e.toString());
         }
@@ -279,7 +280,8 @@ public class ShopMainActivity extends AppCompatActivity
             Glide.with(this)
                     .load(MainApplication.convertToBytes(logo))
                     .asBitmap()
-                    .placeholder(R.drawable.ic_logo_blank).into(mImageLogo);
+                    .placeholder(R.drawable.ic_logo_blank)
+                    .into(mImageLogo);
         }
 
         if (mTxtNameCompany != null) {
@@ -385,6 +387,8 @@ public class ShopMainActivity extends AppCompatActivity
         if (!isNetwork) {
             mSnackbar = Snackbar.make(findViewById(R.id.drawer_layout), R.string.check_network, Snackbar.LENGTH_INDEFINITE)
                     .setAction("Ok", null);
+            View view = mSnackbar.getView();
+            view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorSnackbar));
             mSnackbar.show();
 
             new Thread(runnable).start();

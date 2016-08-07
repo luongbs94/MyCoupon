@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.images.activities.ImagesCheckActivity;
 import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
@@ -35,7 +36,6 @@ import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -171,7 +171,7 @@ public class AddMessageActivity extends AppCompatActivity
 
             if (mNewsOfCompany.getLast_date() != 0) {
                 SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-                if (!MainApplication.getLanguage()) {
+                if (!MainApplication.isEnglish()) {
                     mDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 }
 
@@ -186,7 +186,7 @@ public class AddMessageActivity extends AppCompatActivity
 
         mCalendar.set(year, monthOfYear, dayOfMonth);
         SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-        if (!MainApplication.getLanguage()) {
+        if (!MainApplication.isEnglish()) {
             mDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         }
 
@@ -224,6 +224,7 @@ public class AddMessageActivity extends AppCompatActivity
 
         String idCompany = mCompany.getCompany_id();
         final NewsOfCompany news = new NewsOfCompany();
+        String token = MainApplication.getPreferences().getString(MainApplication.TOKEN_SHOP, "");
 
         news.setMessage_id(idNews);
         news.setContent(content);
@@ -238,7 +239,7 @@ public class AddMessageActivity extends AppCompatActivity
             news.setImages_link(mLinkImageNews);
         }
 
-        Call<Integer> addNews = apiService.addMessage(news);
+        Call<Integer> addNews = apiService.addMessage(token, news);
         addNews.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -318,6 +319,10 @@ public class AddMessageActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.card_view_add_messages:
+                if (!ConnectivityReceiver.isConnect()) {
+                    getShowMessages(getString(R.string.check_network));
+                    return;
+                }
                 onClickAddMessages();
                 break;
             case R.id.img_selected_images:
@@ -403,11 +408,8 @@ public class AddMessageActivity extends AppCompatActivity
             fos.write(byteArray);
             fos.flush();
             fos.close();
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, e.toString());
         } catch (IOException e) {
             Log.d(TAG, e.toString());
-
         }
 
         return resizedFile.getAbsolutePath();

@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -39,6 +41,7 @@ import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,6 +59,7 @@ public class CustomerLoginActivity extends AppCompatActivity
     private LoveCouponAPI mCouponAPI;
     private RealmController mRealm;
     private int mStartNotification = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,7 +224,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         String mCity = MainApplication.getPreferences()
                 .getString(MainApplication.CITY_OF_USER, "");
 
-        AccountOflUser accountOflUser = new AccountOflUser(account.getId(), account.getEmail(), "", account.getIdToken());
+        AccountOflUser accountOflUser = new AccountOflUser(account.getId(), account.getDisplayName(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
             accountOflUser.setPicture(account.getPhotoUrl().toString());
         }
@@ -228,7 +232,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         String strUser = new Gson().toJson(accountOflUser);
         writeSharePreferences(MainApplication.ACCOUNT_CUSTOMER, strUser);
 
-        Log.d(TAG, "Login Google Success " + account.getId() + " - " + account.getEmail());
+        Log.d(TAG, "Login Google Success " + account.getId() + " - " + account.getIdToken());
         getCompanyByUserId(account.getId());
         getNewsOfCustomer(account.getId());
         getNewsMore(account.getId(), mCity);
@@ -360,6 +364,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                 if (response.body() != null) {
 //                    mRealm.deleteListNewsOfCustomer();
                     mRealm.addListNewsOfCustomer(response.body());
+                    loadImages();
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 }
             }
@@ -378,7 +383,6 @@ public class CustomerLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<NewsOfMore>> call,
                                    Response<List<NewsOfMore>> response) {
                 if (response.body() != null) {
-                    mRealm.deleteListNewsOfMore();
                     mRealm.addListNewsOfMore(response.body());
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
@@ -391,5 +395,19 @@ public class CustomerLoginActivity extends AppCompatActivity
                 Log.d(TAG, "getNewsMore " + " onFailure " + t.toString());
             }
         });
+    }
+
+    private void loadImages() {
+        List<NewsOfCustomer> listNews = new ArrayList<>();
+        listNews.addAll(RealmController.with(this).getListNewsOfCustomer());
+        for (NewsOfCustomer news : listNews) {
+            if (news.getLogo_link().contains("http")) {
+                Glide.with(this)
+                        .load(news.getLogo_link())
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .preload();
+            }
+        }
+
     }
 }

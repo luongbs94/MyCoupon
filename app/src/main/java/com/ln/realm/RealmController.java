@@ -189,6 +189,7 @@ public class RealmController {
         List<NewsOfCompany> listNews = getListNewsOfCompany();
         // delete all news
         if (listNews != null) {
+//            listNews.clear();
             for (NewsOfCompany news : listNews) {
                 news.deleteFromRealm();
             }
@@ -398,17 +399,13 @@ public class RealmController {
 
     public void addListNewsOfMore(List<NewsOfMore> listNews) {
         mRealm.beginTransaction();
+
+        List<NewsOfMore> newsMore = getListNewsOfMore();
+        for (NewsOfMore news : newsMore) {
+            news.deleteFromRealm();
+        }
         for (NewsOfMore news : listNews) {
             mRealm.copyToRealmOrUpdate(news);
-        }
-        mRealm.commitTransaction();
-    }
-
-    public void deleteListNewsOfMore() {
-        mRealm.beginTransaction();
-        RealmResults<NewsOfMore> listNews = getListNewsOfMore();
-        for (NewsOfMore news : listNews) {
-            news.deleteFromRealm();
         }
         mRealm.commitTransaction();
     }

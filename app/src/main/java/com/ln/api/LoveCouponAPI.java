@@ -56,7 +56,7 @@ public interface LoveCouponAPI {
     Call<Integer> deleteCouponTemplate(@Body CouponTemplate template);
 
     @POST("/addMessage")
-    Call<Integer> addMessage(@Body NewsOfCompany news);
+    Call<Integer> addMessage(@Header("Authorization") String token, @Body NewsOfCompany news);
 
     @POST("/addCoupon")
     Call<Integer> addCoupon(@Body Coupon coupon);
@@ -69,7 +69,9 @@ public interface LoveCouponAPI {
 
     // khong tim thay dang can hoi
     @POST("/update_user_coupon")
-    Call<List<CompanyOfCustomer>> updateUserCoupon(@Header("city") String city, @Body Coupon template);
+    Call<List<CompanyOfCustomer>> updateUserCoupon(
+            @Header("city") String city,
+            @Body Coupon template);
 
     @GET("/get_created_coupon_by_company_id")
     Call<ArrayList<Coupon>> getCreatedCoupon(
@@ -94,10 +96,10 @@ public interface LoveCouponAPI {
 
 
     @GET("/get_web_token")
-    Call<ResponseBody> getWebTokenUser(@Query("user_name") String user_name, @Query("password") String password);
+    Call<String> getWebTokenUser(@Query("user_name") String user_name, @Query("password") String password);
 
     @GET("/get_web_token")
-    Call<ResponseBody> getWebTokenSocial(@Query("user_id") String user_id, @Query("social") String social, @Query("access_token") String access_token);
+    Call<String> getWebTokenSocial(@Query("user_id") String user_id, @Query("social") String social, @Query("access_token") String access_token);
 
     @Multipart
     @POST("upload")

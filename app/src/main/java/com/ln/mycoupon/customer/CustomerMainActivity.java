@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -114,7 +115,7 @@ public class CustomerMainActivity extends AppCompatActivity
         TextView txt = (TextView) headerView.findViewById(R.id.txt_name_customer_nav);
 
         if (mStartNotification == MainApplication.NOTIFICATION) {
-            startFragment(new NewsCustomerFragment());
+            startFragment(NewsCustomerFragment.getInstances(MainApplication.TYPE_NEWS));
         } else {
             startFragment(new CouponFragment());
         }
@@ -247,6 +248,11 @@ public class CustomerMainActivity extends AppCompatActivity
         if (resultCode == RESULT_OK) {
             if (requestCode == MainApplication.START_QRCODE) {
                 Bundle bundle = data.getExtras();
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
+
+                if (fragment instanceof CouponFragment) {
+                    ((CouponFragment) fragment).setListCompanyCustomer();
+                }
                 Intent intent = new Intent(this, CouponCompanyOfClientActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -281,6 +287,8 @@ public class CustomerMainActivity extends AppCompatActivity
         if (!isNetwork) {
             mSnackbar = Snackbar.make(findViewById(R.id.drawer_layout), R.string.check_network, Snackbar.LENGTH_INDEFINITE)
                     .setAction("Ok", null);
+            View view = mSnackbar.getView();
+            view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorSnackbar));
             mSnackbar.show();
 
             new Thread(runnable).start();

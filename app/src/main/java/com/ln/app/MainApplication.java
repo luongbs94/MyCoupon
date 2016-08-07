@@ -10,11 +10,12 @@ import android.widget.ImageView;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.stetho.Stetho;
 import com.ln.api.LoveCouponAPI;
 import com.ln.broadcast.ConnectivityReceiver;
-import com.ln.model.CityOfUser;
 import com.ln.model.User;
 import com.ln.realm.RealmController;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
@@ -73,12 +74,14 @@ public class MainApplication extends MultiDexApplication {
     public static final String LINK_IMAGES = "LINK_IMAGES";
     public static final int TYPE_NEWS = 111;
     public static final int TYPE_NEWS_MORE = 222;
-    public static final int WIDTH_IMAGES_NEWS = 700;
+    public static final int WIDTH_IMAGES_NEWS = 450;
     public static final String IMAGE_ADD_NEWS = "IMAGE_ADD_NEWS";
     public static final String WHAT_ADD_MESSAGES = "WHAT_ADD_MESSAGES";
     public static final int WHAT_SHOP_MAIN_ADD_NEWS = 211;
     public static final int WHAT_UPDATE_NEWS = 212;
     public static final int NOTIFICATION = 199;
+    public static final int SOCIAL = 123;
+    public static final int NORMAL = 124;
 
     private static MainApplication mInstances;
 
@@ -141,17 +144,6 @@ public class MainApplication extends MultiDexApplication {
     public static RealmController mRealmController;
 
 
-    // TYPE LOGIN SHOP OR LOGIN CUSTOMER
-    public static final int TYPE_NORMAL = 1;
-    public static final int TYPE_FACEBOOK = 2;
-    public static final int TYPE_GOOGLE = 3;
-    public static int TYPE_LOGIN_SHOP = TYPE_NORMAL;
-    public static int TYPE_LOGIN_CUSTOMER = TYPE_FACEBOOK;
-
-
-    //    public static CityOfUser cityOfUser;
-    public static CityOfUser cityOfCompany;
-
     public static final String FONT = "fonts/fontawesome-webfont.ttf";
     //    public static final String EMAIL_LOVE_COUPON = "support@lovecoupon.com";
     public static final String EMAIL_LOVE_COUPON = "info@lovecoupon.com";
@@ -160,8 +152,6 @@ public class MainApplication extends MultiDexApplication {
 
     public static final int NEWS_CUSTOMER = 0;
     public static final int NEWS_MORE = 1;
-
-    private static boolean isEnglish;
 
 
     @Override
@@ -218,16 +208,14 @@ public class MainApplication extends MultiDexApplication {
 
         sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        isEnglish();
 
 
-        getEnglish();
-
-        if (isEnglish) {
-            Log.d("MyApplication", isEnglish + "");
-        } else {
-            Log.d("MyApplication", isEnglish + "");
-        }
-
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                        .build());
     }
 
     public static SharedPreferences getPreferences() {
@@ -329,7 +317,7 @@ public class MainApplication extends MultiDexApplication {
         Date last_date = new Date(lastDate);
 
         long diff = last_date.getTime() - new Date().getTime();
-        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1;
     }
 
     public static Date convertDate(long created_date, int duration) {
@@ -341,21 +329,9 @@ public class MainApplication extends MultiDexApplication {
         return last_cal.getTime();
     }
 
-    public static boolean getLanguage() {
-        return isEnglish;
-    }
-
-
-    private static String getEnglish() {
-
+    public static boolean isEnglish() {
         String local = Locale.getDefault().getLanguage();
-        if (local.equals("en")) {
-            isEnglish = true;
-        } else {
-            isEnglish = false;
-        }
-        Log.d("getEnglish", local);
-        return local;
+        return local.equals("en");
     }
 
     public static void updateUserToken(String userId, String token, String device_os) {

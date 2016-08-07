@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,10 +45,10 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
 
         final Coupon item = mListCoupons.get(position);
         if (item.getUser_image_link() != null) {
-            Picasso.with(mContext)
-                    .load(item.getUser_image_link())
-                    .placeholder(R.drawable.ic_logo_blank)
-                    .into(holder.mImgLogo);
+//            Picasso.with(mContext)
+//                    .load(item.getUser_image_link())
+//                    .placeholder(R.drawable.ic_logo_blank)
+//                    .into(holder.mImgLogo);
         }
 
         if (item.getUser_name() != null) {
