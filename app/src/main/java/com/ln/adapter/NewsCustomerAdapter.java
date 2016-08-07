@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
@@ -25,7 +27,6 @@ import com.ln.model.Message;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,8 +66,14 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         final Message item = mListNews.get(position);
 
         if (item.getLogo_link() != null) {
-            Picasso.with(mContext)
+//            Picasso.with(mContext)
+//                    .load(item.getLogo_link())
+//                    .into(holder.mImgLogo);
+            Glide.with(mContext)
                     .load(item.getLogo_link())
+                    .thumbnail(0.5f)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.mImgLogo);
         }
         if (item.getName() != null) {
@@ -81,14 +88,9 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         }
 
         holder.mTxtLink.setVisibility(View.GONE);
-        if (item.getLink() != null && !item.getLink().isEmpty()) {
+        if (item.getLink() != null) {
             holder.mTxtLink.setVisibility(View.VISIBLE);
-            if (item.getLink().contains("http")) {
-                holder.mTxtLink.setText(item.getLink());
-            } else {
-                String link = "http://" + item.getLink();
-                holder.mTxtLink.setText(link);
-            }
+            holder.mTxtLink.setText(item.getLink());
         }
 
         if (item.getImages_link() != null) {
@@ -225,13 +227,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
         Message item = mListNews.get(position);
         Uri uriLink = null;
-        if (!item.getLink().isEmpty()) {
-
-            if (item.getLink().contains("http")) {
-                uriLink = Uri.parse(item.getLink());
-            } else {
-                uriLink = Uri.parse("http://" + item.getLink());
-            }
+        if (item.getLink() != null) {
+            uriLink = Uri.parse(item.getLink());
         } else {
             uriLink = Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON);
         }

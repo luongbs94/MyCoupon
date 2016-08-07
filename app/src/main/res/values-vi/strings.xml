@@ -1,34 +1,18 @@
 <resources>
-    <string name="app_name">My Coupon</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
     <string name="login">Đăng nhập</string>
-    <string name="face_login">Facebook</string>
-
-    <string name="g_login">Google +</string>
-
     <string name="you_are">Bạn là</string>
     <string name="shop">Cửa hàng</string>
     <string name="customer">Khách hàng</string>
     <string name="not_fill_login">Bạn chưa điền đầy đủ thông tin</string>
-    <string name="title_activity_test_qrcode">TestQRCode</string>
     <string name="reload">Mã mới</string>
     <string name="exit">Thoát</string>
     <string name="add_coupon">Thêm coupon mới</string>
     <string name="add_message">Thêm tin mới</string>
-
     <string name="money">Số tiền</string>
     <string name="title">Tiêu đề </string>
     <string name="content">Nội dung </string>
     <string name="link">Link liên kết</string>
     <string name="date">Ngày hết hạn:</string>
-
-
     <string name="description">Mô tả</string>
     <string name="limit">Thời hạn</string>
     <string name="month">Tháng</string>
@@ -36,47 +20,34 @@
     <string name="add_coupon_fail">Thêm coupon thất bại </string>
     <string name="delete_coupon_success">Xoá coupon thành công </string>
     <string name="delete_coupon_fail">Xoá coupon thất bại </string>
-
-    <string name="add_message_success">Thêm message thành công </string>
-    <string name="add_message_fail">Thêm message thất bại </string>
-
-
+    <string name="add_message_success">Thêm tin thành công </string>
+    <string name="add_message_fail">Thêm tin thất bại </string>
     <string name="title_delete_coupon">Xoá coupon</string>
-    <string name="content_delete_coupon">Bạn có chắc chắn muốn xoá coupon này không ?</string>
+    <string name="content_delete_coupon">Bạn có chắc chắn muốn xoá coupon này không?</string>
     <string name="ok">Đồng ý</string>
     <string name="cancel">Không</string>
     <string name="qrcode">Quét mã Coupon</string>
-    <string name="name_company">Tên công ty</string>
-    <string name="address_company">Địa chỉ công ty</string>
+    <string name="name_company">Tên cửa hàng</string>
+    <string name="address_company">Địa chỉ cửa hàng</string>
     <string name="username1">Username1</string>
     <string name="content_icon">Image of User</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
-
-    <string name="name_user">Le Hong Hai</string>
-    <string name="email">hailh@vnu.edu.vn</string>
     <string name="price">123234</string>
     <string name="txt_time_coupon">30 ngày</string>
     <string name="check_admin">Admin</string>
     <string name="save">Lưu</string>
-    <string name="my_coupon">My Coupon</string>
     <string name="news">Tin mới</string>
     <string name="history">Lịch Sử</string>
     <string name="setting">Cài Đặt</string>
     <string name="title_news">Khuyến mãi</string>
     <string name="qr_code">QRCode</string>
-
-
-    <string name="time_news">May 20, 2016</string>
+    <string name="time_news">20/5/2016</string>
     <string name="share">Chia Sẻ</string>
-
     <string name="create">CREATE</string>
     <string name="add">AddMessage</string>
     <string name="delete">Delete</string>
     <string name="show_password">Show Password</string>
-    <string name="like">Like</string>
-    <string name="share_news">Share</string>
-    <string name="more">More</string>
     <string name="show_images">Hình ảnh</string>
     <string name="coupon_of">Coupon</string>
     <string name="login_fails">Tài khoản hoặc mật khẩu không đúng</string>
@@ -96,37 +67,27 @@
     <string name="love_coupon">Love Coupon</string>
     <string name="delete_news">Bạn có muốn xóa tin mới này không?</string>
     <string name="exit_alert">Bạn có muốn thoát ứng dụng không?</string>
-
-    <string name="agree">Agree</string>
-    <string name="disagree">Disagree</string>
-    <string name="delete_news_success">Bạn đã xóa tin mới thành công!</string>
-    <string name="all_news">All News</string>
+    <string name="delete_news_success">Bạn đã xóa tin thành công!</string>
+    <string name="all_news">Tất cả</string>
     <string name="history_news">Delete News</string>
     <string name="share_love_coupon">Một ứng dụng thật là tiện lợi cho các của hàng!</string>
     <string name="description_love_coupon">Chúng tôi làm mọi thư  đều free!</string>
-
-
-    <string name="like_news">Like News</string>
+    <string name="like_news">Đánh dấu</string>
     <string name="news_delete">Delete News</string>
     <string name="near_news">News Near</string>
     <string name="connect_network">Chế độ ngoại tuyến!</string>
     <string name="changedate">Change</string>
-
     <string name="news_more">Tin khác</string>
-    <string name="no_data_display">Dont have any coupon</string>
-
-    <string name="delete_news_error">Xóa tin mới không thành công!</string>
+    <string name="delete_news_error">Xóa tin không thành công!</string>
     <string name="time_coupon_template" formated="false">%1$s ngày</string>
     <string name="save_running">Đang lưu...</string>
     <string name="post">Tạo</string>
     <string name="press_back_again">Nhấn back một lần nữa để thoát!</string>
-
     <string name="check_network">Bạn hãy kiểm tra lại mạng!</string>
     <string name="coupon_used">Coupon đã được sử dụng!</string>
     <string name="you_add_news_coupon">Bạn đã thêm một coupon mới!</string>
     <string name="delete_coupon">Bạn có muốn sử dụng coupon này không?</string>
     <string name="check_account">Bạn hãy kiểm tra lại tài khoản!</string>
-
 
     <string-array name="month">
         <item>1 tháng</item>
@@ -142,4 +103,7 @@
         <item>11 tháng</item>
         <item>12 tháng</item>
     </string-array>
+    <string name="action_settings">Cài đặt</string>
+    <string name="agree">Đồng ý</string>
+    <string name="coupon">Coupons</string>
 </resources>

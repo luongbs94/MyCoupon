@@ -189,10 +189,10 @@ public class RealmController {
         List<NewsOfCompany> listNews = getListNewsOfCompany();
         // delete all news
         if (listNews != null) {
-            listNews.clear();
-//            for (NewsOfCompany news : listNews) {
-//                news.deleteFromRealm();
-//            }
+//            listNews.clear();
+            for (NewsOfCompany news : listNews) {
+                news.deleteFromRealm();
+            }
         }
 
         // add list all news

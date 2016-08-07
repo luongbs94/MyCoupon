@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.images.activities.ImagesCheckActivity;
 import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
@@ -223,6 +224,7 @@ public class AddMessageActivity extends AppCompatActivity
 
         String idCompany = mCompany.getCompany_id();
         final NewsOfCompany news = new NewsOfCompany();
+        String token = MainApplication.getPreferences().getString(MainApplication.TOKEN_SHOP, "");
 
         news.setMessage_id(idNews);
         news.setContent(content);
@@ -237,7 +239,7 @@ public class AddMessageActivity extends AppCompatActivity
             news.setImages_link(mLinkImageNews);
         }
 
-        Call<Integer> addNews = apiService.addMessage(news);
+        Call<Integer> addNews = apiService.addMessage(token, news);
         addNews.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -317,6 +319,10 @@ public class AddMessageActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.card_view_add_messages:
+                if (!ConnectivityReceiver.isConnect()) {
+                    getShowMessages(getString(R.string.check_network));
+                    return;
+                }
                 onClickAddMessages();
                 break;
             case R.id.img_selected_images:

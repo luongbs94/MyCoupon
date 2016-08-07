@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.ln.adapter.CouponShopAdapter;
 import com.ln.api.LoveCouponAPI;
-import com.ln.app.ItemClickSupport;
 import com.ln.app.MainApplication;
+import com.ln.interfaces.RecyclerViewListener;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
@@ -40,7 +40,7 @@ public class CouponFragment extends Fragment {
     private LoveCouponAPI mApiServices;
     private RealmController mRealmController;
 
-    private RecyclerView mRecCoupon;
+    private RecyclerView mRecyclerView;
     private SwipeRefreshLayout swipeContainer;
     private List<CompanyOfCustomer> mListCompanyCustomer = new ArrayList<>();
 
@@ -65,24 +65,37 @@ public class CouponFragment extends Fragment {
 
     private void initViews(View mView) {
 
-        mRecCoupon = (RecyclerView) mView.findViewById(R.id.recycler_view);
-        mRecCoupon.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         setListCompanyCustomer();
 
-        ItemClickSupport.addTo(mRecCoupon).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewListener(getActivity(), new RecyclerViewListener.OnClickRecyclerView() {
             @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Intent intent = new Intent(getActivity(), CouponCompanyOfClientActivity.class);
+            public void onClick(View view, int position) {
 
+                Intent intent = new Intent(getActivity(), CouponCompanyOfClientActivity.class);
+                CompanyOfCustomer item = mListCompanyCustomer.get(position);
+                String idCompany = item.getCompany_id();
                 Bundle bundle = new Bundle();
-                CompanyOfCustomer companyOfCustomer = mListCompanyCustomer.get(position);
-                String idCompany = companyOfCustomer.getCompany_id();
                 bundle.putString(MainApplication.ID_COMPANY, idCompany);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-        });
+        }));
+
+//        ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+//            @Override
+//            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+//                Intent intent = new Intent(getActivity(), CouponCompanyOfClientActivity.class);
+//
+//                Bundle bundle = new Bundle();
+//                CompanyOfCustomer companyOfCustomer = mListCompanyCustomer.get(position);
+//                String idCompany = companyOfCustomer.getCompany_id();
+//                bundle.putString(MainApplication.ID_COMPANY, idCompany);
+//                intent.putExtras(bundle);
+//                startActivity(intent);
+//            }
+//        });
 
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -104,7 +117,7 @@ public class CouponFragment extends Fragment {
         mListCompanyCustomer = new ArrayList<>();
         mListCompanyCustomer.addAll(mRealmController.getListCompanyCustomer());
         CouponShopAdapter adapter = new CouponShopAdapter(getActivity(), mListCompanyCustomer);
-        mRecCoupon.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
         Log.d(TAG, "setListCompanyCustomer " + mListCompanyCustomer.size());
     }
 
@@ -123,7 +136,6 @@ public class CouponFragment extends Fragment {
                 public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                     if (response.body() != null) {
 
-//                        mRealmController.deleteListCompanyCustomer();
                         mRealmController.addListCompanyCustomer(response.body());
                         setListCompanyCustomer();
                         swipeContainer.setRefreshing(false);

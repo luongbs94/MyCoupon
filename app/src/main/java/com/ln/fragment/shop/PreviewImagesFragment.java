@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
@@ -53,6 +54,8 @@ public class PreviewImagesFragment extends Fragment {
 
         Glide.with(container.getContext())
                 .load(string)
+                .thumbnail(0.5f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .into((ImageView) mView.findViewById(R.id.image_preview));
         attach.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {

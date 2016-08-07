@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -24,6 +26,7 @@ import com.ln.mycoupon.shop.ShopMainActivity;
 import com.ln.realm.RealmController;
 import com.orhanobut.logger.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -155,6 +158,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
                     mRealmController.addListNewsOfCustomer(response.body());
+                    loadImages();
                     Logger.d("List NewsOfCustomer " + response.body().size());
                 } else {
                     Logger.d("List NewsOfCustomer " + "null");
@@ -336,5 +340,19 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         } catch (NullPointerException e) {
             Logger.d("intent null");
         }
+    }
+
+    private void loadImages() {
+        List<NewsOfCustomer> listNews = new ArrayList<>();
+        listNews.addAll(RealmController.with(this).getListNewsOfCustomer());
+        for (NewsOfCustomer news : listNews) {
+            if (news.getLogo_link().contains("http")) {
+                Glide.with(this)
+                        .load(news.getLogo_link())
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .preload();
+            }
+        }
+
     }
 }

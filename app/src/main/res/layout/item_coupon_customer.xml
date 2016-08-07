@@ -15,6 +15,7 @@
         android:id="@+id/app_icon"
         android:layout_width="@dimen/size_82"
         android:layout_height="@dimen/size_82"
+        android:layout_gravity="top"
         android:layout_marginEnd="@dimen/size_8"
         android:layout_marginRight="@dimen/size_8"
         android:contentDescription="@null"
@@ -47,7 +48,7 @@
             android:maxLines="1"
             android:text="@string/price"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/size_24sp"
+            android:textSize="@dimen/size_26sp"
             android:textStyle="bold" />
 
         <TextView

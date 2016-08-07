@@ -100,14 +100,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
 
         holder.mTxtLink.setVisibility(View.GONE);
-        if (item.getLink() != null && !item.getLink().isEmpty()) {
+        if (item.getLink() != null) {
             holder.mTxtLink.setVisibility(View.VISIBLE);
-            if (item.getLink().contains("http")) {
-                holder.mTxtLink.setText(item.getLink());
-            } else {
-                String link = "http://" + item.getLink();
-                holder.mTxtLink.setText(link);
-            }
+            holder.mTxtLink.setText(item.getLink());
         }
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -289,13 +284,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         final Company company = new Gson().fromJson(strCompany, Company.class);
 
         Uri uriLink = null;
-        if (!item.getLink().isEmpty()) {
+        if (item.getLink() != null) {
 
-            if (item.getLink().contains("http")) {
-                uriLink = Uri.parse(item.getLink());
-            } else {
-                uriLink = Uri.parse("http://" + item.getLink());
-            }
+            uriLink = Uri.parse(item.getLink());
         } else {
             uriLink = Uri.parse(MainApplication.WEB_SITE_LOVE_COUPON);
         }

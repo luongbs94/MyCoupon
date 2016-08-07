@@ -10,10 +10,12 @@ import android.widget.ImageView;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.stetho.Stetho;
 import com.ln.api.LoveCouponAPI;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.model.User;
 import com.ln.realm.RealmController;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
@@ -72,12 +74,14 @@ public class MainApplication extends MultiDexApplication {
     public static final String LINK_IMAGES = "LINK_IMAGES";
     public static final int TYPE_NEWS = 111;
     public static final int TYPE_NEWS_MORE = 222;
-    public static final int WIDTH_IMAGES_NEWS = 700;
+    public static final int WIDTH_IMAGES_NEWS = 450;
     public static final String IMAGE_ADD_NEWS = "IMAGE_ADD_NEWS";
     public static final String WHAT_ADD_MESSAGES = "WHAT_ADD_MESSAGES";
     public static final int WHAT_SHOP_MAIN_ADD_NEWS = 211;
     public static final int WHAT_UPDATE_NEWS = 212;
     public static final int NOTIFICATION = 199;
+    public static final int SOCIAL = 123;
+    public static final int NORMAL = 124;
 
     private static MainApplication mInstances;
 
@@ -205,6 +209,13 @@ public class MainApplication extends MultiDexApplication {
         sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
         editor = sharedPreferences.edit();
         isEnglish();
+
+
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                        .build());
     }
 
     public static SharedPreferences getPreferences() {
@@ -306,7 +317,7 @@ public class MainApplication extends MultiDexApplication {
         Date last_date = new Date(lastDate);
 
         long diff = last_date.getTime() - new Date().getTime();
-        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1;
     }
 
     public static Date convertDate(long created_date, int duration) {

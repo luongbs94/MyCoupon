@@ -447,7 +447,7 @@ public class SettingFragment extends Fragment implements
                 if (response.body() == 1) {
                     isAccount1 = true;
                 } else {
-                    mEdtUser1.setError(getString(R.string.account_exists));
+                    mEdtUser1.setError(getString(R.string.check_account));
                     requestFocus(mEdtUser1);
                     isAccount1 = false;
                 }
@@ -476,7 +476,7 @@ public class SettingFragment extends Fragment implements
                 if (response.body() == 1) {
                     isAccount2 = true;
                 } else {
-                    mEdtUser2.setError(getString(R.string.account_exists));
+                    mEdtUser2.setError(getString(R.string.check_account));
                     requestFocus(mEdtUser2);
                     isAccount2 = false;
                 }
@@ -619,7 +619,7 @@ public class SettingFragment extends Fragment implements
         String text2 = editText2.getText().toString().trim();
 
         if (text.equals(text2)) {
-            editText.setError(getString(R.string.user1OtherUser2));
+            editText.setError(getString(R.string.check_account));
             requestFocus(editText);
         }
 

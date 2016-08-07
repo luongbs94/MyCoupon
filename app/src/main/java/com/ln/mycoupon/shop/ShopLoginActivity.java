@@ -26,8 +26,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -67,6 +65,8 @@ public class ShopLoginActivity extends AppCompatActivity
     private ProgressDialog mProgressDialog;
 
     private int mStartNotification = 1;
+    private boolean isGoogle, isFacebook;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +120,11 @@ public class ShopLoginActivity extends AppCompatActivity
                         }
 
                         if (id != null) {
+                            isFacebook = true;
                             writeSharePreferences(MainApplication.ID_SHOP, id);
                             getCompanyProfileSocial(id);
-                            LoginManager.getInstance().logOut();
+                            getToken(MainApplication.SOCIAL, id, token, MainApplication.FACEBOOK);
+                            Logger.d(TAG, "user:" + id + " -token:" + token);
                         }
                     }
 
@@ -176,7 +178,7 @@ public class ShopLoginActivity extends AppCompatActivity
         }
     }
 
-    private void getCompanyProfile(String user, String pass) {
+    private void getCompanyProfile(final String user, final String pass) {
 
         Call<List<Company>> call = mCouponAPI.getCompanyProfile(user, pass, null);
         call.enqueue(new Callback<List<Company>>() {
@@ -192,6 +194,7 @@ public class ShopLoginActivity extends AppCompatActivity
                     writeSharePreferences(MainApplication.COMPANY_SHOP, strCompany);
 
                     signInSuccess(company);
+                    getToken(MainApplication.NORMAL, user, pass, "");
                     Log.d(TAG, "getCompanyProfile " + company.getCompany_id());
                 } else {
 
@@ -268,23 +271,22 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void signInGoogleSuccess(GoogleSignInAccount account) {
 
-        if (account.getId() != null && account.getIdToken() != null) {
-            Log.d(TAG, "Login Google " + account.getId() + " - " + account.getEmail());
 
+//        account.getServerAuthCode();
+        if (account.getId() != null && account.getIdToken() != null) {
+            Log.d(TAG, "Login Google " + account.getId() + " - " + account.getIdToken());
+
+            isGoogle = true;
             writeSharePreferences(MainApplication.ID_SHOP, account.getId());
             writeSharePreferences(MainApplication.TOKEN_SHOP, account.getIdToken());
 
             getCompanyProfileSocial(account.getId());
+            getToken(MainApplication.SOCIAL, account.getId(), account.getServerAuthCode(), MainApplication.GOOGLE);
+            getToken(MainApplication.SOCIAL, account.getId(), account.getIdToken(), MainApplication.GOOGLE);
 
-            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                    new ResultCallback<Status>() {
-
-                        @Override
-                        public void onResult(@NonNull Status status) {
-                            Log.d(TAG, "Logout Google ");
-                        }
-                    });
             getShowMessages(getString(R.string.login_success));
+
+
         }
     }
 
@@ -410,7 +412,6 @@ public class ShopLoginActivity extends AppCompatActivity
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.login));
         }
-        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
     }
 
@@ -430,6 +431,64 @@ public class ShopLoginActivity extends AppCompatActivity
         SharedPreferences.Editor editor = MainApplication.getPreferences().edit();
         editor.putBoolean(key, value);
         editor.apply();
+    }
+
+    private void getToken(int type, String user, String password, String social) {
+
+        if (type == MainApplication.NORMAL) {
+            Call<String> getToken = MainApplication.getAPI().getWebTokenUser(user, password);
+            getToken.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if (response.body() != null) {
+                        writeSharePreferences(MainApplication.TOKEN_SHOP, response.body());
+                    }
+
+                    Logger.d(response.body() + "");
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Logger.d(t.toString());
+                }
+            });
+        } else if (type == MainApplication.SOCIAL) {
+            Call<String> getToken = MainApplication.getAPI().getWebTokenSocial(user, social, password);
+            getToken.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if (response.body() != null) {
+                        writeSharePreferences(MainApplication.TOKEN_SHOP, response.body());
+                    }
+                    Logger.d(response.body());
+
+                    if (isFacebook) {
+                        LoginManager.getInstance().logOut();
+
+                        isFacebook = false;
+                    }
+
+                    if (isGoogle) {
+
+//                        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+//                                new ResultCallback<Status>() {
+//
+//                                    @Override
+//                                    public void onResult(@NonNull Status status) {
+//                                        Log.d(TAG, "Logout Google ");
+//                                    }
+//                                });
+                        isGoogle = false;
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Logger.d(t.toString());
+                }
+            });
+        }
     }
 }
 
