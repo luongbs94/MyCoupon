@@ -355,7 +355,6 @@ public class SettingFragment extends Fragment implements
             save();
         }
 
-
 //        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
 //        call.enqueue(new Callback<Integer>() {
 //            @Override

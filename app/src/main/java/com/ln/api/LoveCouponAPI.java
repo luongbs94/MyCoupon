@@ -34,20 +34,33 @@ import retrofit2.http.Query;
 public interface LoveCouponAPI {
 
     @GET("/get_coupon_template_by_company_id")
-    Call<List<CouponTemplate>> getCouponTemplatesByCompanyId(@Query("company_id") int id);
+    Call<List<CouponTemplate>> getCouponTemplatesByCompanyId(
+            @Query("company_id") int id);
 
     @GET("/get_coupon_template_by_company_id")
-    Call<List<CouponTemplate>> getCouponTemplates(@Header("Authorization") String authorization, @Query("company_id") String id);
+    Call<List<CouponTemplate>> getCouponTemplates(
+            @Header("Authorization") String authorization,
+            @Query("company_id") String id);
 
     @GET("/get_news_by_company_id")
-    Call<List<NewsOfCompany>> getNewsByCompanyId(@Query("company_id") String id);
+    Call<List<NewsOfCompany>> getNewsByCompanyId(
+            @Query("company_id") String id);
 
 
     @GET("/get_company_profile")
-    Call<List<Company>> getCompanyProfile(@Query("user_name") String user_name, @Query("password") String password, @Query("user_id") String user_id);
+    Call<List<Company>> getCompanyProfile(
+            @Query("user_name") String user_name,
+            @Query("password") String password, @Query("user_id") String user_id);
 
     @GET("/get_company_profile")
-    Call<List<Company>> getCompanyProfileSocial(@Query("user_id") String user_id);
+    Call<List<Company>> getCompanyProfileSocial(
+            @Query("user_id") String user_id);
+
+    @GET("/get_company_profile")
+    Call<List<Company>> getCompanyProfileSocial(
+            @Query("user_id") String user_id,
+            @Query("social") String social,
+            @Query("access_token") String accessToken);
 
     @POST("/addCouponTemplate")
     Call<Integer> addCouponTemplate(@Body CouponTemplate template);

@@ -35,7 +35,6 @@ import com.ln.model.AccountOflUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.NewsOfMore;
-import com.ln.model.User;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
@@ -48,6 +47,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 public class CustomerLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -147,7 +147,6 @@ public class CustomerLoginActivity extends AppCompatActivity
                             getNewsOfCustomer(id);
                             getNewsMore(id, strCity);
 
-                            updateUserToken(accountOflUser.getId(), MainApplication.getDeviceToken(), "android");
                             LoginManager.getInstance().logOut();
                             Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
                         }
@@ -236,7 +235,6 @@ public class CustomerLoginActivity extends AppCompatActivity
         getCompanyByUserId(account.getId());
         getNewsOfCustomer(account.getId());
         getNewsMore(account.getId(), mCity);
-        updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -273,23 +271,6 @@ public class CustomerLoginActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<List<CompanyOfCustomer>> call, Throwable t) {
                 Log.d(TAG, "getCompanyByUserId " + "onFailure " + t.toString());
-            }
-        });
-    }
-
-    private void updateUserToken(String userId, String token, String device_os) {
-
-        Call<List<User>> call = mCouponAPI.updateUserToken(userId, token, device_os);
-        call.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> arg0, Response<List<User>> arg1) {
-
-                MainApplication.setIsAddToken(true);
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> arg0, Throwable arg1) {
-                Log.d(TAG, "Failure");
             }
         });
     }

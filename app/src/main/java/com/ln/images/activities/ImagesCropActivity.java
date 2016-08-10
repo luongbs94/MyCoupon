@@ -19,7 +19,8 @@ import com.ln.mycoupon.R;
 
 import org.parceler.Parcels;
 
-public class ImagesCropActivity extends AppCompatActivity implements ImagesCropAdapter.OnClickCropImages {
+public class ImagesCropActivity extends AppCompatActivity
+        implements ImagesCropAdapter.OnClickCropImages {
 
     private static final int CROP_IMAGES = 9999;
     private static final int mCountColumn = 3;

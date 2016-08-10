@@ -1,6 +1,7 @@
 package com.ln.fragment.shop;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
@@ -34,30 +36,30 @@ public class PreviewImagesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View mView = inflater.inflate(R.layout.fragment_preview_images, container, false);
-        ImageView mImagePreview = (ImageView) mView.findViewById(R.id.image_preview);
+        final ImageView mImagePreview = (ImageView) mView.findViewById(R.id.image_preview);
 
         String string = getArguments().getString(MainApplication.PATH);
 
 
         final PhotoViewAttacher attach = new PhotoViewAttacher(mImagePreview);
 
-//        Glide.with(container.getContext())
-//                .load(string)
-//                .asBitmap()
-//                .into(new SimpleTarget<Bitmap>(480, 800) {
-//                    @Override
-//                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                        mImagePreview.setImageBitmap(resource);
-//                        attach.update();
-//                    }
-//                });
-
         Glide.with(container.getContext())
                 .load(string)
-                .thumbnail(0.5f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
-                .into((ImageView) mView.findViewById(R.id.image_preview));
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>(480, 800) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        mImagePreview.setImageBitmap(resource);
+                        attach.update();
+                    }
+                });
+
+//        Glide.with(container.getContext())
+//                .load(string)
+//                .thumbnail(0.5f)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .fitCenter()
+//                .into((ImageView) mView.findViewById(R.id.image_preview));
         attach.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {

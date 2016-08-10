@@ -130,7 +130,7 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void changeCheckboxState(ViewHolder contentHolder, LocalMedia image) {
         boolean isChecked = contentHolder.check.isSelected();
         if (selectImages.size() >= maxSelectNum && !isChecked) {
-            Toast.makeText(mContext, mContext.getString(R.string.message_max_num, maxSelectNum), Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, mContext.getString(R.string.message_max_num, maxSelectNum + ""), Toast.LENGTH_LONG).show();
             return;
         }
         if (isChecked) {

@@ -120,7 +120,8 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String FACEBOOK_EMAIL = "email";
 
-    private static final String URL_GET_POST = "http://188.166.199.25:3000";
+//    private static final String URL_GET_POST = "http://188.166.199.25:3000";
+    private static final String URL_GET_POST = "http://188.166.179.187:3030";
     //    public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
     public static final String URL_UPDATE_IMAGE = "http://188.166.196.171:3001";
     private static final String URL_GET_CITY = "http://freegeoip.net";

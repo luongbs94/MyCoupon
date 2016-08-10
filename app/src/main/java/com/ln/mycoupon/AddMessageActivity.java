@@ -382,16 +382,7 @@ public class AddMessageActivity extends AppCompatActivity
 
     private String createFile(String path) {
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 8;
-        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-
-        Log.d(TAG, bitmap.getWidth() + " -" + bitmap.getHeight());
-//        bitmap = scaleImages(bitmap, MainApplication.WIDTH_IMAGES_NEWS);
-
-        if (bitmap.getWidth() > MainApplication.WIDTH_IMAGES_NEWS) {
-            bitmap = scaleImages(bitmap, MainApplication.WIDTH_IMAGES_NEWS);
-        }
+      Bitmap bitmap= scaleImages(path, MainApplication.WIDTH_IMAGES_NEWS);
 
         String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));
 
@@ -450,24 +441,29 @@ public class AddMessageActivity extends AppCompatActivity
         });
     }
 
-    public Bitmap scaleImages(Bitmap bitmap, int width) {
+    public Bitmap scaleImages(String path, int width) {
 
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+        int bWidth = bitmap.getWidth();
 
-        float ratioX = width / (float) bitmap.getWidth();
-        int height = (int) (ratioX * bitmap.getHeight());
-        Bitmap scaledBitmap = Bitmap.createBitmap(width, height,
-                Bitmap.Config.ARGB_8888);
-        float middleX = width / 2.0f;
-        float middleY = height / 2.0f;
+        if (bWidth > width) {
+            float ratioX = width / (float) bitmap.getWidth();
+            int height = (int) (ratioX * bitmap.getHeight());
+            Bitmap scaledBitmap = Bitmap.createBitmap(width, height,
+                    Bitmap.Config.ARGB_8888);
+            float middleX = width / 2.0f;
+            float middleY = height / 2.0f;
 
-        Matrix scaleMatrix = new Matrix();
-        scaleMatrix.setScale(ratioX, ratioX, middleX, middleY);
+            Matrix scaleMatrix = new Matrix();
+            scaleMatrix.setScale(ratioX, ratioX, middleX, middleY);
 
-        Canvas canvas = new Canvas(scaledBitmap);
-        canvas.setMatrix(scaleMatrix);
-        canvas.drawBitmap(bitmap, middleX - bitmap.getWidth() / 2, middleY - bitmap.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
-
-        return scaledBitmap;
+            Canvas canvas = new Canvas(scaledBitmap);
+            canvas.setMatrix(scaleMatrix);
+            canvas.drawBitmap(bitmap, middleX - bitmap.getWidth() / 2, middleY - bitmap.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
+            return scaledBitmap;
+        }
+        return bitmap;
     }
 
     private void writePreferences(String key, String value) {

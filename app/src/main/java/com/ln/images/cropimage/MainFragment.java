@@ -234,7 +234,8 @@ public class MainFragment extends Fragment {
                     mCropView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
                     break;
                 case R.id.buttonPickImage:
-                    MainFragmentPermissionsDispatcher.pickImageWithCheck(MainFragment.this);
+//                    MainFragmentPermissionsDispatcher.pickImageWithCheck(MainFragment.this);
+                    getActivity().finish();
                     break;
             }
         }

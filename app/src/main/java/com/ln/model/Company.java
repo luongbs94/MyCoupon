@@ -26,6 +26,7 @@ public class Company extends RealmObject {
     private String logo_link;
     private String city;
     private String country_name;
+    private String web_token;
 
     public Company() {
     }
@@ -166,6 +167,9 @@ public class Company extends RealmObject {
     }
 
 
+    public String getWeb_token() {
+        return web_token;
+    }
 }
 
 
