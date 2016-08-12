@@ -307,13 +307,14 @@
                 android:layout_marginRight="@dimen/size_6"
                 android:contentDescription="@null"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_more_vert_black_24dp" />
+                android:src="@drawable/ic_more_horiz_black_48dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="@string/more" />
+                android:text="@string/more"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 

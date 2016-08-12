@@ -193,7 +193,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                     onClickLikeNews(this.getAdapterPosition(), this);
                     break;
                 case R.id.linear_share:
-                    onClickShare(this.getAdapterPosition(), this);
+                    onClickShare(this.getAdapterPosition());
                     break;
                 case R.id.linear_delete:
                     onClickMoreNews(this.getAdapterPosition(), v);
@@ -217,7 +217,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                     bundle.putString(MainApplication.DATA, mListNews.get(position).getMessage_id());
                     intent.putExtras(bundle);
                     mContext.startActivity(intent);
-                } else if (item.getItemId() == R.id.menu_delete_news) {
+                } else if (item.getItemId() == R.id.menu_delete) {
                     onClickDeleteNews(position);
                 }
                 return false;
@@ -276,7 +276,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         }
     }
 
-    private void onClickShare(int position, ViewHolder holder) {
+    private void onClickShare(int position) {
 
         NewsOfCompanyLike item = mListNews.get(position);
 
@@ -301,8 +301,14 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     }
 
     private void deleteNewsOfCompany(final String idNews, final int positionNews) {
+
+        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company company = new Gson().fromJson(strCompany, Company.class);
+
+
+        Log.d(TAG, "Id: " + idNews + " token: " + company.getWeb_token());
         NewsOfCompany news = new NewsOfCompany(idNews);
-        Call<Integer> call = MainApplication.getAPI().deleteMessage(news);
+        Call<Integer> call = MainApplication.getAPI().deleteMessage(company.getWeb_token(), news);
         call.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {

@@ -22,6 +22,7 @@ import com.ln.mycoupon.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,7 +39,7 @@ public class UseFragment extends Fragment {
     private RecyclerView mRecyclerView;
 
     private CreateCouponAdapter mCouponAdapter;
-    private ArrayList<Coupon> mListCoupons = new ArrayList<>();
+    private List<Coupon> mListCoupons = new ArrayList<>();
     private String TAG = getClass().getSimpleName();
     private SwipeRefreshLayout swipeContainer;
     private Calendar calendar;
@@ -106,10 +107,10 @@ public class UseFragment extends Fragment {
 
         mListCoupons.clear();
 
-        Call<ArrayList<Coupon>> listCoupon = mApiServices.getUsedCoupon(company.getCompany_id() + "", utc1, utc2);
-        listCoupon.enqueue(new Callback<ArrayList<Coupon>>() {
+        Call<List<Coupon>> listCoupon = mApiServices.getUsedCoupon(company.getWeb_token(), company.getCompany_id() + "", utc1, utc2);
+        listCoupon.enqueue(new Callback<List<Coupon>>() {
             @Override
-            public void onResponse(Call<ArrayList<Coupon>> call, Response<ArrayList<Coupon>> response) {
+            public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
                 mListCoupons = response.body();
                 mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupons);
                 mRecyclerView.setAdapter(mCouponAdapter);
@@ -125,17 +126,15 @@ public class UseFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Coupon>> call, Throwable t) {
+            public void onFailure(Call<List<Coupon>> call, Throwable t) {
                 swipeContainer.setRefreshing(false);
             }
         });
     }
 
-    public void getData(long time){
+    public void getData(long time) {
         utc1 = time + "";
         utc2 = (time + 24 * 3600 * 1000) + "";
         getUseCoupon();
-
     }
-
 }

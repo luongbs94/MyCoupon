@@ -387,6 +387,17 @@ public class CustomerLoginActivity extends AppCompatActivity
                         .load(news.getLogo_link())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();
+
+                if (news.getImages_link() != null) {
+                    String strImages = news.getImages_link();
+                    String[] listStrImages = strImages.split(";");
+                    for (String path : listStrImages) {
+                        Glide.with(this)
+                                .load(path)
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .preload();
+                    }
+                }
             }
         }
 

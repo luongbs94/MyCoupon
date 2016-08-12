@@ -7,7 +7,6 @@ package com.ln.api;
 
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
-import com.ln.model.CompanyLocation;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
@@ -16,7 +15,6 @@ import com.ln.model.NewsOfCustomer;
 import com.ln.model.NewsOfMore;
 import com.ln.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -32,10 +30,6 @@ import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface LoveCouponAPI {
-
-    @GET("/get_coupon_template_by_company_id")
-    Call<List<CouponTemplate>> getCouponTemplatesByCompanyId(
-            @Query("company_id") int id);
 
     @GET("/get_coupon_template_by_company_id")
     Call<List<CouponTemplate>> getCouponTemplates(
@@ -63,19 +57,26 @@ public interface LoveCouponAPI {
             @Query("access_token") String accessToken);
 
     @POST("/addCouponTemplate")
-    Call<Integer> addCouponTemplate(@Body CouponTemplate template);
+    Call<Integer> addCouponTemplate(
+            @Header("Authorization") String token,
+            @Body CouponTemplate template);
 
     @POST("/deleteCouponTemplate")
-    Call<Integer> deleteCouponTemplate(@Body CouponTemplate template);
+    Call<Integer> deleteCouponTemplate(
+            @Header("Authorization") String token,
+            @Body CouponTemplate template);
 
     @POST("/addMessage")
-    Call<Integer> addMessage(@Header("Authorization") String token, @Body NewsOfCompany news);
+    Call<Integer> addMessage(
+            @Header("Authorization") String token,
+            @Body NewsOfCompany news);
 
     @POST("/addCoupon")
     Call<Integer> addCoupon(@Body Coupon coupon);
 
     @GET("/get_companies_by_user_id")
-    Call<List<CompanyOfCustomer>> getCompaniesByUserId(@Query("user_id") String id);
+    Call<List<CompanyOfCustomer>> getCompaniesByUserId(
+            @Query("user_id") String id);
 
     @GET("/get_news_by_user_id")
     Call<List<NewsOfCustomer>> getNewsByUserId(@Query("user_id") String id);
@@ -87,32 +88,32 @@ public interface LoveCouponAPI {
             @Body Coupon template);
 
     @GET("/get_created_coupon_by_company_id")
-    Call<ArrayList<Coupon>> getCreatedCoupon(
+    Call<List<Coupon>> getCreatedCoupon(
+            @Header("city") String city,
             @Query("company_id") String company_id,
             @Query("utc1") long utc1,
             @Query("utc2") long utc2);
 
     @GET("/get_used_coupon_by_company_id")
-    Call<ArrayList<Coupon>> getUsedCoupon(
+    Call<List<Coupon>> getUsedCoupon(
+            @Header("city") String city,
             @Query("company_id") String company_id,
             @Query("utc1") String utc1,
             @Query("utc2") String utc2);
 
     @GET("/get_user_profile")
-    Call<List<User>> updateUserToken(@Query("user_id") String user_id, @Query("device_token") String device_token, @Query("device_os") String device_os);
+    Call<List<User>> updateUserToken(@Query("user_id") String user_id,
+                                     @Query("device_token") String device_token,
+                                     @Query("device_os") String device_os);
 
     @POST("/useCoupon")
     Call<Integer> useCoupon(@Body Coupon coupon);
 
     @POST("/updateCompany")
-    Call<Integer> updateCompany(@Body Company template);
+    Call<Integer> updateCompany(
+            @Header("Authorization") String token,
+            @Body Company template);
 
-
-    @GET("/get_web_token")
-    Call<String> getWebTokenUser(@Query("user_name") String user_name, @Query("password") String password);
-
-    @GET("/get_web_token")
-    Call<String> getWebTokenSocial(@Query("user_id") String user_id, @Query("social") String social, @Query("access_token") String access_token);
 
     @Multipart
     @POST("upload")
@@ -120,10 +121,13 @@ public interface LoveCouponAPI {
                               @Part MultipartBody.Part file);
 
     @GET("/is_username_avaiable")
-    Call<Integer> isExists(@Query("company_id") String company_id, @Query("username") String username);
+    Call<Integer> isExists(@Query("company_id") String company_id,
+                           @Query("username") String username);
 
     @POST("/deleteMessage")
-    Call<Integer> deleteMessage(@Body NewsOfCompany newsOfCompany);
+    Call<Integer> deleteMessage(
+            @Header("Authorization") String token,
+            @Body NewsOfCompany newsOfCompany);
 
     @GET("/json")
     Call<CityOfUser> getCityOfUser();
@@ -131,12 +135,12 @@ public interface LoveCouponAPI {
     @GET("/json")
     Call<CityOfUser> getCityOfUser2();
 
-    @POST("/updateCompanyLocation")
-    Call<ResponseBody> updateCompanyLocation(@Body CompanyLocation companyLocation);
-
     @GET("/get_news_more_by_user_id")
-    Call<List<NewsOfMore>> getNewsMoreByUserId(@Query("user_id") String user_id, @Query("city") String city);
+    Call<List<NewsOfMore>> getNewsMoreByUserId(@Query("user_id") String user_id,
+                                               @Query("city") String city);
 
     @POST("/updateMessage")
-    Call<Integer> updateMessages(@Body NewsOfCompany news);
+    Call<Integer> updateMessages(
+            @Header("Authorization") String authorization,
+            @Body NewsOfCompany news);
 }

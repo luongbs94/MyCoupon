@@ -10,6 +10,9 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,14 +56,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by luongnguyen on 4/7/16.
- * <></>
- */
 public class AddMessageActivity extends AppCompatActivity
-        implements DatePickerDialog.OnDateSetListener, View.OnClickListener, SelectedImageAdapter.OnClickRemoveImages {
+        implements DatePickerDialog.OnDateSetListener,
+        View.OnClickListener, SelectedImageAdapter.OnClickRemoveImages {
+
 
     private static final int REQUEST_IMAGE = 77;
+    private static final int CREATE_NEWS = 76;
     private final String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mApiService;
@@ -83,8 +85,24 @@ public class AddMessageActivity extends AppCompatActivity
     private long mTimeLong;
     private Calendar mCalendar;
 
-    private static int mType;
+    private int mType = 0;
     private NewsOfCompany mNewsOfCompany;
+    private boolean isEnd = false;
+
+    private Handler mHandler;
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            while (!isEnd) {
+                SystemClock.sleep(100);
+            }
+
+            Message message = new Message();
+            message.what = CREATE_NEWS;
+            message.setTarget(mHandler);
+            message.sendToTarget();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +112,20 @@ public class AddMessageActivity extends AppCompatActivity
         initData();
         initViews();
         addEvents();
+
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == CREATE_NEWS) {
+                    String title = mTxtTitle.getText().toString();
+                    String content = mTxtContent.getText().toString();
+                    String link = mTxtLink.getText().toString();
+                    addNews(title, content, link);
+                    isEnd = false;
+                }
+            }
+        };
     }
 
     private void initData() {
@@ -217,18 +249,18 @@ public class AddMessageActivity extends AppCompatActivity
 
     private void addNews(final String title, final String content, final String link) {
 
-        String idNews = MainApplication.getRandomString(MainApplication.SIZE_ID);
 
         final String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company mCompany = new Gson().fromJson(strCompany, Company.class);
 
         String idCompany = mCompany.getCompany_id();
         final NewsOfCompany news = new NewsOfCompany();
-        String token = MainApplication.getPreferences().getString(MainApplication.TOKEN_SHOP, "");
-
-        news.setMessage_id(idNews);
+        String token = mCompany.getWeb_token();
         news.setContent(content);
         news.setLink(link);
+        if (mNewsOfCompany != null) {
+            news.setMessage_id(mNewsOfCompany.getMessage_id());
+        }
         news.setTitle(title);
         news.setCreated_date(System.currentTimeMillis());
         news.setLast_date(mTimeLong);
@@ -239,33 +271,72 @@ public class AddMessageActivity extends AppCompatActivity
             news.setImages_link(mLinkImageNews);
         }
 
-        Call<Integer> addNews = apiService.addMessage(token, news);
-        addNews.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                if (response.body() == MainApplication.SUCCESS) {
+        if (mType == MainApplication.WHAT_UPDATE_NEWS) {
+            Call<Integer> update = apiService.updateMessages(token, news);
+            update.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.body() == MainApplication.SUCCESS) {
 
-                    MainApplication.mRealmController.addNewsOfCompany(news);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            setResult(RESULT_OK);
-                            hideProgressDialog();
-                            getShowMessages(getString(R.string.add_message_success));
-                            finish();
-                        }
-                    }, MainApplication.TIME_SLEEP_SETTING);
-                } else {
-                    getShowMessages(getString(R.string.add_message_fail));
+                        MainApplication.mRealmController.addNewsOfCompany(news);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                setResult(RESULT_OK);
+                                hideProgressDialog();
+                                getShowMessages(getString(R.string.add_message_success));
+                                finish();
+                                mType = 0;
+                            }
+                        }, MainApplication.TIME_SLEEP_SETTING);
+                    } else {
+                        getShowMessages(getString(R.string.add_message_fail));
+                        hideProgressDialog();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                getShowMessages(getString(R.string.add_message_fail));
-                Log.d(TAG, "addNews " + t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
+                    getShowMessages(getString(R.string.add_message_fail));
+                    Log.d(TAG, "update " + t.toString());
+                }
+            });
+
+        } else {
+
+            String idNews = MainApplication.getRandomString(MainApplication.SIZE_ID);
+            news.setMessage_id(idNews);
+
+
+            Call<Integer> addNews = apiService.addMessage(token, news);
+            addNews.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.body() == MainApplication.SUCCESS) {
+
+                        MainApplication.mRealmController.addNewsOfCompany(news);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                setResult(RESULT_OK);
+                                hideProgressDialog();
+                                getShowMessages(getString(R.string.add_message_success));
+                                finish();
+                            }
+                        }, MainApplication.TIME_SLEEP_SETTING);
+                    } else {
+                        getShowMessages(getString(R.string.add_message_fail));
+                        hideProgressDialog();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
+                    getShowMessages(getString(R.string.add_message_fail));
+                    Log.d(TAG, "addNews " + t.toString());
+                }
+            });
+        }
     }
 
     @Override
@@ -303,7 +374,7 @@ public class AddMessageActivity extends AppCompatActivity
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.com_facebook_loading));
+            mProgressDialog.setMessage(getString(R.string.up_loading));
         }
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
@@ -354,7 +425,6 @@ public class AddMessageActivity extends AppCompatActivity
                 } else {
                     String str = itemImage.getPath().substring(itemImage.getPath().lastIndexOf("/") + 1);
                     url = MainApplication.URL_UPDATE_IMAGE + "/upload/" + str;
-
                 }
 
                 if (mLinkImageNews != null && mLinkImageNews.length() > 0) {
@@ -366,13 +436,23 @@ public class AddMessageActivity extends AppCompatActivity
                 Log.d(TAG, "linkImages : " + url);
             }
 
-            for (LocalMedia itemImage : mListLocalImages) {
-                if (!itemImage.getPath().contains("http")) {
-                    uploadFile(itemImage.getPath());
+            int size = mListLocalImages.size();
+            for (int i = 0; i < size; i++) {
+                if (!mListLocalImages.get(i).getPath().contains("http")) {
+                    if (i != size - 1) {
+                        uploadFile(mListLocalImages.get(i).getPath(), false);
+                    } else {
+                        uploadFile(mListLocalImages.get(i).getPath(), true);
+                    }
+                    new Thread(runnable).start();
                 }
             }
 
-            addNews(title, content, link);
+//            for (LocalMedia itemImage : mListLocalImages) {
+//                if (!itemImage.getPath().contains("http")) {
+//                    uploadFile(itemImage.getPath());
+//                }
+//            }
 
         } else {
             getShowMessages(getString(R.string.not_fill_login));
@@ -382,7 +462,7 @@ public class AddMessageActivity extends AppCompatActivity
 
     private String createFile(String path) {
 
-      Bitmap bitmap= scaleImages(path, MainApplication.WIDTH_IMAGES_NEWS);
+        Bitmap bitmap = scaleImages(path, MainApplication.WIDTH_IMAGES_NEWS);
 
         String nameImages = path.substring(path.lastIndexOf("/") + 1, path.indexOf("."));
 
@@ -406,7 +486,7 @@ public class AddMessageActivity extends AppCompatActivity
         return resizedFile.getAbsolutePath();
     }
 
-    private void uploadFile(String path) {
+    private void uploadFile(String path, final boolean isEnd) {
 
         File file = new File(path);
         Log.d(TAG, "file name : " + file.getName());
@@ -433,6 +513,7 @@ public class AddMessageActivity extends AppCompatActivity
                                    Response<ResponseBody> response) {
 
                 Log.d(TAG, "response" + response.message());
+                AddMessageActivity.this.isEnd = isEnd;
             }
 
             @Override
@@ -480,4 +561,5 @@ public class AddMessageActivity extends AppCompatActivity
     public void remove(int position) {
         mListStringSelectImages.remove(position);
     }
+
 }

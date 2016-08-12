@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.ln.app.MainApplication;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class PreviewImagesActivity extends AppCompatActivity {
 
+    private final String TAG = getClass().getSimpleName();
     private List<LocalMedia> mListImages = new ArrayList<>();
     private int mPosition;
 
@@ -37,6 +39,10 @@ public class PreviewImagesActivity extends AppCompatActivity {
         if (bundle != null) {
             mPosition = bundle.getInt(MainApplication.POSITION);
             mListImages = Parcels.unwrap(bundle.getParcelable(MainApplication.LIST_IMAGES));
+
+            for (LocalMedia media : mListImages) {
+                Log.d(TAG, "media: " + media.getPath());
+            }
         }
     }
 

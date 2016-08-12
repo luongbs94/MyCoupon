@@ -15,8 +15,8 @@ import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -25,11 +25,11 @@ import java.util.Locale;
  */
 public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapter.ViewHolder> {
 
-    private ArrayList<Coupon> mListCoupons;
+    private List<Coupon> mListCoupons;
     private LayoutInflater mInflater;
     private Context mContext;
 
-    public CreateCouponAdapter(Context context, ArrayList<Coupon> listCoupon) {
+    public CreateCouponAdapter(Context context, List<Coupon> listCoupon) {
         mInflater = LayoutInflater.from(context);
         mListCoupons = listCoupon;
         mContext = context;

@@ -2,7 +2,6 @@ package com.ln.mycoupon;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -60,29 +59,24 @@ public class QRCodeActivity extends AppCompatActivity {
 
         mQRCodeReaderView = (ScannerLiveView) findViewById(R.id.decoder_view);
 
-        mQRCodeReaderView.setScannerViewEventListener(new ScannerLiveView.ScannerViewEventListener()
-        {
+        mQRCodeReaderView.setScannerViewEventListener(new ScannerLiveView.ScannerViewEventListener() {
             @Override
-            public void onScannerStarted(ScannerLiveView scanner)
-            {
-                Toast.makeText(QRCodeActivity.this,"Scanner Started",Toast.LENGTH_SHORT).show();
+            public void onScannerStarted(ScannerLiveView scanner) {
+                Toast.makeText(QRCodeActivity.this, "Scanner Started", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onScannerStopped(ScannerLiveView scanner)
-            {
-               // Toast.makeText(QRCodeActivity.this,"Scanner Stopped",Toast.LENGTH_SHORT).show();
+            public void onScannerStopped(ScannerLiveView scanner) {
+                // Toast.makeText(QRCodeActivity.this,"Scanner Stopped",Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onScannerError(Throwable err)
-            {
-          //      Toast.makeText(QRCodeActivity.this,"Scanner Error: " + err.getMessage(),Toast.LENGTH_SHORT).show();
+            public void onScannerError(Throwable err) {
+                //      Toast.makeText(QRCodeActivity.this,"Scanner Error: " + err.getMessage(),Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onCodeScanned(String data)
-            {
+            public void onCodeScanned(String data) {
                 Toast.makeText(QRCodeActivity.this, data, Toast.LENGTH_SHORT).show();
                 if (!isCamera) {
                     isCamera = true;
@@ -102,7 +96,7 @@ public class QRCodeActivity extends AppCompatActivity {
         decoder.setScanAreaPercent(0.5);
         mQRCodeReaderView.setDecoder(decoder);
         mQRCodeReaderView.startScanner();
-   //     mQRCodeReaderView.getCameraManager().startPreview();
+        //     mQRCodeReaderView.getCameraManager().startPreview();
     }
 
     @Override

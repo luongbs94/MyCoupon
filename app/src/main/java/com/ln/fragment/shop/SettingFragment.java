@@ -63,9 +63,9 @@ public class SettingFragment extends Fragment implements
 
     private static final int START_CROP_IMAGES = 99;
     private static final int IS_CHECK_FOCUS = 999;
-    private LoveCouponAPI mLoveCouponAPI;
-
     private final String TAG = getClass().getSimpleName();
+
+    private LoveCouponAPI mLoveCouponAPI;
 
     private MaterialEditText mEdtNameCompany, mEdtAddress,
             mEdtPassword1, mEdtUser1, mEdtUser2, mEdtPassword2;
@@ -296,7 +296,6 @@ public class SettingFragment extends Fragment implements
     }
 
     private boolean isDriverSupportCamera() {
-
         return getActivity()
                 .getApplicationContext()
                 .getPackageManager()
@@ -495,7 +494,12 @@ public class SettingFragment extends Fragment implements
 
     private void createSave(final String name, final String address,
                             final String finalLogo, final Company companyTemplate) {
-        Call<Integer> call3 = mLoveCouponAPI.updateCompany(companyTemplate);
+
+        final String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company mCompany = new Gson().fromJson(strCompany, Company.class);
+
+
+        Call<Integer> call3 = mLoveCouponAPI.updateCompany(mCompany.getWeb_token(), companyTemplate);
         call3.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {

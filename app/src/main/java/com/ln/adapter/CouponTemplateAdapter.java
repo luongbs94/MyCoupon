@@ -81,7 +81,11 @@ public class CouponTemplateAdapter
 
     private void deleteCouponTemplate(final String idCoupon) {
         CouponTemplate coupon = new CouponTemplate(idCoupon);
-        Call<Integer> delete = MainApplication.getAPI().deleteCouponTemplate(coupon);
+
+        final String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
+        Company mCompany = new Gson().fromJson(strCompany, Company.class);
+
+        Call<Integer> delete = MainApplication.getAPI().deleteCouponTemplate(mCompany.getWeb_token(), coupon);
         delete.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {

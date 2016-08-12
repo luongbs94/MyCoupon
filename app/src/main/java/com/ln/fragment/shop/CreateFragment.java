@@ -23,6 +23,7 @@ import com.ln.mycoupon.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +36,7 @@ public class CreateFragment extends Fragment {
 
     private View mView;
     private RecyclerView mRecyclerCreate;
-    private ArrayList<Coupon> mListCoupon = new ArrayList<>();
+    private List<Coupon> mListCoupon = new ArrayList<>();
     private CreateCouponAdapter mCouponAdapter;
 
     private String TAG = getClass().getSimpleName();
@@ -102,13 +103,13 @@ public class CreateFragment extends Fragment {
 
     private void getCreateCoupon() {
 
-        Log.d(TAG, "getCreateCoupon" + utc1+ " - " + utc2);
+        Log.d(TAG, "getCreateCoupon" + utc1 + " - " + utc2);
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
-        Call<ArrayList<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getCompany_id() + "", utc1, utc2);
-        listCoupon.enqueue(new Callback<ArrayList<Coupon>>() {
+        Call<List<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getWeb_token(), company.getCompany_id() + "", utc1, utc2);
+        listCoupon.enqueue(new Callback<List<Coupon>>() {
             @Override
-            public void onResponse(Call<ArrayList<Coupon>> call, Response<ArrayList<Coupon>> response) {
+            public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
                 mListCoupon = new ArrayList<>();
                 mListCoupon = response.body();
 
@@ -126,19 +127,18 @@ public class CreateFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Coupon>> call, Throwable t) {
+            public void onFailure(Call<List<Coupon>> call, Throwable t) {
                 swipeContainer.setRefreshing(false);
 
             }
         });
     }
 
-
     public void getData(long time) {
         utc1 = time;
         utc2 = (time + 24 * 3600 * 1000);
         getCreateCoupon();
 
-        Log.d(TAG, "getData" + utc1+ " - " + utc2);
+        Log.d(TAG, "getData" + utc1 + " - " + utc2);
     }
 }

@@ -1,4 +1,4 @@
-package com.ln.images.views;
+package com.ln.views;
 
 import android.annotation.TargetApi;
 import android.content.Context;

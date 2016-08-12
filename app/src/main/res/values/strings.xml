@@ -9,9 +9,7 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="face_login">Facebook</string>
-
     <string name="g_login">Google</string>
-
     <string name="you_are">You are</string>
     <string name="shop">Shop</string>
     <string name="customer">Customer</string>
@@ -27,7 +25,6 @@
     <string name="content">Content </string>
     <string name="link">Link</string>
     <string name="date">Deadline</string>
-
 
     <string name="description">Description</string>
     <string name="limit">Duration</string>
@@ -172,4 +169,5 @@
         <item>12 months</item>
     </string-array>
     <string name="account_exists">*Exists</string>
+    <string name="up_loading">Uploading...</string>
 </resources>

@@ -18,8 +18,9 @@ import com.ln.images.models.LocalMedia;
 import com.ln.mycoupon.PreviewImagesActivity;
 import com.ln.mycoupon.R;
 
+import org.parceler.Parcels;
+
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,13 +109,13 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
 
-            contentHolder.contentView.setOnClickListener(new View.OnClickListener() {
+            contentHolder.picture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, PreviewImagesActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt(MainApplication.POSITION, holder.getAdapterPosition());
-                    bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) selectImages);
+                    bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(selectImages));
                     intent.putExtras(bundle);
                     mContext.startActivity(intent);
                 }
