@@ -96,10 +96,10 @@ public interface LoveCouponAPI {
 
     @GET("/get_used_coupon_by_company_id")
     Call<List<Coupon>> getUsedCoupon(
-            @Header("city") String city,
+            @Header("Authorization") String token,
             @Query("company_id") String company_id,
-            @Query("utc1") String utc1,
-            @Query("utc2") String utc2);
+            @Query("utc1") long utc1,
+            @Query("utc2") long utc2);
 
     @GET("/get_user_profile")
     Call<List<User>> updateUserToken(@Query("user_id") String user_id,

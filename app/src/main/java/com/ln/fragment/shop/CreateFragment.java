@@ -42,15 +42,19 @@ public class CreateFragment extends Fragment {
     private String TAG = getClass().getSimpleName();
     private long utc1;
     private long utc2;
-    private static boolean isInitRecyclerView;
     private Calendar calendar;
 
     private SwipeRefreshLayout swipeContainer;
     private TextView textView;
+    private int mType = MainApplication.TYPE_CREATE;
 
 
-    public CreateFragment() {
-
+    public static CreateFragment getInstances(int type) {
+        CreateFragment fragment = new CreateFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(MainApplication.TYPE, type);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -66,8 +70,6 @@ public class CreateFragment extends Fragment {
 
         utc1 = date.getTime();
         utc2 = (date.getTime() + 24 * 3600 * 1000);
-
-        getCreateCoupon();
     }
 
     @Override
@@ -75,6 +77,17 @@ public class CreateFragment extends Fragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_create, container, false);
 
+        mType = getArguments().getInt(MainApplication.TYPE);
+
+        initViews();
+        getCreateCoupon();
+
+        return mView;
+    }
+
+    private void initViews() {
+        mRecyclerCreate = (RecyclerView) mView.findViewById(R.id.recycler_view);
+        mRecyclerCreate.setLayoutManager(new LinearLayoutManager(getActivity()));
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
         textView = (TextView) mView.findViewById(R.id.text_no_data);
 
@@ -89,56 +102,79 @@ public class CreateFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        initViews();
-        getCreateCoupon();
-
-        return mView;
-    }
-
-    private void initViews() {
-        mRecyclerCreate = (RecyclerView) mView.findViewById(R.id.recycler_view);
-        mRecyclerCreate.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void getCreateCoupon() {
 
+        if (!MainApplication.sIsAdmin) {
+            ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin);
+            return;
+        }
         Log.d(TAG, "getCreateCoupon" + utc1 + " - " + utc2);
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
-        Call<List<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getWeb_token(), company.getCompany_id() + "", utc1, utc2);
-        listCoupon.enqueue(new Callback<List<Coupon>>() {
-            @Override
-            public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
-                mListCoupon = new ArrayList<>();
-                mListCoupon = response.body();
+        Log.d(TAG, "token:" + company.getWeb_token());
 
-                mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupon);
-                mRecyclerCreate.setAdapter(mCouponAdapter);
-                swipeContainer.setRefreshing(false);
+        if (mType == MainApplication.TYPE_CREATE) {
 
-                if (mListCoupon.size() > 0) {
-                    mRecyclerCreate.setVisibility(View.VISIBLE);
-                    textView.setVisibility(View.GONE);
-                } else {
-                    mRecyclerCreate.setVisibility(View.GONE);
-                    textView.setVisibility(View.VISIBLE);
+            Call<List<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getWeb_token(), company.getCompany_id() + "", utc1, utc2);
+            listCoupon.enqueue(new Callback<List<Coupon>>() {
+                @Override
+                public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
+                    mListCoupon = new ArrayList<>();
+                    mListCoupon = response.body();
+
+                    mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupon);
+                    mRecyclerCreate.setAdapter(mCouponAdapter);
+                    swipeContainer.setRefreshing(false);
+
+                    if (mListCoupon.size() > 0) {
+                        mRecyclerCreate.setVisibility(View.VISIBLE);
+                        textView.setVisibility(View.GONE);
+                    } else {
+                        mRecyclerCreate.setVisibility(View.GONE);
+                        textView.setVisibility(View.VISIBLE);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Coupon>> call, Throwable t) {
-                swipeContainer.setRefreshing(false);
+                @Override
+                public void onFailure(Call<List<Coupon>> call, Throwable t) {
+                    swipeContainer.setRefreshing(false);
 
-            }
-        });
+                }
+            });
+        } else if (mType == MainApplication.TYPE_USE) {
+            Call<List<Coupon>> listCoupon = mApiServices.getUsedCoupon(company.getWeb_token(), company.getCompany_id() + "", utc1, utc2);
+            listCoupon.enqueue(new Callback<List<Coupon>>() {
+                @Override
+                public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
+                    mListCoupon = response.body();
+                    mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupon);
+                    mRecyclerCreate.setAdapter(mCouponAdapter);
+                    swipeContainer.setRefreshing(false);
+
+                    if (mListCoupon.size() > 0) {
+                        mRecyclerCreate.setVisibility(View.VISIBLE);
+                        textView.setVisibility(View.GONE);
+                    } else {
+                        mRecyclerCreate.setVisibility(View.GONE);
+                        textView.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Coupon>> call, Throwable t) {
+                    swipeContainer.setRefreshing(false);
+                }
+            });
+        }
+
     }
 
     public void getData(long time) {
         utc1 = time;
         utc2 = (time + 24 * 3600 * 1000);
         getCreateCoupon();
-
         Log.d(TAG, "getData" + utc1 + " - " + utc2);
     }
 }

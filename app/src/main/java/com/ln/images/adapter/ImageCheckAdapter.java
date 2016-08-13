@@ -32,10 +32,10 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int TYPE_CAMERA = 1;
     private static final int TYPE_PICTURE = 2;
+    private static final int maxSelectNum = 9;
 
     private Context mContext;
     private boolean showCamera = true;
-    private static final int maxSelectNum = 9;
 
     private List<LocalMedia> mListImages = new ArrayList<>();
     private List<LocalMedia> selectImages = new ArrayList<>();
@@ -48,8 +48,20 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setListImages(int type) {
-        mListImages.clear();
-        mListImages.addAll(ImagesManager.loadImages(mContext, type));
+        switch (type) {
+            case ImagesManager.TYPE_ALL_IMAGE:
+                mListImages = ImagesManager.getListImageAll();
+                break;
+            case ImagesManager.TYPE_INTERNAL:
+                mListImages = ImagesManager.getListImageInternal();
+                break;
+            case ImagesManager.TYPE_SD_CARD:
+                mListImages = ImagesManager.getListImageExternal();
+                break;
+            default:
+                mListImages = ImagesManager.getListImageExternal();
+                break;
+        }
         notifyDataSetChanged();
     }
 
@@ -118,13 +130,6 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(mListImages));
                     intent.putExtras(bundle);
                     mContext.startActivity(intent);
-
-//                    Intent intent = new Intent(mContext, PreviewImagesActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putInt(MainApplication.POSITION, this.getAdapterPosition());
-//                    bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(mListImages));
-//                    intent.putExtras(bundle);
-//                    mContext.startActivity(intent);
                 }
             });
         }

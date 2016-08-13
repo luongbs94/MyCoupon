@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.datetimepicker.date.DatePickerDialog;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
@@ -443,8 +445,8 @@ public class AddMessageActivity extends AppCompatActivity
                         uploadFile(mListLocalImages.get(i).getPath(), false);
                     } else {
                         uploadFile(mListLocalImages.get(i).getPath(), true);
+                        new Thread(runnable).start();
                     }
-                    new Thread(runnable).start();
                 }
             }
 
@@ -488,7 +490,7 @@ public class AddMessageActivity extends AppCompatActivity
 
     private void uploadFile(String path, final boolean isEnd) {
 
-        File file = new File(path);
+        final File file = new File(path);
         Log.d(TAG, "file name : " + file.getName());
 
         // create RequestBody instance from file
@@ -514,6 +516,11 @@ public class AddMessageActivity extends AppCompatActivity
 
                 Log.d(TAG, "response" + response.message());
                 AddMessageActivity.this.isEnd = isEnd;
+                String url = MainApplication.URL_UPDATE_IMAGE + "/upload/" + file.getName();
+                Glide.with(MainApplication.getInstance())
+                        .load(url)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .preload();
             }
 
             @Override

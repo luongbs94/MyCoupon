@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,31 +15,28 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.datetimepicker.date.DatePickerDialog;
-import com.ln.adapter.ViewPagerAdapter;
+import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by luongnguyen on 4/14/16.
- * <></>
- */
+
 public class HistoryFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    CreateFragment createFragment;
-    UseFragment useFragment;
+    private CreateFragment createFragment;
+    private CreateFragment useFragment;
     private Menu menu1;
     private Calendar calendar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         calendar = Calendar.getInstance();
-
     }
 
     @Nullable
@@ -56,38 +55,34 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        createFragment = new CreateFragment();
-        useFragment = new UseFragment();
-        adapter.addFragment(createFragment, getString(R.string.create));
-        adapter.addFragment(useFragment, getString(R.string.used));
+
+        List<Fragment> fragments = new ArrayList<>();
+        createFragment = CreateFragment.getInstances(MainApplication.TYPE_CREATE);
+        useFragment = CreateFragment.getInstances(MainApplication.TYPE_USE);
+        fragments.add(createFragment);
+        fragments.add(useFragment);
+
+        String[] title = getActivity().getResources().getStringArray(R.array.title_history);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), fragments, title);
+
         viewPager.setAdapter(adapter);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_create_coupon, menu);
-
         MenuItem item = menu.findItem(R.id.date);
-
         Date date = new Date();
-
         menu1 = menu;
-
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         item.setTitle(fmt.format(date));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.calendar:
-                DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(getActivity().getFragmentManager(), "datePicker");
-                return true;
-            default:
-                break;
+        if (item.getItemId() == R.id.calendar) {
+            DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(getActivity().getFragmentManager(), "datePicker");
         }
-
         return true;
     }
 
@@ -112,4 +107,31 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         useFragment.getData(utc1);
     }
 
+    private class ViewPagerAdapter extends FragmentPagerAdapter {
+
+
+        private List<Fragment> mFragmentList;
+        private String[] mTitle;
+
+        ViewPagerAdapter(FragmentManager manager, List<Fragment> fragments, String[] title) {
+            super(manager);
+            mFragmentList = fragments;
+            mTitle = title;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTitle[position];
+        }
+    }
 }

@@ -17,42 +17,36 @@ public class ImagesManager {
     public static final int TYPE_ALL_IMAGE = 1;
     public static final int TYPE_INTERNAL = 2;
     public static final int TYPE_SD_CARD = 3;
-    public static int TYPE_IMAGE_MANAGER = TYPE_ALL_IMAGE;
+    private static List<LocalMedia> mListImageAll = new ArrayList<>();
+    private static List<LocalMedia> mListImageInternal = new ArrayList<>();
+    private static List<LocalMedia> mListImageExternal = new ArrayList<>();
 
-    public static List<LocalMedia> loadImages(Context context, int type) {
 
-        TYPE_IMAGE_MANAGER = type;
-        List<LocalMedia> listLocalMedia = new ArrayList<>();
-        switch (TYPE_IMAGE_MANAGER) {
-            case TYPE_ALL_IMAGE:
-                listLocalMedia.addAll
-                        (getImages(context,
-                                MediaStore.Images.Media.INTERNAL_CONTENT_URI));
-                listLocalMedia.addAll
-                        (getImages(context,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-                break;
-            case TYPE_INTERNAL:
-                listLocalMedia.addAll
-                        (getImages(context,
-                                MediaStore.Images.Media.INTERNAL_CONTENT_URI));
-                break;
-            case TYPE_SD_CARD:
-                listLocalMedia.addAll
-                        (getImages(context,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-                break;
-            default:
-                listLocalMedia.addAll
-                        (getImages(context,
-                                MediaStore.Images.Media.INTERNAL_CONTENT_URI));
-                listLocalMedia.addAll
-                        (getImages(context,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-                break;
+    private static ImagesManager mInstances;
+
+    private ImagesManager(Context context) {
+        loadImages(context);
+    }
+
+    public static void getInstances(Context context) {
+        if (mInstances == null) {
+            mInstances = new ImagesManager(context);
         }
+    }
 
-        return listLocalMedia;
+    public static void loadImages(Context context) {
+
+        List<LocalMedia> mediasInternal = getImages(context, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        List<LocalMedia> mediasExternal = getImages(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        if (mediasExternal != null) {
+            mListImageExternal.addAll(mediasExternal);
+            mListImageAll.addAll(mediasExternal);
+        }
+        if (mediasInternal != null) {
+            mListImageInternal.addAll(mediasInternal);
+            mListImageAll.addAll(mediasInternal);
+        }
     }
 
     private static List<LocalMedia> getImages(Context context, Uri uris) {
@@ -75,5 +69,17 @@ public class ImagesManager {
         }
         cursor.close();
         return listLocalMedia;
+    }
+
+    public static List<LocalMedia> getListImageAll() {
+        return mListImageAll;
+    }
+
+    public static List<LocalMedia> getListImageInternal() {
+        return mListImageInternal;
+    }
+
+    public static List<LocalMedia> getListImageExternal() {
+        return mListImageExternal;
     }
 }

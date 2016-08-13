@@ -168,6 +168,12 @@
         <item>11 months</item>
         <item>12 months</item>
     </string-array>
+
+    <string-array name="title_history">
+        <item>Create</item>
+        <item>Use</item>
+    </string-array>
     <string name="account_exists">*Exists</string>
     <string name="up_loading">Uploading...</string>
+    <string name="only_admin">Only admin</string>
 </resources>

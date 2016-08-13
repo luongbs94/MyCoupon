@@ -33,8 +33,20 @@ public class ImagesCropAdapter extends RecyclerView.Adapter<ImagesCropAdapter.Vi
     }
 
     public void setListImages(int type) {
-        mListImages.clear();
-        mListImages.addAll(ImagesManager.loadImages(mContext, type));
+        switch (type) {
+            case ImagesManager.TYPE_ALL_IMAGE:
+                mListImages = ImagesManager.getListImageAll();
+                break;
+            case ImagesManager.TYPE_INTERNAL:
+                mListImages = ImagesManager.getListImageInternal();
+                break;
+            case ImagesManager.TYPE_SD_CARD:
+                mListImages = ImagesManager.getListImageExternal();
+                break;
+            default:
+                mListImages = ImagesManager.getListImageExternal();
+                break;
+        }
         notifyDataSetChanged();
     }
 

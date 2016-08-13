@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,10 +46,10 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
 
         final Coupon item = mListCoupons.get(position);
         if (item.getUser_image_link() != null) {
-//            Picasso.with(mContext)
-//                    .load(item.getUser_image_link())
-//                    .placeholder(R.drawable.ic_logo_blank)
-//                    .into(holder.mImgLogo);
+            Picasso.with(mContext)
+                    .load(item.getUser_image_link())
+                    .placeholder(R.drawable.ic_logo_blank)
+                    .into(holder.mImgLogo);
         }
 
         if (item.getUser_name() != null) {
@@ -69,17 +70,17 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
             @Override
             public void onClick(View view) {
 
-                try{
+                try {
                     String link = "";
-                    if(item.getUser_social().equals("facebook")){
+                    if (item.getUser_social().equals("facebook")) {
                         link = "https://facebook.com/" + item.getUser_id();
-                    }else if(item.getUser_social().equals("google")){
+                    } else if (item.getUser_social().equals("google")) {
                         link = "'https://plus.google.com/" + item.getUser_id();
                     }
 
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
                     mContext.startActivity(i);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

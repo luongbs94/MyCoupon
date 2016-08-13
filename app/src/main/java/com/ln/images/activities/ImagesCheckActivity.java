@@ -47,11 +47,11 @@ public class ImagesCheckActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             cameraPath = savedInstanceState.getString(BUNDLE_CAMERA_PATH);
         }
-
         initViews();
     }
 
     private void initViews() {
+
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
