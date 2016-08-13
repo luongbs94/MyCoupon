@@ -89,6 +89,7 @@ public class SettingFragment extends Fragment implements
 
     private Uri mUri;
 
+    private boolean checkUser1, checkUser2;
     private boolean isAccount1, isAccount2;
     private boolean isCheckFocus = true;
     private Handler mHandle;
@@ -258,6 +259,9 @@ public class SettingFragment extends Fragment implements
         mEdtUser1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    checkUser1 = false;
+                }
                 if (!hasFocus) {
                     checkAccount1();
                 }
@@ -267,6 +271,9 @@ public class SettingFragment extends Fragment implements
         mEdtUser2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    checkUser2 = false;
+                }
                 if (!hasFocus) {
                     checkAccount2();
                 }
@@ -328,75 +335,26 @@ public class SettingFragment extends Fragment implements
             getShowMessage(getString(R.string.check_network));
             return;
         }
-
-        if (mEdtUser1.isFocused() || mEdtUser2.isFocused()) {
-            if (mEdtUser1.isFocused()) {
+        if (!checkUser1 || !checkUser2) {
+            if (!checkUser1) {
                 isAccount1 = false;
                 isCheckFocus = false;
-                new Thread(runnableCheckFocus).start();
                 checkAccount1();
+                new Thread(runnableCheckFocus).start();
             }
-
-            if (mEdtUser2.isFocused()) {
+            if (!checkUser2) {
                 isAccount2 = false;
                 isCheckFocus = false;
-                new Thread(runnableCheckFocus).start();
                 checkAccount2();
+                new Thread(runnableCheckFocus).start();
             }
-
-
-        } else {
+        } else if (checkUser1 && checkUser2) {
             if (!isAccount1 || !isAccount2) {
                 getShowMessage(getString(R.string.check_account));
                 return;
             }
-
             save();
         }
-
-//        Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user1);
-//        call.enqueue(new Callback<Integer>() {
-//            @Override
-//            public void onResponse(Call<Integer> call, Response<Integer> response) {
-//
-//                if (response.body() == 1) {
-//
-//                    Call<Integer> call2 = mLoveCouponAPI.isExists(company.getCompany_id(), user2);
-//                    call2.enqueue(new Callback<Integer>() {
-//                        @Override
-//                        public void onResponse(Call<Integer> call, Response<Integer> response) {
-//
-//                            if (response.body() == 1) {
-//                                createSave(name, address, mLogoBase64, template);
-//
-//                            } else {
-//                                mEdtUser2.setError(getString(R.string.account_exists));
-//                                requestFocus(mEdtUser2);
-//
-//                                hideProgressDialog();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<Integer> call, Throwable t) {
-//                            Log.d(TAG, "isCheckAccountExists " + t.toString());
-//                        }
-//                    });
-//
-//
-//                } else {
-//                    mEdtUser1.setError(getString(R.string.account_exists));
-//                    requestFocus(mEdtUser1);
-//
-//                    hideProgressDialog();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Integer> call, Throwable t) {
-//                Log.d(TAG, "isCheckAccountExists " + t.toString());
-//            }
-//        });
     }
 
     private void save() {
@@ -419,7 +377,7 @@ public class SettingFragment extends Fragment implements
                 company.getPass1(), company.getUser1_admin(),
                 company.getUser2(), company.getPass2(),
                 company.getUser2_admin(), company.getLogo_link(),
-                company.getCity(), company.getCountry_name());
+                company.getCity(), company.getCountry_name(), company.getWeb_token());
 
         template.setName(name);
         template.setAddress(address);
@@ -454,6 +412,8 @@ public class SettingFragment extends Fragment implements
                 if (!isCheckFocus) {
                     isCheckFocus = true;
                 }
+
+                checkUser1 = true;
             }
 
             @Override
@@ -483,6 +443,8 @@ public class SettingFragment extends Fragment implements
                 if (!isCheckFocus) {
                     isCheckFocus = true;
                 }
+
+                checkUser2 = true;
             }
 
             @Override
@@ -710,12 +672,21 @@ public class SettingFragment extends Fragment implements
     private Runnable runnableCheckFocus = new Runnable() {
         @Override
         public void run() {
-            while (!isCheckFocus) {
+
+            int what = 1;
+            while (!checkUser1) {
                 SystemClock.sleep(50);
+                what = 2;
+            }
+
+            while (!checkUser2) {
+                SystemClock.sleep(50);
+                what = 3;
             }
 
             Message message = new Message();
             message.what = IS_CHECK_FOCUS;
+            message.arg1 = what;
             message.setTarget(mHandle);
             message.sendToTarget();
         }

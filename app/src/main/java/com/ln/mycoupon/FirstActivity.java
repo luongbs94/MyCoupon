@@ -358,7 +358,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 String strImages = news.getImages_link();
                 String[] listStrImages = strImages.split(";");
                 for (String path : listStrImages) {
-                    Glide.with(this)
+                    Glide.with(MainApplication.getInstance())
                             .load(path)
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .preload();
@@ -373,7 +373,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         listShop.addAll(RealmController.with(this).getListCompanyCustomer());
         for (CompanyOfCustomer company : listShop) {
             if (company.getLogo_link().contains("http")) {
-                Glide.with(this)
+                Glide.with(MainApplication.getInstance())
                         .load(company.getLogo_link())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();

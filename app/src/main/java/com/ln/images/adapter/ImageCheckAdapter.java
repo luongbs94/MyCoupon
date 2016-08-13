@@ -115,9 +115,16 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     Intent intent = new Intent(mContext, PreviewImagesActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt(MainApplication.POSITION, holder.getAdapterPosition());
-                    bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(selectImages));
+                    bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(mListImages));
                     intent.putExtras(bundle);
                     mContext.startActivity(intent);
+
+//                    Intent intent = new Intent(mContext, PreviewImagesActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putInt(MainApplication.POSITION, this.getAdapterPosition());
+//                    bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(mListImages));
+//                    intent.putExtras(bundle);
+//                    mContext.startActivity(intent);
                 }
             });
         }

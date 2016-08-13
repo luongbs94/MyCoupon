@@ -52,6 +52,7 @@ public class PreviewImagesFragment extends Fragment {
             Glide.with(container.getContext())
                     .load(path)
                     .asBitmap()
+                    .fitCenter()
                     .into(new SimpleTarget<Bitmap>(480, 800) {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -63,14 +64,15 @@ public class PreviewImagesFragment extends Fragment {
             Glide.with(container.getContext())
                     .load(new File(path))
                     .asBitmap()
-                    .into((ImageView) mView.findViewById(R.id.image_preview));
+                    .fitCenter()
+                    .into(new SimpleTarget<Bitmap>(480, 800) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            mImagePreview.setImageBitmap(resource);
+                            attach.update();
+                        }
+                    });
         }
-//        Glide.with(container.getContext())
-//                .load(string)
-//                .thumbnail(0.5f)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .fitCenter()
-//                .into((ImageView) mView.findViewById(R.id.image_preview));
         attach.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {

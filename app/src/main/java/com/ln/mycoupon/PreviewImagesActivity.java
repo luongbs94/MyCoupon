@@ -34,11 +34,12 @@ public class PreviewImagesActivity extends AppCompatActivity {
     }
 
     private void initGetData() {
-
+        Log.d(TAG, "media: ");
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mPosition = bundle.getInt(MainApplication.POSITION);
             mListImages = Parcels.unwrap(bundle.getParcelable(MainApplication.LIST_IMAGES));
+            Log.d(TAG, "media2: ");
 
             for (LocalMedia media : mListImages) {
                 Log.d(TAG, "media: " + media.getPath());

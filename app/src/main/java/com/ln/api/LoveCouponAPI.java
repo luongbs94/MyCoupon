@@ -89,7 +89,7 @@ public interface LoveCouponAPI {
 
     @GET("/get_created_coupon_by_company_id")
     Call<List<Coupon>> getCreatedCoupon(
-            @Header("city") String city,
+            @Header("Authorization") String token,
             @Query("company_id") String company_id,
             @Query("utc1") long utc1,
             @Query("utc2") long utc2);

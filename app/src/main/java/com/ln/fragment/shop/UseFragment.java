@@ -121,7 +121,7 @@ public class UseFragment extends Fragment {
                     textView.setVisibility(View.GONE);
                 } else {
                     mRecyclerView.setVisibility(View.GONE);
-                    textView.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.GONE);
                 }
             }
 
