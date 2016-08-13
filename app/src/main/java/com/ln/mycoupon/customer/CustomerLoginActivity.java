@@ -70,7 +70,6 @@ public class CustomerLoginActivity extends AppCompatActivity
         mCouponAPI = MainApplication.getAPI();
         mRealm = MainApplication.mRealmController;
 
-
         getDataFromIntent();
         initViews();
         addEvents();
@@ -383,7 +382,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         listNews.addAll(RealmController.with(this).getListNewsOfCustomer());
         for (NewsOfCustomer news : listNews) {
             if (news.getLogo_link().contains("http")) {
-                Glide.with(this)
+                Glide.with(MainApplication.getInstance())
                         .load(news.getLogo_link())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();

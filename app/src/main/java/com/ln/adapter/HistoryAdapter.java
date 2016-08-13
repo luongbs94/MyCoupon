@@ -24,21 +24,21 @@ import java.util.Locale;
  * Created by Nhahv on 5/22/2016.
  * <></>
  */
-public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapter.ViewHolder> {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
     private List<Coupon> mListCoupons;
-    private LayoutInflater mInflater;
     private Context mContext;
 
-    public CreateCouponAdapter(Context context, List<Coupon> listCoupon) {
-        mInflater = LayoutInflater.from(context);
+    public HistoryAdapter(Context context, List<Coupon> listCoupon) {
         mListCoupons = listCoupon;
         mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(mInflater.inflate(R.layout.item_fragment_create, parent, false));
+        return new ViewHolder(LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.item_fragment_create, parent, false));
     }
 
     @Override
@@ -83,7 +83,6 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
     }

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.ln.adapter.CreateCouponAdapter;
+import com.ln.adapter.HistoryAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
@@ -21,7 +21,6 @@ import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,12 +36,11 @@ public class CreateFragment extends Fragment {
     private View mView;
     private RecyclerView mRecyclerCreate;
     private List<Coupon> mListCoupon = new ArrayList<>();
-    private CreateCouponAdapter mCouponAdapter;
+    private HistoryAdapter mCouponAdapter;
 
     private String TAG = getClass().getSimpleName();
     private long utc1;
     private long utc2;
-    private Calendar calendar;
 
     private SwipeRefreshLayout swipeContainer;
     private TextView textView;
@@ -60,10 +58,9 @@ public class CreateFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mApiServices = MainApplication.getAPI();
-        calendar = Calendar.getInstance();
-        Date date = new Date();
 
+        mApiServices = MainApplication.getAPI();
+        Date date = new Date();
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
@@ -75,8 +72,8 @@ public class CreateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_create, container, false);
 
+        mView = inflater.inflate(R.layout.fragment_create, container, false);
         mType = getArguments().getInt(MainApplication.TYPE);
 
         initViews();
@@ -97,7 +94,6 @@ public class CreateFragment extends Fragment {
                 getCreateCoupon();
             }
         });
-        // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -110,10 +106,8 @@ public class CreateFragment extends Fragment {
             ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin);
             return;
         }
-        Log.d(TAG, "getCreateCoupon" + utc1 + " - " + utc2);
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
-        Log.d(TAG, "token:" + company.getWeb_token());
 
         if (mType == MainApplication.TYPE_CREATE) {
 
@@ -124,7 +118,7 @@ public class CreateFragment extends Fragment {
                     mListCoupon = new ArrayList<>();
                     mListCoupon = response.body();
 
-                    mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupon);
+                    mCouponAdapter = new HistoryAdapter(getActivity(), mListCoupon);
                     mRecyclerCreate.setAdapter(mCouponAdapter);
                     swipeContainer.setRefreshing(false);
 
@@ -149,7 +143,7 @@ public class CreateFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
                     mListCoupon = response.body();
-                    mCouponAdapter = new CreateCouponAdapter(getActivity(), mListCoupon);
+                    mCouponAdapter = new HistoryAdapter(getActivity(), mListCoupon);
                     mRecyclerCreate.setAdapter(mCouponAdapter);
                     swipeContainer.setRefreshing(false);
 

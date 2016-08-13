@@ -202,10 +202,7 @@ public class QRCodeActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<CompanyOfCustomer>> call, Throwable t) {
                 Log.d(TAG, "CompanyOfCustomer  onFailure " + t.toString());
-
             }
         });
     }
-
-
 }

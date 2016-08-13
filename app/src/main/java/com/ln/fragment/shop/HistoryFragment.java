@@ -109,7 +109,6 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
 
-
         private List<Fragment> mFragmentList;
         private String[] mTitle;
 

@@ -5,14 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -44,7 +41,6 @@ import com.ln.model.Company;
 import com.ln.mycoupon.R;
 import com.ln.views.CircleImageView;
 import com.ln.views.MaterialEditText;
-import com.orhanobut.logger.Logger;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,10 +49,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by luongnguyen on 4/14/16.
- * setting account shop
- */
 public class SettingFragment extends Fragment implements
         View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
@@ -89,11 +81,6 @@ public class SettingFragment extends Fragment implements
 
     private Uri mUri;
 
-    private boolean checkUser1, checkUser2;
-    private boolean isAccount1, isAccount2;
-    private boolean isCheckFocus = true;
-    private Handler mHandle;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,20 +107,6 @@ public class SettingFragment extends Fragment implements
 
         View v = inflater.inflate(R.layout.fragment_setting, container, false);
         mLoveCouponAPI = MainApplication.getAPI();
-
-        mHandle = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == IS_CHECK_FOCUS) {
-                    if (!isAccount1 || !isAccount2) {
-                        getShowMessage(getString(R.string.check_account));
-                        return;
-                    }
-                    save();
-                }
-            }
-        };
 
         initViews(v);
         init();
@@ -171,6 +144,22 @@ public class SettingFragment extends Fragment implements
         mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_nav);
         mTxtAddress = (TextView) v.findViewById(R.id.txt_email_nav);
 
+        mEdtUser1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    checkAccount1(false);
+                }
+            }
+        });
+        mEdtUser2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    checkAccount2(false);
+                }
+            }
+        });
     }
 
 
@@ -256,29 +245,6 @@ public class SettingFragment extends Fragment implements
         mEdtPassword1.addTextChangedListener(new Events(mEdtPassword1));
         mEdtPassword2.addTextChangedListener(new Events(mEdtPassword2));
 
-        mEdtUser1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    checkUser1 = false;
-                }
-                if (!hasFocus) {
-                    checkAccount1();
-                }
-            }
-        });
-
-        mEdtUser2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    checkUser2 = false;
-                }
-                if (!hasFocus) {
-                    checkAccount2();
-                }
-            }
-        });
     }
 
 
@@ -300,13 +266,6 @@ public class SettingFragment extends Fragment implements
         } else {
             getShowMessage("User cancelled image capture");
         }
-    }
-
-    private boolean isDriverSupportCamera() {
-        return getActivity()
-                .getApplicationContext()
-                .getPackageManager()
-                .hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
     @Override
@@ -335,26 +294,9 @@ public class SettingFragment extends Fragment implements
             getShowMessage(getString(R.string.check_network));
             return;
         }
-        if (!checkUser1 || !checkUser2) {
-            if (!checkUser1) {
-                isAccount1 = false;
-                isCheckFocus = false;
-                checkAccount1();
-                new Thread(runnableCheckFocus).start();
-            }
-            if (!checkUser2) {
-                isAccount2 = false;
-                isCheckFocus = false;
-                checkAccount2();
-                new Thread(runnableCheckFocus).start();
-            }
-        } else if (checkUser1 && checkUser2) {
-            if (!isAccount1 || !isAccount2) {
-                getShowMessage(getString(R.string.check_account));
-                return;
-            }
-            save();
-        }
+
+        checkAccount1(true);
+
     }
 
     private void save() {
@@ -392,7 +334,7 @@ public class SettingFragment extends Fragment implements
         createSave(name, address, mLogoBase64, template);
     }
 
-    private void checkAccount1() {
+    private void checkAccount1(final boolean isEnd) {
 
         String user = mEdtUser1.getText().toString().trim();
         Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user);
@@ -401,19 +343,14 @@ public class SettingFragment extends Fragment implements
             public void onResponse(Call<Integer> call, Response<Integer> response) {
 
                 if (response.body() == 1) {
-                    isAccount1 = true;
+                    if (isEnd) {
+                        checkAccount2(isEnd);
+                    }
                 } else {
                     mEdtUser1.setError(getString(R.string.check_account));
                     requestFocus(mEdtUser1);
-                    isAccount1 = false;
                 }
 
-                Logger.d(response.body() + "");
-                if (!isCheckFocus) {
-                    isCheckFocus = true;
-                }
-
-                checkUser1 = true;
             }
 
             @Override
@@ -423,7 +360,7 @@ public class SettingFragment extends Fragment implements
         });
     }
 
-    private void checkAccount2() {
+    private void checkAccount2(final boolean isEnd) {
 
         String user = mEdtUser2.getText().toString().trim();
         Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user);
@@ -432,19 +369,13 @@ public class SettingFragment extends Fragment implements
             public void onResponse(Call<Integer> call, Response<Integer> response) {
 
                 if (response.body() == 1) {
-                    isAccount2 = true;
+                    if (isEnd) {
+                        save();
+                    }
                 } else {
                     mEdtUser2.setError(getString(R.string.check_account));
                     requestFocus(mEdtUser2);
-                    isAccount2 = false;
                 }
-
-                Logger.d(response.body() + "");
-                if (!isCheckFocus) {
-                    isCheckFocus = true;
-                }
-
-                checkUser2 = true;
             }
 
             @Override
@@ -520,7 +451,6 @@ public class SettingFragment extends Fragment implements
             mProgressDialog = new ProgressDialog(getActivity());
             mProgressDialog.setMessage(getString(R.string.save_running));
         }
-        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
     }
 
@@ -668,28 +598,4 @@ public class SettingFragment extends Fragment implements
     public interface OnClickSetInformation {
         void onClickSetInformation(String logo, String name, String address);
     }
-
-    private Runnable runnableCheckFocus = new Runnable() {
-        @Override
-        public void run() {
-
-            int what = 1;
-            while (!checkUser1) {
-                SystemClock.sleep(50);
-                what = 2;
-            }
-
-            while (!checkUser2) {
-                SystemClock.sleep(50);
-                what = 3;
-            }
-
-            Message message = new Message();
-            message.what = IS_CHECK_FOCUS;
-            message.arg1 = what;
-            message.setTarget(mHandle);
-            message.sendToTarget();
-        }
-    };
-
 }
