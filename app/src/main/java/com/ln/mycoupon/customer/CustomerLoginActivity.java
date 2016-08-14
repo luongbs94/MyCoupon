@@ -381,17 +381,19 @@ public class CustomerLoginActivity extends AppCompatActivity
         List<NewsOfCustomer> listNews = new ArrayList<>();
         listNews.addAll(RealmController.with(this).getListNewsOfCustomer());
         for (NewsOfCustomer news : listNews) {
+
+            if(news.getLogo_link() != null){
             if (news.getLogo_link().contains("http")) {
                 Glide.with(MainApplication.getInstance())
                         .load(news.getLogo_link())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();
-
+}
                 if (news.getImages_link() != null) {
                     String strImages = news.getImages_link();
                     String[] listStrImages = strImages.split(";");
                     for (String path : listStrImages) {
-                        Glide.with(this)
+                        Glide.with(MainApplication.getInstance())
                                 .load(path)
                                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                 .preload();

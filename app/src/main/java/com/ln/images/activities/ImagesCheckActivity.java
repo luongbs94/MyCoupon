@@ -32,12 +32,10 @@ public class ImagesCheckActivity extends AppCompatActivity {
 
     private static final int spanCount = 3;
     private static final int REQUEST_CAMERA = 66;
-    public static final String REQUEST_OUTPUT = "REQUEST_OUTPUT";
     private final static String BUNDLE_CAMERA_PATH = "CameraPath";
     private ImageCheckAdapter mAdapter;
     private TextView mTextDone;
     private String cameraPath;
-    private static final int maxSelectNum = 9;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,20 +105,20 @@ public class ImagesCheckActivity extends AppCompatActivity {
 
 
     private void onSelectDone(List<LocalMedia> medias) {
-        ArrayList<String> images = new ArrayList<>();
-        for (LocalMedia media : medias) {
-            images.add(media.getPath());
-        }
-        onResult(images);
+//        ArrayList<String> images = new ArrayList<>();
+//        for (LocalMedia media : medias) {
+//            images.add(media.getPath());
+//        }
+        onResult(medias);
     }
 
     private void onSelectDone(String path) {
-        ArrayList<String> images = new ArrayList<>();
-        images.add(path);
+        List<LocalMedia> images = new ArrayList<>();
+        images.add(new LocalMedia(path));
         onResult(images);
     }
 
-    private void onResult(ArrayList<String> images) {
+    private void onResult(List<LocalMedia> images) {
         Intent intent = getIntent();
         Bundle bundle = new Bundle();
         bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(images));

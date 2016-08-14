@@ -76,7 +76,7 @@ public class AddMessageActivity extends AppCompatActivity
 
     private List<LocalMedia> mListLocalImages;
     private List<String> mListStringSelectImages;
-    private SelectedImageAdapter mSelectedImageAdapter;
+    private SelectedImageAdapter mAdapter;
 
     private boolean mIsShowRecyclerView;
     private String mLinkImageNews;
@@ -154,7 +154,7 @@ public class AddMessageActivity extends AppCompatActivity
                             mListLocalImages.add(new LocalMedia(path));
                             mListStringSelectImages.add(path);
 
-                            Logger.d(path);
+                            Log.d(TAG, path);
                         }
 
                         mIsShowRecyclerView = true;
@@ -164,7 +164,6 @@ public class AddMessageActivity extends AppCompatActivity
                 } catch (NullPointerException e) {
                     Logger.d(e.toString());
                 }
-
             }
         }
     }
@@ -188,9 +187,9 @@ public class AddMessageActivity extends AppCompatActivity
         mRecyclerViewImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mRecyclerViewImages.setHasFixedSize(true);
 
-        mSelectedImageAdapter = new SelectedImageAdapter(this, mListLocalImages);
-        mSelectedImageAdapter.setOnClickRemoveImages(this);
-        mRecyclerViewImages.setAdapter(mSelectedImageAdapter);
+        mAdapter = new SelectedImageAdapter(this, mListLocalImages);
+        mAdapter.setOnClickRemoveImages(this);
+        mRecyclerViewImages.setAdapter(mAdapter);
 
         if (mNewsOfCompany != null) {
             if (mNewsOfCompany.getTitle() != null) {
@@ -250,7 +249,6 @@ public class AddMessageActivity extends AppCompatActivity
     }
 
     private void addNews(final String title, final String content, final String link) {
-
 
         final String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company mCompany = new Gson().fromJson(strCompany, Company.class);
@@ -344,23 +342,19 @@ public class AddMessageActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE) {
-            List<String> images = Parcels.unwrap(data.getExtras().getParcelable(MainApplication.LIST_IMAGES));
+            List<LocalMedia> images = Parcels.unwrap(data.getExtras().getParcelable(MainApplication.LIST_IMAGES));
 
-            for (String s : images) {
-                if (!isExists(s)) {
-                    mListStringSelectImages.add(s);
-                    mListLocalImages.add(new LocalMedia(createFile(s)));
+            for (LocalMedia s : images) {
+                if (!isExists(s.getPath())) {
+                    mListStringSelectImages.add(s.getPath());
+                    mListLocalImages.add(new LocalMedia(createFile(s.getPath())));
                     mIsShowRecyclerView = true;
+                    mRecyclerViewImages.setVisibility(View.VISIBLE);
+                    mAdapter.notifyDataSetChanged();
                 } else {
                     getShowMessages(getString(R.string.images_chose_is_exists));
                 }
             }
-
-            if (mIsShowRecyclerView) {
-                mRecyclerViewImages.setVisibility(View.VISIBLE);
-            }
-
-            mSelectedImageAdapter.notifyDataSetChanged();
         }
     }
 
@@ -444,17 +438,12 @@ public class AddMessageActivity extends AppCompatActivity
                     if (i != size - 1) {
                         uploadFile(mListLocalImages.get(i).getPath(), false);
                     } else {
-                        uploadFile(mListLocalImages.get(i).getPath(), true);
+                        isEnd = false;
                         new Thread(runnable).start();
+                        uploadFile(mListLocalImages.get(i).getPath(), true);
                     }
                 }
             }
-
-//            for (LocalMedia itemImage : mListLocalImages) {
-//                if (!itemImage.getPath().contains("http")) {
-//                    uploadFile(itemImage.getPath());
-//                }
-//            }
 
         } else {
             getShowMessages(getString(R.string.not_fill_login));
@@ -521,6 +510,7 @@ public class AddMessageActivity extends AppCompatActivity
                         .load(url)
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();
+
             }
 
             @Override

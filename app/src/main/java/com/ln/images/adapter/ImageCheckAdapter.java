@@ -166,7 +166,6 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return selectImages;
     }
 
-
     private boolean isSelected(LocalMedia image) {
         for (LocalMedia media : selectImages) {
             if (media.getPath().equals(image.getPath())) {
@@ -186,7 +185,7 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        View headerView;
+        private View headerView;
 
         HeaderViewHolder(View itemView) {
             super(itemView);
@@ -195,18 +194,14 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView picture;
-        ImageView check;
-
-        View contentView;
+        private ImageView picture;
+        private ImageView check;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            contentView = itemView;
             picture = (ImageView) itemView.findViewById(R.id.picture);
             check = (ImageView) itemView.findViewById(R.id.check);
         }
-
     }
 
     public interface OnImageSelectChangedListener {
