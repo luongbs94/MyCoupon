@@ -106,4 +106,7 @@
     <string name="action_settings">Cài đặt</string>
     <string name="agree">Đồng ý</string>
     <string name="coupon">Coupons</string>
+    <string name="up_loading">Đang tạo</string>
+    <string name="only_admin">Dành cho người quản trị</string>
+
 </resources>

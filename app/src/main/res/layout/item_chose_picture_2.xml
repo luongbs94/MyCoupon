@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ln.images.views.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ln.views.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -19,4 +19,4 @@
         android:contentDescription="@null"
         android:padding="@dimen/size_8"
         android:src="@drawable/checkbox_selector" />
-</com.ln.images.views.SquareRelativeLayout>
+</com.ln.views.SquareRelativeLayout>

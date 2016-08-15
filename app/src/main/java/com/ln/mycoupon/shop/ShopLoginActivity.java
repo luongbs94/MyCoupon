@@ -140,6 +140,12 @@ public class ShopLoginActivity extends AppCompatActivity
     private void initViews() {
 
         setTitle(R.string.login);
+
+        EditText edtUser = (EditText) findViewById(R.id.username);
+        EditText edtPass = (EditText) findViewById(R.id.password);
+        edtUser.setSelection(edtUser.getText().length());
+        edtPass.setSelection(edtPass.getText().length());
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         LoginManager.getInstance().registerCallback(mCallbackManager,

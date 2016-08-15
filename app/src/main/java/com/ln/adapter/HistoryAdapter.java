@@ -13,31 +13,32 @@ import android.widget.TextView;
 
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by Nhahv on 5/22/2016.
  * <></>
  */
-public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapter.ViewHolder> {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    private ArrayList<Coupon> mListCoupons;
-    private LayoutInflater mInflater;
+    private List<Coupon> mListCoupons;
     private Context mContext;
 
-    public CreateCouponAdapter(Context context, ArrayList<Coupon> listCoupon) {
-        mInflater = LayoutInflater.from(context);
+    public HistoryAdapter(Context context, List<Coupon> listCoupon) {
         mListCoupons = listCoupon;
         mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(mInflater.inflate(R.layout.item_fragment_create, parent, false));
+        return new ViewHolder(LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.item_fragment_create, parent, false));
     }
 
     @Override
@@ -45,10 +46,10 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
 
         final Coupon item = mListCoupons.get(position);
         if (item.getUser_image_link() != null) {
-//            Picasso.with(mContext)
-//                    .load(item.getUser_image_link())
-//                    .placeholder(R.drawable.ic_logo_blank)
-//                    .into(holder.mImgLogo);
+            Picasso.with(mContext)
+                    .load(item.getUser_image_link())
+                    .placeholder(R.drawable.ic_logo_blank)
+                    .into(holder.mImgLogo);
         }
 
         if (item.getUser_name() != null) {
@@ -69,20 +70,19 @@ public class CreateCouponAdapter extends RecyclerView.Adapter<CreateCouponAdapte
             @Override
             public void onClick(View view) {
 
-                try{
+                try {
                     String link = "";
-                    if(item.getUser_social().equals("facebook")){
+                    if (item.getUser_social().equals("facebook")) {
                         link = "https://facebook.com/" + item.getUser_id();
-                    }else if(item.getUser_social().equals("google")){
+                    } else if (item.getUser_social().equals("google")) {
                         link = "'https://plus.google.com/" + item.getUser_id();
                     }
 
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
                     mContext.startActivity(i);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
     }

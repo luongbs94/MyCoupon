@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +36,7 @@ import retrofit2.Response;
 
 public class FirstActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final String TAG = getClass().getSimpleName();
     private LoveCouponAPI mCouponAPI;
     private RealmController mRealmController;
     private int mStartNotification = 1;
@@ -53,12 +55,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         setLogin();
     }
 
-
     private void initViews() {
         findViewById(R.id.shop).setOnClickListener(this);
         findViewById(R.id.customer).setOnClickListener(this);
     }
-
 
     private void onClickLoginShop() {
         Intent intent = new Intent(FirstActivity.this, ShopLoginActivity.class);
@@ -95,8 +95,8 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         boolean isShop = preferences.getBoolean(MainApplication.LOGIN_SHOP, false);
         boolean isCustomer = preferences.getBoolean(MainApplication.LOGIN_CLIENT, false);
 
-        Logger.d("isShop " + isShop);
-        Logger.d("isCustomer " + isCustomer);
+        Log.d(TAG, "isShop " + isShop);
+        Log.d(TAG, "isCustomer " + isCustomer);
 
         if (isShop && !isCustomer) {
 
@@ -105,25 +105,23 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
             if (company != null && company.getCompany_id() != null) {
 
+                startShop();
                 getCouponTemplateOfShop(company.getCompany_id());
                 getNewsOfShop(company.getCompany_id());
-                startShop();
             }
         } else if (isCustomer && !isShop) {
 
             String strAccount = preferences.getString(MainApplication.ACCOUNT_CUSTOMER, "");
             AccountOflUser account = new Gson().fromJson(strAccount, AccountOflUser.class);
             if (account != null) {
-                getCompanyOfCustomer(account.getId());
                 startCustomer();
+                getCompanyOfCustomer(account.getId());
                 getNewsOfCustomer(account.getId());
                 String city = preferences.getString(MainApplication.CITY_OF_USER, "");
                 getNewsMore(account.getId(), city);
-                //           updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
             }
         }
     }
-
 
     /* ============= START CUSTOMER =============*/
     private void getCompanyOfCustomer(final String userId) {
@@ -137,9 +135,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
                 if (response.body() != null) {
                     mRealmController.addListCompanyCustomer(response.body());
-                    Logger.d("getCompanyOfCustomer + " + response.body().size());
+                    preLoadImageShopOfCustomer();
+                    Log.d(TAG, "getCompanyOfCustomer + " + response.body().size());
                 } else {
-                    Logger.d("getCompanyOfCustomer + " + "null");
+                    Log.d(TAG, "getCompanyOfCustomer + " + "null");
                 }
             }
 
@@ -158,35 +157,19 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
                     mRealmController.addListNewsOfCustomer(response.body());
-                    loadImages();
-                    Logger.d("List NewsOfCustomer " + response.body().size());
+                    previousLoadImagesCustomer();
+                    Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 } else {
-                    Logger.d("List NewsOfCustomer " + "null");
+                    Log.d(TAG, "List NewsOfCustomer " + "null");
                 }
             }
 
             @Override
             public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
-                Logger.d("getNewsOfCustomer" + "onFailure " + t.toString());
+                Log.d(TAG, "getNewsOfCustomer" + "onFailure " + t.toString());
             }
         });
     }
-
-//    private void updateUserToken(String userId, String token, String device_os) {
-//
-//        Call<List<User>> call = mCouponAPI.updateUserToken(userId, token, device_os);
-//        call.enqueue(new Callback<List<User>>() {
-//            @Override
-//            public void onResponse(Call<List<User>> arg0, Response<List<User>> arg1) {
-//                MainApplication.setIsAddToken(true);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<User>> arg0, Throwable arg1) {
-//                Log.d(TAG, "updateUserToken " + "Failure");
-//            }
-//        });
-//    }
 
     private void getNewsMore(String id, String city) {
         Call<List<NewsOfMore>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
@@ -195,15 +178,15 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<List<NewsOfMore>> call, Response<List<NewsOfMore>> response) {
                 if (response.body() != null) {
                     mRealmController.addListNewsOfMore(response.body());
-                    Logger.d(" getNewsMore " + response.body().size());
+                    Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
-                    Logger.d(" getNewsMore " + " null");
+                    Log.d(TAG, " getNewsMore " + " null");
                 }
             }
 
             @Override
             public void onFailure(Call<List<NewsOfMore>> call, Throwable t) {
-                Logger.d("getNewsMore " + " onFailure " + t.toString());
+                Log.d(TAG, "getNewsMore " + " onFailure " + t.toString());
             }
         });
     }
@@ -221,15 +204,15 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<List<CouponTemplate>> call, Response<List<CouponTemplate>> response) {
                 if (response.body() != null) {
                     mRealmController.addListCouponTemplate(response.body());
-                    Logger.d("getCouponTemplateOfShop " + response.body().size());
+                    Log.d(TAG, "getCouponTemplateOfShop " + response.body().size());
                 } else {
-                    Logger.d("getCouponTemplateOfShop " + "null");
+                    Log.d(TAG, "getCouponTemplateOfShop " + "null");
                 }
             }
 
             @Override
             public void onFailure(Call<List<CouponTemplate>> call, Throwable t) {
-                Logger.d("getCouponTemplateOfShop " + "onFailure " + t.toString());
+                Log.d(TAG, "getCouponTemplateOfShop " + "onFailure " + t.toString());
             }
         });
     }
@@ -242,15 +225,16 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
                     mRealmController.addListNewsOfCompany(response.body());
-                    Logger.d("getNewsOfShop " + response.body().size());
+                    preLoadImageShop();
+                    Log.d(TAG, "getNewsOfShop " + response.body().size());
                 } else {
-                    Logger.d("getNewsOfShop " + "null ");
+                    Log.d(TAG, "getNewsOfShop " + "null ");
                 }
             }
 
             @Override
             public void onFailure(Call<List<NewsOfCompany>> call, Throwable t) {
-                Logger.d("getNewsOfShop " + "onFailure " + t.toString());
+                Log.d(TAG, "getNewsOfShop " + "onFailure " + t.toString());
             }
         });
     }
@@ -270,15 +254,15 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                     } else {
                         getCityOfAccount1();
                     }
-                    Logger.d("City : " + response.body().getCity());
+                    Log.d(TAG, "City : " + response.body().getCity());
                 } else {
-                    Logger.d("City : " + "Khong co du lieu");
+                    Log.d(TAG, "City : " + "Khong co du lieu");
                 }
             }
 
             @Override
             public void onFailure(Call<CityOfUser> call, Throwable t) {
-                Logger.d("City Error : " + t.toString());
+                Log.d(TAG, "City Error : " + t.toString());
             }
         });
     }
@@ -295,15 +279,15 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                     if (!cityOfUser.isEmpty()) {
                         writeSharePreferences(MainApplication.CITY_OF_USER, cityOfUser);
                     }
-                    Logger.d("City : " + response.body().getCity());
+                    Log.d(TAG, "City : " + response.body().getCity());
                 } else {
-                    Logger.d("City : " + "Khong co du lieu");
+                    Log.d(TAG, "City : " + "Khong co du lieu");
                 }
             }
 
             @Override
             public void onFailure(Call<CityOfUser> call, Throwable t) {
-                Logger.d("City Error : " + t.toString());
+                Log.d(TAG, "City Error : " + t.toString());
             }
         });
     }
@@ -338,11 +322,11 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             }
 
         } catch (NullPointerException e) {
-            Logger.d("intent null");
+            Log.d(TAG, "intent null" + e.toString());
         }
     }
 
-    private void loadImages() {
+    private void previousLoadImagesCustomer() {
         List<NewsOfCustomer> listNews = new ArrayList<>();
         listNews.addAll(RealmController.with(this).getListNewsOfCustomer());
         for (NewsOfCustomer news : listNews) {
@@ -351,8 +335,49 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                         .load(news.getLogo_link())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();
+
+                if (news.getImages_link() != null) {
+                    String strImages = news.getImages_link();
+                    String[] listStrImages = strImages.split(";");
+                    for (String path : listStrImages) {
+                        Glide.with(this)
+                                .load(path)
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .preload();
+                    }
+                }
+            }
+        }
+    }
+
+    private void preLoadImageShop() {
+        List<NewsOfCompany> listNews = new ArrayList<>();
+        listNews.addAll(RealmController.with(this).getListNewsOfCompany());
+        for (NewsOfCompany news : listNews) {
+            if (news.getImages_link() != null) {
+                String strImages = news.getImages_link();
+                String[] listStrImages = strImages.split(";");
+                for (String path : listStrImages) {
+                    Glide.with(MainApplication.getInstance())
+                            .load(path)
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .preload();
+                }
             }
         }
 
+    }
+
+    private void preLoadImageShopOfCustomer() {
+        List<CompanyOfCustomer> listShop = new ArrayList<>();
+        listShop.addAll(RealmController.with(this).getListCompanyCustomer());
+        for (CompanyOfCustomer company : listShop) {
+            if (company.getLogo_link().contains("http")) {
+                Glide.with(MainApplication.getInstance())
+                        .load(company.getLogo_link())
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .preload();
+            }
+        }
     }
 }

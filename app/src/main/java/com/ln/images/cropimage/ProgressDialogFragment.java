@@ -19,7 +19,8 @@ import android.widget.ProgressBar;
 import com.ln.mycoupon.R;
 
 public class ProgressDialogFragment extends DialogFragment {
-    public static final String TAG = ProgressDialogFragment.class.getSimpleName();
+
+    public final String TAG = getClass().getSimpleName();
 
     // Note: only the system can call this constructor by reflection. 
     public ProgressDialogFragment() {

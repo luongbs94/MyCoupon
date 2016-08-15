@@ -35,7 +35,7 @@ public class Company extends RealmObject {
                    String logo, String created_date, String user_id,
                    String user1, String pass1, String user1_admin,
                    String user2, String pass2, String user2_admin,
-                   String logo_link, String city, String country_name) {
+                   String logo_link, String city, String country_name, String token) {
         this.company_id = company_id;
         this.name = name;
         this.address = address;
@@ -51,6 +51,7 @@ public class Company extends RealmObject {
         this.logo_link = logo_link;
         this.city = city;
         this.country_name = country_name;
+        web_token = token;
     }
 
     public String getName() {

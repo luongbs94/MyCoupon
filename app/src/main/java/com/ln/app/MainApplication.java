@@ -13,6 +13,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.stetho.Stetho;
 import com.ln.api.LoveCouponAPI;
 import com.ln.broadcast.ConnectivityReceiver;
+import com.ln.images.models.ImagesManager;
 import com.ln.model.User;
 import com.ln.realm.RealmController;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
@@ -82,6 +83,9 @@ public class MainApplication extends MultiDexApplication {
     public static final int NOTIFICATION = 199;
     public static final int SOCIAL = 123;
     public static final int NORMAL = 124;
+    public static final String TYPE = "TYPE";
+    public static final int TYPE_CREATE = 125;
+    public static final int TYPE_USE = 126;
 
     private static MainApplication mInstances;
 
@@ -120,7 +124,7 @@ public class MainApplication extends MultiDexApplication {
 
     public static final String FACEBOOK_EMAIL = "email";
 
-//    private static final String URL_GET_POST = "http://188.166.199.25:3000";
+    //    private static final String URL_GET_POST = "http://188.166.199.25:3000";
     private static final String URL_GET_POST = "http://188.166.179.187:3030";
     //    public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
     public static final String URL_UPDATE_IMAGE = "http://188.166.196.171:3001";
@@ -211,6 +215,7 @@ public class MainApplication extends MultiDexApplication {
         editor = sharedPreferences.edit();
         isEnglish();
 
+        ImagesManager.getInstances(this);
 
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)

@@ -18,8 +18,9 @@ import com.ln.images.models.LocalMedia;
 import com.ln.mycoupon.PreviewImagesActivity;
 import com.ln.mycoupon.R;
 
+import org.parceler.Parcels;
+
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +32,10 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int TYPE_CAMERA = 1;
     private static final int TYPE_PICTURE = 2;
+    private static final int maxSelectNum = 9;
 
     private Context mContext;
     private boolean showCamera = true;
-    private static final int maxSelectNum = 9;
 
     private List<LocalMedia> mListImages = new ArrayList<>();
     private List<LocalMedia> selectImages = new ArrayList<>();
@@ -47,8 +48,20 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setListImages(int type) {
-        mListImages.clear();
-        mListImages.addAll(ImagesManager.loadImages(mContext, type));
+        switch (type) {
+            case ImagesManager.TYPE_ALL_IMAGE:
+                mListImages = ImagesManager.getListImageAll();
+                break;
+            case ImagesManager.TYPE_INTERNAL:
+                mListImages = ImagesManager.getListImageInternal();
+                break;
+            case ImagesManager.TYPE_SD_CARD:
+                mListImages = ImagesManager.getListImageExternal();
+                break;
+            default:
+                mListImages = ImagesManager.getListImageExternal();
+                break;
+        }
         notifyDataSetChanged();
     }
 
@@ -108,13 +121,13 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
 
-            contentHolder.contentView.setOnClickListener(new View.OnClickListener() {
+            contentHolder.picture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, PreviewImagesActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt(MainApplication.POSITION, holder.getAdapterPosition());
-                    bundle.putSerializable(MainApplication.LIST_IMAGES, (Serializable) selectImages);
+                    bundle.putParcelable(MainApplication.LIST_IMAGES, Parcels.wrap(mListImages));
                     intent.putExtras(bundle);
                     mContext.startActivity(intent);
                 }
@@ -153,7 +166,6 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return selectImages;
     }
 
-
     private boolean isSelected(LocalMedia image) {
         for (LocalMedia media : selectImages) {
             if (media.getPath().equals(image.getPath())) {
@@ -173,7 +185,7 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        View headerView;
+        private View headerView;
 
         HeaderViewHolder(View itemView) {
             super(itemView);
@@ -182,18 +194,14 @@ public class ImageCheckAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView picture;
-        ImageView check;
-
-        View contentView;
+        private ImageView picture;
+        private ImageView check;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            contentView = itemView;
             picture = (ImageView) itemView.findViewById(R.id.picture);
             check = (ImageView) itemView.findViewById(R.id.check);
         }
-
     }
 
     public interface OnImageSelectChangedListener {

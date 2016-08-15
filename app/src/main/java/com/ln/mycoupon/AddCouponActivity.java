@@ -104,7 +104,7 @@ public class AddCouponActivity extends AppCompatActivity
 
         template.setCompany_id(mCompany.getCompany_id() + "");
 
-        Call<Integer> createCoupon = mApiService.addCouponTemplate(template);
+        Call<Integer> createCoupon = mApiService.addCouponTemplate(mCompany.getWeb_token(), template);
         createCoupon.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
