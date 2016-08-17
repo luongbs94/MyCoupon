@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
@@ -67,9 +68,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
             }
 
             holder.textTimeShelf.setText(fmt.format
-                    (MainApplication
-                            .convertDate(item.getCreated_date(),
-                                    item.getDuration())));
+                    (MainApplication.convertDate(item.getCreated_date(), item.getDuration())));
 
             String dayLeft = MainApplication.dayLeft(item.getCreated_date(), item.getDuration()) + "";
             holder.textDayShelf.setText(dayLeft);
@@ -78,6 +77,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
                 Glide.with(mContext).load(MainApplication
                         .convertToBytes(mCompanyOfCustomer.getLogo()))
                         .asBitmap()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.mImageLogo);
             }
         }

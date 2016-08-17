@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
@@ -63,6 +64,7 @@ public class CouponTemplateAdapter
             Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
                     .asBitmap()
                     .placeholder(R.drawable.ic_logo_blank)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.mImgLogo);
         }
 

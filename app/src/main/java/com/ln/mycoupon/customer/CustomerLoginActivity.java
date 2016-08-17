@@ -146,6 +146,10 @@ public class CustomerLoginActivity extends AppCompatActivity
                             getNewsOfCustomer(id);
                             getNewsMore(id, strCity);
 
+                            Glide.with(MainApplication.getInstance())
+                                    .load(accountOflUser.getPicture())
+                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .preload();
                             LoginManager.getInstance().logOut();
                             Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
                         }
@@ -225,6 +229,11 @@ public class CustomerLoginActivity extends AppCompatActivity
         AccountOflUser accountOflUser = new AccountOflUser(account.getId(), account.getDisplayName(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
             accountOflUser.setPicture(account.getPhotoUrl().toString());
+
+            Glide.with(MainApplication.getInstance())
+                    .load(accountOflUser.getPicture())
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .preload();
         }
 
         String strUser = new Gson().toJson(accountOflUser);
@@ -379,16 +388,16 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private void loadImages() {
         List<NewsOfCustomer> listNews = new ArrayList<>();
-        listNews.addAll(RealmController.with(this).getListNewsOfCustomer());
+        listNews.addAll(RealmController.with(MainApplication.getInstance()).getListNewsOfCustomer());
         for (NewsOfCustomer news : listNews) {
 
-            if(news.getLogo_link() != null){
-            if (news.getLogo_link().contains("http")) {
-                Glide.with(MainApplication.getInstance())
-                        .load(news.getLogo_link())
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .preload();
-}
+            if (news.getLogo_link() != null) {
+                if (news.getLogo_link().contains("http")) {
+                    Glide.with(MainApplication.getInstance())
+                            .load(news.getLogo_link())
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .preload();
+                }
                 if (news.getImages_link() != null) {
                     String strImages = news.getImages_link();
                     String[] listStrImages = strImages.split(";");

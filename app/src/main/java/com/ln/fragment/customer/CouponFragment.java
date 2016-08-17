@@ -49,7 +49,7 @@ public class CouponFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
-        mRealmController = MainApplication.mRealmController;
+        mRealmController = RealmController.with(MainApplication.getInstance());
     }
 
     @Override
@@ -82,20 +82,6 @@ public class CouponFragment extends Fragment {
             }
         }));
 
-//        ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-//            @Override
-//            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-//                Intent intent = new Intent(getActivity(), CouponCompanyOfClientActivity.class);
-//
-//                Bundle bundle = new Bundle();
-//                CompanyOfCustomer companyOfCustomer = mListCompanyCustomer.get(position);
-//                String idCompany = companyOfCustomer.getCompany_id();
-//                bundle.putString(MainApplication.ID_COMPANY, idCompany);
-//                intent.putExtras(bundle);
-//                startActivity(intent);
-//            }
-//        });
-
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -103,7 +89,6 @@ public class CouponFragment extends Fragment {
                 getCompanyByUserId();
             }
         });
-        // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,

@@ -328,10 +328,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void previousLoadImagesCustomer() {
         List<NewsOfCustomer> listNews = new ArrayList<>();
-        listNews.addAll(RealmController.with(this).getListNewsOfCustomer());
+        listNews.addAll(RealmController.with(MainApplication.getInstance()).getListNewsOfCustomer());
         for (NewsOfCustomer news : listNews) {
-            if (news.getLogo_link().contains("http")) {
-                Glide.with(this)
+            if (news.getLogo_link() != null && news.getLogo_link().contains("http")) {
+                Glide.with(MainApplication.getInstance())
                         .load(news.getLogo_link())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();
@@ -340,7 +340,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                     String strImages = news.getImages_link();
                     String[] listStrImages = strImages.split(";");
                     for (String path : listStrImages) {
-                        Glide.with(this)
+                        Glide.with(MainApplication.getInstance())
                                 .load(path)
                                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                 .preload();
@@ -352,7 +352,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void preLoadImageShop() {
         List<NewsOfCompany> listNews = new ArrayList<>();
-        listNews.addAll(RealmController.with(this).getListNewsOfCompany());
+        listNews.addAll(RealmController.with(MainApplication.getInstance()).getListNewsOfCompany());
         for (NewsOfCompany news : listNews) {
             if (news.getImages_link() != null) {
                 String strImages = news.getImages_link();
@@ -365,14 +365,14 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         }
-
     }
 
     private void preLoadImageShopOfCustomer() {
         List<CompanyOfCustomer> listShop = new ArrayList<>();
-        listShop.addAll(RealmController.with(this).getListCompanyCustomer());
+        listShop.addAll(RealmController.with(MainApplication.getInstance()).getListCompanyCustomer());
         for (CompanyOfCustomer company : listShop) {
-            if (company.getLogo_link().contains("http")) {
+            if (company.getLogo_link() != null
+                    && company.getLogo_link().contains("http")) {
                 Glide.with(MainApplication.getInstance())
                         .load(company.getLogo_link())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)

@@ -69,7 +69,7 @@ public class RealmController {
 
         mRealm.beginTransaction();
         LikeNews item = getLikeNewsCustomerById(idNews);
-        if (item != null) {
+        if (item != null && !item.isValid()) {
             item.deleteFromRealm();
         }
         mRealm.copyToRealmOrUpdate(new LikeNews(idNews, idUser));
@@ -79,7 +79,7 @@ public class RealmController {
     public void deleteLikeNewsCustomer(String idNews) {
         mRealm.beginTransaction();
         LikeNews item = getLikeNewsCustomerById(idNews);
-        if (item != null) {
+        if (item != null && !item.isValid()) {
             item.deleteFromRealm();
         }
         mRealm.commitTransaction();
@@ -101,7 +101,7 @@ public class RealmController {
 
         mRealm.beginTransaction();
         DeleteNews item = getDeleteNewsCustomerById(idNews);
-        if (item != null) {
+        if (item != null && !item.isValid()) {
             item.deleteFromRealm();
         }
         mRealm.copyToRealmOrUpdate(new DeleteNews(idNews, idUser));
@@ -142,8 +142,11 @@ public class RealmController {
         mRealm.beginTransaction();
         RealmResults<ShopLikeNews> listShopLike = getShopLikeById(idNews);
         if (!listShopLike.isEmpty()) {
-            for (ShopLikeNews shopLikeNews : listShopLike) {
-                shopLikeNews.deleteFromRealm();
+            for (ShopLikeNews item : listShopLike) {
+
+                if (!item.isValid()) {
+                    item.deleteFromRealm();
+                }
             }
         }
         mRealm.commitTransaction();
@@ -175,7 +178,7 @@ public class RealmController {
     public void deleteNewsOfCompany(String idNews) {
         mRealm.beginTransaction();
         NewsOfCompany newsOfCompany = getNewsOfCompanyById(idNews);
-        if (newsOfCompany != null) {
+        if (newsOfCompany != null && !newsOfCompany.isValid()) {
             newsOfCompany.deleteFromRealm();
         }
         mRealm.commitTransaction();
@@ -190,8 +193,10 @@ public class RealmController {
         // delete all news
         if (listNews != null) {
 //            listNews.clear();
-            for (NewsOfCompany news : listNews) {
-                news.deleteFromRealm();
+            for (NewsOfCompany item : listNews) {
+                if (!item.isValid()) {
+                    item.deleteFromRealm();
+                }
             }
         }
 
@@ -227,7 +232,9 @@ public class RealmController {
         List<NewsOfCustomer> listNews = getListNewsOfCustomer();
         if (listNews != null) {
             for (NewsOfCustomer news : listNews) {
-                news.deleteFromRealm();
+                if (!news.isValid()) {
+                    news.deleteFromRealm();
+                }
             }
         }
 
@@ -253,7 +260,9 @@ public class RealmController {
         List<CouponTemplate> listCoupon = getListCouponTemplate();
         if (listCoupon != null) {
             for (CouponTemplate coupon : listCoupon) {
-                coupon.deleteFromRealm();
+                if (!coupon.isValid()) {
+                    coupon.deleteFromRealm();
+                }
             }
         }
 
@@ -269,7 +278,10 @@ public class RealmController {
         mRealm.beginTransaction();
         CouponTemplate couponTemplate = getCouponTemplateById(id);
         if (couponTemplate != null) {
-            couponTemplate.deleteFromRealm();
+            if (!couponTemplate.isValid()) {
+
+                couponTemplate.deleteFromRealm();
+            }
         }
         mRealm.commitTransaction();
     }
@@ -296,12 +308,17 @@ public class RealmController {
 
         mRealm.beginTransaction();
         List<Coupon> listCoupon = getListCouponByCompanyId(company.getCompany_id());
-        for (Coupon coupon : listCoupon) {
-            coupon.deleteFromRealm();
+        if (listCoupon != null) {
+            for (Coupon coupon : listCoupon) {
+                if (!coupon.isValid()) {
+                    coupon.deleteFromRealm();
+                }
+            }
         }
 
         CompanyOfCustomer companyOfCustomer = getCompanyOfCustomer(company.getCompany_id());
-        if (companyOfCustomer != null) {
+        if (companyOfCustomer != null && !companyOfCustomer.isValid()) {
+
             companyOfCustomer.deleteFromRealm();
         }
 
@@ -327,12 +344,16 @@ public class RealmController {
 
         List<CompanyOfCustomer> mListCompany = getListCompanyCustomer();
         for (CompanyOfCustomer company : mListCompany) {
-            company.deleteFromRealm();
+            if (!company.isValid()) {
+                company.deleteFromRealm();
+            }
         }
 
         List<Coupon> listCoupon = getListCoupon();
         for (Coupon coupon : listCoupon) {
-            coupon.deleteFromRealm();
+            if (!coupon.isValid()) {
+                coupon.deleteFromRealm();
+            }
         }
 
 
@@ -376,14 +397,14 @@ public class RealmController {
 
     public void deleteNewsCustomerLike(String id) {
         NewsOfLike news = getNewsCustomerLike(id);
-        if (news != null) {
+        if (news != null && !news.isValid()) {
             mRealm.beginTransaction();
             news.deleteFromRealm();
             mRealm.commitTransaction();
         }
     }
 
-    public NewsOfLike getNewsCustomerLike(String id) {
+    private NewsOfLike getNewsCustomerLike(String id) {
         return mRealm.where(NewsOfLike.class)
                 .equalTo("message_id", id)
                 .findFirst();
@@ -402,7 +423,9 @@ public class RealmController {
 
         List<NewsOfMore> newsMore = getListNewsOfMore();
         for (NewsOfMore news : newsMore) {
-            news.deleteFromRealm();
+            if (!news.isValid()) {
+                news.deleteFromRealm();
+            }
         }
         for (NewsOfMore news : listNews) {
             mRealm.copyToRealmOrUpdate(news);
@@ -419,13 +442,13 @@ public class RealmController {
     public void deleteCoupon(String id) {
         mRealm.beginTransaction();
         Coupon coupon1 = getCoupon(id);
-        if (coupon1 != null) {
+        if (coupon1 != null && !coupon1.isValid()) {
             coupon1.deleteFromRealm();
         }
         mRealm.commitTransaction();
     }
 
-    public Coupon getCoupon(String id) {
+    private Coupon getCoupon(String id) {
         return mRealm
                 .where(Coupon.class)
                 .equalTo("coupon_id", id)

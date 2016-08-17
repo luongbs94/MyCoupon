@@ -77,7 +77,8 @@ public class QRCodeActivity extends AppCompatActivity {
 
             @Override
             public void onCodeScanned(String data) {
-                Toast.makeText(QRCodeActivity.this, data, Toast.LENGTH_SHORT).show();
+
+                Log.d(TAG, "onCodeScanned : " + data);
                 if (!isCamera) {
                     isCamera = true;
                     mQRCodeReaderView.stopScanner();

@@ -21,6 +21,7 @@ import com.ln.model.CouponTemplate;
 import com.ln.mycoupon.R;
 import com.ln.realm.RealmController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,8 +42,6 @@ public class CouponFragment extends Fragment {
     private RecyclerView mRecCoupon;
     private Company mCompany;
 
-    public CouponFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +95,8 @@ public class CouponFragment extends Fragment {
 
     public void setCouponTemplate() {
 
-        List<CouponTemplate> mListCoupon = mRealmController.getListCouponTemplate();
+        List<CouponTemplate> mListCoupon = new ArrayList<>();
+        mListCoupon.addAll(mRealmController.getListCouponTemplate());
         CouponTemplateAdapter adapter = new CouponTemplateAdapter(getActivity(), mListCoupon);
         mRecCoupon.setAdapter(adapter);
         swipeContainer.setRefreshing(false);

@@ -232,16 +232,16 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         final String idNewsOfCompany = mListNews.get(position).getMessage_id();
         new MaterialDialog
                 .Builder(mContext)
-                .content(R.string.delete_news)
+//                .content(R.string.delete_news)
+                .icon(mContext.getResources().getDrawable(R.drawable.ic_delete_black_24px))
+                .title(R.string.delete_news)
                 .positiveText(R.string.agree)
-                .negativeText(R.string.disagree)
                 .positiveColor(mContext.getResources().getColor(R.color.title_bg))
                 .negativeColor(mContext.getResources().getColor(R.color.title_bg))
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         deleteNewsOfCompany(idNewsOfCompany, position);
-
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -316,7 +316,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                     getShowMessages(mContext.getString(R.string.delete_news_success));
                     MainApplication.mRealmController.deleteNewsOfCompany(idNews);
                     mListNews.remove(positionNews);
-                    notifyDataSetChanged();
+                    notifyItemRemoved(positionNews);
                     Log.d("NewsShopAdapter", "Delete : News Success");
                 } else {
                     getShowMessages(mContext.getString(R.string.delete_news_error));

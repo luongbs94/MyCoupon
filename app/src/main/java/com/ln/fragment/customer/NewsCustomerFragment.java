@@ -118,7 +118,8 @@ public class NewsCustomerFragment extends Fragment {
         List<Message> listMessage = new ArrayList<>();
         Log.d(TAG, mTypeNews + "");
         if (mTypeNews == MainApplication.TYPE_NEWS) {
-            List<NewsOfCustomer> listNews = mRealmController.getListNewsOfCustomer();
+            List<NewsOfCustomer> listNews = new ArrayList<>();
+            listNews.addAll( mRealmController.getListNewsOfCustomer());
             for (NewsOfCustomer news : listNews) {
                 listMessage.add(new Message(news));
             }
@@ -133,7 +134,8 @@ public class NewsCustomerFragment extends Fragment {
         }
 
 
-        List<LikeNews> listLike = mRealmController.getListLikeNews();
+        List<LikeNews> listLike = new ArrayList<>();
+        listLike.addAll(mRealmController.getListLikeNews());
         List<DeleteNews> listDeleteNews = mRealmController.getListDeleteNews();
 
 

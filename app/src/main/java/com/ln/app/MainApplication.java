@@ -152,7 +152,7 @@ public class MainApplication extends MultiDexApplication {
     public static final String FONT = "fonts/fontawesome-webfont.ttf";
     //    public static final String EMAIL_LOVE_COUPON = "support@lovecoupon.com";
     public static final String EMAIL_LOVE_COUPON = "info@lovecoupon.com";
-    public static final String WEB_SITE_LOVE_COUPON = "http://www.lovecoupon.com:8080";
+    public static final String WEB_SITE_LOVE_COUPON = "http://www.lovecoupon.com";
     public static final String LINK_SHARE_IMAGE = "http://188.166.199.25:3000/logo/love.jpg";
 
     public static final int NEWS_CUSTOMER = 0;
@@ -354,5 +354,14 @@ public class MainApplication extends MultiDexApplication {
                 Log.d("test", "updateUserToken " + "Failure");
             }
         });
+    }
+
+    @Override
+    public void onTerminate() {
+
+        if (Realm.getDefaultInstance() != null) {
+            Realm.getDefaultInstance().close();
+        }
+        super.onTerminate();
     }
 }

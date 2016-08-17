@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
@@ -52,7 +53,7 @@ public class CouponShopAdapter extends RecyclerView.Adapter<CouponShopAdapter.Vi
                 Glide.with(mContext)
                         .load(MainApplication.convertToBytes(item.getLogo()))
                         .asBitmap()
-                        .placeholder(R.drawable.ic_logo_blank)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.mImgLogo);
             }
         }

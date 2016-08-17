@@ -242,7 +242,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         mShareDialog.show(content);
     }
 
-    private void onClickDeleteNews(int position, final ViewHolder holder) {
+    private void onClickDeleteNews(final int position, final ViewHolder holder) {
 
         final Message item = mListNews.get(position);
 
@@ -262,7 +262,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         MainApplication.mRealmController.addDeleteNewsCustomer(item.getMessage_id(), idUser);
                         mListNews.remove(holder.getAdapterPosition());
-                        notifyDataSetChanged();
+                        notifyItemRemoved(position);
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {

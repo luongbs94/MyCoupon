@@ -80,7 +80,8 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
                     public void onClick(View view, final int position) {
                         new MaterialDialog
                                 .Builder(CouponCompanyOfClientActivity.this)
-                                .content(R.string.delete_coupon)
+                                .icon(getResources().getDrawable(R.drawable.ic_delete_black_24px))
+                                .title(R.string.delete_coupon)
                                 .positiveText(R.string.agree)
                                 .positiveColor(getResources().getColor(R.color.title_bg))
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
