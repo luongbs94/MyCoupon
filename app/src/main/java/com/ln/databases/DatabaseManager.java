@@ -287,6 +287,6 @@ public class DatabaseManager {
         new Delete()
                 .from(Coupon.class)
                 .where("coupon_id = ?", id)
-                .executeSingle();
+                .execute();
     }
 }

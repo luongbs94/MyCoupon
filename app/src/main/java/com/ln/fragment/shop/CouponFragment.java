@@ -49,7 +49,7 @@ public class CouponFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View mView = inflater.inflate(R.layout.fragment_coupon, container, false);
+        View mView = inflater.inflate(R.layout.fragment_news, container, false);
 
         initViews(mView);
         setCouponTemplate();
@@ -99,9 +99,7 @@ public class CouponFragment extends Fragment {
 
     public void getCouponTemplate() {
 
-
         if (mCompany != null) {
-
             Call<List<CouponTemplate>> couponShop = mApiServices.getCouponTemplates("abc", mCompany.getCompany_id());
             couponShop.enqueue(new Callback<List<CouponTemplate>>() {
                 @Override

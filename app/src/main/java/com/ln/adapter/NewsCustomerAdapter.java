@@ -259,9 +259,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
         new MaterialDialog.Builder(mContext).content(R.string.delete_news)
                 .positiveText(R.string.agree)
-                .negativeText(R.string.disagree)
                 .positiveColor(mContext.getResources().getColor(R.color.title_bg))
-                .negativeColor(mContext.getResources().getColor(R.color.title_bg))
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -270,11 +268,6 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                         notifyItemRemoved(position);
                     }
                 })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                .show();
     }
 }

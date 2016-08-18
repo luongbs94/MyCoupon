@@ -18,7 +18,7 @@ import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CompanyOfCustomer;
-import com.ln.model.Coupon;
+import com.ln.until.UntilCoupon;
 
 import java.util.List;
 
@@ -121,7 +121,7 @@ public class QRCodeActivity extends AppCompatActivity {
         Log.d(TAG, "updateCoupon " + mAccountOflUser.getName());
         Log.d(TAG, "updateCoupon " + mAccountOflUser.getPicture());
 
-        Coupon coupon = new Coupon();
+        UntilCoupon coupon = new UntilCoupon();
         coupon.setCoupon_id(coupon_id);
         coupon.setUser_id(mAccountOflUser.getId());
         coupon.setUser_image_link(mAccountOflUser.getPicture());
@@ -143,7 +143,6 @@ public class QRCodeActivity extends AppCompatActivity {
             public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                 if (response.body() == null) {
                     new MaterialDialog.Builder(QRCodeActivity.this)
-                            .title(R.string.coupon)
                             .content(R.string.coupon_used)
                             .cancelListener(new DialogInterface.OnCancelListener() {
                                 @Override

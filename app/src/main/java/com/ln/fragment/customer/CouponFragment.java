@@ -37,7 +37,6 @@ public class CouponFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
     private List<CompanyOfCustomer> mListCompanyCustomer = new ArrayList<>();
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +47,7 @@ public class CouponFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View mView = inflater.inflate(R.layout.fragment_coupon, container, false);
+        View mView = inflater.inflate(R.layout.fragment_news, container, false);
         initViews(mView);
         setHasOptionsMenu(true);
         return mView;

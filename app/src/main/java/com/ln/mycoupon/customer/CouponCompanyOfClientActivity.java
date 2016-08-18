@@ -22,8 +22,8 @@ import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.interfaces.RecyclerViewListener;
 import com.ln.model.CompanyOfCustomer;
-import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
+import com.ln.until.Until;
 import com.ln.views.RecyclerViewHeader;
 import com.squareup.picasso.Picasso;
 
@@ -130,22 +130,19 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteCoupon(int position) {
+    private void deleteCoupon(final int position) {
         final String id = mCompanyOfCustomer.coupons().get(position).getCoupon_id();
-        Coupon coupon = new Coupon();
+        Until coupon = new Until();
         coupon.setCoupon_id(id);
 
-        Call<Integer> deleteCoupon = MainApplication
-                .getAPI()
-                .useCoupon(coupon);
-
+        Call<Integer> deleteCoupon = MainApplication.getAPI().useCoupon(coupon);
         deleteCoupon.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.body() == MainApplication.SUCCESS) {
                     DatabaseManager.deleteCouponById(id);
                     getShowMessages(getString(R.string.delete_coupon_success));
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyItemRemoved(position);
                 } else {
                     getShowMessages(getString(R.string.delete_coupon_fail));
                 }

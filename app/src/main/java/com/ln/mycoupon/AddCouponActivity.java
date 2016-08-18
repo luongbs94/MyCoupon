@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
-import com.ln.model.CouponTemplate;
+import com.ln.until.UntilCouponTemplate;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,7 +90,8 @@ public class AddCouponActivity extends AppCompatActivity
     }
 
     private void postCouponTemplate(String value, String content, int duration) {
-        CouponTemplate template = new CouponTemplate();
+
+        UntilCouponTemplate template = new UntilCouponTemplate();
         template.setCoupon_template_id(MainApplication.getRandomString(15));
         template.setContent(content);
         template.setValue(value);

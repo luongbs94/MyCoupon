@@ -43,6 +43,14 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
+
+        NewsOfCompany newsOfCompany = new NewsOfCompany();
+        if (newsOfCompany == null) {
+            Log.d(TAG, "null");
+        } else {
+            Log.d(TAG, "not null");
+        }
+
         mCouponAPI = MainApplication.getAPI();
 
         getCityOfAccount();
@@ -237,7 +245,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     /* ================ END SHOP   ===========*/
 
     private void getCityOfAccount() {
-        Call<CityOfUser> call = MainApplication.getApiService2().getCityOfUser();
+        Call<CityOfUser> call = MainApplication.getAPI2().getCityOfUser();
         call.enqueue(new Callback<CityOfUser>() {
             @Override
             public void onResponse(Call<CityOfUser> call, Response<CityOfUser> response) {

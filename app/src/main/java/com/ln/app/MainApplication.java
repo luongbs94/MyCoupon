@@ -152,6 +152,8 @@ public class MainApplication extends MultiDexApplication {
         mInstances = this;
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+
+
         ActiveAndroid.initialize(this);
 //
 //        OkHttpClient httpClient = new OkHttpClient();
@@ -228,6 +230,10 @@ public class MainApplication extends MultiDexApplication {
         return apiService1;
     }
 
+    public static LoveCouponAPI getAPI2() {
+        return apiService2;
+    }
+
     public static LoveCouponAPI getAPI3() {
         return apiService3;
     }
@@ -274,10 +280,6 @@ public class MainApplication extends MultiDexApplication {
         ConnectivityReceiver.mListener = listener;
     }
 
-    public static LoveCouponAPI getApiService2() {
-        return apiService2;
-    }
-
     public static SharedPreferences getSharePrefer() {
         return sharedPreferences;
     }
@@ -293,7 +295,6 @@ public class MainApplication extends MultiDexApplication {
     public static long dayLeft(long lastDate) {
 
         Date last_date = new Date(lastDate);
-
         long diff = last_date.getTime() - new Date().getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1;
     }

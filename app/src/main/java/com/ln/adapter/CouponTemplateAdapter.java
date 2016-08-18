@@ -21,6 +21,7 @@ import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
+import com.ln.until.Until;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.TestQRCode;
 
@@ -88,7 +89,8 @@ public class CouponTemplateAdapter
     }
 
     private void deleteCouponTemplate(final String idCoupon, final int position) {
-        CouponTemplate coupon = new CouponTemplate(idCoupon);
+        Until coupon = new Until();
+        coupon.setCoupon_template_id(idCoupon);
 
         final String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company mCompany = new Gson().fromJson(strCompany, Company.class);
@@ -102,6 +104,7 @@ public class CouponTemplateAdapter
                 if (response.body() == MainApplication.SUCCESS) {
                     getShowMessages(mContext.getString(R.string.delete_coupon_success));
                     DatabaseManager.deleteCouponTemplate(idCoupon);
+                    mListCoupon.remove(position);
                     notifyItemRemoved(position);
                 } else {
                     getShowMessages(mContext.getString(R.string.delete_coupon_fail));

@@ -10,9 +10,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +32,7 @@ import com.ln.images.activities.ImagesCheckActivity;
 import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
+import com.ln.until.UntilNews;
 import com.ln.views.MaterialEditText;
 
 import org.parceler.Parcels;
@@ -91,21 +89,6 @@ public class AddMessageActivity extends AppCompatActivity
     private NewsOfCompany mNewsOfCompany;
     private boolean isEnd = false;
 
-    private Handler mHandler;
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            while (!isEnd) {
-                SystemClock.sleep(100);
-            }
-
-            Message message = new Message();
-            message.what = CREATE_NEWS;
-            message.setTarget(mHandler);
-            message.sendToTarget();
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,20 +97,6 @@ public class AddMessageActivity extends AppCompatActivity
         initData();
         initViews();
         addEvents();
-
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == CREATE_NEWS) {
-                    String title = mTxtTitle.getText().toString();
-                    String content = mTxtContent.getText().toString();
-                    String link = mTxtLink.getText().toString();
-                    addNews(title, content, link);
-                    isEnd = false;
-                }
-            }
-        };
     }
 
     private void initData() {
@@ -254,7 +223,7 @@ public class AddMessageActivity extends AppCompatActivity
         Company mCompany = new Gson().fromJson(strCompany, Company.class);
 
         String idCompany = mCompany.getCompany_id();
-        final NewsOfCompany news = new NewsOfCompany();
+        final UntilNews news = new UntilNews();
         String token = mCompany.getWeb_token();
         news.setContent(content);
         news.setLink(link);
@@ -278,7 +247,8 @@ public class AddMessageActivity extends AppCompatActivity
                 public void onResponse(Call<Integer> call, Response<Integer> response) {
                     if (response.body() == MainApplication.SUCCESS) {
 
-                        DatabaseManager.addNewsOfCompany(news);
+                        NewsOfCompany newsOfCompany = new NewsOfCompany(news);
+                        DatabaseManager.addNewsOfCompany(newsOfCompany);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -314,7 +284,8 @@ public class AddMessageActivity extends AppCompatActivity
                 public void onResponse(Call<Integer> call, Response<Integer> response) {
                     if (response.body() == MainApplication.SUCCESS) {
 
-                        DatabaseManager.addNewsOfCompany(news);
+                        NewsOfCompany newsOfCompany = new NewsOfCompany(news);
+                        DatabaseManager.addNewsOfCompany(newsOfCompany);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -372,7 +343,6 @@ public class AddMessageActivity extends AppCompatActivity
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.up_loading));
         }
-        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
     }
 
@@ -433,16 +403,23 @@ public class AddMessageActivity extends AppCompatActivity
             }
 
             int size = mListLocalImages.size();
-            for (int i = 0; i < size; i++) {
-                if (!mListLocalImages.get(i).getPath().contains("http")) {
+            if (size > 0) {
+                for (int i = 0; i < size; i++) {
+
                     if (i != size - 1) {
-                        uploadFile(mListLocalImages.get(i).getPath(), false);
+                        if (!mListLocalImages.get(i).getPath().contains("http")) {
+                            uploadFile(mListLocalImages.get(i).getPath());
+                        }
                     } else {
-                        isEnd = false;
-                        new Thread(runnable).start();
-                        uploadFile(mListLocalImages.get(i).getPath(), true);
+                        if (!mListLocalImages.get(i).getPath().contains("http")) {
+                            uploadFile(mListLocalImages.get(i).getPath());
+                        }
+                        addNews(title, content, link);
                     }
+
                 }
+            } else {
+                addNews(title, content, link);
             }
 
         } else {
@@ -477,7 +454,7 @@ public class AddMessageActivity extends AppCompatActivity
         return resizedFile.getAbsolutePath();
     }
 
-    private void uploadFile(String path, final boolean isEnd) {
+    private void uploadFile(String path) {
 
         final File file = new File(path);
         Log.d(TAG, "file name : " + file.getName());
@@ -510,11 +487,11 @@ public class AddMessageActivity extends AppCompatActivity
                         .load(url)
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();
-
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, t.toString());
             }
         });
     }

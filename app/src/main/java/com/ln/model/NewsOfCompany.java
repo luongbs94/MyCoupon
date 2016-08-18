@@ -3,6 +3,8 @@ package com.ln.model;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.gson.annotations.Expose;
+import com.ln.until.UntilNews;
 
 /**
  * Created by Nhahv on 6/30/2016.
@@ -11,38 +13,41 @@ import com.activeandroid.annotation.Table;
 @Table(name = "NewsOfCompany")
 public class NewsOfCompany extends Model {
 
+    @Expose
     @Column(name = "message_id", index = true)
     private String message_id;
-
+    @Expose
     @Column(name = "content")
     private String content;
-
+    @Expose
     @Column(name = "created_date")
     private long created_date;
-
+    @Expose
     @Column(name = "company_id")
     private String company_id;
-
+    @Expose
     @Column(name = "last_date")
     private long last_date;
-
+    @Expose
     @Column(name = "title")
     private String title;
-
+    @Expose
     @Column(name = "link")
     private String link;
-
+    @Expose
     @Column(name = "images_link")
     private String images_link;
-
+    @Expose
     @Column(name = "like")
     private boolean like;
 
 
     public NewsOfCompany() {
+        super();
     }
 
     public NewsOfCompany(String message_id) {
+        super();
         this.message_id = message_id;
     }
 
@@ -56,6 +61,16 @@ public class NewsOfCompany extends Model {
         this.title = title;
         this.link = link;
         this.images_link = images_link;
+    }
+
+    public NewsOfCompany(UntilNews news) {
+        this.message_id = news.getMessage_id();
+        this.content = news.getContent();
+        this.company_id = news.getCompany_id();
+        this.last_date = news.getLast_date();
+        this.title = news.getTitle();
+        this.link = news.getLink();
+        this.images_link = news.getImages_link();
     }
 
     public String getMessage_id() {

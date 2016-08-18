@@ -13,6 +13,10 @@ import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.User;
+import com.ln.until.Until;
+import com.ln.until.UntilCoupon;
+import com.ln.until.UntilCouponTemplate;
+import com.ln.until.UntilNews;
 
 import java.util.List;
 
@@ -58,17 +62,17 @@ public interface LoveCouponAPI {
     @POST("/addCouponTemplate")
     Call<Integer> addCouponTemplate(
             @Header("Authorization") String token,
-            @Body CouponTemplate template);
+            @Body UntilCouponTemplate template);
 
     @POST("/deleteCouponTemplate")
     Call<Integer> deleteCouponTemplate(
             @Header("Authorization") String token,
-            @Body CouponTemplate idTemplate);
+            @Body Until template);
 
     @POST("/addMessage")
     Call<Integer> addMessage(
             @Header("Authorization") String token,
-            @Body NewsOfCompany news);
+            @Body UntilNews news);
 
     @POST("/addCoupon")
     Call<Integer> addCoupon(@Body Coupon coupon);
@@ -84,7 +88,7 @@ public interface LoveCouponAPI {
     @POST("/update_user_coupon")
     Call<List<CompanyOfCustomer>> updateUserCoupon(
             @Header("city") String city,
-            @Body Coupon template);
+            @Body UntilCoupon template);
 
     @GET("/get_created_coupon_by_company_id")
     Call<List<Coupon>> getCreatedCoupon(
@@ -106,7 +110,7 @@ public interface LoveCouponAPI {
                                      @Query("device_os") String device_os);
 
     @POST("/useCoupon")
-    Call<Integer> useCoupon(@Body Coupon coupon);
+    Call<Integer> useCoupon(@Body Until coupon);
 
     @POST("/updateCompany")
     Call<Integer> updateCompany(
@@ -126,7 +130,7 @@ public interface LoveCouponAPI {
     @POST("/deleteMessage")
     Call<Integer> deleteMessage(
             @Header("Authorization") String token,
-            @Body NewsOfCompany idNews);
+            @Body Until news);
 
     @GET("/json")
     Call<CityOfUser> getCityOfUser();
@@ -141,5 +145,5 @@ public interface LoveCouponAPI {
     @POST("/updateMessage")
     Call<Integer> updateMessages(
             @Header("Authorization") String authorization,
-            @Body NewsOfCompany news);
+            @Body UntilNews news);
 }

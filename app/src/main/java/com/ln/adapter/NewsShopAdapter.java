@@ -25,11 +25,13 @@ import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
+import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
+import com.ln.until.Until;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
@@ -50,11 +52,13 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     private Context mContext;
     private List<NewsOfCompany> mListNews;
     private ShareDialog mShareDialog;
+    private LoveCouponAPI mApi;
 
     public NewsShopAdapter(Context context, List<NewsOfCompany> listNews, Fragment fragment) {
         mContext = context;
         mListNews = listNews;
         mShareDialog = new ShareDialog(fragment);
+        mApi = MainApplication.getAPI();
     }
 
     @Override
@@ -68,6 +72,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         NewsOfCompany item = mListNews.get(position);
+        if (item == null) {
+            return;
+        }
 
         String strCompany = MainApplication
                 .getPreferences()
@@ -80,8 +87,10 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                 holder.mTxtCompanyName.setText(company.getName());
             }
             if (company.getLogo() != null) {
+
+                byte[] bytes = MainApplication.convertToBytes(company.getLogo());
                 Glide.with(mContext)
-                        .load(MainApplication.convertToBytes(company.getLogo()))
+                        .load(bytes)
                         .asBitmap()
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(holder.mImgLogo);
@@ -271,7 +280,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         final Company company = new Gson().fromJson(strCompany, Company.class);
 
-        Uri uriLink = null;
+        Uri uriLink;
         if (item.getLink() != null) {
 
             uriLink = Uri.parse(item.getLink());
@@ -295,8 +304,11 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
 
         Log.d(TAG, "Id: " + idNews + " token: " + company.getWeb_token());
-        NewsOfCompany news = new NewsOfCompany(idNews);
-        Call<Integer> call = MainApplication.getAPI().deleteMessage(company.getWeb_token(), news);
+
+        Company company1 = new Company();
+        company1.setCompany_id("2342423423");
+        Until news = new Until(idNews);
+        Call<Integer> call = mApi.deleteMessage(company.getWeb_token(), news);
         call.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -316,6 +328,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
                 getShowMessages(mContext.getString(R.string.delete_news_error));
+                Log.d(TAG, t.toString());
             }
         });
     }
