@@ -15,10 +15,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
-import com.ln.realm.RealmController;
 
 import java.util.List;
 
@@ -35,7 +35,6 @@ import retrofit2.Response;
 public class QRCodeActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getSimpleName();
-    private RealmController mRealmController;
 
 
     private ScannerLiveView mQRCodeReaderView;
@@ -50,7 +49,6 @@ public class QRCodeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qrcode);
 
         apiService = MainApplication.getAPI();
-        mRealmController = MainApplication.mRealmController;
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
         mAccountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
@@ -187,7 +185,7 @@ public class QRCodeActivity extends AppCompatActivity {
                 } else {
 
                     final CompanyOfCustomer company = response.body().get(0);
-                    mRealmController.addCompanyOfCustomer(company);
+                    DatabaseManager.addShopOfCustomer(company);
                     Intent intent = getIntent();
                     Bundle bundle = new Bundle();
                     bundle.putString(MainApplication.ID_COMPANY, company.getCompany_id());

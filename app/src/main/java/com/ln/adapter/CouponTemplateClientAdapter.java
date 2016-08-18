@@ -32,7 +32,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
     public CouponTemplateClientAdapter(Context context, CompanyOfCustomer company) {
         mContext = context;
-        mListCoupon = company.getCoupon();
+        mListCoupon = company.coupons();
         mCompanyOfCustomer = company;
     }
 

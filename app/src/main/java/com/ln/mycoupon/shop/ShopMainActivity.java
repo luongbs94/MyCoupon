@@ -40,7 +40,6 @@ import com.ln.mycoupon.AddCouponActivity;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
-import com.orhanobut.logger.Logger;
 
 public class ShopMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -172,7 +171,7 @@ public class ShopMainActivity extends AppCompatActivity
             Intent intent = getIntent();
             mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
         } catch (NullPointerException e) {
-            Logger.d("intent null " + e.toString());
+            Log.d(TAG, "intent null " + e.toString());
         }
 
     }

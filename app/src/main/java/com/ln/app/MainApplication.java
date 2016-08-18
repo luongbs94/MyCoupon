@@ -8,15 +8,13 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.activeandroid.ActiveAndroid;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.stetho.Stetho;
 import com.ln.api.LoveCouponAPI;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.images.models.ImagesManager;
 import com.ln.model.User;
-import com.ln.realm.RealmController;
-import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
@@ -26,8 +24,6 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,11 +77,13 @@ public class MainApplication extends MultiDexApplication {
     public static final int WHAT_SHOP_MAIN_ADD_NEWS = 211;
     public static final int WHAT_UPDATE_NEWS = 212;
     public static final int NOTIFICATION = 199;
-    public static final int SOCIAL = 123;
-    public static final int NORMAL = 124;
     public static final String TYPE = "TYPE";
     public static final int TYPE_CREATE = 125;
     public static final int TYPE_USE = 126;
+    public static final int NEW_LIKE = 132;
+    public static final int NEW_DELETE = 133;
+    public static final int SHOP = 222;
+    public static final int CUSTOMER = 223;
 
     private static MainApplication mInstances;
 
@@ -146,8 +144,6 @@ public class MainApplication extends MultiDexApplication {
     public static final String ID_NEWS = "idNews";
     public static final String ID_USER = "idUser";
 
-    public static RealmController mRealmController;
-
 
     public static final String FONT = "fonts/fontawesome-webfont.ttf";
     //    public static final String EMAIL_LOVE_COUPON = "support@lovecoupon.com";
@@ -166,6 +162,7 @@ public class MainApplication extends MultiDexApplication {
         mInstances = this;
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        ActiveAndroid.initialize(this);
 //
 //        OkHttpClient httpClient = new OkHttpClient();
 //        httpClient.networkInterceptors().add(new Interceptor() {
@@ -201,15 +198,6 @@ public class MainApplication extends MultiDexApplication {
         apiService2 = retrofit2.create(LoveCouponAPI.class);
         apiService3 = retrofit3.create(LoveCouponAPI.class);
 
-        // setup realm database
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
-                .name(Realm.DEFAULT_REALM_NAME)
-                .schemaVersion(0)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.setDefaultConfiguration(realmConfiguration);
-
-        mRealmController = RealmController.with(this);
 
         sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -217,11 +205,6 @@ public class MainApplication extends MultiDexApplication {
 
         ImagesManager.getInstances(this);
 
-        Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
-                        .build());
     }
 
     public static SharedPreferences getPreferences() {
@@ -356,12 +339,4 @@ public class MainApplication extends MultiDexApplication {
         });
     }
 
-    @Override
-    public void onTerminate() {
-
-        if (Realm.getDefaultInstance() != null) {
-            Realm.getDefaultInstance().close();
-        }
-        super.onTerminate();
-    }
 }

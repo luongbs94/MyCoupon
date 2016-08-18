@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
@@ -19,13 +20,10 @@ import com.ln.model.CompanyOfCustomer;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
-import com.ln.model.NewsOfMore;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.customer.CustomerMainActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.mycoupon.shop.ShopMainActivity;
-import com.ln.realm.RealmController;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +36,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private final String TAG = getClass().getSimpleName();
     private LoveCouponAPI mCouponAPI;
-    private RealmController mRealmController;
     private int mStartNotification = 1;
 
     @Override
@@ -47,7 +44,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_first);
 
         mCouponAPI = MainApplication.getAPI();
-        mRealmController = RealmController.with(this);
 
         getCityOfAccount();
         getDataFromIntent();
@@ -134,7 +130,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                                    Response<List<CompanyOfCustomer>> response) {
 
                 if (response.body() != null) {
-                    mRealmController.addListCompanyCustomer(response.body());
+                    DatabaseManager.addListShopOfCustomer(response.body());
                     preLoadImageShopOfCustomer();
                     Log.d(TAG, "getCompanyOfCustomer + " + response.body().size());
                 } else {
@@ -144,7 +140,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<List<CompanyOfCustomer>> call, Throwable t) {
-                Logger.d("getCompanyOfCustomer + " + t.toString());
+                Log.d(TAG, "getCompanyOfCustomer + " + t.toString());
             }
         });
     }
@@ -156,8 +152,8 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-                    mRealmController.addListNewsOfCustomer(response.body());
-                    previousLoadImagesCustomer();
+                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS);
+                    preLoadImagesCustomer();
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 } else {
                     Log.d(TAG, "List NewsOfCustomer " + "null");
@@ -172,12 +168,13 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void getNewsMore(String id, String city) {
-        Call<List<NewsOfMore>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
-        newsMore.enqueue(new Callback<List<NewsOfMore>>() {
+        Call<List<NewsOfCustomer>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
+
+        newsMore.enqueue(new Callback<List<NewsOfCustomer>>() {
             @Override
-            public void onResponse(Call<List<NewsOfMore>> call, Response<List<NewsOfMore>> response) {
+            public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-                    mRealmController.addListNewsOfMore(response.body());
+                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE);
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
                     Log.d(TAG, " getNewsMore " + " null");
@@ -185,7 +182,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             }
 
             @Override
-            public void onFailure(Call<List<NewsOfMore>> call, Throwable t) {
+            public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
                 Log.d(TAG, "getNewsMore " + " onFailure " + t.toString());
             }
         });
@@ -194,7 +191,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
 
     /* ================ START SHOP ===========*/
-
     private void getCouponTemplateOfShop(String idCompany) {
 
         Call<List<CouponTemplate>> couponShop = mCouponAPI.getCouponTemplates("abc", idCompany);
@@ -203,7 +199,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<CouponTemplate>> call, Response<List<CouponTemplate>> response) {
                 if (response.body() != null) {
-                    mRealmController.addListCouponTemplate(response.body());
+                    DatabaseManager.addListCouponTemplate(response.body());
                     Log.d(TAG, "getCouponTemplateOfShop " + response.body().size());
                 } else {
                     Log.d(TAG, "getCouponTemplateOfShop " + "null");
@@ -224,7 +220,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
-                    mRealmController.addListNewsOfCompany(response.body());
+                    DatabaseManager.addListNewsOfCompany(response.body());
                     preLoadImageShop();
                     Log.d(TAG, "getNewsOfShop " + response.body().size());
                 } else {
@@ -326,9 +322,9 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void previousLoadImagesCustomer() {
+    private void preLoadImagesCustomer() {
         List<NewsOfCustomer> listNews = new ArrayList<>();
-        listNews.addAll(RealmController.with(MainApplication.getInstance()).getListNewsOfCustomer());
+        listNews.addAll(DatabaseManager.getListNewsOfCustomer(MainApplication.TYPE_NEWS));
         for (NewsOfCustomer news : listNews) {
             if (news.getLogo_link() != null && news.getLogo_link().contains("http")) {
                 Glide.with(MainApplication.getInstance())
@@ -352,7 +348,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void preLoadImageShop() {
         List<NewsOfCompany> listNews = new ArrayList<>();
-        listNews.addAll(RealmController.with(MainApplication.getInstance()).getListNewsOfCompany());
+        listNews.addAll(DatabaseManager.getListNewsOfCompany());
         for (NewsOfCompany news : listNews) {
             if (news.getImages_link() != null) {
                 String strImages = news.getImages_link();
@@ -368,16 +364,16 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void preLoadImageShopOfCustomer() {
-        List<CompanyOfCustomer> listShop = new ArrayList<>();
-        listShop.addAll(RealmController.with(MainApplication.getInstance()).getListCompanyCustomer());
-        for (CompanyOfCustomer company : listShop) {
-            if (company.getLogo_link() != null
-                    && company.getLogo_link().contains("http")) {
-                Glide.with(MainApplication.getInstance())
-                        .load(company.getLogo_link())
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .preload();
-            }
-        }
+//        List<CompanyOfCustomer> listShop = new ArrayList<>();
+//        listShop.addAll(RealmController.with(MainApplication.getInstance()).getListCompanyCustomer());
+//        for (CompanyOfCustomer company : listShop) {
+//            if (company.getLogo_link() != null
+//                    && company.getLogo_link().contains("http")) {
+//                Glide.with(MainApplication.getInstance())
+//                        .load(company.getLogo_link())
+//                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+//                        .preload();
+//            }
+//        }
     }
 }

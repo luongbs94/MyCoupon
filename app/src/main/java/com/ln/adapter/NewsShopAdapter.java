@@ -26,10 +26,10 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
-import com.ln.model.NewsOfCompanyLike;
 import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
@@ -52,10 +52,10 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
     private static final String TAG = "NewsShopAdapter";
     private Context mContext;
-    private List<NewsOfCompanyLike> mListNews;
+    private List<NewsOfCompany> mListNews;
     private ShareDialog mShareDialog;
 
-    public NewsShopAdapter(Context context, List<NewsOfCompanyLike> listNews, Fragment fragment) {
+    public NewsShopAdapter(Context context, List<NewsOfCompany> listNews, Fragment fragment) {
         mContext = context;
         mListNews = listNews;
         mShareDialog = new ShareDialog(fragment);
@@ -71,7 +71,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        NewsOfCompanyLike item = mListNews.get(position);
+        NewsOfCompany item = mListNews.get(position);
 
         String strCompany = MainApplication
                 .getPreferences()
@@ -255,7 +255,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
     private void onClickLikeNews(int position, ViewHolder holder) {
 
-        NewsOfCompanyLike item = mListNews.get(position);
+        NewsOfCompany item = mListNews.get(position);
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         final Company company = new Gson().fromJson(strCompany, Company.class);
 
@@ -265,20 +265,20 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
             item.setLike(false);
-            MainApplication.mRealmController.deleteShopLikeNewsByIdNews(item.getMessage_id());
+            DatabaseManager.deleteOptionNews(item.getMessage_id(), MainApplication.SHOP);
 
         } else {
             holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
             item.setLike(true);
-            MainApplication.mRealmController.addShopLikeNewsByIdNews(item.getMessage_id(), company.getCompany_id());
+            DatabaseManager.addOptionNews(item.getMessage_id(), company.getCompany_id(), MainApplication.SHOP);
         }
     }
 
     private void onClickShare(int position) {
 
-        NewsOfCompanyLike item = mListNews.get(position);
+        NewsOfCompany item = mListNews.get(position);
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         final Company company = new Gson().fromJson(strCompany, Company.class);
@@ -314,7 +314,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.body() == MainApplication.SUCCESS) {
                     getShowMessages(mContext.getString(R.string.delete_news_success));
-                    MainApplication.mRealmController.deleteNewsOfCompany(idNews);
+                    DatabaseManager.deleteNewsOfCompany(idNews);
                     mListNews.remove(positionNews);
                     notifyItemRemoved(positionNews);
                     Log.d("NewsShopAdapter", "Delete : News Success");

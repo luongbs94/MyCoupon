@@ -15,12 +15,12 @@ import com.google.gson.Gson;
 import com.ln.adapter.CouponShopAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.interfaces.RecyclerViewListener;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
 import com.ln.mycoupon.customer.CouponCompanyOfClientActivity;
-import com.ln.realm.RealmController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,6 @@ public class CouponFragment extends Fragment {
     private final String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mApiServices;
-    private RealmController mRealmController;
 
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout swipeContainer;
@@ -49,7 +48,6 @@ public class CouponFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
-        mRealmController = RealmController.with(MainApplication.getInstance());
     }
 
     @Override
@@ -99,7 +97,7 @@ public class CouponFragment extends Fragment {
     public void setListCompanyCustomer() {
 
         mListCompanyCustomer = new ArrayList<>();
-        mListCompanyCustomer.addAll(mRealmController.getListCompanyCustomer());
+        mListCompanyCustomer.addAll(DatabaseManager.getListShopOfCustomer());
         CouponShopAdapter adapter = new CouponShopAdapter(getActivity(), mListCompanyCustomer);
         mRecyclerView.setAdapter(adapter);
         Log.d(TAG, "setListCompanyCustomer " + mListCompanyCustomer.size());
@@ -120,7 +118,7 @@ public class CouponFragment extends Fragment {
                 public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
                     if (response.body() != null) {
 
-                        mRealmController.addListCompanyCustomer(response.body());
+                        DatabaseManager.addListShopOfCustomer(response.body());
                         setListCompanyCustomer();
                         swipeContainer.setRefreshing(false);
                         Log.d(TAG, "CompanyCustomer " + response.body().size());

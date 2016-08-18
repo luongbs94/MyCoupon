@@ -38,13 +38,12 @@ import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
+import com.ln.databases.DatabaseManager;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
-import com.ln.realm.RealmController;
-import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -67,7 +66,6 @@ public class ShopLoginActivity extends AppCompatActivity
     private final String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mCouponAPI;
-    private RealmController mRealmController;
 
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager mCallbackManager;
@@ -126,8 +124,6 @@ public class ShopLoginActivity extends AppCompatActivity
         mCallbackManager = CallbackManager.Factory.create();
 
         mCouponAPI = MainApplication.getAPI();
-        mRealmController = RealmController.with(this);
-
         try {
             Intent intent = getIntent();
             mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
@@ -409,7 +405,7 @@ public class ShopLoginActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
-                    mRealmController.addListNewsOfCompany(response.body());
+                    DatabaseManager.addListNewsOfCompany(response.body());
                     Log.d(TAG, "getNewsByCompanyId " + response.body().size());
                 } else {
                     Log.d(TAG, "getNewsByCompanyId " + "null");
@@ -432,7 +428,7 @@ public class ShopLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<CouponTemplate>> call,
                                    Response<List<CouponTemplate>> response) {
                 if (response.body() != null) {
-                    mRealmController.addListCouponTemplate(response.body());
+                    DatabaseManager.addListCouponTemplate(response.body());
 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
@@ -498,7 +494,7 @@ public class ShopLoginActivity extends AppCompatActivity
         protected Void doInBackground(Void... account) {
             try {
                 mTokenGoogle = GoogleAuthUtil.getToken(ShopLoginActivity.this, mEmail, mScope);
-                Logger.d(TAG, "Token" + mTokenGoogle);
+                Log.d(TAG, "Token" + mTokenGoogle);
                 isGoogle = true;
             } catch (GoogleAuthException fatalException) {
                 Log.d(TAG, fatalException.toString());

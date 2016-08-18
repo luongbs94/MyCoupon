@@ -3,28 +3,56 @@ package com.ln.model;
 
 import android.support.annotation.NonNull;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
-public class Coupon extends RealmObject implements Comparable<Coupon> {
+@Table(name = "Coupon")
+public class Coupon extends Model implements Comparable<Coupon> {
 
-    @PrimaryKey
+    @Column(name = "coupon_id", index = true)
     private String coupon_id;
+
+    @Column(name = "user_id")
     private String user_id;
+
+    @Column(name = "coupon_template_id")
     private String coupon_template_id;
+
+    @Column(name = "created_date")
     private long created_date;
+
+    @Column(name = "used_date")
     private long used_date;
+
+    @Column(name = "company_id")
     private String company_id;
+
+    @Column(name = "value")
     private String value;
+
+    @Column(name = "duration")
     private int duration;
-    private String code;
+
+    @Column(name = "user_name")
     private String user_name;
+
+    @Column(name = "user_social")
     private String user_social;
+
+    @Column(name = "user_image_link")
     private String user_image_link;
+
+    @Column(name = "content")
     private String content;
+
+
+    @Column(name = "companyOfCustomer", onDelete = Column.ForeignKeyAction.CASCADE)
+    private CompanyOfCustomer companyOfCustomer;
 
     public Coupon() {
     }
+
 
 
     public String getUser_id() {
@@ -108,18 +136,6 @@ public class Coupon extends RealmObject implements Comparable<Coupon> {
         this.used_date = used_date;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-//    public void setCoupon(String coupon_id, String user_id, String coupon_template_id,
-//                          Date created_date, String used_date, String company_id, String value, int duration, String code, String user_name, String user_social, String user_image_link) {
-
-
     public String getContent() {
         return content;
     }
@@ -128,30 +144,20 @@ public class Coupon extends RealmObject implements Comparable<Coupon> {
         this.content = content;
     }
 
-    public void setCoupon(String coupon_id, String user_id, String coupon_template_id,
-                          long used_date, String company_id, String value,
-                          int duration, String code, String user_name, String user_social, String user_image_link) {
-
-        this.coupon_id = coupon_id;
-        this.user_id = user_id;
-        this.coupon_template_id = coupon_template_id;
-//        this.created_date = created_date;
-        this.used_date = used_date;
-        this.company_id = company_id;
-        this.value = value;
-        this.duration = duration;
-        this.code = code;
-        this.user_name = user_name;
-        this.user_social = user_social;
-        this.user_image_link = user_image_link;
-    }
-
     public long getCreated_date() {
         return created_date;
     }
 
     public void setCreated_date(long created_date) {
         this.created_date = created_date;
+    }
+
+    public CompanyOfCustomer getCompanyOfCustomer() {
+        return companyOfCustomer;
+    }
+
+    public void setCompanyOfCustomer(CompanyOfCustomer companyOfCustomer) {
+        this.companyOfCustomer = companyOfCustomer;
     }
 
     @Override

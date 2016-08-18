@@ -30,12 +30,12 @@ import com.ln.adapter.SelectedImageAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
+import com.ln.databases.DatabaseManager;
 import com.ln.images.activities.ImagesCheckActivity;
 import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
 import com.ln.views.MaterialEditText;
-import com.orhanobut.logger.Logger;
 
 import org.parceler.Parcels;
 
@@ -140,7 +140,7 @@ public class AddMessageActivity extends AppCompatActivity
             mType = bundle.getInt(MainApplication.WHAT_ADD_MESSAGES);
             if (mType == MainApplication.WHAT_UPDATE_NEWS) {
                 String idNews = bundle.getString(MainApplication.DATA);
-                NewsOfCompany news = MainApplication.mRealmController.getNewsOfCompanyById(idNews);
+                NewsOfCompany news = DatabaseManager.getNewsOfCompanyById(idNews);
                 try {
                     mNewsOfCompany = new NewsOfCompany(news.getMessage_id(),
                             news.getContent(), news.getCompany_id(),
@@ -162,7 +162,7 @@ public class AddMessageActivity extends AppCompatActivity
                     }
 
                 } catch (NullPointerException e) {
-                    Logger.d(e.toString());
+                    Log.d(TAG, e.toString());
                 }
             }
         }
@@ -278,7 +278,7 @@ public class AddMessageActivity extends AppCompatActivity
                 public void onResponse(Call<Integer> call, Response<Integer> response) {
                     if (response.body() == MainApplication.SUCCESS) {
 
-                        MainApplication.mRealmController.addNewsOfCompany(news);
+                        DatabaseManager.addNewsOfCompany(news);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -314,7 +314,7 @@ public class AddMessageActivity extends AppCompatActivity
                 public void onResponse(Call<Integer> call, Response<Integer> response) {
                     if (response.body() == MainApplication.SUCCESS) {
 
-                        MainApplication.mRealmController.addNewsOfCompany(news);
+                        DatabaseManager.addNewsOfCompany(news);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {

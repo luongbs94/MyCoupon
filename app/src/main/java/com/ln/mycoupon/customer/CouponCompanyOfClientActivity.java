@@ -19,11 +19,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.ln.adapter.CouponTemplateClientAdapter;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.interfaces.RecyclerViewListener;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
-import com.ln.realm.RealmController;
 import com.ln.views.RecyclerViewHeader;
 import com.squareup.picasso.Picasso;
 
@@ -39,7 +39,6 @@ import retrofit2.Response;
 public class CouponCompanyOfClientActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getSimpleName();
-    private RealmController mRealmController;
     private CompanyOfCustomer mCompanyOfCustomer;
     private CouponTemplateClientAdapter adapter;
 
@@ -47,8 +46,6 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon_company_client);
-
-        mRealmController = MainApplication.mRealmController;
 
         initData();
         initViews();
@@ -58,7 +55,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String idCompany = bundle.getString(MainApplication.ID_COMPANY);
-        mCompanyOfCustomer = mRealmController.getCompanyOfCustomer(idCompany);
+        mCompanyOfCustomer = DatabaseManager.getShopOfCustomer(idCompany);
 
     }
 
@@ -146,7 +143,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.body() == MainApplication.SUCCESS) {
-                    MainApplication.mRealmController.deleteCoupon(id);
+                    DatabaseManager.deleteCouponById(id);
                     getShowMessages(getString(R.string.delete_coupon_success));
                     adapter.notifyDataSetChanged();
                 } else {

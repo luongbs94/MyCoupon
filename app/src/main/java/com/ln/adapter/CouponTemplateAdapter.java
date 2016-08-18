@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.mycoupon.R;
@@ -71,17 +72,19 @@ public class CouponTemplateAdapter
         if (item.getValue() != null) {
             holder.mTxtPriceCoupon.setText(item.getValue());
         }
-        holder.mTxtTimeCoupon
-                .setText(mContext.getString(
+        holder.mTxtTimeCoupon.setText(
+                mContext.getString(
                         R.string.time_coupon_template,
-                        item.getDuration() + ""));
+                        item.getDuration() + ""
+                )
+        );
 
         if (item.getContent() != null) {
             holder.mTxtDescription.setText(item.getContent());
         }
     }
 
-    private void deleteCouponTemplate(final String idCoupon) {
+    private void deleteCouponTemplate(final String idCoupon, final int position) {
         CouponTemplate coupon = new CouponTemplate(idCoupon);
 
         final String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
@@ -94,8 +97,8 @@ public class CouponTemplateAdapter
 
                 if (response.body() == MainApplication.SUCCESS) {
                     getShowMessages(mContext.getString(R.string.delete_coupon_success));
-                    MainApplication.mRealmController.deleteCouponTemplateById(idCoupon);
-                    notifyDataSetChanged();
+                    DatabaseManager.deleteCouponTemplate(idCoupon);
+                    notifyItemRemoved(position);
                 } else {
                     getShowMessages(mContext.getString(R.string.delete_coupon_fail));
                 }
@@ -193,7 +196,7 @@ public class CouponTemplateAdapter
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_delete:
-                        deleteCouponTemplate(itemCoupon.getCoupon_template_id());
+                        deleteCouponTemplate(itemCoupon.getCoupon_template_id(), position);
                         break;
                     case R.id.menu_qrCode:
                         onClickBtnQRCode(position);

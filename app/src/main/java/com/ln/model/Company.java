@@ -1,15 +1,12 @@
 package com.ln.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
 /**
- * Created by luongnguyen on 4/1/16.
+ * Created by nhahv on 4/1/16.
  * <></>
  */
-public class Company extends RealmObject {
 
-    @PrimaryKey
+public class Company {
+
     private String company_id;
     private String name;
     private String address;
@@ -22,7 +19,6 @@ public class Company extends RealmObject {
     private String user2;
     private String pass2;
     private String user2_admin;
-    //    private String ip;
     private String logo_link;
     private String city;
     private String country_name;

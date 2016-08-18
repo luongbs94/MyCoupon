@@ -31,14 +31,12 @@ import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
+import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOflUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.NewsOfCustomer;
-import com.ln.model.NewsOfMore;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
-import com.ln.realm.RealmController;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +55,6 @@ public class CustomerLoginActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
 
     private LoveCouponAPI mCouponAPI;
-    private RealmController mRealm;
     private int mStartNotification = 1;
 
 
@@ -68,7 +65,6 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         mCouponAPI = MainApplication.getAPI();
-        mRealm = MainApplication.mRealmController;
 
         getDataFromIntent();
         initViews();
@@ -80,7 +76,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             Intent intent = getIntent();
             mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
         } catch (NullPointerException e) {
-            Logger.d("Intent null");
+            Log.d(TAG, "Intent null");
         }
 
     }
@@ -265,7 +261,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                                    Response<List<CompanyOfCustomer>> response) {
                 if (response.body() != null) {
 //                    mRealmController.deleteListCompanyCustomer();
-                    mRealm.addListCompanyCustomer(response.body());
+                    DatabaseManager.addListShopOfCustomer(response.body());
                     Log.d(TAG, "getCompanyByUserId " + response.body().size());
 
                     writeSharePreferences(MainApplication.LOGIN_SHOP, false);
@@ -352,7 +348,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
                 if (response.body() != null) {
 //                    mRealm.deleteListNewsOfCustomer();
-                    mRealm.addListNewsOfCustomer(response.body());
+                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS);
                     loadImages();
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 }
@@ -366,13 +362,12 @@ public class CustomerLoginActivity extends AppCompatActivity
     }
 
     private void getNewsMore(String id, String city) {
-        Call<List<NewsOfMore>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
-        newsMore.enqueue(new Callback<List<NewsOfMore>>() {
+        Call<List<NewsOfCustomer>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
+        newsMore.enqueue(new Callback<List<NewsOfCustomer>>() {
             @Override
-            public void onResponse(Call<List<NewsOfMore>> call,
-                                   Response<List<NewsOfMore>> response) {
+            public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-                    mRealm.addListNewsOfMore(response.body());
+                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE);
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
                     Log.d(TAG, " getNewsMore " + " null");
@@ -380,15 +375,16 @@ public class CustomerLoginActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<List<NewsOfMore>> call, Throwable t) {
+            public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
                 Log.d(TAG, "getNewsMore " + " onFailure " + t.toString());
+
             }
         });
     }
 
     private void loadImages() {
         List<NewsOfCustomer> listNews = new ArrayList<>();
-        listNews.addAll(RealmController.with(MainApplication.getInstance()).getListNewsOfCustomer());
+        listNews.addAll(DatabaseManager.getListNewsOfCustomer(MainApplication.TYPE_NEWS));
         for (NewsOfCustomer news : listNews) {
 
             if (news.getLogo_link() != null) {

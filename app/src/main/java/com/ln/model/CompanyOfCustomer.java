@@ -1,40 +1,36 @@
 package com.ln.model;
 
-import java.util.List;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import java.util.List;
 
 /**
  * Created by luongnguyen on 4/8/16.
  * <></>
  */
-public class CompanyOfCustomer extends RealmObject {
+@Table(name = "CompanyOfCustomer")
+public class CompanyOfCustomer extends Model {
 
-    @PrimaryKey
+    @Column(name = "company_id", index = true)
     private String company_id;
+
+    @Column(name = "logo")
     private String logo;
+
+    @Column(name = "logo_link")
     private String logo_link;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "address")
     private String address;
-    private RealmList<Coupon> coupon;
+
+    private List<Coupon> coupon;
 
     public CompanyOfCustomer() {
-    }
-
-    public CompanyOfCustomer(String company_id, String logo,
-                             String logo_link, String name,
-                             String address, RealmList<Coupon> coupon) {
-//    public CompanyOfCustomer(String company_id, String logo,
-//                             String logo_link, String name,
-//                             String address) {
-        this.company_id = company_id;
-        this.logo = logo;
-        this.logo_link = logo_link;
-        this.name = name;
-        this.address = address;
-        this.coupon = coupon;
     }
 
     public String getCompany_id() {
@@ -78,21 +74,16 @@ public class CompanyOfCustomer extends RealmObject {
         this.logo_link = logo_link;
     }
 
-    public RealmList<Coupon> getCoupon() {
+    public List<Coupon> getCoupon() {
         return coupon;
     }
 
-    public void setCoupon(RealmList<Coupon> coupon) {
+    public void setCoupon(List<Coupon> coupon) {
         this.coupon = coupon;
     }
 
-    public void setCompanyCustomer(String company_id, String logo,
-                                   String logo_link, String name,
-                                   String address) {
-        this.company_id = company_id;
-        this.logo = logo;
-        this.logo_link = logo_link;
-        this.name = name;
-        this.address = address;
+
+    public List<Coupon> coupons() {
+        return getMany(Coupon.class, "CompanyOfCustomer");
     }
 }

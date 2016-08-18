@@ -1,16 +1,12 @@
 package com.ln.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
 /**
  * Created by Nhahv on 6/17/2016.
  * <></>
  */
 
-public class AccountOflUser extends RealmObject {
+public class AccountOflUser {
 
-    @PrimaryKey
     private String id;
     private String name;
     private String picture;

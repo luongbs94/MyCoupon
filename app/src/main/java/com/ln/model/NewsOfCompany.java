@@ -1,23 +1,43 @@
 package com.ln.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Created by Nhahv on 6/30/2016.
  * <></>
  */
-public class NewsOfCompany extends RealmObject {
+@Table(name = "NewsOfCompany")
+public class NewsOfCompany extends Model {
 
-    @PrimaryKey
+    @Column(name = "message_id", index = true)
     private String message_id;
+
+    @Column(name = "content")
     private String content;
+
+    @Column(name = "created_date")
     private long created_date;
+
+    @Column(name = "company_id")
     private String company_id;
+
+    @Column(name = "last_date")
     private long last_date;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "link")
     private String link;
+
+    @Column(name = "images_link")
     private String images_link;
+
+    @Column(name = "like")
+    private boolean like;
+
 
     public NewsOfCompany() {
     }
@@ -102,5 +122,14 @@ public class NewsOfCompany extends RealmObject {
 
     public long getLast_date() {
         return last_date;
+    }
+
+
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
     }
 }

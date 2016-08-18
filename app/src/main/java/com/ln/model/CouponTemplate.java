@@ -1,20 +1,33 @@
 package com.ln.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 /**
  * Created by Nhahv on 5/21/2016.
  * <></>
  */
-public class CouponTemplate extends RealmObject {
 
-    @PrimaryKey
+@Table(name = "CouponTemplate")
+public class CouponTemplate extends Model {
+
+    @Column(name = "coupon_template_id", index = true)
     private String coupon_template_id;
+
+    @Column(name = "content")
     private String content;
+
+    @Column(name = "created_date")
     private String created_date;
+
+    @Column(name = "company_id")
     private String company_id;
+
+    @Column(name = "value")
     private String value;
+
+    @Column(name = "duration")
     private int duration;
 
     public CouponTemplate() {

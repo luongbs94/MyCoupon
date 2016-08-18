@@ -18,17 +18,13 @@ import com.google.gson.Gson;
 import com.ln.adapter.NewsCustomerAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOflUser;
-import com.ln.model.Message;
 import com.ln.model.NewsOfCustomer;
-import com.ln.model.NewsOfMore;
+import com.ln.model.OptionNews;
 import com.ln.mycoupon.R;
-import com.ln.realm.DeleteNews;
-import com.ln.realm.LikeNews;
-import com.ln.realm.RealmController;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -44,7 +40,6 @@ public class NewsCustomerFragment extends Fragment {
     private final String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI apiService;
-    private RealmController mRealmController;
 
     private RecyclerView mRecyclerNews;
     private SwipeRefreshLayout mSwipeContainer;
@@ -66,7 +61,6 @@ public class NewsCustomerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         apiService = MainApplication.getAPI();
-        mRealmController = RealmController.with(this);
         account = new Gson()
                 .fromJson(MainApplication
                         .getPreferences()
@@ -115,33 +109,26 @@ public class NewsCustomerFragment extends Fragment {
 
     private void setListMessages() {
 
-        List<Message> listMessage = new ArrayList<>();
-        Log.d(TAG, mTypeNews + "");
-        if (mTypeNews == MainApplication.TYPE_NEWS) {
-            List<NewsOfCustomer> listNews = new ArrayList<>();
-            listNews.addAll( mRealmController.getListNewsOfCustomer());
-            for (NewsOfCustomer news : listNews) {
-                listMessage.add(new Message(news));
-            }
-        } else if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
-            List<NewsOfMore> mListNews = mRealmController.getListNewsOfMore();
-            for (NewsOfMore news : mListNews) {
-                listMessage.add(new Message(news));
-                Log.d(TAG, "setListMessages " + news.getLogo_link());
-                Log.d(TAG, "setListMessages " + news.getMessage_id());
-                Log.d(TAG, "setListMessages " + " ========================= ");
-            }
-        }
+        List<NewsOfCustomer> news = new ArrayList<>();
+        news.addAll(DatabaseManager.getListNewsOfCustomer(mTypeNews));
+//        else if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
+//                Log.d(TAG, "setListMessages " + news.getLogo_link());
+//                Log.d(TAG, "setListMessages " + news.getMessage_id());
+//                Log.d(TAG, "setListMessages " + " ========================= ");
+//            }
+//        }
 
 
-        List<LikeNews> listLike = new ArrayList<>();
-        listLike.addAll(mRealmController.getListLikeNews());
-        List<DeleteNews> listDeleteNews = mRealmController.getListDeleteNews();
+        List<OptionNews> listLike = new ArrayList<>();
+        listLike.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_LIKE, MainApplication.CUSTOMER));
+
+        List<OptionNews> listDeleteNews = new ArrayList<>();
+        listDeleteNews.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_DELETE, MainApplication.CUSTOMER));
 
 
-        for (LikeNews likeNews : listLike) {
+        for (OptionNews likeNews : listLike) {
 
-            for (Message item : listMessage) {
+            for (NewsOfCustomer item : news) {
                 if (item.getMessage_id().equals(likeNews.getIdNews())
                         && likeNews.getIdUser().equals(account.getId())) {
                     item.setLike(true);
@@ -150,23 +137,23 @@ public class NewsCustomerFragment extends Fragment {
         }
 
         //set delete news
-        for (DeleteNews deleteNews : listDeleteNews) {
-            for (Message item : listMessage) {
+        for (OptionNews deleteNews : listDeleteNews) {
+            for (NewsOfCustomer item : news) {
                 if (item.getMessage_id().equals(deleteNews.getIdNews())) {
                     item.setDelete(true);
                 }
             }
 
-            int size = listMessage.size() - 1;
+            int size = news.size() - 1;
 
             for (int i = size; i >= 0; i--) {
-                if (listMessage.get(i).isDelete()) {
-                    listMessage.remove(i);
+                if (news.get(i).isDelete()) {
+                    news.remove(i);
                 }
             }
         }
 
-        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listMessage, this);
+        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), news, this);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);
 
@@ -181,7 +168,7 @@ public class NewsCustomerFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                     if (response.body() != null) {
-                        mRealmController.addListNewsOfCustomer(response.body());
+                        DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS);
                         setListMessages();
                         mSwipeContainer.setRefreshing(false);
                         Log.d(TAG, "getNewsOfCustomer " + response.body().size());
@@ -201,12 +188,12 @@ public class NewsCustomerFragment extends Fragment {
             String city = MainApplication
                     .getPreferences()
                     .getString(MainApplication.CITY_OF_USER, "");
-            Call<List<NewsOfMore>> listNewsMore = apiService.getNewsMoreByUserId(account.getId(), city);
-            listNewsMore.enqueue(new Callback<List<NewsOfMore>>() {
+            Call<List<NewsOfCustomer>> newsMore = apiService.getNewsMoreByUserId(account.getId(), city);
+            newsMore.enqueue(new Callback<List<NewsOfCustomer>>() {
                 @Override
-                public void onResponse(Call<List<NewsOfMore>> call, Response<List<NewsOfMore>> response) {
+                public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                     if (response.body() != null) {
-                        mRealmController.addListNewsOfMore(response.body());
+                        DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE);
                         setListMessages();
                         mSwipeContainer.setRefreshing(false);
                         Log.d(TAG, "getNewsOfCustomer " + response.body().size());
@@ -216,14 +203,12 @@ public class NewsCustomerFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<List<NewsOfMore>> call, Throwable t) {
+                public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
                     Log.d(TAG, "getNewsOfCustomer onFailure");
                     mSwipeContainer.setRefreshing(false);
                 }
             });
         }
-
-
     }
 
     @Override
@@ -250,43 +235,39 @@ public class NewsCustomerFragment extends Fragment {
 
     private void getNewsLike() {
 
-        List<LikeNews> listLikeNews = mRealmController.getListLikeNews();
-        List<NewsOfCustomer> listNews = mRealmController.getListNewsOfCustomer();
-        List<NewsOfMore> listNewsOfMores = mRealmController.getListNewsOfMore();
-        List<Message> listMessage = new ArrayList<>();
-        List<DeleteNews> listDeleteNews = mRealmController.getListDeleteNews();
+        List<OptionNews> listLike = new ArrayList<>();
+        listLike.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_LIKE, MainApplication.CUSTOMER));
 
-        for (LikeNews likeNews : listLikeNews) {
-            for (NewsOfCustomer news : listNews) {
-                if (likeNews.getIdNews().equals(news.getMessage_id())) {
-                    listMessage.add(new Message(news, true));
-                }
-            }
+        List<OptionNews> listDeleteNews = new ArrayList<>();
+        listDeleteNews.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_DELETE, MainApplication.CUSTOMER));
 
-            for (NewsOfMore newsOfMore : listNewsOfMores) {
-                if (likeNews.getIdNews().equals(newsOfMore.getMessage_id())) {
-                    listMessage.add(new Message(newsOfMore, true));
+        List<NewsOfCustomer> listNews = new ArrayList<>();
+        listNews.addAll(DatabaseManager.getListNewsOfCustomer(mTypeNews));
+
+        for (OptionNews likeNews : listLike) {
+            for (NewsOfCustomer item : listNews) {
+                if (likeNews.getIdNews().equals(item.getMessage_id())) {
+                    item.setLike(true);
                 }
             }
         }
         //set delete news
-        for (DeleteNews deleteNews : listDeleteNews) {
-            for (Message item : listMessage) {
+        for (OptionNews deleteNews : listDeleteNews) {
+            for (NewsOfCustomer item : listNews) {
                 if (item.getMessage_id().equals(deleteNews.getIdNews())) {
                     item.setDelete(true);
                 }
             }
 
-            int size = listMessage.size() - 1;
+            int size = listNews.size() - 1;
 
             for (int i = size; i >= 0; i--) {
-                if (listMessage.get(i).isDelete()) {
-                    listMessage.remove(i);
+                if (listNews.get(i).isDelete()) {
+                    listNews.remove(i);
                 }
             }
         }
-        Collections.sort(listMessage);
-        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listMessage, this);
+        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listNews, this);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);
     }

@@ -34,13 +34,13 @@ import com.ln.model.AccountOflUser;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
-import com.orhanobut.logger.Logger;
 
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static final int NETWORK = 1000;
+    private final String TAG = getClass().getSimpleName();
     private static String sTitle;
 
     private FloatingActionButton mFabButton;
@@ -142,7 +142,7 @@ public class CustomerMainActivity extends AppCompatActivity
             Intent intent = getIntent();
             mStartNotification = intent.getIntExtra(MainApplication.PUSH_NOTIFICATION, 1);
         } catch (NullPointerException e) {
-            Logger.d("intent null " + e.toString());
+            Log.d(TAG, "intent null " + e.toString());
         }
     }
 

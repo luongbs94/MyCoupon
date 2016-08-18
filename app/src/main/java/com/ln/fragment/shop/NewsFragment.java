@@ -14,15 +14,13 @@ import com.google.gson.Gson;
 import com.ln.adapter.NewsShopAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
-import com.ln.model.NewsOfCompanyLike;
+import com.ln.model.OptionNews;
 import com.ln.mycoupon.R;
-import com.ln.realm.RealmController;
-import com.ln.realm.ShopLikeNews;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,10 +36,7 @@ public class NewsFragment extends Fragment {
     private final String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mApiServices;
-    private RealmController mRealmController;
-
     private SwipeRefreshLayout swipeContainer;
-
     private RecyclerView mRecNews;
     private Company mCompany;
 
@@ -52,7 +47,6 @@ public class NewsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
-        mRealmController = MainApplication.mRealmController;
         String strCompany = MainApplication
                 .getPreferences()
                 .getString(MainApplication.COMPANY_SHOP, "");
@@ -91,37 +85,32 @@ public class NewsFragment extends Fragment {
 
     public void setNewsOfCompany() {
 
-        List<NewsOfCompany> mListNewsOfCompany = new ArrayList<>();
-        mListNewsOfCompany.addAll(mRealmController.getListNewsOfCompany());
+        List<NewsOfCompany> news = new ArrayList<>();
+        if (DatabaseManager.getListNewsOfCompany() != null) {
+            news.addAll(DatabaseManager.getListNewsOfCompany());
+        }
 
         Log.d(TAG, "======================");
 
-        for (NewsOfCompany item : mListNewsOfCompany) {
+        for (NewsOfCompany item : news) {
             Log.d(TAG, item.getCreated_date() + "");
         }
 
-        Log.d(TAG, "======================");
-        List<NewsOfCompanyLike> listNews = new ArrayList<>();
 
-        for (NewsOfCompany newsOfCompany : mListNewsOfCompany) {
-            listNews.add(new NewsOfCompanyLike(newsOfCompany));
-        }
+        List<OptionNews> listLike = new ArrayList<>();
+        listLike.addAll(DatabaseManager.getListOptionNews(MainApplication.SHOP));
 
-        List<ShopLikeNews> listLike = new ArrayList<>();
-        listLike.addAll(mRealmController.getListShopLikeNews());
-
-        for (ShopLikeNews likeNews : listLike) {
-            for (NewsOfCompanyLike news : listNews) {
-                if (news.getMessage_id().equals(likeNews.getIdNews())
-                        && likeNews.getIdCompany().equals(mCompany.getCompany_id())) {
-                    news.setLike(true);
+        for (OptionNews likeNews : listLike) {
+            for (NewsOfCompany item : news) {
+                if (item.getMessage_id().equals(likeNews.getIdNews())
+                        && likeNews.getIdUser().equals(mCompany.getCompany_id())) {
+                    item.setLike(true);
                 }
             }
         }
-        Collections.sort(listNews);
-        NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), listNews, this);
+        NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), news, this);
         mRecNews.setAdapter(adapter);
-        Log.d(TAG, "Size : " + mListNewsOfCompany.size());
+        Log.d(TAG, "Size : " + news.size());
     }
 
     private void getNewsByCompanyId() {
@@ -137,7 +126,7 @@ public class NewsFragment extends Fragment {
                     if (response.body() != null) {
 
 //                        mRealmController.deleteListNewsOfCompany();
-                        mRealmController.addListNewsOfCompany(response.body());
+                        DatabaseManager.addListNewsOfCompany(response.body());
                         setNewsOfCompany();
                         Log.d(TAG, "getNewsByCompanyId " + response.body().size());
                         swipeContainer.setRefreshing(false);

@@ -21,9 +21,10 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.images.models.LocalMedia;
 import com.ln.model.AccountOflUser;
-import com.ln.model.Message;
+import com.ln.model.NewsOfCustomer;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
@@ -41,12 +42,12 @@ import java.util.Locale;
 
 public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapter.ViewHolder> {
 
-    private List<Message> mListNews;
+    private List<NewsOfCustomer> mListNews;
     private Context mContext;
     private ShareDialog mShareDialog;
     private int mType;
 
-    public NewsCustomerAdapter(Context context, List<Message> listNews, Fragment fragment) {
+    public NewsCustomerAdapter(Context context, List<NewsOfCustomer> listNews, Fragment fragment) {
         mContext = context;
         mListNews = listNews;
         mShareDialog = new ShareDialog(fragment);
@@ -63,7 +64,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final Message item = mListNews.get(position);
+        final NewsOfCustomer item = mListNews.get(position);
 
         if (item.getLogo_link() != null) {
 //            Picasso.with(mContext)
@@ -201,31 +202,35 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
     private void onClickLikeNews(int position, ViewHolder holder) {
 
-        Message item = mListNews.get(position);
+        NewsOfCustomer item = mListNews.get(position);
         String strAccount = MainApplication.getPreferences()
                 .getString(MainApplication.ACCOUNT_CUSTOMER, "");
         final String idUser = new Gson()
                 .fromJson(strAccount, AccountOflUser.class)
                 .getId();
 
+        int type = MainApplication.NEW_LIKE;
+        int typeShop = MainApplication.CUSTOMER;
+
+
         if (item.isLike()) {
             holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.icon_heart));
             item.setLike(false);
-            MainApplication.mRealmController.deleteLikeNewsCustomer(item.getMessage_id());
+            DatabaseManager.deleteOptionNews(item.getMessage_id(), type, typeShop);
         } else {
             holder.mImgLike.setTextColor(mContext.getResources().getColor(R.color.heart_color));
             holder.mImageBookmarks.setText(mContext.getString(R.string.ic_start_like));
             holder.mImageBookmarks.setTextColor(mContext.getResources().getColor(R.color.heart_color));
             item.setLike(true);
-            MainApplication.mRealmController.addLikeNewsCustomer(item.getMessage_id(), idUser);
+            DatabaseManager.addOptionNews(item.getMessage_id(), idUser, type, typeShop);
         }
     }
 
     private void onClickShareNews(int position) {
 
-        Message item = mListNews.get(position);
+        NewsOfCustomer item = mListNews.get(position);
         Uri uriLink = null;
         if (item.getLink() != null) {
             uriLink = Uri.parse(item.getLink());
@@ -244,7 +249,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
 
     private void onClickDeleteNews(final int position, final ViewHolder holder) {
 
-        final Message item = mListNews.get(position);
+        final NewsOfCustomer item = mListNews.get(position);
 
         String strAccount = MainApplication.getPreferences()
                 .getString(MainApplication.ACCOUNT_CUSTOMER, "");
@@ -260,7 +265,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        MainApplication.mRealmController.addDeleteNewsCustomer(item.getMessage_id(), idUser);
+                        DatabaseManager.addOptionNews(item.getMessage_id(), idUser, MainApplication.NEW_DELETE, MainApplication.CUSTOMER);
                         mListNews.remove(holder.getAdapterPosition());
                         notifyItemRemoved(position);
                     }

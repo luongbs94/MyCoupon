@@ -12,7 +12,6 @@ import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
-import com.ln.model.NewsOfMore;
 import com.ln.model.User;
 
 import java.util.List;
@@ -136,8 +135,8 @@ public interface LoveCouponAPI {
     Call<CityOfUser> getCityOfUser2();
 
     @GET("/get_news_more_by_user_id")
-    Call<List<NewsOfMore>> getNewsMoreByUserId(@Query("user_id") String user_id,
-                                               @Query("city") String city);
+    Call<List<NewsOfCustomer>> getNewsMoreByUserId(@Query("user_id") String user_id,
+                                                   @Query("city") String city);
 
     @POST("/updateMessage")
     Call<Integer> updateMessages(

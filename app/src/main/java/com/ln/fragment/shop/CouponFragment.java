@@ -16,10 +16,10 @@ import com.google.gson.Gson;
 import com.ln.adapter.CouponTemplateAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.mycoupon.R;
-import com.ln.realm.RealmController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +28,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by luongnguyen on 4/6/16.
- * <></>
- */
 public class CouponFragment extends Fragment {
 
     private String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mApiServices;
-    private RealmController mRealmController;
     private SwipeRefreshLayout swipeContainer;
     private RecyclerView mRecCoupon;
     private Company mCompany;
@@ -47,7 +42,6 @@ public class CouponFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApiServices = MainApplication.getAPI();
-        mRealmController = MainApplication.mRealmController;
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         mCompany = new Gson().fromJson(strCompany, Company.class);
     }
@@ -96,7 +90,7 @@ public class CouponFragment extends Fragment {
     public void setCouponTemplate() {
 
         List<CouponTemplate> mListCoupon = new ArrayList<>();
-        mListCoupon.addAll(mRealmController.getListCouponTemplate());
+        mListCoupon.addAll(DatabaseManager.getListCouponTemplate());
         CouponTemplateAdapter adapter = new CouponTemplateAdapter(getActivity(), mListCoupon);
         mRecCoupon.setAdapter(adapter);
         swipeContainer.setRefreshing(false);
@@ -113,7 +107,7 @@ public class CouponFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<CouponTemplate>> call, Response<List<CouponTemplate>> response) {
                     if (response.body() != null) {
-                        mRealmController.addListCouponTemplate(response.body());
+                        DatabaseManager.addListCouponTemplate(response.body());
                         setCouponTemplate();
                         swipeContainer.setRefreshing(false);
                         Log.d(TAG, "getCouponTemplate " + response.body().size());
