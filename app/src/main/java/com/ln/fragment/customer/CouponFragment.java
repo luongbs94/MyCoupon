@@ -29,16 +29,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by luongnguyen on 4/8/16.
- * <></>
- */
 public class CouponFragment extends Fragment {
 
     private final String TAG = getClass().getSimpleName();
-
     private LoveCouponAPI mApiServices;
-
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout swipeContainer;
     private List<CompanyOfCustomer> mListCompanyCustomer = new ArrayList<>();
@@ -96,7 +90,7 @@ public class CouponFragment extends Fragment {
 
     public void setListCompanyCustomer() {
 
-        mListCompanyCustomer = new ArrayList<>();
+        mListCompanyCustomer.clear();
         mListCompanyCustomer.addAll(DatabaseManager.getListShopOfCustomer());
         CouponShopAdapter adapter = new CouponShopAdapter(getActivity(), mListCompanyCustomer);
         mRecyclerView.setAdapter(adapter);
@@ -105,34 +99,30 @@ public class CouponFragment extends Fragment {
 
     private void getCompanyByUserId() {
 
-        AccountOflUser account = new Gson().fromJson(
-                MainApplication.getPreferences()
-                        .getString(MainApplication
-                                .ACCOUNT_CUSTOMER, ""),
+        AccountOflUser account = new Gson().fromJson(MainApplication.getPreferences()
+                        .getString(MainApplication.ACCOUNT_CUSTOMER, ""),
                 AccountOflUser.class);
 
-        if (account != null) {
-            Call<List<CompanyOfCustomer>> call3 = mApiServices.getCompaniesByUserId(account.getId());
-            call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
-                @Override
-                public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
-                    if (response.body() != null) {
+        Call<List<CompanyOfCustomer>> call3 = mApiServices.getCompaniesByUserId(account.getId());
+        call3.enqueue(new Callback<List<CompanyOfCustomer>>() {
+            @Override
+            public void onResponse(Call<List<CompanyOfCustomer>> call, Response<List<CompanyOfCustomer>> response) {
+                if (response.body() != null) {
 
-                        DatabaseManager.addListShopOfCustomer(response.body());
-                        setListCompanyCustomer();
-                        swipeContainer.setRefreshing(false);
-                        Log.d(TAG, "CompanyCustomer " + response.body().size());
-                    } else {
-                        Log.d(TAG, "CompanyCustomer " + "null");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<CompanyOfCustomer>> call, Throwable t) {
-                    Log.d(TAG, "CompanyCustomer " + t.toString());
+                    DatabaseManager.addListShopOfCustomer(response.body());
+                    setListCompanyCustomer();
                     swipeContainer.setRefreshing(false);
+                    Log.d(TAG, "CompanyCustomer " + response.body().size());
+                } else {
+                    Log.d(TAG, "CompanyCustomer " + "null");
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onFailure(Call<List<CompanyOfCustomer>> call, Throwable t) {
+                Log.d(TAG, "CompanyCustomer " + t.toString());
+                swipeContainer.setRefreshing(false);
+            }
+        });
     }
 }

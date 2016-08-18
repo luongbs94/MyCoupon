@@ -111,13 +111,6 @@ public class NewsCustomerFragment extends Fragment {
 
         List<NewsOfCustomer> news = new ArrayList<>();
         news.addAll(DatabaseManager.getListNewsOfCustomer(mTypeNews));
-//        else if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
-//                Log.d(TAG, "setListMessages " + news.getLogo_link());
-//                Log.d(TAG, "setListMessages " + news.getMessage_id());
-//                Log.d(TAG, "setListMessages " + " ========================= ");
-//            }
-//        }
-
 
         List<OptionNews> listLike = new ArrayList<>();
         listLike.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_LIKE, MainApplication.CUSTOMER));

@@ -31,7 +31,7 @@
             android:value="MyCoupon.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="10" />
+            android:value="11" />
 
         <meta-data
             android:name="AA_MODELS"
@@ -43,6 +43,9 @@
             com.ln.model.OptionNews,
             com.ln.model.NewsOfCustomer" />
 
+        <meta-data
+            android:name="AA_SERIALIZERS"
+            android:value="com.ln.model.ByteImages" />
         <!-- ======================= START ACTIVITY OF APP =============== -->
         <activity
             android:name=".FirstActivity"

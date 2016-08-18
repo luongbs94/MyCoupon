@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,7 @@ import retrofit2.Response;
 public class CouponTemplateAdapter
         extends RecyclerView.Adapter<CouponTemplateAdapter.ViewHolder> {
 
+    private final String TAG = getClass().getSimpleName();
     private List<CouponTemplate> mListCoupon;
     private Context mContext;
 
@@ -62,7 +64,8 @@ public class CouponTemplateAdapter
 
         if (company != null && company.getLogo() != null) {
             holder.mTxtNameCoupon.setText(company.getName());
-            Glide.with(mContext).load(MainApplication.convertToBytes(company.getLogo()))
+            byte[] bytes = MainApplication.convertToBytes(company.getLogo());
+            Glide.with(mContext).load(bytes)
                     .asBitmap()
                     .placeholder(R.drawable.ic_logo_blank)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -90,6 +93,7 @@ public class CouponTemplateAdapter
         final String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company mCompany = new Gson().fromJson(strCompany, Company.class);
 
+        Log.d(TAG, "idnews: " + idCoupon + " - token: " + mCompany.getWeb_token());
         Call<Integer> delete = MainApplication.getAPI().deleteCouponTemplate(mCompany.getWeb_token(), coupon);
         delete.enqueue(new Callback<Integer>() {
             @Override

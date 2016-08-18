@@ -44,10 +44,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by Nhahv on 5/21/2016.
- * adapter connect news fragments
- */
 public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHolder> {
 
     private static final String TAG = "NewsShopAdapter";
@@ -232,22 +228,14 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         final String idNewsOfCompany = mListNews.get(position).getMessage_id();
         new MaterialDialog
                 .Builder(mContext)
-//                .content(R.string.delete_news)
                 .icon(mContext.getResources().getDrawable(R.drawable.ic_delete_black_24px))
                 .title(R.string.delete_news)
                 .positiveText(R.string.agree)
                 .positiveColor(mContext.getResources().getColor(R.color.title_bg))
-                .negativeColor(mContext.getResources().getColor(R.color.title_bg))
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         deleteNewsOfCompany(idNewsOfCompany, position);
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
                     }
                 })
                 .show();

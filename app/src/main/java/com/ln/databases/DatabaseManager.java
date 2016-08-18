@@ -1,8 +1,11 @@
 package com.ln.databases;
 
+import android.util.Log;
+
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
@@ -221,6 +224,15 @@ public class DatabaseManager {
 
         ActiveAndroid.beginTransaction();
         try {
+            if (shopOfCustomer.getLogo() != null) {
+
+                byte[] bytes = MainApplication.convertToBytes(shopOfCustomer.getLogo());
+                for (byte b : bytes) {
+                    Log.d("LogWord", String.valueOf(((char) b)));
+                }
+            }
+
+
             shopOfCustomer.save();
 
             List<Coupon> coupons = shopOfCustomer.getCoupon();

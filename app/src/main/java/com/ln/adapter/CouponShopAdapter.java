@@ -16,10 +16,6 @@ import com.ln.mycoupon.R;
 
 import java.util.List;
 
-/**
- * Created by luongnguyen on 6/7/16.
- * <></>
- */
 public class CouponShopAdapter extends RecyclerView.Adapter<CouponShopAdapter.ViewHolder> {
 
     private List<CompanyOfCustomer> mListCompanyOfCustomer;
@@ -41,21 +37,22 @@ public class CouponShopAdapter extends RecyclerView.Adapter<CouponShopAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         CompanyOfCustomer item = mListCompanyOfCustomer.get(position);
-        if (item != null) {
-            if (item.getName() != null) {
-                holder.companyName.setText(item.getName());
-            }
-            if (item.getAddress() != null) {
-                holder.companyAddress.setText(item.getAddress());
-            }
-
-            if (item.getLogo() != null) {
-                Glide.with(mContext)
-                        .load(MainApplication.convertToBytes(item.getLogo()))
-                        .asBitmap()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(holder.mImgLogo);
-            }
+        if (item == null) {
+            return;
+        }
+        if (item.getLogo() != null) {
+            byte[] bytes = MainApplication.convertToBytes(item.getLogo());
+            Glide.with(mContext).load(bytes)
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_logo_blank)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.mImgLogo);
+        }
+        if (item.getName() != null) {
+            holder.companyName.setText(item.getName());
+        }
+        if (item.getAddress() != null) {
+            holder.companyAddress.setText(item.getAddress());
         }
     }
 

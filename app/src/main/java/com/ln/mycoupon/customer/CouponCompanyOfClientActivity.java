@@ -131,7 +131,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
     }
 
     private void deleteCoupon(int position) {
-        final String id = mCompanyOfCustomer.getCoupon().get(position).getCoupon_id();
+        final String id = mCompanyOfCustomer.coupons().get(position).getCoupon_id();
         Coupon coupon = new Coupon();
         coupon.setCoupon_id(id);
 

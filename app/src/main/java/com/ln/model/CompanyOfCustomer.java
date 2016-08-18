@@ -28,6 +28,7 @@ public class CompanyOfCustomer extends Model {
     @Column(name = "address")
     private String address;
 
+
     private List<Coupon> coupon;
 
     public CompanyOfCustomer() {
@@ -70,18 +71,10 @@ public class CompanyOfCustomer extends Model {
         return logo_link;
     }
 
-    public void setLogo_link(String logo_link) {
-        this.logo_link = logo_link;
-    }
 
     public List<Coupon> getCoupon() {
         return coupon;
     }
-
-    public void setCoupon(List<Coupon> coupon) {
-        this.coupon = coupon;
-    }
-
 
     public List<Coupon> coupons() {
         return getMany(Coupon.class, "CompanyOfCustomer");

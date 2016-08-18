@@ -30,10 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by luongnguyen on 4/1/16.
- * <></>
- */
+
 public class MainApplication extends MultiDexApplication {
 
     public static final String POSITION = "POSITION";
@@ -67,12 +64,10 @@ public class MainApplication extends MultiDexApplication {
     public static final int START_QRCODE = 111;
     public static final String CONTENT_COUPON = "CONTENT_COUPON";
     public static final long TIME_SLEEP_SETTING = 400;
-    public static final String CROP_IMAGES = "CROP_IMAGES";
     public static final String LINK_IMAGES = "LINK_IMAGES";
     public static final int TYPE_NEWS = 111;
     public static final int TYPE_NEWS_MORE = 222;
     public static final int WIDTH_IMAGES_NEWS = 450;
-    public static final String IMAGE_ADD_NEWS = "IMAGE_ADD_NEWS";
     public static final String WHAT_ADD_MESSAGES = "WHAT_ADD_MESSAGES";
     public static final int WHAT_SHOP_MAIN_ADD_NEWS = 211;
     public static final int WHAT_UPDATE_NEWS = 212;
@@ -96,18 +91,13 @@ public class MainApplication extends MultiDexApplication {
     private static LoveCouponAPI apiService3;
 
 
-    public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
-
-    public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String PUSH_NOTIFICATION = "pushNotification";
     public static final String DEVICE_TOKEN = "deviceToken";
     public static final String BOOL_ADD_TOKEN = "addToken";
     public static final String SHARED_PREFERENCE = "SHARED_PREFERENCE";
     public static final String LOGIN_CLIENT = "loginclient";
 
-    public static final String CLIENT_DATA = "client_data";
     public static final String LOGIN_SHOP = "loginshop";
-    public static final String SHOP_DATA = "shop_data";
     private static SharedPreferences sharedPreferences;
 
 
@@ -256,7 +246,6 @@ public class MainApplication extends MultiDexApplication {
     }
 
     public static byte[] convertToByte(String path) {
-
         return Base64.decode(path, Base64.NO_WRAP);
     }
 

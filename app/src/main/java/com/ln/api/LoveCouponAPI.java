@@ -63,7 +63,7 @@ public interface LoveCouponAPI {
     @POST("/deleteCouponTemplate")
     Call<Integer> deleteCouponTemplate(
             @Header("Authorization") String token,
-            @Body CouponTemplate template);
+            @Body CouponTemplate idTemplate);
 
     @POST("/addMessage")
     Call<Integer> addMessage(
@@ -126,7 +126,7 @@ public interface LoveCouponAPI {
     @POST("/deleteMessage")
     Call<Integer> deleteMessage(
             @Header("Authorization") String token,
-            @Body NewsOfCompany newsOfCompany);
+            @Body NewsOfCompany idNews);
 
     @GET("/json")
     Call<CityOfUser> getCityOfUser();
