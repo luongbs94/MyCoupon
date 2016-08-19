@@ -2,6 +2,7 @@ package com.ln.mycoupon;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -12,18 +13,18 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
-import com.ln.model.AccountOflUser;
+import com.ln.model.AccountOfUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.until.UntilCoupon;
 
 import java.util.List;
 
 import eu.livotov.labs.android.camview.ScannerLiveView;
-import eu.livotov.labs.android.camview.scanner.decoder.zxing.ZXDecoder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,15 +33,16 @@ import retrofit2.Response;
  * Created by luongnguyen on 4/13/16.
  * <></>
  */
-public class QRCodeActivity extends AppCompatActivity {
+public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
 
     private final String TAG = getClass().getSimpleName();
 
 
     private ScannerLiveView mQRCodeReaderView;
+    private QRCodeReaderView qrCodeReaderView;
 
     private LoveCouponAPI apiService;
-    private AccountOflUser mAccountOflUser;
+    private AccountOfUser mAccountOflUser;
     private boolean isCamera;
 
     @Override
@@ -51,7 +53,7 @@ public class QRCodeActivity extends AppCompatActivity {
         apiService = MainApplication.getAPI();
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
-        mAccountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
+        mAccountOflUser = new Gson().fromJson(strCompany, AccountOfUser.class);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -60,7 +62,7 @@ public class QRCodeActivity extends AppCompatActivity {
         mQRCodeReaderView.setScannerViewEventListener(new ScannerLiveView.ScannerViewEventListener() {
             @Override
             public void onScannerStarted(ScannerLiveView scanner) {
-                Toast.makeText(QRCodeActivity.this, "Scanner Started", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(QRCodeActivity.this, "Scanner Started", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -76,14 +78,28 @@ public class QRCodeActivity extends AppCompatActivity {
             @Override
             public void onCodeScanned(String data) {
 
-                Log.d(TAG, "onCodeScanned : " + data);
-                if (!isCamera) {
-                    isCamera = true;
-                    mQRCodeReaderView.stopScanner();
-                    updateCoupon(data);
-                }
+//                Log.d(TAG, "onCodeScanned : " + data);
+//                if (!isCamera) {
+//                    isCamera = true;
+//                    mQRCodeReaderView.stopScanner();
+//                    updateCoupon(data);
+//                }
             }
         });
+
+
+        qrCodeReaderView = (QRCodeReaderView) findViewById(R.id.qr_code);
+        qrCodeReaderView.setOnQRCodeReadListener(this);
+
+        // Use this function to enable/disable decoding
+        qrCodeReaderView.setQRDecodingEnabled(true);
+
+        // Use this function to change the autofocus interval (default is 5 secs)
+        qrCodeReaderView.setAutofocusInterval(2000L);
+
+        // Use this function to enable/disable Torch
+        qrCodeReaderView.setTorchEnabled(true);
+
 
     }
 
@@ -91,17 +107,21 @@ public class QRCodeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ZXDecoder decoder = new ZXDecoder();
-        decoder.setScanAreaPercent(0.5);
-        mQRCodeReaderView.setDecoder(decoder);
-        mQRCodeReaderView.startScanner();
+//        ZXDecoder decoder = new ZXDecoder();
+//        decoder.setScanAreaPercent(0.5);
+//        mQRCodeReaderView.setDecoder(decoder);
+//        mQRCodeReaderView.startScanner();
         //     mQRCodeReaderView.getCameraManager().startPreview();
+
+        qrCodeReaderView.startCamera();
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mQRCodeReaderView.stopScanner();
+//        mQRCodeReaderView.stopScanner();
+        qrCodeReaderView.stopCamera();
     }
 
 
@@ -126,11 +146,9 @@ public class QRCodeActivity extends AppCompatActivity {
         coupon.setUser_id(mAccountOflUser.getId());
         coupon.setUser_image_link(mAccountOflUser.getPicture());
         coupon.setUser_name(mAccountOflUser.getName());
-
+        coupon.setUser_social(MainApplication.GOOGLE);
         if (mAccountOflUser.getPicture().contains(MainApplication.FACEBOOK)) {
             coupon.setUser_social(MainApplication.FACEBOOK);
-        } else {
-            coupon.setUser_social(MainApplication.GOOGLE);
         }
         String city = MainApplication
                 .getSharePrefer()
@@ -172,13 +190,12 @@ public class QRCodeActivity extends AppCompatActivity {
                                             isCamera = false;
                                             mQRCodeReaderView.startScanner();
                                         }
-                                    }, 1000);
+                                    }, 1500);
 
                                     mQRCodeReaderView.startScanner();
                                 }
                             })
                             .show();
-
 
                     Log.d(TAG, "CompanyOfCustomer " + response.body());
                 } else {
@@ -202,5 +219,16 @@ public class QRCodeActivity extends AppCompatActivity {
                 Log.d(TAG, "CompanyOfCustomer  onFailure " + t.toString());
             }
         });
+    }
+
+
+    @Override
+    public void onQRCodeRead(String data, PointF[] points) {
+        Log.d(TAG, "onCodeScanned : " + data);
+        if (!isCamera) {
+            isCamera = true;
+            mQRCodeReaderView.stopScanner();
+            updateCoupon(data);
+        }
     }
 }

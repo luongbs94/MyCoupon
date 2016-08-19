@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="@dimen/size_10"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".customer.CouponCompanyOfClientActivity"
+    tools:context=".customer.ShopOfCustomerActivity"
     tools:showIn="@layout/activity_coupon_company_client">
 
     <android.support.v7.widget.RecyclerView

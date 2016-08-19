@@ -36,7 +36,7 @@ import retrofit2.Response;
  * <p>
  * coupon
  */
-public class CouponCompanyOfClientActivity extends AppCompatActivity {
+public class ShopOfCustomerActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getSimpleName();
     private CompanyOfCustomer mCompanyOfCustomer;
@@ -76,7 +76,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view, final int position) {
                         new MaterialDialog
-                                .Builder(CouponCompanyOfClientActivity.this)
+                                .Builder(ShopOfCustomerActivity.this)
                                 .icon(getResources().getDrawable(R.drawable.ic_delete_black_24px))
                                 .title(R.string.delete_coupon)
                                 .positiveText(R.string.agree)
@@ -142,7 +142,7 @@ public class CouponCompanyOfClientActivity extends AppCompatActivity {
                 if (response.body() == MainApplication.SUCCESS) {
                     DatabaseManager.deleteCouponById(id);
                     getShowMessages(getString(R.string.delete_coupon_success));
-                    adapter.notifyItemRemoved(position);
+                    adapter.remove(position);
                 } else {
                     getShowMessages(getString(R.string.delete_coupon_fail));
                 }

@@ -119,7 +119,6 @@ public class MainApplication extends MultiDexApplication {
     private static final String URL_GET_CITY = "http://freegeoip.net";
     private static final String URL_GET_CITY2 = "http://ip-api.com";
 
-//    public static AccountOflUser sShopDetail;
 
     public static boolean sIsAdmin = false;
 

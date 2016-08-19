@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.images.models.LocalMedia;
-import com.ln.model.AccountOflUser;
+import com.ln.model.AccountOfUser;
 import com.ln.model.NewsOfCustomer;
 import com.ln.mycoupon.R;
 import com.ln.views.IconTextView;
@@ -206,7 +206,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         String strAccount = MainApplication.getPreferences()
                 .getString(MainApplication.ACCOUNT_CUSTOMER, "");
         final String idUser = new Gson()
-                .fromJson(strAccount, AccountOflUser.class)
+                .fromJson(strAccount, AccountOfUser.class)
                 .getId();
 
         int type = MainApplication.NEW_LIKE;
@@ -254,7 +254,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         String strAccount = MainApplication.getPreferences()
                 .getString(MainApplication.ACCOUNT_CUSTOMER, "");
         final String idUser = new Gson()
-                .fromJson(strAccount, AccountOflUser.class)
+                .fromJson(strAccount, AccountOfUser.class)
                 .getId();
 
         new MaterialDialog.Builder(mContext).content(R.string.delete_news)

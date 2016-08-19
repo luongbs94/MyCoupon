@@ -31,11 +31,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by Nhahv on 5/21/2016.
- * Set coupon for show
- */
-
 public class CouponTemplateAdapter
         extends RecyclerView.Adapter<CouponTemplateAdapter.ViewHolder> {
 

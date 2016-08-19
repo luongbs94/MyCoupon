@@ -32,7 +32,7 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.databases.DatabaseManager;
-import com.ln.model.AccountOflUser;
+import com.ln.model.AccountOfUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.NewsOfCustomer;
 import com.ln.mycoupon.FirstActivity;
@@ -102,7 +102,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                             id = mProfile.getId();
                         }
 
-                        AccountOflUser accountOflUser = new AccountOflUser();
+                        AccountOfUser accountOflUser = new AccountOfUser();
                         if (id != null) {
                             accountOflUser.setId(id);
                             accountOflUser.setPicture(getString(R.string.face_image, id));
@@ -222,7 +222,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         String mCity = MainApplication.getPreferences()
                 .getString(MainApplication.CITY_OF_USER, "");
 
-        AccountOflUser accountOflUser = new AccountOflUser(account.getId(), account.getDisplayName(), "", account.getIdToken());
+        AccountOfUser accountOflUser = new AccountOfUser(account.getId(), account.getDisplayName(), "", account.getIdToken());
         if (account.getPhotoUrl() != null) {
             accountOflUser.setPicture(account.getPhotoUrl().toString());
 

@@ -19,7 +19,7 @@ import com.ln.adapter.NewsCustomerAdapter;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
-import com.ln.model.AccountOflUser;
+import com.ln.model.AccountOfUser;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.OptionNews;
 import com.ln.mycoupon.R;
@@ -31,10 +31,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by luongnguyen on 4/8/16.
- * <></>
- */
 public class NewsCustomerFragment extends Fragment {
 
     private final String TAG = getClass().getSimpleName();
@@ -43,7 +39,7 @@ public class NewsCustomerFragment extends Fragment {
 
     private RecyclerView mRecyclerNews;
     private SwipeRefreshLayout mSwipeContainer;
-    private AccountOflUser account;
+    private AccountOfUser account;
 
     private int mType;
     private int mTypeNews = MainApplication.TYPE_NEWS;
@@ -64,7 +60,7 @@ public class NewsCustomerFragment extends Fragment {
         account = new Gson()
                 .fromJson(MainApplication
                         .getPreferences()
-                        .getString(MainApplication.ACCOUNT_CUSTOMER, ""), AccountOflUser.class);
+                        .getString(MainApplication.ACCOUNT_CUSTOMER, ""), AccountOfUser.class);
     }
 
     @Nullable

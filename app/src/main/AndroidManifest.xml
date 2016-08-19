@@ -101,7 +101,7 @@
             android:label="@string/qrcode"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".customer.CouponCompanyOfClientActivity"
+            android:name=".customer.ShopOfCustomerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".customer.CustomerLoginActivity" />
 

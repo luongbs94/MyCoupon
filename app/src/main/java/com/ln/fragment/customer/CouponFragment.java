@@ -17,10 +17,10 @@ import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.interfaces.RecyclerViewListener;
-import com.ln.model.AccountOflUser;
+import com.ln.model.AccountOfUser;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
-import com.ln.mycoupon.customer.CouponCompanyOfClientActivity;
+import com.ln.mycoupon.customer.ShopOfCustomerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class CouponFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
 
-                Intent intent = new Intent(getActivity(), CouponCompanyOfClientActivity.class);
+                Intent intent = new Intent(getActivity(), ShopOfCustomerActivity.class);
                 CompanyOfCustomer item = mListCompanyCustomer.get(position);
                 String idCompany = item.getCompany_id();
                 Bundle bundle = new Bundle();
@@ -98,9 +98,9 @@ public class CouponFragment extends Fragment {
 
     private void getCompanyByUserId() {
 
-        AccountOflUser account = new Gson().fromJson(MainApplication.getPreferences()
+        AccountOfUser account = new Gson().fromJson(MainApplication.getPreferences()
                         .getString(MainApplication.ACCOUNT_CUSTOMER, ""),
-                AccountOflUser.class);
+                AccountOfUser.class);
 
         Call<List<CompanyOfCustomer>> call3 = mApiServices.getCompaniesByUserId(account.getId());
         call3.enqueue(new Callback<List<CompanyOfCustomer>>() {

@@ -75,7 +75,9 @@ public interface LoveCouponAPI {
             @Body UntilNews news);
 
     @POST("/addCoupon")
-    Call<Integer> addCoupon(@Body Coupon coupon);
+    Call<Integer> addCoupon(
+            @Header("Authorization") String token,
+            @Body UntilCoupon coupon);
 
     @GET("/get_companies_by_user_id")
     Call<List<CompanyOfCustomer>> getCompaniesByUserId(

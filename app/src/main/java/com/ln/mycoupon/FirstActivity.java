@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
-import com.ln.model.AccountOflUser;
+import com.ln.model.AccountOfUser;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
@@ -116,7 +116,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         } else if (isCustomer && !isShop) {
 
             String strAccount = preferences.getString(MainApplication.ACCOUNT_CUSTOMER, "");
-            AccountOflUser account = new Gson().fromJson(strAccount, AccountOflUser.class);
+            AccountOfUser account = new Gson().fromJson(strAccount, AccountOfUser.class);
             if (account != null) {
                 startCustomer();
                 getCompanyOfCustomer(account.getId());

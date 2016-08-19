@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.ln.api.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
-import com.ln.model.Coupon;
+import com.ln.until.UntilCoupon;
 
 import net.glxn.qrgen.android.QRCode;
 
@@ -80,7 +80,8 @@ public class TestQRCode extends AppCompatActivity {
 
 
     private void addCoupon(final String coupon_id) {
-        Coupon template = new Coupon();
+
+        UntilCoupon template = new UntilCoupon();
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
@@ -92,7 +93,7 @@ public class TestQRCode extends AppCompatActivity {
         template.setDuration(duration);
         template.setContent(mContent);
 
-        Call<Integer> call2 = apiService.addCoupon(template);
+        Call<Integer> call2 = apiService.addCoupon(company.getWeb_token(), template);
         call2.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -105,7 +106,7 @@ public class TestQRCode extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
-                Log.d(TAG, "onFailure");
+                Log.d(TAG, "onFailure: " + t.toString());
             }
         });
     }

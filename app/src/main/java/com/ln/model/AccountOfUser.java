@@ -5,23 +5,23 @@ package com.ln.model;
  * <></>
  */
 
-public class AccountOflUser {
+public class AccountOfUser {
 
     private String id;
     private String name;
     private String picture;
     private String accessToken;
 
-    public AccountOflUser() {
+    public AccountOfUser() {
     }
 
-    public AccountOflUser(String id, String name, String picture) {
+    public AccountOfUser(String id, String name, String picture) {
         this.id = id;
         this.name = name;
         this.picture = picture;
     }
 
-    public AccountOflUser(String id, String name, String picture, String accessToken) {
+    public AccountOfUser(String id, String name, String picture, String accessToken) {
         this.id = id;
         this.name = name;
         this.picture = picture;

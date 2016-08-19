@@ -7,7 +7,6 @@ public class UntilCoupon {
     private String user_id;
     private String coupon_template_id;
     private long created_date;
-    private long used_date;
     private String company_id;
     private String value;
     private int duration;
@@ -89,13 +88,6 @@ public class UntilCoupon {
         this.duration = duration;
     }
 
-    public long getUsed_date() {
-        return used_date;
-    }
-
-    public void setUsed_date(long used_date) {
-        this.used_date = used_date;
-    }
 
     public String getContent() {
         return content;

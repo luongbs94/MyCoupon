@@ -30,7 +30,7 @@ import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.fragment.customer.CouponFragment;
 import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.shop.ShareFragment;
-import com.ln.model.AccountOflUser;
+import com.ln.model.AccountOfUser;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
@@ -68,10 +68,10 @@ public class CustomerMainActivity extends AppCompatActivity
         };
 
 
-        AccountOflUser account = new Gson()
+        AccountOfUser account = new Gson()
                 .fromJson(MainApplication
                         .getPreferences()
-                        .getString(MainApplication.ACCOUNT_CUSTOMER, ""), AccountOflUser.class);
+                        .getString(MainApplication.ACCOUNT_CUSTOMER, ""), AccountOfUser.class);
 
         MainApplication.updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
 
@@ -122,7 +122,7 @@ public class CustomerMainActivity extends AppCompatActivity
 
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
-        AccountOflUser accountOflUser = new Gson().fromJson(strCompany, AccountOflUser.class);
+        AccountOfUser accountOflUser = new Gson().fromJson(strCompany, AccountOfUser.class);
 
         if (accountOflUser != null) {
 
@@ -253,7 +253,7 @@ public class CustomerMainActivity extends AppCompatActivity
                 if (fragment instanceof CouponFragment) {
                     ((CouponFragment) fragment).setListCompanyCustomer();
                 }
-                Intent intent = new Intent(this, CouponCompanyOfClientActivity.class);
+                Intent intent = new Intent(this, ShopOfCustomerActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

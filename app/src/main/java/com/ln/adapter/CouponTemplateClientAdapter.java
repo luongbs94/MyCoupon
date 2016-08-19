@@ -106,4 +106,8 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
         }
     }
 
+    public void remove(int position){
+        mListCoupon.remove(position);
+        notifyItemRemoved(position);
+    }
 }
