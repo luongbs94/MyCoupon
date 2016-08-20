@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.ln.adapter.NewsCustomerAdapter;
-import com.ln.api.LoveCouponAPI;
+import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOfUser;

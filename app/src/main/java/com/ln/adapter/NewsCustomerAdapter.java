@@ -257,7 +257,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                 .fromJson(strAccount, AccountOfUser.class)
                 .getId();
 
-        new MaterialDialog.Builder(mContext).content(R.string.delete_news)
+        new MaterialDialog.Builder(mContext)
+                .content(R.string.delete_news)
                 .positiveText(R.string.agree)
                 .positiveColor(mContext.getResources().getColor(R.color.title_bg))
                 .onPositive(new MaterialDialog.SingleButtonCallback() {

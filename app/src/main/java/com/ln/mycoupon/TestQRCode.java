@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
-import com.ln.api.LoveCouponAPI;
+import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
 import com.ln.until.UntilCoupon;

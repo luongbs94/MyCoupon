@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
-import com.ln.api.LoveCouponAPI;
+import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.images.models.LocalMedia;

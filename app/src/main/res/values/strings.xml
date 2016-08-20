@@ -200,6 +200,8 @@
     <string name="title_forget_password">Forgot password</string>
     <string name="email">Email</string>
     <string name="send_email">Send</string>
+    <string name="user_dont_empty">Email do not empty</string>
+    <string name="email_do_not_match">Email is notcorrect</string>
 
 
 </resources>

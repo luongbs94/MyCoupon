@@ -1,4 +1,4 @@
-package com.ln.api;
+package com.ln.app;
 
 /**
  * Created by luongnguyen on 4/1/16.
@@ -12,6 +12,9 @@ import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
+import com.ln.mycoupon.ForgetPasswordActivity;
+import com.ln.mycoupon.customer.CustomerLoginActivity;
+import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.until.Until;
 import com.ln.until.UntilCoupon;
 import com.ln.until.UntilCouponTemplate;
@@ -43,10 +46,14 @@ public interface LoveCouponAPI {
             @Query("company_id") String id);
 
 
-    @GET("/get_company_profile")
-    Call<List<Company>> getCompanyProfile(
-            @Query("user_name") String user_name,
-            @Query("password") String password, @Query("user_id") String user_id);
+//    @GET("/get_company_profile")
+//    Call<List<Company>> getCompanyProfile(
+//            @Query("user_name") String user_name,
+//            @Query("password") String password,
+//            @Query("user_id") String user_id);
+
+    @POST("/get_company_profile")
+    Call<List<Company>> getCompanyProfile(@Body ShopLoginActivity.ShopProfile profile);
 
     @GET("/get_company_profile")
     Call<List<Company>> getCompanyProfileSocial(
@@ -105,11 +112,14 @@ public interface LoveCouponAPI {
             @Query("utc1") long utc1,
             @Query("utc2") long utc2);
 
-    @GET("/get_user_profile")
-    Call<Integer> updateUserToken(@Query("user_id") String user_id,
-                                  @Query("device_token") String device_token,
-                                  @Query("device_os") String device_os,
-                                  @Query("password") String password);
+//    @GET("/get_user_profile")
+//    Call<Integer> updateUserToken(@Query("user_id") String user_id,
+//                                  @Query("device_token") String device_token,
+//                                  @Query("device_os") String device_os,
+//                                  @Query("password") String password);
+
+    @POST("/get_user_profile")
+    Call<Integer> updateUserToken(@Body CustomerLoginActivity.CustomerProfile profile);
 
     @POST("/useCoupon")
     Call<Integer> useCoupon(@Body Until coupon);
@@ -150,5 +160,5 @@ public interface LoveCouponAPI {
             @Body UntilNews news);
 
     @POST("/sendPassword")
-    Call<String> sendPassword(@Body String value);
+    Call<String> sendPassword(@Body ForgetPasswordActivity.SendEmail value);
 }

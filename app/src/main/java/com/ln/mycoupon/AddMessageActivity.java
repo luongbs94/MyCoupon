@@ -24,7 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.adapter.SelectedImageAdapter;
-import com.ln.api.LoveCouponAPI;
+import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.databases.DatabaseManager;

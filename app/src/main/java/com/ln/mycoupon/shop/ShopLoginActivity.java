@@ -35,7 +35,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
-import com.ln.api.LoveCouponAPI;
+import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.databases.DatabaseManager;
@@ -225,11 +225,11 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void getCompanyProfile(final String user, final String pass) {
 
-        Call<List<Company>> call = mCouponAPI.getCompanyProfile(user, pass, null);
+        ShopProfile profile = new ShopProfile(user, pass, null);
+        Call<List<Company>> call = mCouponAPI.getCompanyProfile(profile);
         call.enqueue(new Callback<List<Company>>() {
             @Override
-            public void onResponse(Call<List<Company>> call,
-                                   Response<List<Company>> response) {
+            public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
 
                 if (response.body() != null) {
 
@@ -238,15 +238,19 @@ public class ShopLoginActivity extends AppCompatActivity
                     String strCompany = new Gson().toJson(company);
                     writeSharePreferences(MainApplication.COMPANY_SHOP, strCompany);
 
-                    if (user.equals(company.getUser1())) {
+                    if (company.getUser1() != null
+                            && user.equals(company.getUser1())) {
                         boolean isAdmin = false;
-                        if (company.getUser1_admin().equals("1")) {
+                        if (company.getUser1_admin() != null
+                                && company.getUser1_admin().equals("1")) {
                             isAdmin = true;
                         }
                         writeSharePreferences(MainApplication.ADMIN, isAdmin);
-                    } else if (user.equals(company.getUser2())) {
+                    } else if (company.getUser2() != null
+                            && user.equals(company.getUser2())) {
                         boolean isAdmin = false;
-                        if (company.getUser2_admin().equals("1")) {
+                        if (company.getUser2_admin() != null
+                                && company.getUser2_admin().equals("1")) {
                             isAdmin = true;
                         }
                         writeSharePreferences(MainApplication.ADMIN, isAdmin);
@@ -537,5 +541,21 @@ public class ShopLoginActivity extends AppCompatActivity
             message.sendToTarget();
         }
     };
+
+
+    public static class ShopProfile {
+        private String user_name;
+        private String password;
+        private String user_id;
+
+        public ShopProfile() {
+        }
+
+        public ShopProfile(String user_name, String password, String user_id) {
+            this.user_name = user_name;
+            this.password = password;
+            this.user_id = user_id;
+        }
+    }
 }
 

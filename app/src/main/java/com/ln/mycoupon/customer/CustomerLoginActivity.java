@@ -29,7 +29,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
-import com.ln.api.LoveCouponAPI;
+import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.databases.DatabaseManager;
@@ -347,7 +347,8 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     public void login(final String userId, String token, String device_os, String password) {
 
-        Call<Integer> loginCustomer = MainApplication.getAPI().updateUserToken(userId, token, device_os, password);
+        CustomerProfile profile = new CustomerProfile(userId, device_os, token, password);
+        Call<Integer> loginCustomer = MainApplication.getAPI().updateUserToken(profile);
         loginCustomer.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -457,5 +458,24 @@ public class CustomerLoginActivity extends AppCompatActivity
             }
         }
 
+    }
+
+    public static class CustomerProfile {
+
+        private String user_id;
+        private String device_os;
+        private String device_token;
+        private String password;
+
+        public CustomerProfile() {
+        }
+
+        public CustomerProfile(String user_id, String device_os,
+                               String device_token, String password) {
+            this.user_id = user_id;
+            this.device_os = device_os;
+            this.device_token = device_token;
+            this.password = password;
+        }
     }
 }

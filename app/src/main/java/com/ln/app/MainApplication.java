@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import com.activeandroid.ActiveAndroid;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.ln.api.LoveCouponAPI;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.images.models.ImagesManager;
 
@@ -21,9 +20,6 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -308,26 +304,6 @@ public class MainApplication extends MultiDexApplication {
     public static boolean isEnglish() {
         String local = Locale.getDefault().getLanguage();
         return local.equals("en");
-    }
-
-    public static void updateUserToken(String userId, String token, String device_os, String password) {
-
-        Call<Integer> loginCustomer = apiService.updateUserToken(userId, token, device_os, password);
-        loginCustomer.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                if (response.body() == MainApplication.SUCCESS) {
-                    MainApplication.setIsAddToken(true);
-                } else {
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-
-            }
-        });
     }
 
 }

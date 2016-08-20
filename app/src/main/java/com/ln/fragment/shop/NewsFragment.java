@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.ln.adapter.NewsShopAdapter;
-import com.ln.api.LoveCouponAPI;
+import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.model.Company;
