@@ -28,6 +28,9 @@ public class CompanyOfCustomer extends Model {
     @Column(name = "address")
     private String address;
 
+//    @Column(name = "images")
+//    private String images;
+
 
     private List<Coupon> coupon;
 
@@ -71,6 +74,21 @@ public class CompanyOfCustomer extends Model {
         return logo_link;
     }
 
+    public void setLogo_link(String logo_link) {
+        this.logo_link = logo_link;
+    }
+
+//    public String getImages() {
+//        return images;
+//    }
+//
+//    public void setImages(String images) {
+//        this.images = images;
+//    }
+
+    public void setCoupon(List<Coupon> coupon) {
+        this.coupon = coupon;
+    }
 
     public List<Coupon> getCoupon() {
         return coupon;

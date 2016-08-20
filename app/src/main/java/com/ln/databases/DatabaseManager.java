@@ -227,8 +227,10 @@ public class DatabaseManager {
                 for (byte b : bytes) {
                     Log.d("LogWord", String.valueOf(((char) b)));
                 }
+                String images = new String(bytes);
+                Log.d("LogWord1111", images);
+//                shopOfCustomer.setImages(images);
             }
-
 
             shopOfCustomer.save();
 
