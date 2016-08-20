@@ -29,10 +29,11 @@ public class OptionNews extends Model {
     public OptionNews() {
     }
 
-    public OptionNews(String idNews, String idUser, int type) {
+    public OptionNews(String idNews, String idUser, int type, int typeShop) {
         this.idNews = idNews;
         this.idUser = idUser;
         this.type = type;
+        this.typeShopOfCustomer = typeShop;
     }
 
     public String getIdNews() {

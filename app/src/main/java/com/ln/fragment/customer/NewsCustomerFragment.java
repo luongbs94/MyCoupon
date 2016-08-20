@@ -114,6 +114,9 @@ public class NewsCustomerFragment extends Fragment {
         List<OptionNews> listDeleteNews = new ArrayList<>();
         listDeleteNews.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_DELETE, MainApplication.CUSTOMER));
 
+        for (OptionNews item : listDeleteNews) {
+            Log.d(TAG, "delete  " + item.getIdNews());
+        }
 
         for (OptionNews likeNews : listLike) {
 

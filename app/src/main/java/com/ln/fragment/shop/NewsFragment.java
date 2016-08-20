@@ -60,8 +60,8 @@ public class NewsFragment extends Fragment {
         View mView = inflater.inflate(R.layout.fragment_news, container, false);
 
         initViews(mView);
-        setNewsOfCompany();
         setHasOptionsMenu(false);
+        setNewsOfCompany();
         return mView;
     }
 
@@ -124,8 +124,6 @@ public class NewsFragment extends Fragment {
 
 
                     if (response.body() != null) {
-
-//                        mRealmController.deleteListNewsOfCompany();
                         DatabaseManager.addListNewsOfCompany(response.body());
                         setNewsOfCompany();
                         Log.d(TAG, "getNewsByCompanyId " + response.body().size());

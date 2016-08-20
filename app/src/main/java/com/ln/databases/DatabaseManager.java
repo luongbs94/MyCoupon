@@ -15,8 +15,6 @@ import com.ln.model.OptionNews;
 
 import java.util.List;
 
-import static android.R.attr.type;
-
 /**
  * Created by Nhahv on 8/17/2016.
  * <></>
@@ -167,10 +165,10 @@ public class DatabaseManager {
                 .executeSingle();
 
         if (item != null) {
-            item.setIdUser(idUser);
-        } else {
-            item = new OptionNews(idNews, idUser, type);
+            item.delete();
         }
+
+        item = new OptionNews(idNews, idUser, type, typeShop);
         item.save();
     }
 
@@ -182,10 +180,9 @@ public class DatabaseManager {
                 .executeSingle();
 
         if (item != null) {
-            item.setIdUser(idUser);
-        } else {
-            item = new OptionNews(idNews, idUser, type);
+            item.delete();
         }
+        item = new OptionNews(idNews, idUser, 0, typeShop);
         item.save();
 
     }

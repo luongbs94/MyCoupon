@@ -196,6 +196,7 @@ public class MainApplication extends MultiDexApplication {
 
         ImagesManager.getInstances(this);
 
+
     }
 
     public static SharedPreferences getPreferences() {
