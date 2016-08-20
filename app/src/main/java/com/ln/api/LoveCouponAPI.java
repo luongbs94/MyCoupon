@@ -12,7 +12,6 @@ import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
-import com.ln.model.User;
 import com.ln.until.Until;
 import com.ln.until.UntilCoupon;
 import com.ln.until.UntilCouponTemplate;
@@ -107,9 +106,10 @@ public interface LoveCouponAPI {
             @Query("utc2") long utc2);
 
     @GET("/get_user_profile")
-    Call<List<User>> updateUserToken(@Query("user_id") String user_id,
-                                     @Query("device_token") String device_token,
-                                     @Query("device_os") String device_os);
+    Call<Integer> updateUserToken(@Query("user_id") String user_id,
+                                  @Query("device_token") String device_token,
+                                  @Query("device_os") String device_os,
+                                  @Query("password") String password);
 
     @POST("/useCoupon")
     Call<Integer> useCoupon(@Body Until coupon);
@@ -148,4 +148,7 @@ public interface LoveCouponAPI {
     Call<Integer> updateMessages(
             @Header("Authorization") String authorization,
             @Body UntilNews news);
+
+    @POST("/sendPassword")
+    Call<String> sendPassword(@Body String value);
 }

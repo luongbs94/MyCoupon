@@ -24,25 +24,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
-        <!--META DATA-->
+        <!-- META DATA -->
         <meta-data
             android:name="AA_DB_NAME"
             android:value="MyCoupon.db" />
         <meta-data
             android:name="AA_DB_VERSION"
             android:value="13" />
-
         <meta-data
             android:name="AA_MODELS"
-            android:value="
-            com.ln.model.CompanyOfCustomer,
-            com.ln.model.Coupon,
-            com.ln.model.CouponTemplate,
-            com.ln.model.NewsOfCompany,
-            com.ln.model.OptionNews,
-            com.ln.model.NewsOfCustomer" />
-
+            android:value="             com.ln.model.CompanyOfCustomer,             com.ln.model.Coupon,             com.ln.model.CouponTemplate,             com.ln.model.NewsOfCompany,             com.ln.model.OptionNews,             com.ln.model.NewsOfCustomer" />
         <meta-data
             android:name="AA_SERIALIZERS"
             android:value="com.ln.model.ByteImages" />
@@ -62,7 +53,6 @@
             android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
 
@@ -104,7 +94,6 @@
             android:name=".customer.ShopOfCustomerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".customer.CustomerLoginActivity" />
-
         <activity android:name=".PreviewImagesActivity" />
         <!-- ======================== END ACTIVITY OF APP =============== -->
 
@@ -162,6 +151,7 @@
         <activity
             android:name="com.ln.images.cropimage.CropActivity"
             android:theme="@style/AppTheme.Light.NoActionBar" />
+        <activity android:name=".ForgetPasswordActivity"></activity>
     </application>
 
 </manifest>

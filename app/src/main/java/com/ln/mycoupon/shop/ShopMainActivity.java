@@ -83,23 +83,6 @@ public class ShopMainActivity extends AppCompatActivity
                 MODE_PRIVATE).getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
 
-        if (company != null) {
-
-            if (company.getUser_id() != null
-                    || (company.getUser1_admin() != null
-                    && company.getUser1_admin().equals("1"))
-                    || (company.getUser2_admin() != null
-                    && company.getUser2_admin().equals("1"))) {
-                MainApplication.sIsAdmin = true;
-            }
-
-            Log.d(TAG, "Company " + company.getName());
-            Log.d(TAG, "Company " + company.getLogo());
-            Log.d(TAG, "Company " + company.getLogo_link());
-            Log.d(TAG, "Company " + company.getAddress());
-        }
-
-
         getDataFromIntent();
 
         sTitle = getString(R.string.my_coupon);
@@ -148,20 +131,25 @@ public class ShopMainActivity extends AppCompatActivity
             }
         }
 
-//        if (!MainApplication.sIsAdmin) {
-//            mFbButton.setVisibility(View.GONE);
-//        }
+
+        Fragment fragment = new CouponFragment();
+        int intFragment = 0;
         if (mStartNotification == MainApplication.NOTIFICATION) {
-            startFragment(new NewsFragment());
+            fragment = new NewsFragment();
+            intFragment = 0;
         } else if (company != null && company.getName() != null) {
-            startFragment(new CouponFragment());
+            fragment = new CouponFragment();
+            intFragment = 1;
         } else {
-            startFragment(new SettingFragment());
+            fragment = new SettingFragment();
+            intFragment = 2;
         }
 
+        startFragment(fragment);
         mFbButton.setVisibility(View.GONE);
         mFbButton.setOnClickListener(this);
-        if (MainApplication.sIsAdmin) {
+        if (MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)
+                && intFragment != 2) {
             mFbButton.setVisibility(View.VISIBLE);
         }
     }
@@ -230,8 +218,6 @@ public class ShopMainActivity extends AppCompatActivity
                 MainApplication.editor.putBoolean(MainApplication.LOGIN_SHOP, false);
                 MainApplication.editor.commit();
 
-                MainApplication.sIsAdmin = false;
-
                 Intent intent = new Intent(this, FirstActivity.class);
                 startActivity(intent);
 
@@ -241,13 +227,13 @@ public class ShopMainActivity extends AppCompatActivity
                 break;
         }
 
-        if (MainApplication.sIsAdmin) {
+        if (MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
             if (id == R.id.nav_coupon || id == R.id.nav_new) {
                 mFbButton.setVisibility(View.VISIBLE);
             } else if (R.id.nav_history == id || R.id.nav_manage == id || R.id.nav_view == id || id == R.id.menu_share) {
                 mFbButton.setVisibility(View.GONE);
             }
-        } else if (!MainApplication.sIsAdmin) {
+        } else if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
             mFbButton.setVisibility(View.GONE);
         }
 

@@ -2,8 +2,12 @@ package com.ln.mycoupon;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
@@ -25,6 +29,8 @@ import com.ln.mycoupon.customer.CustomerMainActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.mycoupon.shop.ShopMainActivity;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +49,23 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.ln.mycoupon",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+
+
+//        new Delete().from(NewsOfCustomer.class).execute();
 
         NewsOfCompany newsOfCompany = new NewsOfCompany();
         if (newsOfCompany == null) {
@@ -160,7 +183,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS);
+
+                    String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+                    String user = new Gson().fromJson(account, AccountOfUser.class).getId();
+                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS, user);
                     preLoadImagesCustomer();
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 } else {
@@ -182,7 +208,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
-                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE);
+                    String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+                    String user = new Gson().fromJson(account, AccountOfUser.class).getId();
+
+                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE, user);
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
                     Log.d(TAG, " getNewsMore " + " null");

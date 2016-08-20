@@ -123,7 +123,7 @@ public class SettingFragment extends Fragment implements
         mChbShowPass = (CheckBox) v.findViewById(R.id.chb_show_password);
 
 
-        if (!MainApplication.sIsAdmin) {
+        if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
             (v.findViewById(R.id.linear_information)).setVisibility(View.GONE);
             mFabDoneSave.setVisibility(View.GONE);
         }

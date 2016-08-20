@@ -1,5 +1,7 @@
 package com.ln.databases;
 
+import android.util.Log;
+
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
@@ -65,12 +67,17 @@ public class DatabaseManager {
                 .execute();
     }
 
-    public static void addListNewsOfCustomer(List<NewsOfCustomer> news, int type) {
+    public static void addListNewsOfCustomer(List<NewsOfCustomer> news, int type, String user) {
+
+        Log.d("addListNewsOfCustomer ", "type: " + type);
+        List<NewsOfCustomer> listNews = getListNewsOfCustomer(type);
 
         new Delete().from(NewsOfCustomer.class).where("type = ?", type).execute();
+
         ActiveAndroid.beginTransaction();
         try {
             for (NewsOfCustomer item : news) {
+                item.setType(type);
                 item.save();
             }
             ActiveAndroid.setTransactionSuccessful();

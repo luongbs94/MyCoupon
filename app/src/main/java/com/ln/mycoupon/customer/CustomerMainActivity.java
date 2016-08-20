@@ -73,8 +73,6 @@ public class CustomerMainActivity extends AppCompatActivity
                         .getPreferences()
                         .getString(MainApplication.ACCOUNT_CUSTOMER, ""), AccountOfUser.class);
 
-        MainApplication.updateUserToken(account.getId(), MainApplication.getDeviceToken(), "android");
-
         Log.d("MyFirebaseIIDService", account.getId() + "  " + MainApplication.getDeviceToken());
 
         getDataFromIntent();

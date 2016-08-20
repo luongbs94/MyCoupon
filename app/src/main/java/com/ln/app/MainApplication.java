@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.multidex.MultiDexApplication;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.activeandroid.ActiveAndroid;
@@ -14,12 +13,10 @@ import com.facebook.appevents.AppEventsLogger;
 import com.ln.api.LoveCouponAPI;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.images.models.ImagesManager;
-import com.ln.model.User;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -79,6 +76,8 @@ public class MainApplication extends MultiDexApplication {
     public static final int NEW_DELETE = 133;
     public static final int SHOP = 222;
     public static final int CUSTOMER = 223;
+    public static final String ADMIN = "ADMIN";
+    public static final String LOGO_USER = "http://lovecoupon.com:4000/logo/user.png";
 
     private static MainApplication mInstances;
 
@@ -113,14 +112,12 @@ public class MainApplication extends MultiDexApplication {
     public static final String FACEBOOK_EMAIL = "email";
 
     //    private static final String URL_GET_POST = "http://188.166.199.25:3000";
-    private static final String URL_GET_POST = "http://188.166.179.187:3030";
+    private static final String URL_GET_POST = "http://188.166.179.187:4000";
+    //    private static final String URL_GET_POST = "http://188.166.179.187:3030";
     //    public static final String URL_UPDATE_IMAGE = "http://188.166.179.187:3001";
     public static final String URL_UPDATE_IMAGE = "http://188.166.196.171:3001";
     private static final String URL_GET_CITY = "http://freegeoip.net";
     private static final String URL_GET_CITY2 = "http://ip-api.com";
-
-
-    public static boolean sIsAdmin = false;
 
     public static final String FILE_URI = "file_uri";
     public static final int GOOGLE_SIGN_IN = 100;
@@ -213,7 +210,7 @@ public class MainApplication extends MultiDexApplication {
 
     public static void setDeviceToken(String deviceToken) {
         editor.putString(DEVICE_TOKEN, deviceToken);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setIsAddToken(boolean isAddToken) {
@@ -313,18 +310,22 @@ public class MainApplication extends MultiDexApplication {
         return local.equals("en");
     }
 
-    public static void updateUserToken(String userId, String token, String device_os) {
+    public static void updateUserToken(String userId, String token, String device_os, String password) {
 
-        Call<List<User>> call = apiService.updateUserToken(userId, token, device_os);
-        call.enqueue(new Callback<List<User>>() {
+        Call<Integer> loginCustomer = apiService.updateUserToken(userId, token, device_os, password);
+        loginCustomer.enqueue(new Callback<Integer>() {
             @Override
-            public void onResponse(Call<List<User>> arg0, Response<List<User>> arg1) {
-                MainApplication.setIsAddToken(true);
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.body() == MainApplication.SUCCESS) {
+                    MainApplication.setIsAddToken(true);
+                } else {
+
+                }
             }
 
             @Override
-            public void onFailure(Call<List<User>> arg0, Throwable arg1) {
-                Log.d("test", "updateUserToken " + "Failure");
+            public void onFailure(Call<Integer> call, Throwable t) {
+
             }
         });
     }

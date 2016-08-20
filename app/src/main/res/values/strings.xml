@@ -154,6 +154,9 @@
     <string name="edit_news">Edit</string>
     <string name="check_account">*Existing</string>
 
+    <string name="user1OtherUser2">Tài khoản 1 phải khác với tài khoản 2</string>
+    <string name="user2OtherUser1">Tài khoản 2 phải khác với tài khoản 1! bạn hãy nhập tài khoản mới!</string>
+
     <string-array name="month">
         <item>1 month</item>
         <item>2 months</item>
@@ -176,4 +179,27 @@
     <string name="account_exists">*Exists</string>
     <string name="up_loading">Uploading...</string>
     <string name="only_admin">Only admin</string>
+
+
+    <string name="icon_calendar">\uf133</string>
+    <string name="icon_clock">\uf017</string>
+    <string name="ic_heart">\uf004</string>
+    <string name="ic_share">\uf064</string>
+    <string name="ic_delete">\uf00d</string>
+    <string name="ic_email">\uf0e0</string>
+    <string name="ic_start">\uf006</string>
+    <string name="ic_start_like">\uf005</string>
+    <string name="ic_globe">\uf0ac</string>
+    <string name="icon_picture">\uf03e</string>
+    <string name="icon_more">\uf142</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="ic_close">\uf00d</string>
+    <string name="ic_calendar_message">\uf073</string>
+    <string name="icon_bell">\uf0a2</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="title_forget_password">Forgot password</string>
+    <string name="email">Email</string>
+    <string name="send_email">Send</string>
+
+
 </resources>

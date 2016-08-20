@@ -102,7 +102,7 @@ public class CreateFragment extends Fragment {
 
     private void getCreateCoupon() {
 
-        if (!MainApplication.sIsAdmin) {
+        if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
             ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin);
             return;
         }

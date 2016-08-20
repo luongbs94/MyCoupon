@@ -3,7 +3,6 @@ package com.ln.model;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.ln.app.MainApplication;
 
 /**
  * Created by Nhahv on 7/3/2016.
@@ -13,7 +12,7 @@ import com.ln.app.MainApplication;
 @Table(name = "NewsOfCustomer")
 public class NewsOfCustomer extends Model {
 
-    @Column(name = "message_id", index = true)
+    @Column(name = "message_id")
     private String message_id;
 
     @Column(name = "content")
@@ -47,7 +46,7 @@ public class NewsOfCustomer extends Model {
     private String name;
 
     @Column(name = "type")
-    private int type = MainApplication.TYPE_NEWS;
+    private int type;
 
     @Column(name = "isLike")
     private boolean isLike = false;

@@ -19,7 +19,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            debuggable true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -39,6 +39,11 @@ android {
         jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 ext {

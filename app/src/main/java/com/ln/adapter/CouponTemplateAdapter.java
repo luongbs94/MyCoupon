@@ -144,7 +144,7 @@ public class CouponTemplateAdapter
             (itemView.findViewById(R.id.linear_time)).setOnClickListener(this);
             mImgLogo.setOnClickListener(this);
 
-            if (!MainApplication.sIsAdmin) {
+            if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
                 (itemView.findViewById(R.id.image_more)).setVisibility(View.INVISIBLE);
             }
         }

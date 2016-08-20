@@ -43,6 +43,7 @@ import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.mycoupon.FirstActivity;
+import com.ln.mycoupon.ForgetPasswordActivity;
 import com.ln.mycoupon.R;
 
 import java.io.IOException;
@@ -83,7 +84,7 @@ public class ShopLoginActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop_login);
+        setContentView(R.layout.activity_login);
 
         getDataFromIntent();
         initViews();
@@ -199,7 +200,7 @@ public class ShopLoginActivity extends AppCompatActivity
     private void addEvents() {
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.btn_google).setOnClickListener(this);
-        findViewById(R.id.btn_login_facebook).setOnClickListener(this);
+        findViewById(R.id.btn_facebook).setOnClickListener(this);
     }
 
     @Override
@@ -237,8 +238,23 @@ public class ShopLoginActivity extends AppCompatActivity
                     String strCompany = new Gson().toJson(company);
                     writeSharePreferences(MainApplication.COMPANY_SHOP, strCompany);
 
+                    if (user.equals(company.getUser1())) {
+                        boolean isAdmin = false;
+                        if (company.getUser1_admin().equals("1")) {
+                            isAdmin = true;
+                        }
+                        writeSharePreferences(MainApplication.ADMIN, isAdmin);
+                    } else if (user.equals(company.getUser2())) {
+                        boolean isAdmin = false;
+                        if (company.getUser2_admin().equals("1")) {
+                            isAdmin = true;
+                        }
+                        writeSharePreferences(MainApplication.ADMIN, isAdmin);
+
+                    } else {
+                        writeSharePreferences(MainApplication.ADMIN, false);
+                    }
                     signInSuccess(company);
-//                    getToken(MainApplication.NORMAL, user, pass, "");
                     Log.d(TAG, "getCompanyProfile " + company.getCompany_id());
                 } else {
 
@@ -346,25 +362,28 @@ public class ShopLoginActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                if (ConnectivityReceiver.isConnect()) {
-                    onClickLogin();
-                } else {
+                if (!ConnectivityReceiver.isConnect()) {
                     getShowMessages(getString(R.string.check_network));
+                    return;
                 }
+                onClickLogin();
                 break;
-            case R.id.btn_login_facebook:
-                if (ConnectivityReceiver.isConnect()) {
-                    onClickLoginFacebook();
-                } else {
+            case R.id.btn_facebook:
+                if (!ConnectivityReceiver.isConnect()) {
                     getShowMessages(getString(R.string.check_network));
+                    return;
                 }
+                onClickLoginFacebook();
                 break;
             case R.id.btn_google:
-                if (ConnectivityReceiver.isConnect()) {
-                    onClickGooglePlus();
-                } else {
+                if (!ConnectivityReceiver.isConnect()) {
                     getShowMessages(getString(R.string.check_network));
+                    return;
                 }
+                onClickGooglePlus();
+                break;
+            case R.id.txt_forgot_password:
+                startActivity(new Intent(this, ForgetPasswordActivity.class));
                 break;
             default:
                 break;

@@ -22,11 +22,16 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         Log.d(TAG, "Refreshed token: " + refreshedToken);
 
 
-        MainApplication.setDeviceToken(refreshedToken);
-        sendRegistrationToServer(refreshedToken);
+//        MainApplication.setDeviceToken(refreshedToken);
+        writePreferences(MainApplication.DEVICE_TOKEN, refreshedToken);
     }
 
-    private void sendRegistrationToServer(String token) {
+    private void writePreferences(String key, String token) {
+        MainApplication
+                .getPreferences()
+                .edit()
+                .putString(key, token)
+                .apply();
 
     }
 }

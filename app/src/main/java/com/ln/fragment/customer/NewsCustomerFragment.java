@@ -42,7 +42,7 @@ public class NewsCustomerFragment extends Fragment {
     private AccountOfUser account;
 
     private int mType;
-    private int mTypeNews = MainApplication.TYPE_NEWS;
+    private int mTypeNews;
 
     public static NewsCustomerFragment getInstances(int typeNews) {
         NewsCustomerFragment instances = new NewsCustomerFragment();
@@ -61,6 +61,9 @@ public class NewsCustomerFragment extends Fragment {
                 .fromJson(MainApplication
                         .getPreferences()
                         .getString(MainApplication.ACCOUNT_CUSTOMER, ""), AccountOfUser.class);
+
+        mTypeNews = getArguments().getInt(MainApplication.ID_NEWS);
+        Log.d(TAG, " onCreate: " + mTypeNews);
     }
 
     @Nullable
@@ -160,7 +163,12 @@ public class NewsCustomerFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                     if (response.body() != null) {
-                        DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS);
+
+                        String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+                        String user = new Gson().fromJson(account, AccountOfUser.class).getId();
+
+                        DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS, user);
+
                         setListMessages();
                         mSwipeContainer.setRefreshing(false);
                         Log.d(TAG, "getNewsOfCustomer " + response.body().size());
@@ -175,7 +183,7 @@ public class NewsCustomerFragment extends Fragment {
                     mSwipeContainer.setRefreshing(false);
                 }
             });
-        } else if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
+        } else {
 
             String city = MainApplication
                     .getPreferences()
@@ -185,7 +193,12 @@ public class NewsCustomerFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                     if (response.body() != null) {
-                        DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE);
+
+
+                        String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+                        String user = new Gson().fromJson(account, AccountOfUser.class).getId();
+
+                        DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE, user);
                         setListMessages();
                         mSwipeContainer.setRefreshing(false);
                         Log.d(TAG, "getNewsOfCustomer " + response.body().size());
