@@ -6,6 +6,8 @@ import com.activeandroid.annotation.Table;
 
 import java.util.List;
 
+import static android.R.attr.x;
+
 /**
  * Created by luongnguyen on 4/8/16.
  * <></>
@@ -27,10 +29,6 @@ public class CompanyOfCustomer extends Model {
 
     @Column(name = "address")
     private String address;
-
-//    @Column(name = "images")
-//    private String images;
-
 
     private List<Coupon> coupon;
 
@@ -78,13 +76,6 @@ public class CompanyOfCustomer extends Model {
         this.logo_link = logo_link;
     }
 
-//    public String getImages() {
-//        return images;
-//    }
-//
-//    public void setImages(String images) {
-//        this.images = images;
-//    }
 
     public void setCoupon(List<Coupon> coupon) {
         this.coupon = coupon;

@@ -218,7 +218,7 @@ public class MainApplication extends MultiDexApplication {
 
     public static void setIsAddToken(boolean isAddToken) {
         editor.putBoolean(BOOL_ADD_TOKEN, isAddToken);
-        editor.commit();
+        editor.apply();
     }
 
 
