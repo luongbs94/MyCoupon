@@ -52,18 +52,15 @@ public interface LoveCouponAPI {
 //            @Query("password") String password,
 //            @Query("user_id") String user_id);
 
+//    @POST("/get_company_profile")
+//    Call<List<Company>> getCompanyProfile(
+//            @Body ShopLoginActivity.ShopProfile profile
+//    );
+
     @POST("/get_company_profile")
-    Call<List<Company>> getCompanyProfile(@Body ShopLoginActivity.ShopProfile profile);
-
-    @GET("/get_company_profile")
-    Call<List<Company>> getCompanyProfileSocial(
-            @Query("user_id") String user_id);
-
-    @GET("/get_company_profile")
-    Call<List<Company>> getCompanyProfileSocial(
-            @Query("user_id") String user_id,
-            @Query("social") String social,
-            @Query("access_token") String accessToken);
+    Call<List<Company>> getCompanyProfile(
+            @Body ShopLoginActivity.ShopProfile profile
+    );
 
     @POST("/addCouponTemplate")
     Call<Integer> addCouponTemplate(

@@ -54,11 +54,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by luongnguyen on 3/30/16.
- * login shop
- */
-
 public class ShopLoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
@@ -225,7 +220,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void getCompanyProfile(final String user, final String pass) {
 
-        ShopProfile profile = new ShopProfile(user, pass, null);
+        ShopProfile profile = new ShopProfile(null, null, null, user, pass);
         Call<List<Company>> call = mCouponAPI.getCompanyProfile(profile);
         call.enqueue(new Callback<List<Company>>() {
             @Override
@@ -290,7 +285,8 @@ public class ShopLoginActivity extends AppCompatActivity
             isLoginFacebook = false;
         }
 
-        Call<List<Company>> call = mCouponAPI.getCompanyProfileSocial(user_id, social, accessToken);
+        ShopProfile profile = new ShopProfile(user_id, social, accessToken, null, null);
+        Call<List<Company>> call = mCouponAPI.getCompanyProfile(profile);
         call.enqueue(new Callback<List<Company>>() {
             @Override
             public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
@@ -544,17 +540,19 @@ public class ShopLoginActivity extends AppCompatActivity
 
 
     public static class ShopProfile {
+        private String user_id;
+        private String social;
+        private String access_token;
         private String user_name;
         private String password;
-        private String user_id;
 
-        public ShopProfile() {
-        }
-
-        public ShopProfile(String user_name, String password, String user_id) {
+        ShopProfile(String user_id, String social, String access_token,
+                    String user_name, String password) {
+            this.user_id = user_id;
+            this.social = social;
+            this.access_token = access_token;
             this.user_name = user_name;
             this.password = password;
-            this.user_id = user_id;
         }
     }
 }
