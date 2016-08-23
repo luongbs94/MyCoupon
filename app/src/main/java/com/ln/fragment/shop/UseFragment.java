@@ -16,9 +16,7 @@ import com.google.gson.Gson;
 import com.ln.adapter.HistoryAdapter;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
-import com.ln.databases.DatabaseManager;
 import com.ln.model.Company;
-import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 import com.ln.until.UntilCoupon;
 
@@ -30,17 +28,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CreateFragment extends Fragment {
+public class UseFragment extends Fragment {
 
     private LoveCouponAPI mApiServices;
 
-    private View mView;
-    private RecyclerView mRecyclerCreate;
-
     private String TAG = getClass().getSimpleName();
+    private View mView;
+    private SwipeRefreshLayout swipeContainer;
+    private RecyclerView mRecyclerView;
     private long utc1;
     private long utc2;
-    private SwipeRefreshLayout swipeContainer;
 
 
     @Override
@@ -62,14 +59,16 @@ public class CreateFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_create, container, false);
+
         initViews();
         getListCoupon();
         return mView;
     }
 
     private void initViews() {
-        mRecyclerCreate = (RecyclerView) mView.findViewById(R.id.recycler_view);
-        mRecyclerCreate.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -87,43 +86,35 @@ public class CreateFragment extends Fragment {
 
         if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
             ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin);
-            mRecyclerCreate.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
             return;
         }
-        mRecyclerCreate.setVisibility(View.VISIBLE);
-
+        mRecyclerView.setVisibility(View.VISIBLE);
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
 
-        Call<List<UntilCoupon>> listCoupon = mApiServices.getCreatedCoupon(company.getWeb_token(), company.getCompany_id(), utc1, utc2);
+        Call<List<UntilCoupon>> listCoupon = mApiServices.getUsedCoupon(company.getWeb_token(), company.getCompany_id() + "", utc1, utc2);
         listCoupon.enqueue(new Callback<List<UntilCoupon>>() {
             @Override
             public void onResponse(Call<List<UntilCoupon>> call, Response<List<UntilCoupon>> response) {
-
-                for (UntilCoupon item : response.body()) {
-                    Log.d(TAG, item.getCoupon_id() + "\n");
-                }
-
-                HistoryAdapter mAdapter = new HistoryAdapter(getContext(), response.body());
-                mRecyclerCreate.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+                HistoryAdapter mAdapter = new HistoryAdapter(getActivity(), response.body());
+                mRecyclerView.setAdapter(mAdapter);
                 swipeContainer.setRefreshing(false);
-
-                Log.d(TAG, response.body().size() + " ");
                 for (UntilCoupon item : response.body()) {
-                    Log.d(TAG, item.getCoupon_id() + "\n");
+                    Log.d(TAG, "getListCoupon" + item.getCoupon_id() + "\n");
                 }
+
+                Log.d(TAG, "getListCoupon" + response.body().size() + " ");
             }
 
             @Override
             public void onFailure(Call<List<UntilCoupon>> call, Throwable t) {
-                swipeContainer.setRefreshing(false);
-
                 Log.d(TAG, t.toString());
-
+                swipeContainer.setRefreshing(false);
             }
         });
+
     }
 
     public void getData(long time) {

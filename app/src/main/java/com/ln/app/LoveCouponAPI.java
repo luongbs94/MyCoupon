@@ -8,7 +8,6 @@ package com.ln.app;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
-import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
@@ -45,17 +44,6 @@ public interface LoveCouponAPI {
     Call<List<NewsOfCompany>> getNewsByCompanyId(
             @Query("company_id") String id);
 
-
-//    @GET("/get_company_profile")
-//    Call<List<Company>> getCompanyProfile(
-//            @Query("user_name") String user_name,
-//            @Query("password") String password,
-//            @Query("user_id") String user_id);
-
-//    @POST("/get_company_profile")
-//    Call<List<Company>> getCompanyProfile(
-//            @Body ShopLoginActivity.ShopProfile profile
-//    );
 
     @POST("/get_company_profile")
     Call<List<Company>> getCompanyProfile(
@@ -96,24 +84,19 @@ public interface LoveCouponAPI {
             @Body UntilCoupon template);
 
     @GET("/get_created_coupon_by_company_id")
-    Call<List<Coupon>> getCreatedCoupon(
+    Call<List<UntilCoupon>> getCreatedCoupon(
             @Header("Authorization") String token,
             @Query("company_id") String company_id,
             @Query("utc1") long utc1,
             @Query("utc2") long utc2);
 
     @GET("/get_used_coupon_by_company_id")
-    Call<List<Coupon>> getUsedCoupon(
+    Call<List<UntilCoupon>> getUsedCoupon(
             @Header("Authorization") String token,
             @Query("company_id") String company_id,
             @Query("utc1") long utc1,
             @Query("utc2") long utc2);
 
-//    @GET("/get_user_profile")
-//    Call<Integer> updateUserToken(@Query("user_id") String user_id,
-//                                  @Query("device_token") String device_token,
-//                                  @Query("device_os") String device_os,
-//                                  @Query("password") String password);
 
     @POST("/get_user_profile")
     Call<Integer> updateUserToken(@Body CustomerLoginActivity.CustomerProfile profile);

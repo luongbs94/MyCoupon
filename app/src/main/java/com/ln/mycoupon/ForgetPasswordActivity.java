@@ -3,6 +3,7 @@ package com.ln.mycoupon;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -85,6 +86,14 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void showMessages(int id) {
         Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
     }
@@ -92,6 +101,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
 
     public static class SendEmail {
         private String value;

@@ -1,5 +1,7 @@
 package com.ln.model;
 
+import android.support.annotation.NonNull;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -10,7 +12,7 @@ import com.activeandroid.annotation.Table;
  */
 
 @Table(name = "NewsOfCustomer")
-public class NewsOfCustomer extends Model {
+public class NewsOfCustomer extends Model implements Comparable<NewsOfCustomer> {
 
     @Column(name = "message_id")
     private String message_id;
@@ -164,5 +166,13 @@ public class NewsOfCustomer extends Model {
 
     public void setDelete(boolean delete) {
         isDelete = delete;
+    }
+
+    @Override
+    public int compareTo(@NonNull NewsOfCustomer another) {
+        if (created_date > another.getCreated_date()) {
+            return -1;
+        }
+        return 1;
     }
 }

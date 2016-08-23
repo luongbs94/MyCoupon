@@ -27,7 +27,7 @@
             android:id="@+id/img_logo_news"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_love_coupon" />
+            android:src="@drawable/ic_logo_blank" />
 
         <LinearLayout
             android:layout_width="0dp"

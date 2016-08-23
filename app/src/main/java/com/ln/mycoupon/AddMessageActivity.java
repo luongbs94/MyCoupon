@@ -236,6 +236,7 @@ public class AddMessageActivity extends AppCompatActivity
         Log.d(TAG, "Time  = " + mTimeLong);
         news.setCompany_id(idCompany);
 
+        news.setCreated_date(System.currentTimeMillis());
         if (mLinkImageNews != null) {
             news.setImages_link(mLinkImageNews);
         }

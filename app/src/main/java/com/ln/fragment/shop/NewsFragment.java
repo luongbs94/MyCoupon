@@ -21,6 +21,7 @@ import com.ln.model.OptionNews;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -108,6 +109,8 @@ public class NewsFragment extends Fragment {
                 }
             }
         }
+
+        Collections.sort(news);
         NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), news, this);
         mRecNews.setAdapter(adapter);
         Log.d(TAG, "Size : " + news.size());

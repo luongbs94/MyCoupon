@@ -264,7 +264,7 @@ public class SettingFragment extends Fragment implements
                 isChoseImages = true;
             }
         } else {
-            getShowMessage("User cancelled image capture");
+            getShowMessage(getString(R.string.cancel_camera));
         }
     }
 

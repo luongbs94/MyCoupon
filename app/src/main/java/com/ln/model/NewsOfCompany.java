@@ -1,5 +1,7 @@
 package com.ln.model;
 
+import android.support.annotation.NonNull;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -11,7 +13,7 @@ import com.ln.until.UntilNews;
  * <></>
  */
 @Table(name = "NewsOfCompany")
-public class NewsOfCompany extends Model {
+public class NewsOfCompany extends Model implements Comparable<NewsOfCompany> {
 
     @Expose
     @Column(name = "message_id", index = true)
@@ -146,5 +148,13 @@ public class NewsOfCompany extends Model {
 
     public void setLike(boolean like) {
         this.like = like;
+    }
+
+    @Override
+    public int compareTo(@NonNull NewsOfCompany another) {
+        if (this.created_date >= another.getCreated_date()) {
+            return -1;
+        }
+        return 1;
     }
 }

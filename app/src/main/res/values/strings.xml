@@ -111,7 +111,6 @@
     <string name="changedate">Change</string>
 
     <string name="news_more">Other News</string>
-    <string name="no_data_display">Do not have any coupon</string>
 
     <string name="delete_news_error">Delete Message Error</string>
     <string name="date_menu">AUG 10, 2016</string>
@@ -196,12 +195,14 @@
     <string name="ic_close">\uf00d</string>
     <string name="ic_calendar_message">\uf073</string>
     <string name="icon_bell">\uf0a2</string>
+
     <string name="forgot_password">Forgot password?</string>
     <string name="title_forget_password">Forgot password</string>
     <string name="email">Email</string>
     <string name="send_email">Send</string>
     <string name="user_dont_empty">Email do not empty</string>
-    <string name="email_do_not_match">Email is notcorrect</string>
+    <string name="email_do_not_match">Email is not correct</string>
+    <string name="cancel_camera">User cancelled image capture</string>
 
 
 </resources>

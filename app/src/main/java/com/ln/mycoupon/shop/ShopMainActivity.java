@@ -132,7 +132,7 @@ public class ShopMainActivity extends AppCompatActivity
         }
 
 
-        Fragment fragment = new CouponFragment();
+        Fragment fragment;
         int intFragment = 0;
         if (mStartNotification == MainApplication.NOTIFICATION) {
             fragment = new NewsFragment();

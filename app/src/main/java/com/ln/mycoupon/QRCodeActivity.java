@@ -25,6 +25,7 @@ import com.ln.until.UntilCoupon;
 import java.util.List;
 
 import eu.livotov.labs.android.camview.ScannerLiveView;
+import eu.livotov.labs.android.camview.scanner.decoder.zxing.ZXDecoder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,12 +79,12 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
             @Override
             public void onCodeScanned(String data) {
 
-//                Log.d(TAG, "onCodeScanned : " + data);
-//                if (!isCamera) {
-//                    isCamera = true;
-//                    mQRCodeReaderView.stopScanner();
-//                    updateCoupon(data);
-//                }
+                Log.d(TAG, "onCodeScanned : " + data);
+                if (!isCamera) {
+                    isCamera = true;
+                    mQRCodeReaderView.stopScanner();
+                    updateCoupon(data);
+                }
             }
         });
 
@@ -107,21 +108,21 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
     @Override
     protected void onResume() {
         super.onResume();
-//        ZXDecoder decoder = new ZXDecoder();
-//        decoder.setScanAreaPercent(0.5);
-//        mQRCodeReaderView.setDecoder(decoder);
-//        mQRCodeReaderView.startScanner();
-        //     mQRCodeReaderView.getCameraManager().startPreview();
+        ZXDecoder decoder = new ZXDecoder();
+        decoder.setScanAreaPercent(0.5);
+        mQRCodeReaderView.setDecoder(decoder);
+        mQRCodeReaderView.startScanner();
+//        mQRCodeReaderView.getCameraManager().startPreview();
 
-        qrCodeReaderView.startCamera();
+//        qrCodeReaderView.startCamera();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        mQRCodeReaderView.stopScanner();
-        qrCodeReaderView.stopCamera();
+        mQRCodeReaderView.stopScanner();
+//        qrCodeReaderView.stopCamera();
     }
 
 
@@ -146,9 +147,11 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         coupon.setUser_id(mAccountOflUser.getId());
         coupon.setUser_image_link(mAccountOflUser.getPicture());
         coupon.setUser_name(mAccountOflUser.getName());
-        coupon.setUser_social(MainApplication.GOOGLE);
+        coupon.setUser_social(null);
         if (mAccountOflUser.getPicture().contains(MainApplication.FACEBOOK)) {
             coupon.setUser_social(MainApplication.FACEBOOK);
+        } else if (mAccountOflUser.getPicture().contains(MainApplication.GOOGLE)) {
+            coupon.setUser_social(MainApplication.GOOGLE);
         }
         String city = MainApplication
                 .getSharePrefer()

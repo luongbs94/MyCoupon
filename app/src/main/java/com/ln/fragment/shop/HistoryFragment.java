@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.datetimepicker.date.DatePickerDialog;
-import com.ln.app.MainApplication;
 import com.ln.mycoupon.R;
 
 import java.text.SimpleDateFormat;
@@ -29,7 +28,7 @@ import java.util.Locale;
 public class HistoryFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private CreateFragment createFragment;
-    private CreateFragment useFragment;
+    private UseFragment useFragment;
     private Menu menu1;
     private Calendar calendar;
 
@@ -57,8 +56,8 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
     private void setupViewPager(ViewPager viewPager) {
 
         List<Fragment> fragments = new ArrayList<>();
-        createFragment = CreateFragment.getInstances(MainApplication.TYPE_CREATE);
-        useFragment = CreateFragment.getInstances(MainApplication.TYPE_USE);
+        createFragment = new CreateFragment();
+        useFragment = new UseFragment();
         fragments.add(createFragment);
         fragments.add(useFragment);
 

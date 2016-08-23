@@ -25,6 +25,7 @@ import com.ln.model.OptionNews;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -246,11 +247,11 @@ public class NewsCustomerFragment extends Fragment {
         List<OptionNews> listDeleteNews = new ArrayList<>();
         listDeleteNews.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_DELETE, MainApplication.CUSTOMER));
 
-        List<NewsOfCustomer> listNews = new ArrayList<>();
-        listNews.addAll(DatabaseManager.getListNewsOfCustomer(mTypeNews));
+        List<NewsOfCustomer> news = new ArrayList<>();
+        news.addAll(DatabaseManager.getListNewsOfCustomer(mTypeNews));
 
         for (OptionNews likeNews : listLike) {
-            for (NewsOfCustomer item : listNews) {
+            for (NewsOfCustomer item : news) {
                 if (likeNews.getIdNews().equals(item.getMessage_id())) {
                     item.setLike(true);
                 }
@@ -258,21 +259,23 @@ public class NewsCustomerFragment extends Fragment {
         }
         //set delete news
         for (OptionNews deleteNews : listDeleteNews) {
-            for (NewsOfCustomer item : listNews) {
+            for (NewsOfCustomer item : news) {
                 if (item.getMessage_id().equals(deleteNews.getIdNews())) {
                     item.setDelete(true);
                 }
             }
 
-            int size = listNews.size() - 1;
+            int size = news.size() - 1;
 
             for (int i = size; i >= 0; i--) {
-                if (listNews.get(i).isDelete()) {
-                    listNews.remove(i);
+                if (news.get(i).isDelete()) {
+                    news.remove(i);
                 }
             }
         }
-        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listNews, this);
+
+        Collections.sort(news);
+        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), news, this);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);
     }
