@@ -211,7 +211,7 @@
         android:listSelector="@android:color/transparent"
         android:paddingLeft="@dimen/size_5"
         android:paddingRight="@dimen/size_5"
-        android:scrollbars="horizontal"
+        android:scrollbars="none"
         android:visibility="gone" />
 
     <TextView

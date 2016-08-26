@@ -9,11 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ln.app.MainApplication;
 import com.ln.images.models.LocalMedia;
 import com.ln.mycoupon.PreviewImagesActivity;
 import com.ln.mycoupon.R;
-import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -41,8 +42,9 @@ class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
         LocalMedia item = mListImages.get(position);
         if (item != null) {
-            Picasso.with(mContext)
+            Glide.with(mContext)
                     .load(item.getPath())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.imageView);
         }
     }

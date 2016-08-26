@@ -83,6 +83,9 @@ public class ShopMainActivity extends AppCompatActivity
                 MODE_PRIVATE).getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
 
+
+        Log.d(TAG, "web token: " + company.getWeb_token());
+        Log.d(TAG, "web token: " + company.getCompany_id());
         getDataFromIntent();
 
         sTitle = getString(R.string.my_coupon);

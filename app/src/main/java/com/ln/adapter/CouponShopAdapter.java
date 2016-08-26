@@ -42,7 +42,6 @@ public class CouponShopAdapter extends RecyclerView.Adapter<CouponShopAdapter.Vi
         }
         if (item.getLogo() != null) {
             byte[] bytes = MainApplication.convertToBytes(item.getLogo());
-//            byte[] bytes = item.getImages().getBytes();
             Glide.with(mContext).load(bytes)
                     .asBitmap()
                     .placeholder(R.drawable.ic_logo_blank)

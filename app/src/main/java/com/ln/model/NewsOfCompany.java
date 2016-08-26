@@ -73,6 +73,7 @@ public class NewsOfCompany extends Model implements Comparable<NewsOfCompany> {
         this.title = news.getTitle();
         this.link = news.getLink();
         this.images_link = news.getImages_link();
+        this.created_date = news.getCreated_date();
     }
 
     public String getMessage_id() {

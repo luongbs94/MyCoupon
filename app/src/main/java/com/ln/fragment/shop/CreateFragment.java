@@ -4,30 +4,23 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.ln.adapter.HistoryAdapter;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
-import com.ln.databases.DatabaseManager;
-import com.ln.model.Company;
-import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
 import com.ln.until.UntilCoupon;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class CreateFragment extends Fragment {
@@ -70,6 +63,35 @@ public class CreateFragment extends Fragment {
     private void initViews() {
         mRecyclerCreate = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecyclerCreate.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerCreate.setHasFixedSize(true);
+        mRecyclerCreate.setItemAnimator(new DefaultItemAnimator());
+
+        List<UntilCoupon> coupons = new ArrayList<>();
+        UntilCoupon coupon = new UntilCoupon();
+        coupon.setUser_name("hoang nha");
+        coupons.add(coupon);
+
+        coupon = new UntilCoupon();
+        coupon.setUser_name("hoang nhanh");
+        coupons.add(coupon);
+
+        coupon = new UntilCoupon();
+        coupon.setUser_name("hoang tung");
+        coupons.add(coupon);
+
+        coupon = new UntilCoupon();
+        coupon.setUser_name("hoang Truong");
+        coupons.add(coupon);
+
+        coupon = new UntilCoupon();
+        coupon.setUser_name("hoang Hung");
+        coupons.add(coupon);
+
+        Log.d(TAG, "size: " + coupons.size());
+        HistoryAdapter mAdapter = new HistoryAdapter(getActivity(), coupons);
+
+        mRecyclerCreate.setAdapter(mAdapter);
+
         swipeContainer = (SwipeRefreshLayout) mView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -85,45 +107,47 @@ public class CreateFragment extends Fragment {
 
     private void getListCoupon() {
 
-        if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
-            ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin);
-            mRecyclerCreate.setVisibility(View.GONE);
-            return;
-        }
-        mRecyclerCreate.setVisibility(View.VISIBLE);
+//        if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
+//            ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin);
+//            mRecyclerCreate.setVisibility(View.GONE);
+//            return;
+//        }
 
 
-        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
-        Company company = new Gson().fromJson(strCompany, Company.class);
-
-        Call<List<UntilCoupon>> listCoupon = mApiServices.getCreatedCoupon(company.getWeb_token(), company.getCompany_id(), utc1, utc2);
-        listCoupon.enqueue(new Callback<List<UntilCoupon>>() {
-            @Override
-            public void onResponse(Call<List<UntilCoupon>> call, Response<List<UntilCoupon>> response) {
-
-                for (UntilCoupon item : response.body()) {
-                    Log.d(TAG, item.getCoupon_id() + "\n");
-                }
-
-                HistoryAdapter mAdapter = new HistoryAdapter(getContext(), response.body());
-                mRecyclerCreate.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
-                swipeContainer.setRefreshing(false);
-
-                Log.d(TAG, response.body().size() + " ");
-                for (UntilCoupon item : response.body()) {
-                    Log.d(TAG, item.getCoupon_id() + "\n");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<UntilCoupon>> call, Throwable t) {
-                swipeContainer.setRefreshing(false);
-
-                Log.d(TAG, t.toString());
-
-            }
-        });
+//        mRecyclerCreate.setVisibility(View.VISIBLE);
+//
+//
+//        String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
+//        Company company = new Gson().fromJson(strCompany, Company.class);
+//
+//        Call<List<UntilCoupon>> listCoupon = mApiServices.getCreatedCoupon(company.getWeb_token(), company.getCompany_id(), utc1, utc2);
+//        listCoupon.enqueue(new Callback<List<UntilCoupon>>() {
+//            @Override
+//            public void onResponse(Call<List<UntilCoupon>> call, Response<List<UntilCoupon>> response) {
+//
+//                for (UntilCoupon item : response.body()) {
+//                    Log.d(TAG, item.getUser_id() + "\n");
+//                }
+//
+//                HistoryAdapter mAdapter = new HistoryAdapter(getContext(), response.body());
+//                mRecyclerCreate.setAdapter(mAdapter);
+//                mAdapter.notifyDataSetChanged();
+//                swipeContainer.setRefreshing(false);
+//
+//                Log.d(TAG, response.body().size() + " ");
+//                for (UntilCoupon item : response.body()) {
+//                    Log.d(TAG, item.getUser_id() + "\n");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<UntilCoupon>> call, Throwable t) {
+//                swipeContainer.setRefreshing(false);
+//
+//                Log.d(TAG, t.toString());
+//
+//            }
+//        });
     }
 
     public void getData(long time) {

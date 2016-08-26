@@ -37,7 +37,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater
-                .from(mContext)
+                .from(parent.getContext())
                 .inflate(R.layout.item_fragment_create, parent, false));
     }
 
