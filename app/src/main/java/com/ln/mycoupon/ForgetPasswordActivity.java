@@ -2,6 +2,8 @@ package com.ln.mycoupon;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +40,8 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
+
+        mEdtEmail.addTextChangedListener(new Events(mEdtEmail));
         findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,12 +53,12 @@ public class ForgetPasswordActivity extends AppCompatActivity {
 
                 String email = mEdtEmail.getText().toString().trim();
                 if (email.isEmpty()) {
-                    showMessages(R.string.user_dont_empty);
+                    mEdtEmail.setError(getString(R.string.user_dont_empty));
                     return;
                 }
 
                 if (!isEmailValid(email)) {
-                    showMessages(R.string.email_do_not_match);
+                    mEdtEmail.setError(getString(R.string.email_do_not_match));
                     return;
                 }
 
@@ -88,7 +92,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
@@ -108,6 +112,36 @@ public class ForgetPasswordActivity extends AppCompatActivity {
 
         public SendEmail(String value) {
             this.value = value;
+        }
+    }
+
+    private class Events implements TextWatcher {
+
+        private View view;
+
+        public Events(View view) {
+            this.view = view;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (view == mEdtEmail) {
+                if (!isEmailValid(mEdtEmail.getText().toString().trim())) {
+                    mEdtEmail.setError(getString(R.string.email_do_not_match));
+                } else {
+                    mEdtEmail.setError("");
+                }
+            }
         }
     }
 }

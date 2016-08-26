@@ -55,7 +55,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         if (item.getUser_name() != null) {
             holder.mTxtCompanyName.setText(item.getUser_name());
         } else {
-            holder.mTxtCompanyName.setText("");
+            holder.mTxtCompanyName.setText(item.getUser_id());
+
         }
 
         if (item.getValue() != null) {

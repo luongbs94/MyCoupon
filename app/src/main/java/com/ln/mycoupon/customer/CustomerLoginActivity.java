@@ -97,6 +97,13 @@ public class CustomerLoginActivity extends AppCompatActivity
         mEdtPassword = (EditText) findViewById(R.id.password);
 
 
+        String user = MainApplication.getPreferences().getString(MainApplication.USER_CUSTOMER, "");
+        String pass = MainApplication.getPreferences().getString(MainApplication.PASSWORD_CUSTOMER, "");
+        mEdtUser.setText(user);
+        mEdtUser.setSelection(mEdtUser.length());
+        mEdtPassword.setText(pass);
+        mEdtPassword.setSelection(mEdtPassword.length());
+
         mCallbackManager = CallbackManager.Factory.create();
 
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -345,7 +352,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         }
     }
 
-    public void login(final String userId, String token, String device_os, String password) {
+    public void login(final String userId, String token, String device_os, final String password) {
 
         CustomerProfile profile = new CustomerProfile(userId, device_os, token, password);
         Call<Integer> loginCustomer = MainApplication.getAPI().updateUserToken(profile);
@@ -358,6 +365,11 @@ public class CustomerLoginActivity extends AppCompatActivity
                     getNewsOfCustomer(userId);
                     String strCity = MainApplication.getPreferences().getString(MainApplication.CITY_OF_USER, "");
                     getNewsMore(userId, strCity);
+
+                    if (password != null) {
+                        writeSharePreferences(MainApplication.USER_CUSTOMER, userId);
+                        writeSharePreferences(MainApplication.PASSWORD_CUSTOMER, password);
+                    }
                 } else {
                     getShowMessages(getString(R.string.login_fails));
                 }
@@ -470,8 +482,8 @@ public class CustomerLoginActivity extends AppCompatActivity
         public CustomerProfile() {
         }
 
-        public CustomerProfile(String user_id, String device_os,
-                               String device_token, String password) {
+        CustomerProfile(String user_id, String device_os,
+                        String device_token, String password) {
             this.user_id = user_id;
             this.device_os = device_os;
             this.device_token = device_token;

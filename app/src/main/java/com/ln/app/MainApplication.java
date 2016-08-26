@@ -46,6 +46,11 @@ public class MainApplication extends MultiDexApplication {
     public static final String COMPANY_SHOP = "COMPANY_SHOP";
     public static final String ACCOUNT_CUSTOMER = "ACCOUNT_CUSTOMER";
 
+    public static final String USER_SHOP = "USER_SHOP";
+    public static final String PASSWORD_SHOP = "PASSWORD_SHOP";
+
+    public static final String USER_CUSTOMER = "USER_CUSTOMER";
+    public static final String PASSWORD_CUSTOMER = "PASSWORD_CUSTOMER";
 
     public static final int ADD_COUPON_TEMPLATE = 2;
     public static final int ADD_MESSAGES = 3;

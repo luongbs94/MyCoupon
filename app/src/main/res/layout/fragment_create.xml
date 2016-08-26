@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipeContainer"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/back_ground_item">
+    android:background="@color/back_ground_item"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_no_data"
@@ -15,18 +15,27 @@
         android:textSize="@dimen/size_26sp"
         android:visibility="gone" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:dividerHeight="4dp"
-        android:fastScrollEnabled="true"
-        android:focusable="true"
-        android:layoutAnimation="@anim/list_anim"
-        android:listSelector="@android:color/transparent"
-        android:scrollbars="vertical" />
+        android:background="@color/background_green">
 
-</android.support.v4.widget.SwipeRefreshLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@null"
+            android:dividerHeight="4dp"
+            android:fastScrollEnabled="true"
+            android:focusable="true"
+            android:layoutAnimation="@anim/list_anim"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="vertical" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</LinearLayout>
 

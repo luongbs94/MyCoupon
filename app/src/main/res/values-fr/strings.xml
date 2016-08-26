@@ -1,0 +1,205 @@
+<resources>
+    <string name="app_name">Mon Coupon</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Réglages</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="password">Mot de passe</string>
+    <string name="login">S\'identifier</string>
+    <string name="face_login">Facebook</string>
+    <string name="g_login">Google</string>
+    <string name="you_are">Vous êtes</string>
+    <string name="shop">Boutique</string>
+    <string name="customer">Client</string>
+    <string name="not_fill_login">Votre utilisateur ou mot de passe saisis ne correspondent pas</string>
+    <string name="title_activity_test_qrcode">TestQRCode</string>
+    <string name="reload">Autre code</string>
+    <string name="exit">Se déconnecter</string>
+    <string name="add_coupon">Nouveau modèle de coupon</string>
+    <string name="add_message">Ajouter des Nouvelles</string>
+
+    <string name="money">la valeur</string>
+    <string name="title">Titre </string>
+    <string name="content">Contenu</string>
+    <string name="link">Lien</string>
+    <string name="date">Date de limite</string>
+
+    <string name="description">Description</string>
+    <string name="limit">Durée</string>
+    <string name="month">Mois</string>
+    <string name="add_coupon_success">pas de succès</string>
+    <string name="add_coupon_fail">Succès</string>
+    <string name="delete_coupon_success">Succès</string>
+    <string name="delete_coupon_fail">pas de succès</string>
+
+    <string name="add_message_success">Succès</string>
+    <string name="add_message_fail">pas de succès</string>
+
+
+    <string name="title_delete_coupon">Delete coupon</string>
+    <string name="content_delete_coupon">Êtes-vous sûr de vouloir supprimer ce coupon</string>
+    <string name="ok">D\'accord</string>
+    <string name="cancel">Annuler</string>
+    <string name="qrcode">Coupon numérisé</string>
+    <string name="name_company">Nom de la boutique</string>
+    <string name="address_company">Adresse de la boutique</string>
+    <string name="username1">Username1</string>
+    <string name="content_icon">Image of User</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+
+    <string name="facebook_app_id">1073363172685474</string>
+    <string name="fb_login_protocol_scheme">fb1073363172685474</string>
+    <string name="price">123234</string>
+    <string name="txt_time_coupon">30</string>
+    <string name="check_admin">Administrateur</string>
+    <string name="save">save</string>
+    <string name="my_coupon">My Coupons</string>
+    <string name="news">Notifications</string>
+    <string name="history">Histoire</string>
+    <string name="setting">Réglages</string>
+    <string name="title_news">Promotion</string>
+    <string name="qr_code">QRCode</string>
+
+
+    <string name="time_news">20/5/2016</string>
+    <string name="share">Partager</string>
+
+    <string name="create">Créer</string>
+    <string name="used">Utilisé</string>
+    <string name="add">Ajouter un message</string>
+    <string name="delete">Effacer</string>
+    <string name="show_password">Montrer le mot de passe</string>
+    <string name="like">Comme</string>
+    <string name="share_news">Partager</string>
+    <string name="more">Plus</string>
+    <string name="show_images">Images</string>
+    <string name="coupon_of">Coupon</string>
+    <string name="login_fails">Compte ou mot de passe est incorrect</string>
+    <string name="login_google_fails">Connectez-vous google échoue</string>
+    <string name="google_login">google</string>
+    <string name="create_news">CREATE NOUVELLES</string>
+    <string name="images_chose_is_exists">Sélectionnez l\'image que vous venez de faire dans la liste des photos sélectionnées!</string>
+    <string name="username2">Username 2</string>
+    <string name="user_error">Il vous suffit de saisir votre nom d\'utilisateur!</string>
+    <string name="enter_password">ne peut pas être vide</string>
+    <string name="title_share">Nous sommes comme vous, l\'amour et la promotion coupon nouvelles.</string>
+    <string name="contact">Contact Hors de l\'équipe:</string>
+    <string name="support">info@lovecoupon.com</string>
+    <string name="web">www.lovecoupon.com</string>
+    <string name="please_question">S\'il vous plaît nous contacter si vous avez des questions?</string>
+    <string name="love_coupon">Mon Coupon</string>
+    <string name="delete_news">Voulez-vous supprimer ces nouvelles?</string>
+    <string name="exit_alert">Voulez-vous sortir?</string>
+
+    <string name="agree">Se mettre d\'accord</string>
+    <string name="disagree">Être en désaccord</string>
+    <string name="delete_news_success">Le message est supprimé</string>
+    <string name="all_news">Tout</string>
+    <string name="history_news">Supprimer Nouvelles</string>
+    <string name="share_love_coupon">L\'application pour les clients de la boutique et bien-aimé!</string>
+    <string name="description_love_coupon">Avec Coupon Amour, les magasins peuvent récompenser coupons et envoyer les promotions aux clients aimés facilement
+, Les clients ne doivent pas apporter des coupons de papier et ne manquez jamais les promotions des boutiques préférées. </string>
+
+    <string name="face_image">https://graph.facebook.com/%1$s/picture?type=large</string>
+    <string name="like_news">Signet</string>
+    <string name="news_delete">Supprimer Nouvelles</string>
+    <string name="near_news">Nouvelles Près</string>
+    <string name="connect_network">En attente du réseau!</string>
+    <string name="changedate">Changement</string>
+
+    <string name="news_more">Autres Nouvelles</string>
+
+    <string name="delete_news_error">Supprimer un message d\'erreur</string>
+    <string name="date_menu">AUG 10, 2016</string>
+    <string name="login_success">Connectez-vous avec succès</string>
+    <string name="save_running">Économie</string>
+    <string name="delete_coupon">Voulez-vous utiliser ce coupon?</string>
+    <string name="post">Poster</string>
+    <string name="time_coupon_template" formated="false">%1$s journée</string>
+    <string name="press_back_again">Appuyez sur la touche Retour à nouveau pour quitter!</string>
+    <string name="check_network">Connexion internet ne is available PAS</string>
+    <string name="time_shelf">40</string>
+    <string name="fit_images">FIT IMAGE</string>
+    <string name="square">SQUARE</string>
+    <string name="text_done" formated="false">Terminé(%1$S)</string>
+    <string name="take_camera">Prendre une photo</string>
+    <string name="text_3_4">3:4</string>
+    <string name="text_4_3">4:3</string>
+    <string name="text_9_16">9:16</string>
+    <string name="text_16_9">16:9</string>
+    <string name="free">4:3</string>
+    <string name="text_7_5">7:5</string>
+    <string name="circle">CIRCLE</string>
+    <string name="circle_square">CIRCLE_SQUARE</string>
+    <string name="all_image">All images</string>
+    <string name="crop_images">Chose Images Crop</string>
+
+    <string name="button_allow">Allow</string>
+    <string name="button_deny">Deny</string>
+    <string name="permission_pick_rationale">READ_EXTERNAL_STORAGE permission is needed to pick image.</string>
+    <string name="permission_crop_rationale">WRITE_EXTERNAL_STORAGE permission is needed to save cropped image.</string>
+    <string name="permission_denied">Permission was denied. Please consider granting it in order to use all features.</string>
+    <string name="permission_denied_never_ask_again">Permission was denied with never ask again.</string>
+    <string name="external">SDcard</string>
+    <string name="internal">Internal storage</string>
+    <string name="message_max_num">Up to %1$s photos can be selected</string>
+    <string name="coupon">Coupons</string>
+    <string name="coupon_used">CCode a été utilisé , s\'il vous plaît vérifier autre code!</string>
+    <string name="you_add_news_coupon">Vous avez ajouté un nouveau coupon!</string>
+    <string name="title_qr_code">QR Code  %1$S coupon</string>
+    <string name="edit_news">modifier</string>
+    <string name="check_account">*Existant</string>
+
+    <string-array name="month">
+        <item>1 mois</item>
+        <item>2 mois</item>
+        <item>3 mois</item>
+        <item>4 mois</item>
+        <item>5 mois</item>
+        <item>6 mois</item>
+        <item>7 mois</item>
+        <item>8 mois</item>
+        <item>9 mois</item>
+        <item>10 mois</item>
+        <item>11 mois</item>
+        <item>12 mois</item>
+    </string-array>
+
+    <string-array name="title_history">
+        <item>Créer</item>
+        <item>Utilisé</item>
+    </string-array>
+    <string name="account_exists">*Existant</string>
+    <string name="up_loading">Uploading</string>
+    <string name="only_admin">Seul administrateur</string>
+
+
+    <string name="icon_calendar">\uf133</string>
+    <string name="icon_clock">\uf017</string>
+    <string name="ic_heart">\uf004</string>
+    <string name="ic_share">\uf064</string>
+    <string name="ic_delete">\uf00d</string>
+    <string name="ic_email">\uf0e0</string>
+    <string name="ic_start">\uf006</string>
+    <string name="ic_start_like">\uf005</string>
+    <string name="ic_globe">\uf0ac</string>
+    <string name="icon_picture">\uf03e</string>
+    <string name="icon_more">\uf142</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="ic_close">\uf00d</string>
+    <string name="ic_calendar_message">\uf073</string>
+    <string name="icon_bell">\uf0a2</string>
+
+    <string name="forgot_password">Mot de passe oublié?</string>
+    <string name="title_forget_password">Mot de passe oublié</string>
+    <string name="email">Email</string>
+    <string name="send_email">Envoyer</string>
+    <string name="user_dont_empty">Email faire pas vide</string>
+    <string name="email_do_not_match">Le courrier électronique est incorrect</string>
+    <string name="cancel_camera">L\'utilisateur a annulé la capture d\'image</string>
+
+
+</resources>

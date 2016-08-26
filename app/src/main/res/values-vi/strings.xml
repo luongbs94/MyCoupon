@@ -150,8 +150,6 @@
     <string name="edit_news">Sửa</string>
     <string name="check_account">*Đã tòn tại</string>
 
-    <string name="user1OtherUser2">Tài khoản 1 phải khác với tài khoản 2</string>
-    <string name="user2OtherUser1">Tài khoản 2 phải khác với tài khoản 1! bạn hãy nhập tài khoản mới!</string>
 
     <string-array name="month">
         <item>1 tháng</item>

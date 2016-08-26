@@ -135,8 +135,16 @@ public class ShopLoginActivity extends AppCompatActivity
 
         EditText edtUser = (EditText) findViewById(R.id.username);
         EditText edtPass = (EditText) findViewById(R.id.password);
+
+        String user = MainApplication.getPreferences().getString(MainApplication.USER_SHOP, "");
+        String pass = MainApplication.getPreferences().getString(MainApplication.PASSWORD_SHOP, "");
+
+        edtUser.setText(user);
+        edtPass.setText(pass);
+
         edtUser.setSelection(edtUser.getText().length());
         edtPass.setSelection(edtPass.getText().length());
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -232,7 +240,8 @@ public class ShopLoginActivity extends AppCompatActivity
 
                     String strCompany = new Gson().toJson(company);
                     writeSharePreferences(MainApplication.COMPANY_SHOP, strCompany);
-
+                    writeSharePreferences(MainApplication.USER_SHOP, user);
+                    writeSharePreferences(MainApplication.PASSWORD_SHOP, pass);
                     if (company.getUser1() != null
                             && user.equals(company.getUser1())) {
                         boolean isAdmin = false;
