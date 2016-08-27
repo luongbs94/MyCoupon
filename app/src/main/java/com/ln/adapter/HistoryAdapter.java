@@ -47,10 +47,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         final UntilCoupon item = mListCoupons.get(position);
         if (item.getUser_image_link() != null) {
-//            Picasso.with(mContext)
-//                    .load(item.getUser_image_link())
-//                    .placeholder(R.drawable.ic_logo_blank)
-//                    .into(holder.mImgLogo);
             Glide.with(mContext)
                     .load(item.getUser_image_link())
                     .thumbnail(0.5f)

@@ -25,7 +25,6 @@ import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
 import com.ln.until.Until;
 import com.ln.views.RecyclerViewHeader;
-import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -101,11 +100,14 @@ public class ShopOfCustomerActivity extends AppCompatActivity {
                     Glide.with(this)
                             .load(MainApplication.convertToBytes(mCompanyOfCustomer.getLogo()))
                             .asBitmap()
+                            .thumbnail(0.5f)
                             .placeholder(R.drawable.ic_logo_blank)
                             .into((ImageView) header.findViewById(R.id.img_logo_nav));
                 } else {
-                    Picasso.with(this)
+                    Glide.with(this)
                             .load(mCompanyOfCustomer.getLogo())
+                            .thumbnail(0.5f)
+                            .crossFade()
                             .placeholder(R.drawable.ic_logo_blank)
                             .into((ImageView) header.findViewById(R.id.img_logo_nav));
                 }

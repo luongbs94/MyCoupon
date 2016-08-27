@@ -42,10 +42,6 @@ class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
         LocalMedia item = mListImages.get(position);
         if (item != null) {
-//            Glide.with(mContext)
-//                    .load(item.getPath())
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                    .into(holder.imageView);
 
             Glide.with(mContext)
                     .load(item.getPath())

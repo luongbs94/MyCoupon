@@ -47,15 +47,6 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.mImages);
-//        if (item.getPath().contains("http")) {
-////            Picasso.with(mContext)
-////                    .load(item.getPath())
-////                    .into(holder.mImages);
-//        } else {
-//            Glide.with(mContext)
-//                    .load(item.getPath())
-//                    .into(holder.mImages);
-//        }
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
