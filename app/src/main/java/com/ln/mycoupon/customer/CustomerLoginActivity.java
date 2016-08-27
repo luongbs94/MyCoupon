@@ -1,8 +1,11 @@
 package com.ln.mycoupon.customer;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -61,6 +64,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
 
     private EditText mEdtUser, mEdtPassword;
+    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -268,13 +272,21 @@ public class CustomerLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<CompanyOfCustomer>> call,
                                    Response<List<CompanyOfCustomer>> response) {
                 if (response.body() != null) {
-                    DatabaseManager.addListShopOfCustomer(response.body());
                     preImageShop(response.body());
+                    DatabaseManager.addListShopOfCustomer(response.body());
                     Log.d(TAG, "getCompanyByUserId " + response.body().size());
 
                     writeSharePreferences(MainApplication.LOGIN_SHOP, false);
                     writeSharePreferences(MainApplication.LOGIN_CLIENT, true);
-                    start();
+
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideProgressDialog();
+                            start();
+                        }
+                    }, 2000);
                 } else {
                     Log.d(TAG, "getCompanyByUserId " + "null");
                 }
@@ -335,6 +347,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                     return;
                 }
 
+                showProgressDialog();
                 String user = mEdtUser.getText().toString().trim();
                 String pass = mEdtPassword.getText().toString().trim();
                 String device_os = "android";
@@ -482,6 +495,20 @@ public class CustomerLoginActivity extends AppCompatActivity
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .preload();
             }
+        }
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(getString(R.string.login));
+        }
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 

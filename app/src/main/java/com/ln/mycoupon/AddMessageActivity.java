@@ -10,7 +10,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -260,6 +259,7 @@ public class AddMessageActivity extends AppCompatActivity
                                 hideProgressDialog();
                                 getShowMessages(getString(R.string.add_message_success));
                                 mType = 0;
+                                finish();
                             }
                         }, MainApplication.TIME_SLEEP_SETTING);
                     } else {
@@ -295,6 +295,7 @@ public class AddMessageActivity extends AppCompatActivity
                                 setResult(RESULT_OK);
                                 hideProgressDialog();
                                 getShowMessages(getString(R.string.add_message_success));
+                                finish();
                             }
                         }, MainApplication.TIME_SLEEP_SETTING);
                     } else {
@@ -417,13 +418,7 @@ public class AddMessageActivity extends AppCompatActivity
                             uploadFile(mListLocalImages.get(i).getPath());
                         }
                         addNews(title, content, link);
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                finish();
-                            }
-                        }, 2000);
+
                     }
                 }
             } else {
