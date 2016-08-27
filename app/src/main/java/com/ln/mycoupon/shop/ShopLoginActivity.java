@@ -107,7 +107,7 @@ public class ShopLoginActivity extends AppCompatActivity
                                     Log.d(TAG, "Logout Google ");
                                 }
                             });
-
+                    writeSharePreferences(MainApplication.ADMIN, true);
                     isGoogle = false;
                 }
             }
@@ -145,7 +145,6 @@ public class ShopLoginActivity extends AppCompatActivity
         edtUser.setSelection(edtUser.getText().length());
         edtPass.setSelection(edtPass.getText().length());
 
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         LoginManager.getInstance().registerCallback(mCallbackManager,
@@ -173,6 +172,7 @@ public class ShopLoginActivity extends AppCompatActivity
                             getCompanyProfileSocial(id, token);
                             Log.d(TAG, "user:" + id + " -token:" + token);
                             LoginManager.getInstance().logOut();
+                            writeSharePreferences(MainApplication.ADMIN, true);
                         }
                     }
 
@@ -204,6 +204,7 @@ public class ShopLoginActivity extends AppCompatActivity
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.btn_google).setOnClickListener(this);
         findViewById(R.id.btn_facebook).setOnClickListener(this);
+        findViewById(R.id.txt_forgot_password).setOnClickListener(this);
     }
 
     @Override

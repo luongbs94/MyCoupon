@@ -40,14 +40,22 @@ public class CouponShopAdapter extends RecyclerView.Adapter<CouponShopAdapter.Vi
         if (item == null) {
             return;
         }
-        if (item.getLogo() != null) {
-            byte[] bytes = MainApplication.convertToBytes(item.getLogo());
-            Glide.with(mContext).load(bytes)
+
+        if (item.getLogo_link() != null) {
+            Glide.with(mContext).load(item.getLogo_link())
                     .asBitmap()
                     .placeholder(R.drawable.ic_logo_blank)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.mImgLogo);
         }
+//        if (item.getLogo() != null) {
+//            byte[] bytes = MainApplication.convertToBytes(item.getLogo());
+//            Glide.with(mContext).load(bytes)
+//                    .asBitmap()
+//                    .placeholder(R.drawable.ic_logo_blank)
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .into(holder.mImgLogo);
+//        }
         if (item.getName() != null) {
             holder.companyName.setText(item.getName());
         }

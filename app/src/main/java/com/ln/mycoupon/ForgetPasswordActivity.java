@@ -7,12 +7,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
+import com.ln.views.MaterialEditText;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,7 +20,7 @@ import retrofit2.Response;
 
 public class ForgetPasswordActivity extends AppCompatActivity {
 
-    private EditText mEdtEmail;
+    private MaterialEditText mEdtEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.title_forget_password);
 
-        mEdtEmail = (EditText) findViewById(R.id.edt_email);
+        mEdtEmail = (MaterialEditText) findViewById(R.id.edt_email);
     }
 
     private void addEvents() {
@@ -67,9 +67,9 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                 sendEmail.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        String content = "Send Email fail";
+                        String content = getString(R.string.send_email_fails);
                         if (response.body() != null) {
-                            content = "Password was sent to your email";
+                            content = getString(R.string.send_email_success);
                         }
                         new MaterialDialog.Builder(ForgetPasswordActivity.this)
                                 .content(content)

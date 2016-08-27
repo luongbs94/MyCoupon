@@ -55,9 +55,9 @@
     <string name="price">123234</string>
     <string name="txt_time_coupon">30</string>
     <string name="check_admin">Administrateur</string>
-    <string name="save">save</string>
-    <string name="my_coupon">My Coupons</string>
-    <string name="news">Notifications</string>
+    <string name="save">enregistrer</string>
+    <string name="my_coupon">Mon Coupon</string>
+    <string name="news">Notification</string>
     <string name="history">Histoire</string>
     <string name="setting">Réglages</string>
     <string name="title_news">Promotion</string>
@@ -146,7 +146,7 @@
     <string name="external">SDcard</string>
     <string name="internal">Internal storage</string>
     <string name="message_max_num">Up to %1$s photos can be selected</string>
-    <string name="coupon">Coupons</string>
+    <string name="coupon">Coupon</string>
     <string name="coupon_used">CCode a été utilisé , s\'il vous plaît vérifier autre code!</string>
     <string name="you_add_news_coupon">Vous avez ajouté un nouveau coupon!</string>
     <string name="title_qr_code">QR Code  %1$S coupon</string>
@@ -200,6 +200,8 @@
     <string name="user_dont_empty">Email faire pas vide</string>
     <string name="email_do_not_match">Le courrier électronique est incorrect</string>
     <string name="cancel_camera">L\'utilisateur a annulé la capture d\'image</string>
+    <string name="send_email_success">Mot de passe a été envoyé à votre email</string>
+    <string name="send_email_fails">Envoyer un message échouer</string>
 
 
 </resources>

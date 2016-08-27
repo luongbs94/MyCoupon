@@ -84,11 +84,11 @@
     <string name="username2">Username 2</string>
     <string name="user_error">Bạn hãy nhập username!</string>
     <string name="enter_password">Password không được để trống!</string>
-    <string name="title_share">Chúng tôi giống như bạn, yêu phiếu giảm giá và khuyến mãi tin tức.</string>
+    <string name="title_share">Chúng tôi giống như bạn, yêu phiếu giảm giá và tin tức khuyến mãi.</string>
     <string name="contact">Liên hệ của chúng tôi:</string>
     <string name="support">info@lovecoupon.com</string>
     <string name="web">www.lovecoupon.com</string>
-    <string name="please_question">Hãy liên lạc với chúng tôi nếu bạn có bất kì câu hỏi nào?</string>
+    <string name="please_question">Hãy liên lạc với chúng tôi nếu bạn có bất kì câu hỏi nào</string>
     <string name="love_coupon">Love Coupon</string>
     <string name="delete_news">Bạn có muốn xóa tin mới này không?</string>
     <string name="exit_alert">Bạn có muốn thoát ứng dụng không?</string>
@@ -195,5 +195,8 @@
     <string name="email">Email</string>
     <string name="send_email">Gửi</string>
     <string name="cancel_camera">Không thể chụp được!</string>
+
+    <string name="send_email_success">Mật khẩu đã được gửi tới Email!</string>
+    <string name="send_email_fails">Gửi email không thành công</string>
 
 </resources>

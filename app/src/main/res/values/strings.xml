@@ -200,6 +200,8 @@
     <string name="user_dont_empty">Email do not empty</string>
     <string name="email_do_not_match">Email is not correct</string>
     <string name="cancel_camera">User cancelled image capture</string>
+    <string name="send_email_success">Password was sent to your email</string>
+    <string name="send_email_fails">Send Email fail</string>
 
 
 </resources>

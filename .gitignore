@@ -37,6 +37,7 @@ ehthumbs.db
 Thumbs.db
 
 *.iml
+.idea
 .gradle
 /local.properties
 /.idea/workspace.xml
@@ -46,3 +47,4 @@ Thumbs.db
 /captures
 /.idea/*
 .idea/*
+/gradle

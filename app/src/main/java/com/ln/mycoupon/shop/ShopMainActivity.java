@@ -86,6 +86,7 @@ public class ShopMainActivity extends AppCompatActivity
 
         Log.d(TAG, "web token: " + company.getWeb_token());
         Log.d(TAG, "web token: " + company.getCompany_id());
+        Log.d(TAG, "web token: " + company.getUser_id());
         getDataFromIntent();
 
         sTitle = getString(R.string.my_coupon);

@@ -16,7 +16,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginLeft="@dimen/size_15"
+        android:layout_marginRight="@dimen/size_15"
+        android:layout_marginTop="@dimen/size_10"
+        android:layout_marginBottom="@dimen/size_5"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/size_8"

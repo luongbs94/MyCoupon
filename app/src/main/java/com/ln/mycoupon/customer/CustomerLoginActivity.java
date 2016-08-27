@@ -269,6 +269,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                                    Response<List<CompanyOfCustomer>> response) {
                 if (response.body() != null) {
                     DatabaseManager.addListShopOfCustomer(response.body());
+                    preImageShop(response.body());
                     Log.d(TAG, "getCompanyByUserId " + response.body().size());
 
                     writeSharePreferences(MainApplication.LOGIN_SHOP, false);
@@ -470,6 +471,18 @@ public class CustomerLoginActivity extends AppCompatActivity
             }
         }
 
+    }
+
+
+    private void preImageShop(List<CompanyOfCustomer> companies) {
+        for (CompanyOfCustomer item : companies) {
+            if (item.getLogo_link() != null) {
+                Glide.with(MainApplication.getInstance())
+                        .load(item.getLogo_link())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .preload();
+            }
+        }
     }
 
     public static class CustomerProfile {
