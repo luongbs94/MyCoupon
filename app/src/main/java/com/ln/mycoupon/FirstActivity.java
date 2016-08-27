@@ -20,7 +20,6 @@ import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOfUser;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
-import com.ln.model.CompanyOfCustomer;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
@@ -58,9 +57,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 md.update(signature.toByteArray());
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
 
         }
 
@@ -142,38 +139,12 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             AccountOfUser account = new Gson().fromJson(strAccount, AccountOfUser.class);
             if (account != null) {
                 startCustomer();
-                getCompanyOfCustomer(account.getId());
+//                getCompanyOfCustomer(account.getId());
                 getNewsOfCustomer(account.getId());
                 String city = preferences.getString(MainApplication.CITY_OF_USER, "");
                 getNewsMore(account.getId(), city);
             }
         }
-    }
-
-    /* ============= START CUSTOMER =============*/
-    private void getCompanyOfCustomer(final String userId) {
-
-        Call<List<CompanyOfCustomer>> customerLogin
-                = mCouponAPI.getCompaniesByUserId(userId);
-        customerLogin.enqueue(new Callback<List<CompanyOfCustomer>>() {
-            @Override
-            public void onResponse(Call<List<CompanyOfCustomer>> call,
-                                   Response<List<CompanyOfCustomer>> response) {
-
-                if (response.body() != null) {
-                    DatabaseManager.addListShopOfCustomer(response.body());
-                    preLoadImageShopOfCustomer();
-                    Log.d(TAG, "getCompanyOfCustomer + " + response.body().size());
-                } else {
-                    Log.d(TAG, "getCompanyOfCustomer + " + "null");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<CompanyOfCustomer>> call, Throwable t) {
-                Log.d(TAG, "getCompanyOfCustomer + " + t.toString());
-            }
-        });
     }
 
     private void getNewsOfCustomer(String id) {
@@ -208,15 +179,16 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
+                    preLoadImageNewMore(response.body());
                     String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
                     String user = new Gson().fromJson(account, AccountOfUser.class).getId();
-
                     DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE, user);
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
                     Log.d(TAG, " getNewsMore " + " null");
                 }
             }
+
 
             @Override
             public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
@@ -366,7 +338,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             if (news.getLogo_link() != null && news.getLogo_link().contains("http")) {
                 Glide.with(MainApplication.getInstance())
                         .load(news.getLogo_link())
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .preload();
 
                 if (news.getImages_link() != null) {
@@ -375,7 +347,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                     for (String path : listStrImages) {
                         Glide.with(MainApplication.getInstance())
                                 .load(path)
-                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .preload();
                     }
                 }
@@ -393,24 +365,21 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 for (String path : listStrImages) {
                     Glide.with(MainApplication.getInstance())
                             .load(path)
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .preload();
                 }
             }
         }
     }
 
-    private void preLoadImageShopOfCustomer() {
-//        List<CompanyOfCustomer> listShop = new ArrayList<>();
-//        listShop.addAll(RealmController.with(MainApplication.getInstance()).getListCompanyCustomer());
-//        for (CompanyOfCustomer company : listShop) {
-//            if (company.getLogo_link() != null
-//                    && company.getLogo_link().contains("http")) {
-//                Glide.with(MainApplication.getInstance())
-//                        .load(company.getLogo_link())
-//                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-//                        .preload();
-//            }
-//        }
+    private void preLoadImageNewMore(List<NewsOfCustomer> news) {
+        for (NewsOfCustomer item : news) {
+            if (item.getLogo_link() != null && item.getLogo_link().contains("http")) {
+                Glide.with(MainApplication.getInstance())
+                        .load(item.getLogo_link())
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .preload();
+            }
+        }
     }
 }

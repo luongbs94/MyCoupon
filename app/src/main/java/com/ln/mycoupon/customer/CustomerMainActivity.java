@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
@@ -125,7 +126,12 @@ public class CustomerMainActivity extends AppCompatActivity
         if (accountOflUser != null) {
 
             if (accountOflUser.getPicture() != null) {
-                Glide.with(this).load(accountOflUser.getPicture()).into(imageView);
+                Glide.with(this)
+                        .load(accountOflUser.getPicture())
+                        .thumbnail(0.5f)
+                        .crossFade()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
             }
 
             if (accountOflUser.getName() != null) {

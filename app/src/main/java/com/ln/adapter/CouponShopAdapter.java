@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.ln.app.MainApplication;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.mycoupon.R;
 
@@ -42,20 +41,13 @@ public class CouponShopAdapter extends RecyclerView.Adapter<CouponShopAdapter.Vi
         }
 
         if (item.getLogo_link() != null) {
-            Glide.with(mContext).load(item.getLogo_link())
-                    .asBitmap()
-                    .placeholder(R.drawable.ic_logo_blank)
+            Glide.with(mContext)
+                    .load(item.getLogo_link())
+                    .thumbnail(0.5f)
+                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.mImgLogo);
         }
-//        if (item.getLogo() != null) {
-//            byte[] bytes = MainApplication.convertToBytes(item.getLogo());
-//            Glide.with(mContext).load(bytes)
-//                    .asBitmap()
-//                    .placeholder(R.drawable.ic_logo_blank)
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                    .into(holder.mImgLogo);
-//        }
         if (item.getName() != null) {
             holder.companyName.setText(item.getName());
         }

@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -242,6 +240,8 @@ public class CustomerLoginActivity extends AppCompatActivity
 
             Glide.with(MainApplication.getInstance())
                     .load(accountOflUser.getPicture())
+                    .thumbnail(0.5f)
+                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .preload();
         }
@@ -279,14 +279,8 @@ public class CustomerLoginActivity extends AppCompatActivity
                     writeSharePreferences(MainApplication.LOGIN_SHOP, false);
                     writeSharePreferences(MainApplication.LOGIN_CLIENT, true);
 
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            hideProgressDialog();
-                            start();
-                        }
-                    }, 2000);
+                    hideProgressDialog();
+                    start();
                 } else {
                     Log.d(TAG, "getCompanyByUserId " + "null");
                 }
@@ -353,7 +347,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                 String device_os = "android";
                 String token = MainApplication.getPreferences().getString(MainApplication.DEVICE_TOKEN, "");
 
-                AccountOfUser account = new AccountOfUser(user, user, MainApplication.LOGO_USER, token);
+                AccountOfUser account = new AccountOfUser(user, user, null, token);
                 String strAccount = new Gson().toJson(account);
                 writeSharePreferences(MainApplication.ACCOUNT_CUSTOMER, strAccount);
                 login(user, token, device_os, pass);

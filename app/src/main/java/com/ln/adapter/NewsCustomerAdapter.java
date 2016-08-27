@@ -67,9 +67,6 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         final NewsOfCustomer item = mListNews.get(position);
 
         if (item.getLogo_link() != null) {
-//            Picasso.with(mContext)
-//                    .load(item.getLogo_link())
-//                    .into(holder.mImgLogo);
             Glide.with(mContext)
                     .load(item.getLogo_link())
                     .thumbnail(0.5f)

@@ -81,25 +81,25 @@
     <string name="login_google_fails">Connectez-vous google échoue</string>
     <string name="google_login">google</string>
     <string name="create_news">CREATE NOUVELLES</string>
-    <string name="images_chose_is_exists">Sélectionnez l\'image que vous venez de faire dans la liste des photos sélectionnées!</string>
+    <string name="images_chose_is_exists">Sélectionnez l\'image que vous venez de faire dans la liste des photos sélectionnées</string>
     <string name="username2">Username 2</string>
-    <string name="user_error">Il vous suffit de saisir votre nom d\'utilisateur!</string>
+    <string name="user_error">Il vous suffit de saisir votre nom d\'utilisateur</string>
     <string name="enter_password">ne peut pas être vide</string>
     <string name="title_share">Nous sommes comme vous, l\'amour et la promotion coupon nouvelles.</string>
     <string name="contact">Contact Hors de l\'équipe:</string>
     <string name="support">info@lovecoupon.com</string>
     <string name="web">www.lovecoupon.com</string>
-    <string name="please_question">S\'il vous plaît nous contacter si vous avez des questions?</string>
+    <string name="please_question">S\'il vous plaît nous contacter si vous avez des questions</string>
     <string name="love_coupon">Mon Coupon</string>
-    <string name="delete_news">Voulez-vous supprimer ces nouvelles?</string>
-    <string name="exit_alert">Voulez-vous sortir?</string>
+    <string name="delete_news">Voulez-vous supprimer ces nouvelles</string>
+    <string name="exit_alert">Voulez-vous sortir</string>
 
     <string name="agree">Se mettre d\'accord</string>
     <string name="disagree">Être en désaccord</string>
     <string name="delete_news_success">Le message est supprimé</string>
     <string name="all_news">Tout</string>
     <string name="history_news">Supprimer Nouvelles</string>
-    <string name="share_love_coupon">L\'application pour les clients de la boutique et bien-aimé!</string>
+    <string name="share_love_coupon">L\'application pour les clients de la boutique et bien-aimé</string>
     <string name="description_love_coupon">Avec Coupon Amour, les magasins peuvent récompenser coupons et envoyer les promotions aux clients aimés facilement
 , Les clients ne doivent pas apporter des coupons de papier et ne manquez jamais les promotions des boutiques préférées. </string>
 
@@ -107,7 +107,7 @@
     <string name="like_news">Signet</string>
     <string name="news_delete">Supprimer Nouvelles</string>
     <string name="near_news">Nouvelles Près</string>
-    <string name="connect_network">En attente du réseau!</string>
+    <string name="connect_network">En attente du réseau</string>
     <string name="changedate">Changement</string>
 
     <string name="news_more">Autres Nouvelles</string>
@@ -116,10 +116,10 @@
     <string name="date_menu">AUG 10, 2016</string>
     <string name="login_success">Connectez-vous avec succès</string>
     <string name="save_running">Économie</string>
-    <string name="delete_coupon">Voulez-vous utiliser ce coupon?</string>
+    <string name="delete_coupon">Voulez-vous utiliser ce coupon</string>
     <string name="post">Poster</string>
     <string name="time_coupon_template" formated="false">%1$s journée</string>
-    <string name="press_back_again">Appuyez sur la touche Retour à nouveau pour quitter!</string>
+    <string name="press_back_again">Appuyez sur la touche Retour à nouveau pour quitter</string>
     <string name="check_network">Connexion internet ne is available PAS</string>
     <string name="time_shelf">40</string>
     <string name="fit_images">FIT IMAGE</string>
@@ -147,8 +147,8 @@
     <string name="internal">Internal storage</string>
     <string name="message_max_num">Up to %1$s photos can be selected</string>
     <string name="coupon">Coupon</string>
-    <string name="coupon_used">CCode a été utilisé , s\'il vous plaît vérifier autre code!</string>
-    <string name="you_add_news_coupon">Vous avez ajouté un nouveau coupon!</string>
+    <string name="coupon_used">CCode a été utilisé , s\'il vous plaît vérifier autre code</string>
+    <string name="you_add_news_coupon">Vous avez ajouté un nouveau coupon</string>
     <string name="title_qr_code">QR Code  %1$S coupon</string>
     <string name="edit_news">modifier</string>
     <string name="check_account">*Existant</string>
@@ -193,7 +193,7 @@
     <string name="ic_calendar_message">\uf073</string>
     <string name="icon_bell">\uf0a2</string>
 
-    <string name="forgot_password">Mot de passe oublié?</string>
+    <string name="forgot_password">Mot de passe oublié</string>
     <string name="title_forget_password">Mot de passe oublié</string>
     <string name="email">Email</string>
     <string name="send_email">Envoyer</string>

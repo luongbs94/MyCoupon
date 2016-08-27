@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ln.images.models.LocalMedia;
 import com.ln.mycoupon.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,15 +41,21 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         LocalMedia item = mListImages.get(position);
-        if (item.getPath().contains("http")) {
-            Picasso.with(mContext)
-                    .load(item.getPath())
-                    .into(holder.mImages);
-        } else {
-            Glide.with(mContext)
-                    .load(item.getPath())
-                    .into(holder.mImages);
-        }
+        Glide.with(mContext)
+                .load(item.getPath())
+                .thumbnail(0.5f)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.mImages);
+//        if (item.getPath().contains("http")) {
+////            Picasso.with(mContext)
+////                    .load(item.getPath())
+////                    .into(holder.mImages);
+//        } else {
+//            Glide.with(mContext)
+//                    .load(item.getPath())
+//                    .into(holder.mImages);
+//        }
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

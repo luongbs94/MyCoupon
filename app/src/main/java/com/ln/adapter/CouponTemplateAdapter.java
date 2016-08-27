@@ -63,8 +63,9 @@ public class CouponTemplateAdapter
             byte[] bytes = MainApplication.convertToBytes(company.getLogo());
             Glide.with(mContext).load(bytes)
                     .asBitmap()
-                    .placeholder(R.drawable.ic_logo_blank)
+                    .thumbnail(0.5f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.ic_logo_blank)
                     .into(holder.mImgLogo);
         }
 

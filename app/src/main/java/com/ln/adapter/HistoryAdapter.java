@@ -11,9 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ln.mycoupon.R;
 import com.ln.until.UntilCoupon;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,9 +47,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         final UntilCoupon item = mListCoupons.get(position);
         if (item.getUser_image_link() != null) {
-            Picasso.with(mContext)
+//            Picasso.with(mContext)
+//                    .load(item.getUser_image_link())
+//                    .placeholder(R.drawable.ic_logo_blank)
+//                    .into(holder.mImgLogo);
+            Glide.with(mContext)
                     .load(item.getUser_image_link())
-                    .placeholder(R.drawable.ic_logo_blank)
+                    .thumbnail(0.5f)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.mImgLogo);
         }
 

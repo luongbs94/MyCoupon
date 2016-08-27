@@ -77,6 +77,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
                 Glide.with(mContext).load(MainApplication
                         .convertToBytes(mCompanyOfCustomer.getLogo()))
                         .asBitmap()
+                        .thumbnail(0.5f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.mImageLogo);
             }

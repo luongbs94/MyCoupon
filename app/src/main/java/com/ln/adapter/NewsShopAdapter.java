@@ -92,6 +92,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
                 Glide.with(mContext)
                         .load(bytes)
                         .asBitmap()
+                        .thumbnail(0.5f)
                         .placeholder(R.drawable.ic_logo_blank)
                         .into(holder.mImgLogo);
             }
