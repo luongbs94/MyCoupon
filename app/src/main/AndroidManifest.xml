@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.ln.mycoupon">
 
     <uses-feature
@@ -17,10 +18,12 @@
     <application
         android:name="com.ln.app.MainApplication"
         android:allowBackup="true"
+        android:configChanges="keyboardHidden|orientation"
         android:excludeFromRecents="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -33,14 +36,22 @@
             android:value="13" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="             com.ln.model.CompanyOfCustomer,             com.ln.model.Coupon,             com.ln.model.CouponTemplate,             com.ln.model.NewsOfCompany,             com.ln.model.OptionNews,             com.ln.model.NewsOfCustomer" />
+            android:value="
+            com.ln.model.CompanyOfCustomer,
+            com.ln.model.Coupon,
+            com.ln.model.CouponTemplate,
+            com.ln.model.NewsOfCompany,
+            com.ln.model.OptionNews,
+            com.ln.model.NewsOfCustomer" />
         <meta-data
             android:name="AA_SERIALIZERS"
             android:value="com.ln.model.ByteImages" />
         <!-- ======================= START ACTIVITY OF APP =============== -->
         <activity
             android:name=".FirstActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,8 +61,10 @@
         </activity>
         <activity
             android:name=".shop.ShopMainActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:excludeFromRecents="true"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
@@ -61,8 +74,10 @@
         </activity>
         <activity
             android:name=".customer.CustomerMainActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:excludeFromRecents="true"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
@@ -72,37 +87,60 @@
         </activity>
         <activity
             android:name=".shop.ShopLoginActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".TestQRCode"
+            android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_test_qrcode"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".AddCouponActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:label="@string/add_coupon"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".AddMessageActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:label="@string/add_message"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".QRCodeActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:label="@string/qrcode"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".customer.ShopOfCustomerActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".customer.CustomerLoginActivity" />
-        <activity android:name=".PreviewImagesActivity" />
+        <activity
+            android:name=".customer.CustomerLoginActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PreviewImagesActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
         <!-- ======================== END ACTIVITY OF APP =============== -->
 
-        <service android:name="com.ln.firebase.MyFirebaseMessagingService">
+        <service
+            android:name="com.ln.firebase.MyFirebaseMessagingService"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.ln.firebase.MyFirebaseInstanceIDService">
+
+        <service
+            android:name="com.ln.firebase.MyFirebaseInstanceIDService"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -113,6 +151,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.facebook.CustomTabActivity"
@@ -123,14 +162,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/fb_login_protocol_scheme" />
+                <data
+                    android:scheme="@string/fb_login_protocol_scheme"
+                    tools:ignore="ManifestResource" />
             </intent-filter>
         </activity>
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider1073363172685474"
-            android:exported="true" />
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -144,14 +186,26 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name="com.ln.images.activities.ImagesCropActivity" />
+        <activity
+            android:name="com.ln.images.activities.ImagesCropActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.ln.images.activities.ImagesCheckActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.ln.images.cropimage.CropActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Light.NoActionBar" />
-        <activity android:name=".ForgetPasswordActivity"></activity>
+        <activity
+            android:name=".ForgetPasswordActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>

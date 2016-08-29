@@ -136,7 +136,7 @@ public class MainApplication extends MultiDexApplication {
     //    public static final String EMAIL_LOVE_COUPON = "support@lovecoupon.com";
     public static final String EMAIL_LOVE_COUPON = "info@lovecoupon.com";
     public static final String WEB_SITE_LOVE_COUPON = "http://www.lovecoupon.com";
-    public static final String LINK_SHARE_IMAGE = "http://188.166.199.25:3000/logo/love.jpg";
+    public static final String LINK_SHARE_IMAGE = "http://188.166.199.25:4000/logo/love.jpg";
 
     public static final int NEWS_CUSTOMER = 0;
     public static final int NEWS_MORE = 1;
@@ -193,8 +193,6 @@ public class MainApplication extends MultiDexApplication {
         isEnglish();
 
         ImagesManager.getInstances(this);
-
-
     }
 
     public static SharedPreferences getPreferences() {

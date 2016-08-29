@@ -92,25 +92,30 @@ public class ShopOfCustomerActivity extends AppCompatActivity {
         adapter = new CouponTemplateClientAdapter(this, mCompanyOfCustomer);
         mRecyclerCoupon.setAdapter(adapter);
 
-        RecyclerViewHeader header = (RecyclerViewHeader) findViewById(R.id.header);
+        final RecyclerViewHeader header = (RecyclerViewHeader) findViewById(R.id.header);
+        assert header != null;
         header.attachTo(mRecyclerCoupon);
         if (mCompanyOfCustomer != null) {
             if (mCompanyOfCustomer.getLogo() != null) {
-                if (mCompanyOfCustomer.getLogo().contains(MainApplication.LOGO)) {
-                    Glide.with(this)
-                            .load(MainApplication.convertToBytes(mCompanyOfCustomer.getLogo()))
-                            .asBitmap()
-                            .thumbnail(0.5f)
-                            .placeholder(R.drawable.ic_logo_blank)
-                            .into((ImageView) header.findViewById(R.id.img_logo_nav));
-                } else {
+
+                if (mCompanyOfCustomer.getLogo().contains("http")) {
                     Glide.with(this)
                             .load(mCompanyOfCustomer.getLogo())
                             .thumbnail(0.5f)
                             .crossFade()
                             .placeholder(R.drawable.ic_logo_blank)
                             .into((ImageView) header.findViewById(R.id.img_logo_nav));
+
+                } else {
+                    byte[] bytes = MainApplication.convertToBytes(mCompanyOfCustomer.getLogo());
+                    Glide.with(this)
+                            .load(bytes)
+                            .asBitmap()
+                            .thumbnail(0.5f)
+                            .placeholder(R.drawable.ic_logo_blank)
+                            .into((ImageView) header.findViewById(R.id.img_logo_nav));
                 }
+
             }
 
             if (mCompanyOfCustomer.getName() != null) {

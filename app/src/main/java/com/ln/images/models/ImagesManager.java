@@ -34,7 +34,7 @@ public class ImagesManager {
         }
     }
 
-    public static void loadImages(Context context) {
+    private static void loadImages(Context context) {
 
         List<LocalMedia> mediasInternal = getImages(context, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         List<LocalMedia> mediasExternal = getImages(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

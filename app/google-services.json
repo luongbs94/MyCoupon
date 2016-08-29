@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "617276584328-lke56dnbqope9qou450dmjmd2kc60gum.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ln.mycoupon",
+            "certificate_hash": "70464A1C685468F11A362089808A47FC47428F2D"
+          }
+        },
+        {
           "client_id": "617276584328-mir67p383lmfvjtdcealjnn81r1b1es7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

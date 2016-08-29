@@ -116,7 +116,7 @@
     <string name="date_menu">AUG 10, 2016</string>
     <string name="login_success">Connectez-vous avec succès</string>
     <string name="save_running">Économie</string>
-    <string name="delete_coupon">Voulez-vous utiliser ce coupon</string>
+    <string name="delete_coupon">Voulez-vous supprimer ce coupon</string>
     <string name="post">Poster</string>
     <string name="time_coupon_template" formated="false">%1$s journée</string>
     <string name="press_back_again">Appuyez sur la touche Retour à nouveau pour quitter</string>

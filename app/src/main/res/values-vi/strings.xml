@@ -39,7 +39,7 @@
 
 
     <string name="title_delete_coupon">Xoá coupon</string>
-    <string name="content_delete_coupon">Bạn có chắc chắn muốn xoá coupon này không</string>
+    <string name="content_delete_coupon">Bạn có muốn xoá coupon này không</string>
     <string name="ok">Đồng ý</string>
     <string name="cancel">Không</string>
     <string name="qrcode">Quét mã Coupon</string>
@@ -98,8 +98,8 @@
     <string name="delete_news_success">Bạn đã xóa tin thành công</string>
     <string name="all_news">Tất cả</string>
     <string name="history_news">Xóa tin</string>
-    <string name="share_love_coupon">Một ứng dụng thật là tiện lợi cho các của hàng</string>
-    <string name="description_love_coupon">Chúng tôi làm mọi thư  đều free</string>
+    <string name="share_love_coupon">Ứng dụng cho cửa hiệu &amp; khách hàng thân yêu</string>
+    <string name="description_love_coupon">Giứp trao và nhận coupon dễ dàng. Gửi tin mới tới khách hàng thân yêu</string>
 
     <string name="face_image">https://graph.facebook.com/%1$s/picture?type=large</string>
     <string name="like_news">Đánh dấu</string>

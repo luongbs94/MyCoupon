@@ -341,9 +341,15 @@ public class CustomerLoginActivity extends AppCompatActivity
                     return;
                 }
 
-                showProgressDialog();
+
                 String user = mEdtUser.getText().toString().trim();
                 String pass = mEdtPassword.getText().toString().trim();
+                if (user.length() == 0 || pass.length() == 0 || !checkEmail(user)) {
+                    getShowMessages(getString(R.string.email_do_not_match));
+                    return;
+                }
+
+                showProgressDialog();
                 String device_os = "android";
                 String token = MainApplication.getPreferences().getString(MainApplication.DEVICE_TOKEN, "");
 
@@ -486,7 +492,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             if (item.getLogo_link() != null) {
                 Glide.with(MainApplication.getInstance())
                         .load(item.getLogo_link())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();
             }
         }
@@ -504,6 +510,10 @@ public class CustomerLoginActivity extends AppCompatActivity
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    private boolean checkEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     public static class CustomerProfile {

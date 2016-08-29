@@ -347,7 +347,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                     for (String path : listStrImages) {
                         Glide.with(MainApplication.getInstance())
                                 .load(path)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                 .preload();
                     }
                 }
@@ -365,7 +365,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 for (String path : listStrImages) {
                     Glide.with(MainApplication.getInstance())
                             .load(path)
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .preload();
                 }
             }
