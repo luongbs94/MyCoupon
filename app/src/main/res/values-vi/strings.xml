@@ -168,10 +168,10 @@
     </string-array>
 
     <string-array name="title_history">
-        <item>Create</item>
-        <item>Use</item>
+        <item>Tạo</item>
+        <item>Sử dụng</item>
     </string-array>
-    <string name="account_exists">*Đã tòn tại</string>
+    <string name="account_exists">*Đã tồn tại</string>
     <string name="up_loading">Đang tạo</string>
     <string name="only_admin">Chỉ admin mới được xem</string>
 
@@ -191,7 +191,7 @@
     <string name="ic_close">\uf00d</string>
     <string name="ic_calendar_message">\uf073</string>
     <string name="icon_bell">\uf0a2</string>
-    <string name="forgot_password">Quên mật khẩu</string>
+    <string name="forgot_password"><u>Quên mật khẩu</u></string>
     <string name="title_forget_password">Quên mật khẩu</string>
     <string name="email">Email</string>
     <string name="send_email">Gửi</string>
@@ -199,5 +199,6 @@
 
     <string name="send_email_success">Mật khẩu đã được gửi tới Email </string>
     <string name="send_email_fails">Gửi email không thành công</string>
+    <string name="text_back"><u>Quay lại</u></string>
 
 </resources>

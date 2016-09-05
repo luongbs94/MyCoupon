@@ -38,5 +38,6 @@
     <color name="colorButtonNormal">#FFFFFB</color>
     <color name="colorSnackbar">#3f000000</color>
     <color name="hint_color">#aaaaaa</color>
+    <color name="edittext">#FFF59D</color>
 
 </resources>

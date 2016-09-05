@@ -3,6 +3,7 @@ package com.ln.mycoupon.shop;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -145,7 +146,12 @@ public class ShopLoginActivity extends AppCompatActivity
         edtUser.setSelection(edtUser.getText().length());
         edtPass.setSelection(edtPass.getText().length());
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        edtUser.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+        edtPass.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        edtUser.getBackground().mutate().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        edtPass.getBackground().mutate().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         LoginManager.getInstance().registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -205,6 +211,7 @@ public class ShopLoginActivity extends AppCompatActivity
         findViewById(R.id.btn_google).setOnClickListener(this);
         findViewById(R.id.btn_facebook).setOnClickListener(this);
         findViewById(R.id.txt_forgot_password).setOnClickListener(this);
+        findViewById(R.id.text_back).setOnClickListener(this);
     }
 
     @Override
@@ -395,6 +402,9 @@ public class ShopLoginActivity extends AppCompatActivity
             case R.id.txt_forgot_password:
                 startActivity(new Intent(this, ForgetPasswordActivity.class));
                 break;
+            case R.id.text_back:
+                startActivity(new Intent(this, FirstActivity.class));
+                finish();
             default:
                 break;
         }
@@ -532,6 +542,13 @@ public class ShopLoginActivity extends AppCompatActivity
             }
             return null;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, FirstActivity.class));
+        fileList();
+        super.onBackPressed();
     }
 
     private Runnable runnable = new Runnable() {

@@ -89,7 +89,7 @@
             android:name=".shop.ShopLoginActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".TestQRCode"
@@ -123,6 +123,7 @@
         <activity
             android:name=".customer.CustomerLoginActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" />
         <activity
             android:name=".PreviewImagesActivity"

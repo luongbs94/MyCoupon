@@ -99,9 +99,9 @@
     <string name="delete_news_success">Le message est supprimé</string>
     <string name="all_news">Tout</string>
     <string name="history_news">Supprimer Nouvelles</string>
-    <string name="share_love_coupon">L\'application pour les clients de la boutique et bien-aimé</string>
-    <string name="description_love_coupon">Avec Coupon Amour, les magasins peuvent récompenser coupons et envoyer les promotions aux clients aimés facilement
-, Les clients ne doivent pas apporter des coupons de papier et ne manquez jamais les promotions des boutiques préférées. </string>
+    <string name="share_love_coupon">L\'App pour la boutique &amp; chers clients</string>
+    <string name="description_love_coupon">Récompenser et conserver le coupon facilement
+Envoyer les nouvelles de promotions à vos chers clients</string>
 
     <string name="face_image">https://graph.facebook.com/%1$s/picture?type=large</string>
     <string name="like_news">Signet</string>
@@ -193,7 +193,7 @@
     <string name="ic_calendar_message">\uf073</string>
     <string name="icon_bell">\uf0a2</string>
 
-    <string name="forgot_password">Mot de passe oublié</string>
+    <string name="forgot_password"><u>Mot de passe oublié</u></string>
     <string name="title_forget_password">Mot de passe oublié</string>
     <string name="email">Email</string>
     <string name="send_email">Envoyer</string>
@@ -202,6 +202,6 @@
     <string name="cancel_camera">L\'utilisateur a annulé la capture d\'image</string>
     <string name="send_email_success">Mot de passe a été envoyé à votre email</string>
     <string name="send_email_fails">Envoyer un message échouer</string>
-
+    <string name="back"><u>Arrière</u></string>
 
 </resources>

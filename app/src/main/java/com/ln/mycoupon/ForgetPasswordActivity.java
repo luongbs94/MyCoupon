@@ -1,9 +1,8 @@
 package com.ln.mycoupon;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,11 +36,11 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         setTitle(R.string.title_forget_password);
 
         mEdtEmail = (MaterialEditText) findViewById(R.id.edt_email);
+
     }
 
     private void addEvents() {
 
-        mEdtEmail.addTextChangedListener(new Events(mEdtEmail));
         findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,36 +111,6 @@ public class ForgetPasswordActivity extends AppCompatActivity {
 
         public SendEmail(String value) {
             this.value = value;
-        }
-    }
-
-    private class Events implements TextWatcher {
-
-        private View view;
-
-        public Events(View view) {
-            this.view = view;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (view == mEdtEmail) {
-                if (!isEmailValid(mEdtEmail.getText().toString().trim())) {
-                    mEdtEmail.setError(getString(R.string.email_do_not_match));
-                } else {
-                    mEdtEmail.setError("");
-                }
-            }
         }
     }
 }

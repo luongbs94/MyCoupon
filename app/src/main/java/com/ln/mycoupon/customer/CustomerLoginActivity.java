@@ -3,6 +3,7 @@ package com.ln.mycoupon.customer;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -97,6 +98,8 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         mEdtUser = (EditText) findViewById(R.id.username);
         mEdtPassword = (EditText) findViewById(R.id.password);
+        mEdtUser.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+        mEdtPassword.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
 
 
         String user = MainApplication.getPreferences().getString(MainApplication.USER_CUSTOMER, "");
@@ -209,6 +212,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         findViewById(R.id.btn_google).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.txt_forgot_password).setOnClickListener(this);
+        findViewById(R.id.text_back).setOnClickListener(this);
     }
 
     @Override
@@ -360,6 +364,10 @@ public class CustomerLoginActivity extends AppCompatActivity
                 break;
             case R.id.txt_forgot_password:
                 startActivity(new Intent(this, ForgetPasswordActivity.class));
+                break;
+            case R.id.text_back:
+                startActivity(new Intent(this, FirstActivity.class));
+                finish();
                 break;
             default:
                 break;
@@ -514,6 +522,13 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     private boolean checkEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, FirstActivity.class));
+        fileList();
+        super.onBackPressed();
     }
 
     public static class CustomerProfile {

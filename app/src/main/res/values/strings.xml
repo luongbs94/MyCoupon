@@ -193,7 +193,7 @@
     <string name="ic_calendar_message">\uf073</string>
     <string name="icon_bell">\uf0a2</string>
 
-    <string name="forgot_password">Forgot password</string>
+    <string name="forgot_password"> <u>Forgot password</u></string>
     <string name="title_forget_password">Forgot password</string>
     <string name="email">Email</string>
     <string name="send_email">Send</string>
@@ -202,6 +202,7 @@
     <string name="cancel_camera">User cancelled image capture</string>
     <string name="send_email_success">Password was sent to your email</string>
     <string name="send_email_fails">Send Email fail</string>
+    <string name="text_back"><u>Back</u></string>
 
 
 </resources>
