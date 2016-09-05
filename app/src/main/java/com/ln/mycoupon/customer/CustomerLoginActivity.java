@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +40,7 @@ import com.ln.model.NewsOfCustomer;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.ForgetPasswordActivity;
 import com.ln.mycoupon.R;
+import com.ln.views.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +62,7 @@ public class CustomerLoginActivity extends AppCompatActivity
     private int mStartNotification = 1;
 
 
-    private EditText mEdtUser, mEdtPassword;
+    private MaterialEditText mEdtUser, mEdtPassword;
     private ProgressDialog mProgressDialog;
 
 
@@ -96,8 +96,8 @@ public class CustomerLoginActivity extends AppCompatActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mEdtUser = (EditText) findViewById(R.id.username);
-        mEdtPassword = (EditText) findViewById(R.id.password);
+        mEdtUser = (MaterialEditText) findViewById(R.id.username);
+        mEdtPassword = (MaterialEditText) findViewById(R.id.password);
         mEdtUser.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         mEdtPassword.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
 

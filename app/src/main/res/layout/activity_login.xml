@@ -19,35 +19,43 @@
         android:orientation="vertical"
         android:paddingTop="100dp">
 
-        <EditText
-            android:textColorHighlight="@color/white"
+        <com.ln.views.MaterialEditText
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
+            android:maxLines="1"
             android:paddingBottom="@dimen/size_10"
             android:paddingTop="@dimen/size_10"
             android:textColor="@color/white"
+            android:textColorHighlight="@color/white"
             android:textColorHint="@color/hint_color"
             android:textCursorDrawable="@drawable/cursor"
             android:textScaleX="1.2"
-            android:textSize="@dimen/size_18sp" />
+            android:singleLine="true"
+            android:textSize="@dimen/size_18sp"
+            app:met_primaryColor="@color/white"
+            app:met_textColor="@color/white" />
 
-        <EditText
-            android:textColorHighlight="@color/white"
+        <com.ln.views.MaterialEditText
             android:id="@+id/password"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size_10"
             android:hint="@string/password"
             android:inputType="textPassword"
+            android:maxLines="1"
             android:paddingBottom="@dimen/size_10"
             android:paddingTop="@dimen/size_10"
             android:textColor="@android:color/white"
+            android:textColorHighlight="@color/white"
             android:textColorHint="@color/hint_color"
             android:textCursorDrawable="@drawable/cursor"
             android:textScaleX="1.1"
-            android:textSize="@dimen/size_18sp" />
+            android:textSize="@dimen/size_18sp"
+            app:met_primaryColor="@color/white"
+            app:met_textColor="@color/white" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"

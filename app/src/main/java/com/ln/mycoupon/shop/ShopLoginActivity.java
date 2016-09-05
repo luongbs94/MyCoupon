@@ -3,7 +3,6 @@ package com.ln.mycoupon.shop;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +45,7 @@ import com.ln.model.NewsOfCompany;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.ForgetPasswordActivity;
 import com.ln.mycoupon.R;
+import com.ln.views.MaterialEditText;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -134,8 +134,8 @@ public class ShopLoginActivity extends AppCompatActivity
 
         setTitle(R.string.login);
 
-        EditText edtUser = (EditText) findViewById(R.id.username);
-        EditText edtPass = (EditText) findViewById(R.id.password);
+        MaterialEditText edtUser = (MaterialEditText) findViewById(R.id.username);
+        MaterialEditText edtPass = (MaterialEditText) findViewById(R.id.password);
 
         String user = MainApplication.getPreferences().getString(MainApplication.USER_SHOP, "");
         String pass = MainApplication.getPreferences().getString(MainApplication.PASSWORD_SHOP, "");
@@ -146,12 +146,6 @@ public class ShopLoginActivity extends AppCompatActivity
         edtUser.setSelection(edtUser.getText().length());
         edtPass.setSelection(edtPass.getText().length());
 
-        edtUser.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-        edtPass.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        edtUser.getBackground().mutate().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
-        edtPass.getBackground().mutate().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         LoginManager.getInstance().registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {
