@@ -37,7 +37,7 @@
     <color name="green">#43c117</color>
     <color name="colorButtonNormal">#FFFFFB</color>
     <color name="colorSnackbar">#3f000000</color>
-    <color name="hint_color">#aaaaaa</color>
+    <color name="hint_color">#CCCCCC</color>
     <color name="edittext">#FFF59D</color>
 
 </resources>

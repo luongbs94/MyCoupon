@@ -98,10 +98,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         mEdtUser = (MaterialEditText) findViewById(R.id.username);
         mEdtPassword = (MaterialEditText) findViewById(R.id.password);
-        mEdtUser.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-        mEdtPassword.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-
-
+       
         String user = MainApplication.getPreferences().getString(MainApplication.USER_CUSTOMER, "");
         String pass = MainApplication.getPreferences().getString(MainApplication.PASSWORD_CUSTOMER, "");
         mEdtUser.setText(user);
