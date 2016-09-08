@@ -85,11 +85,14 @@ public class ShopMainActivity extends AppCompatActivity
 
 
         Log.d(TAG, "web token: " + company.getWeb_token());
-        Log.d(TAG, "web token: " + company.getCompany_id());
-        Log.d(TAG, "web token: " + company.getUser_id());
+        Log.d(TAG, "web companyId: " + company.getCompany_id());
+        Log.d(TAG, "web userId: " + company.getUser_id());
+        Log.d(TAG, "web user1: " + company.getUser1());
+        Log.d(TAG, "web user2: " + company.getUser2());
+
         getDataFromIntent();
 
-        sTitle = getString(R.string.my_coupon);
+        sTitle = getString(R.string.coupon);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(sTitle);
@@ -141,11 +144,14 @@ public class ShopMainActivity extends AppCompatActivity
         if (mStartNotification == MainApplication.NOTIFICATION) {
             fragment = new NewsFragment();
             intFragment = 0;
+            sTitle = getString(R.string.news);
         } else if (company != null && company.getName() != null) {
             fragment = new CouponFragment();
             intFragment = 1;
+            sTitle = getString(R.string.coupon);
         } else {
             fragment = new SettingFragment();
+            sTitle = getString(R.string.setting);
             intFragment = 2;
         }
 
@@ -265,7 +271,7 @@ public class ShopMainActivity extends AppCompatActivity
 
     @Override
     public void onClickSetInformation(String logo, String name, String address) {
-        if (mImageLogo != null) {
+        if (mImageLogo != null && logo != null) {
             Glide.with(this)
                     .load(MainApplication.convertToBytes(logo))
                     .asBitmap()

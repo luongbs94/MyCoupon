@@ -99,16 +99,10 @@ public class ShopLoginActivity extends AppCompatActivity
                     writeSharePreferences(MainApplication.ID_SHOP, mAccount.getId());
                     writeSharePreferences(MainApplication.TOKEN_SHOP, mAccount.getIdToken());
                     getCompanyProfileSocial(mAccount.getId(), mTokenGoogle);
-                    getShowMessages(getString(R.string.login_success));
-                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                            new ResultCallback<Status>() {
 
-                                @Override
-                                public void onResult(@NonNull com.google.android.gms.common.api.Status status) {
-                                    Log.d(TAG, "Logout Google ");
-                                }
-                            });
                     writeSharePreferences(MainApplication.ADMIN, true);
+                    getShowMessages(getString(R.string.login_success));
+                    logoutGoogle();
                     isGoogle = false;
                 }
             }
@@ -559,6 +553,16 @@ public class ShopLoginActivity extends AppCompatActivity
         }
     };
 
+    private void logoutGoogle() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+
+                    @Override
+                    public void onResult(@NonNull com.google.android.gms.common.api.Status status) {
+                        Log.d(TAG, "Logout Google ");
+                    }
+                });
+    }
 
     public static class ShopProfile {
         private String user_id;

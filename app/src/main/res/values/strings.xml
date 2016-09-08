@@ -56,7 +56,7 @@
     <string name="txt_time_coupon">30</string>
     <string name="check_admin">Admin</string>
     <string name="save">save</string>
-    <string name="my_coupon">My Coupons</string>
+    <string name="my_coupon">Coupons</string>
     <string name="news">Notifications</string>
     <string name="history">History</string>
     <string name="setting">Settings</string>

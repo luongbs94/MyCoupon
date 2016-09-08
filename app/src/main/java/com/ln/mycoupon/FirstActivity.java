@@ -58,17 +58,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
-
-        }
-
-
-//        new Delete().from(NewsOfCustomer.class).execute();
-
-        NewsOfCompany newsOfCompany = new NewsOfCompany();
-        if (newsOfCompany == null) {
-            Log.d(TAG, "null");
-        } else {
-            Log.d(TAG, "not null");
+            Log.d(TAG, e.toString());
         }
 
         mCouponAPI = MainApplication.getAPI();
@@ -338,7 +328,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             if (news.getLogo_link() != null && news.getLogo_link().contains("http")) {
                 Glide.with(MainApplication.getInstance())
                         .load(news.getLogo_link())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();
 
                 if (news.getImages_link() != null) {

@@ -36,7 +36,8 @@
             android:textSize="@dimen/size_18sp"
             app:met_baseColor="@color/hint_color"
             app:met_primaryColor="@color/white"
-            app:met_textColor="@color/white" />
+            app:met_textColor="@color/white"
+            app:met_textColorHint="@color/hint_color" />
 
         <com.ln.views.MaterialEditText
             android:id="@+id/password"
@@ -57,7 +58,8 @@
             android:textSize="@dimen/size_18sp"
             app:met_baseColor="@color/hint_color"
             app:met_primaryColor="@color/white"
-            app:met_textColor="@color/white" />
+            app:met_textColor="@color/white"
+            app:met_textColorHint="@color/hint_color" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -89,6 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_facebook"
+                android:focusable="true"
                 android:text="@string/face_login"
                 android:textColor="@color/white"
                 android:textScaleX="1.1"

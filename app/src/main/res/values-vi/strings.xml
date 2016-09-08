@@ -55,7 +55,7 @@
     <string name="txt_time_coupon">30</string>
     <string name="check_admin">Admin</string>
     <string name="save">Lưu</string>
-    <string name="my_coupon">My Coupons</string>
+    <string name="my_coupon">Coupon</string>
     <string name="news">Tin mới</string>
     <string name="history">Lịch Sử</string>
     <string name="setting">Cài Đặt</string>
@@ -144,7 +144,7 @@
     <string name="external">SDcard</string>
     <string name="internal">Internal storage</string>
     <string name="message_max_num">Up to %1$s photos can be selected</string>
-    <string name="coupon">Coupons</string>
+    <string name="coupon">Coupon</string>
     <string name="coupon_used">Coupon này đã được sử dụng </string>
     <string name="you_add_news_coupon">Bạn đã thêm 1 coupon mới </string>
     <string name="title_qr_code">QR Code  %1$S coupon</string>
@@ -196,7 +196,7 @@
     <string name="email">Email</string>
     <string name="send_email">Gửi</string>
     <string name="cancel_camera">Không thể chụp được </string>
-
+    <string name="email_do_not_match">Email chưa chính xác</string>
     <string name="send_email_success">Mật khẩu đã được gửi tới Email </string>
     <string name="send_email_fails">Gửi email không thành công</string>
     <string name="text_back"><u>Quay lại</u></string>

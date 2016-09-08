@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.isseiaoki.simplecropview.util.Utils;
 import com.ln.app.LoveCouponAPI;
@@ -143,23 +144,6 @@ public class SettingFragment extends Fragment implements
         mImgLogo = (CircleImageView) v.findViewById(R.id.img_logo_nav);
         mTxtNameCompany = (TextView) v.findViewById(R.id.txt_name_nav);
         mTxtAddress = (TextView) v.findViewById(R.id.txt_email_nav);
-
-        mEdtUser1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    checkAccount1(false);
-                }
-            }
-        });
-        mEdtUser2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    checkAccount2(false);
-                }
-            }
-        });
     }
 
 
@@ -187,6 +171,7 @@ public class SettingFragment extends Fragment implements
             Glide.with(getActivity()).load(MainApplication.convertToBytes(logo))
                     .asBitmap()
                     .placeholder(R.drawable.ic_logo_blank)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(mImgLogo);
         }
 
@@ -312,31 +297,29 @@ public class SettingFragment extends Fragment implements
         final String user2 = mEdtUser2.getText().toString().trim();
 
 
-        final Company template = new Company(company.getCompany_id(),
-                company.getName(), company.getAddress(),
-                company.getLogo(), company.getCreated_date(),
-                company.getUser_id(), company.getUser1(),
-                company.getPass1(), company.getUser1_admin(),
-                company.getUser2(), company.getPass2(),
-                company.getUser2_admin(), company.getLogo_link(),
-                company.getCity(), company.getCountry_name(), company.getWeb_token());
-
-        template.setName(name);
-        template.setAddress(address);
-        template.setLogo(null);
+        company.setName(name);
+        company.setAddress(address);
         if (isChoseImages) {
-            template.setLogo(mLogoBase64);
+            company.setLogo(mLogoBase64);
         }
-        template.setUser1(user1);
-        template.setUser2(user2);
-        template.setPass1(mEdtPassword1.getText().toString().trim());
-        template.setPass2(mEdtPassword2.getText().toString().trim());
-        createSave(name, address, mLogoBase64, template);
+
+
+        company.setUser1(user1);
+        company.setUser2(user2);
+        company.setPass1(mEdtPassword1.getText().toString().trim());
+        company.setPass2(mEdtPassword2.getText().toString().trim());
+
+        createSave();
     }
 
     private void checkAccount1(final boolean isEnd) {
 
+
         String user = mEdtUser1.getText().toString().trim();
+        if (user.isEmpty()) {
+            checkAccount2(isEnd);
+            return;
+        }
         Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user);
         call.enqueue(new Callback<Integer>() {
             @Override
@@ -363,6 +346,10 @@ public class SettingFragment extends Fragment implements
     private void checkAccount2(final boolean isEnd) {
 
         String user = mEdtUser2.getText().toString().trim();
+        if (user.isEmpty()) {
+            save();
+            return;
+        }
         Call<Integer> call = mLoveCouponAPI.isExists(company.getCompany_id(), user);
         call.enqueue(new Callback<Integer>() {
             @Override
@@ -385,14 +372,11 @@ public class SettingFragment extends Fragment implements
         });
     }
 
-    private void createSave(final String name, final String address,
-                            final String finalLogo, final Company companyTemplate) {
+    private void createSave() {
 
-        final String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
-        Company mCompany = new Gson().fromJson(strCompany, Company.class);
-
-
-        Call<Integer> call3 = mLoveCouponAPI.updateCompany(mCompany.getWeb_token(), companyTemplate);
+        Log.d(TAG, "user1: " + company.getUser1());
+        Log.d(TAG, "user2: " + company.getUser2());
+        Call<Integer> call3 = mLoveCouponAPI.updateCompany(company.getWeb_token(), company);
         call3.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -404,13 +388,21 @@ public class SettingFragment extends Fragment implements
                         public void run() {
 
                             getShowMessage("Success");
-                            company = companyTemplate;
-                            company.setLogo(mLogoBase64);
+
                             String str = new Gson().toJson(company);
                             writeSharePreferences(MainApplication.COMPANY_SHOP, str);
 
+                            String strCompany = MainApplication
+                                    .getPreferences()
+                                    .getString(MainApplication.COMPANY_SHOP, "");
+
+                            Company company1 = new Gson().fromJson(strCompany, Company.class);
+
+                            Log.d(TAG, "user11: " + company1.getUser1());
+                            Log.d(TAG, "user12: " + company1.getUser2());
+
                             if (mListener != null) {
-                                mListener.onClickSetInformation(finalLogo, name, address);
+                                mListener.onClickSetInformation(company.getLogo(), company.getName(), company.getAddress());
                             }
                             isChoseImages = false;
                             hideProgressDialog();
@@ -470,7 +462,6 @@ public class SettingFragment extends Fragment implements
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
         }
 
         @Override
@@ -513,7 +504,7 @@ public class SettingFragment extends Fragment implements
         String text = editText.getText().toString().trim();
         String text2 = editText2.getText().toString().trim();
 
-        if (text.equals(text2)) {
+        if (text.equals(text2) && !text2.isEmpty()) {
             editText.setError(getString(R.string.check_account));
             requestFocus(editText);
         }
@@ -521,6 +512,8 @@ public class SettingFragment extends Fragment implements
         if (!text.isEmpty() && edtPassword.getText().toString().trim().isEmpty()) {
             edtPassword.setError(getString(R.string.enter_password));
             Log.d(TAG, "1");
+        } else if (text.isEmpty()) {
+            edtPassword.setError("");
         }
     }
 
