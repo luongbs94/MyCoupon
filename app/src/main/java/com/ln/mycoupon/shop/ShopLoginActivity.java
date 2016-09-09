@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -73,7 +70,6 @@ public class ShopLoginActivity extends AppCompatActivity
     private boolean isGoogle, isLoginFacebook;
     private String mTokenGoogle;
 
-    private Handler mHandler;
     private GoogleSignInAccount mAccount;
 
 
@@ -86,27 +82,6 @@ public class ShopLoginActivity extends AppCompatActivity
         initViews();
         addEvents();
 
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == LOGIN_GOOGLE) {
-
-                    if (mAccount == null) {
-                        getShowMessages(getString(R.string.login_google_fails));
-                        return;
-                    }
-                    writeSharePreferences(MainApplication.ID_SHOP, mAccount.getId());
-                    writeSharePreferences(MainApplication.TOKEN_SHOP, mAccount.getIdToken());
-                    getCompanyProfileSocial(mAccount.getId(), mTokenGoogle);
-
-                    writeSharePreferences(MainApplication.ADMIN, true);
-                    getShowMessages(getString(R.string.login_success));
-                    logoutGoogle();
-                    isGoogle = false;
-                }
-            }
-        };
     }
 
     private void getDataFromIntent() {
@@ -216,8 +191,11 @@ public class ShopLoginActivity extends AppCompatActivity
 
             if (result.isSuccess()) {
                 signInGoogleSuccess(result.getSignInAccount());
+                Log.d(TAG, "Login success");
+
             } else {
                 getShowMessages(getString(R.string.login_google_fails));
+                Log.d(TAG, "Login fails 1");
             }
         }
     }
@@ -352,9 +330,6 @@ public class ShopLoginActivity extends AppCompatActivity
             String mScope = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
 
             new GetAccessTokenTask(mEmail, mScope).execute();
-            isGoogle = false;
-            new Thread(runnable).start();
-
         }
     }
 
@@ -508,7 +483,7 @@ public class ShopLoginActivity extends AppCompatActivity
     }
 
 
-    public class GetAccessTokenTask extends AsyncTask<Void, Void, Void> {
+    public class GetAccessTokenTask extends AsyncTask<Void, Void, Boolean> {
 
         private String mEmail, mScope;
 
@@ -518,17 +493,37 @@ public class ShopLoginActivity extends AppCompatActivity
         }
 
         @Override
-        protected Void doInBackground(Void... account) {
+        protected Boolean doInBackground(Void... account) {
             try {
                 mTokenGoogle = GoogleAuthUtil.getToken(ShopLoginActivity.this, mEmail, mScope);
                 Log.d(TAG, "Token" + mTokenGoogle);
-                isGoogle = true;
+                return true;
             } catch (GoogleAuthException fatalException) {
                 Log.d(TAG, fatalException.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                if (mAccount == null) {
+                    getShowMessages(getString(R.string.login_google_fails));
+                    return;
+                }
+                writeSharePreferences(MainApplication.ID_SHOP, mAccount.getId());
+                writeSharePreferences(MainApplication.TOKEN_SHOP, mAccount.getIdToken());
+                getCompanyProfileSocial(mAccount.getId(), mTokenGoogle);
+
+                writeSharePreferences(MainApplication.ADMIN, true);
+                getShowMessages(getString(R.string.login_success));
+                logoutGoogle();
+            } else {
+                Log.d(TAG, "login fails 2");
+            }
         }
     }
 
@@ -539,19 +534,6 @@ public class ShopLoginActivity extends AppCompatActivity
         super.onBackPressed();
     }
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            while (!isGoogle) {
-                SystemClock.sleep(50);
-            }
-
-            Message message = new Message();
-            message.what = LOGIN_GOOGLE;
-            message.setTarget(mHandler);
-            message.sendToTarget();
-        }
-    };
 
     private void logoutGoogle() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(

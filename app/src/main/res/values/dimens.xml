@@ -63,4 +63,5 @@
     <dimen name="size_85">85dp</dimen>
     <dimen name="size_90">90dp</dimen>
     <dimen name="size_30sp">30sp</dimen>
+    <dimen name="size_login">0dp</dimen>
 </resources>

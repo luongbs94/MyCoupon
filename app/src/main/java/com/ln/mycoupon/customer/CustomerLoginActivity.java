@@ -3,7 +3,6 @@ package com.ln.mycoupon.customer;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -225,10 +224,12 @@ public class CustomerLoginActivity extends AppCompatActivity
                 GoogleSignInAccount account = result.getSignInAccount();
                 if (account != null) {
                     signInGoogleSuccess(account);
+                    Log.d(TAG, "login google success 1");
                 }
 
             } else {
                 getShowMessages(getString(R.string.login_google_fails));
+                Log.d(TAG, "login google fails 1");
             }
         }
     }
@@ -259,6 +260,8 @@ public class CustomerLoginActivity extends AppCompatActivity
                         Log.d(TAG, "Logout Google " + status.toString());
                     }
                 });
+        Log.d(TAG, "login google ");
+
     }
 
     private void getShowMessages(String string) {
