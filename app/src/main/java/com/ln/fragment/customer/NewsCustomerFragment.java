@@ -280,18 +280,18 @@ public class NewsCustomerFragment extends Fragment {
                 }
             }
         }
-
+        List<NewsOfCustomer> listNew = new ArrayList<>();
         int size = news.size();
         Log.d(TAG, "size: " + size);
-        for (int i = size - 1; i > 0; i--) {
-            if (!news.get(i).isLike()) {
-                news.remove(i);
-                size--;
+        for (NewsOfCustomer item : news) {
+            if (item.isLike()) {
+                listNew.add(item);
+                Log.d(TAG, "item like: " + item.getMessage_id());
             }
         }
 
-        Collections.sort(news);
-        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), news, this);
+        Collections.sort(listNew);
+        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listNew, this);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);
     }

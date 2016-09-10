@@ -1,5 +1,6 @@
 package com.ln.fragment.shop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,6 +19,7 @@ import com.ln.databases.DatabaseManager;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.OptionNews;
+import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.R;
 
 import java.util.ArrayList;
@@ -28,11 +30,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by nha on 4/6/16.
  * show news in shop
  */
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements NewsShopAdapter.OnClickUpdateNews {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -40,9 +44,9 @@ public class NewsFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
     private RecyclerView mRecNews;
     private Company mCompany;
-
-    public NewsFragment() {
-    }
+    private List<NewsOfCompany> mListNew = new ArrayList<>();
+    private NewsShopAdapter mAdapter;
+    private int mPosition = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,10 @@ public class NewsFragment extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         swipeContainer.setRefreshing(false);
+
+        mAdapter = new NewsShopAdapter(getActivity(), mListNew, this);
+        mRecNews.setAdapter(mAdapter);
+        mAdapter.setOnClickUpdateNews(this);
     }
 
     public void setNewsOfCompany() {
@@ -110,9 +118,13 @@ public class NewsFragment extends Fragment {
             }
         }
 
-        Collections.sort(news);
-        NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), news, this);
-        mRecNews.setAdapter(adapter);
+        mListNew.clear();
+        mListNew.addAll(news);
+        Collections.sort(mListNew);
+        mAdapter.notifyDataSetChanged();
+//        NewsShopAdapter adapter = new NewsShopAdapter(getActivity(), news, this);
+//        mRecNews.setAdapter(adapter);
+//        mRecNews.setAdapter(mAdapter);
         Log.d(TAG, "Size : " + news.size());
     }
 
@@ -145,4 +157,48 @@ public class NewsFragment extends Fragment {
             });
         }
     }
+
+    public void addMessage(String idNew) {
+        NewsOfCompany item = DatabaseManager.getNewsOfCompanyById(idNew);
+        Log.d(TAG, "item: " + item.getMessage_id());
+        Log.d(TAG, "item: " + item.getCreated_date());
+
+        mListNew.add(0, item);
+        mAdapter.notifyItemInserted(0);
+    }
+
+    @Override
+    public void onClickUpdateNews(int position, String idNews) {
+        mPosition = position;
+        Intent intent = new Intent(getActivity(), AddMessageActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(MainApplication.WHAT_ADD_MESSAGES, MainApplication.WHAT_UPDATE_NEWS);
+        bundle.putString(MainApplication.DATA, mListNew.get(position).getMessage_id());
+        intent.putExtras(bundle);
+        startActivityForResult(intent, MainApplication.WHAT_UPDATE_NEWS);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MainApplication.WHAT_UPDATE_NEWS) {
+            if (resultCode == RESULT_OK) {
+//                String idNew = data.getExtras().getString(MainApplication.DATA);
+//                NewsOfCompany item = DatabaseManager.getNewsOfCompanyById(idNew);
+//                Log.d(TAG, "item: " + item.getMessage_id());
+//                Log.d(TAG, "item: " + item.getCreated_date());
+//
+//                mListNew.remove(mPosition);
+//                mAdapter.notifyItemRemoved(mPosition);
+//                mListNew.add(0, item);
+//                mAdapter.notifyItemInserted(0);
+//                mAdapter.notifyDataSetChanged();
+
+                setNewsOfCompany();
+                Log.d(TAG, "edit message");
+            }
+        }
+    }
+
+
 }

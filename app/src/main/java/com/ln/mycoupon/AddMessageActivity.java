@@ -255,7 +255,11 @@ public class AddMessageActivity extends AppCompatActivity
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                setResult(RESULT_OK);
+                                Intent intent = new Intent();
+                                Bundle bundle = new Bundle();
+                                bundle.putString(MainApplication.DATA, news.getMessage_id());
+                                intent.putExtras(bundle);
+                                setResult(RESULT_OK, intent);
                                 hideProgressDialog();
                                 getShowMessages(getString(R.string.add_message_success));
                                 mType = 0;

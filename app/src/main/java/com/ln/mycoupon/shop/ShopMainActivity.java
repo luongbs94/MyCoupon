@@ -342,6 +342,13 @@ public class ShopMainActivity extends AppCompatActivity
                         ((NewsFragment) fragment).setNewsOfCompany();
                     }
                     break;
+                case MainApplication.WHAT_UPDATE_NEWS:
+                    if (fragment instanceof NewsFragment) {
+                        ((NewsFragment) fragment).setNewsOfCompany();
+                    }
+
+                    Log.d(TAG, "change mes");
+                    break;
                 default:
                     break;
             }

@@ -140,7 +140,7 @@ public class ShopLoginActivity extends AppCompatActivity
                             writeSharePreferences(MainApplication.ID_SHOP, id);
                             getCompanyProfileSocial(id, token);
                             Log.d(TAG, "user:" + id + " -token:" + token);
-                            LoginManager.getInstance().logOut();
+//                            LoginManager.getInstance().logOut();
                             writeSharePreferences(MainApplication.ADMIN, true);
                         }
                     }

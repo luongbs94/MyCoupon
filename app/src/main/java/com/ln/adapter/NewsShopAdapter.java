@@ -1,9 +1,7 @@
 package com.ln.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,9 +29,8 @@ import com.ln.databases.DatabaseManager;
 import com.ln.images.models.LocalMedia;
 import com.ln.model.Company;
 import com.ln.model.NewsOfCompany;
-import com.ln.until.Until;
-import com.ln.mycoupon.AddMessageActivity;
 import com.ln.mycoupon.R;
+import com.ln.until.Until;
 import com.ln.views.IconTextView;
 import com.ln.views.MyTextView;
 
@@ -53,12 +50,17 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     private List<NewsOfCompany> mListNews;
     private ShareDialog mShareDialog;
     private LoveCouponAPI mApi;
+    private OnClickUpdateNews mOnClickUpdateNews;
 
     public NewsShopAdapter(Context context, List<NewsOfCompany> listNews, Fragment fragment) {
         mContext = context;
         mListNews = listNews;
         mShareDialog = new ShareDialog(fragment);
         mApi = MainApplication.getAPI();
+    }
+
+    public void setOnClickUpdateNews(OnClickUpdateNews onClickUpdateNews) {
+        mOnClickUpdateNews = onClickUpdateNews;
     }
 
     @Override
@@ -217,12 +219,17 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.menu_edit_news) {
-                    Intent intent = new Intent(mContext, AddMessageActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(MainApplication.WHAT_ADD_MESSAGES, MainApplication.WHAT_UPDATE_NEWS);
-                    bundle.putString(MainApplication.DATA, mListNews.get(position).getMessage_id());
-                    intent.putExtras(bundle);
-                    mContext.startActivity(intent);
+//                    Intent intent = new Intent(mContext, AddMessageActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putInt(MainApplication.WHAT_ADD_MESSAGES, MainApplication.WHAT_UPDATE_NEWS);
+//                    bundle.putString(MainApplication.DATA, mListNews.get(position).getMessage_id());
+//                    intent.putExtras(bundle);
+//                    mContext.startActivity(intent);
+
+                    if (mOnClickUpdateNews != null) {
+                        mOnClickUpdateNews.onClickUpdateNews(position, mListNews.get(position).getMessage_id());
+                    }
+
                 } else if (item.getItemId() == R.id.menu_delete) {
                     onClickDeleteNews(position);
                 }
@@ -336,5 +343,9 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
     private void getShowMessages(String msg) {
         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public interface OnClickUpdateNews {
+        void onClickUpdateNews(int position, String idNews);
     }
 }

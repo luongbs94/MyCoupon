@@ -158,7 +158,7 @@ public class CustomerLoginActivity extends AppCompatActivity
                                     .load(accountOflUser.getPicture())
                                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                     .preload();
-                            LoginManager.getInstance().logOut();
+//                            LoginManager.getInstance().logOut();
                             Log.d(TAG, "mProfile1 " + accountOflUser.getId() + " - " + token);
                         }
                     }
