@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +30,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.gson.Gson;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -39,6 +45,7 @@ import com.ln.databases.DatabaseManager;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewsOfCompany;
+import com.ln.mycoupon.BaseActivity;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.ForgetPasswordActivity;
 import com.ln.mycoupon.R;
@@ -52,7 +59,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ShopLoginActivity extends AppCompatActivity
+public class ShopLoginActivity extends BaseActivity
         implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
@@ -70,7 +77,16 @@ public class ShopLoginActivity extends AppCompatActivity
     private boolean isGoogle, isLoginFacebook;
     private String mTokenGoogle;
 
-    private GoogleSignInAccount mAccount;
+
+    private static final int RC_SIGN_IN = 9001;
+
+    // [START declare_auth]
+    private FirebaseAuth mAuth;
+    // [END declare_auth]
+
+    // [START declare_auth_listener]
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    // [END declare_auth_listener]
 
 
     @Override
@@ -80,6 +96,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
         getDataFromIntent();
         initViews();
+        initGoogle();
         addEvents();
 
     }
@@ -156,18 +173,45 @@ public class ShopLoginActivity extends AppCompatActivity
                     }
                 });
 
+    }
 
-        GoogleSignInOptions mInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+    private void initGoogle() {
+
+        // [START config_signin]
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+        // [END config_signin]
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-    }
 
+        // [START initialize_auth]
+        mAuth = FirebaseAuth.getInstance();
+        // [END initialize_auth]
+
+        // [START auth_state_listener]
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // [START_EXCLUDE]
+                // [END_EXCLUDE]
+            }
+        };
+        // [END auth_state_listener]
+    }
 
     private void addEvents() {
         findViewById(R.id.btn_login).setOnClickListener(this);
@@ -177,6 +221,14 @@ public class ShopLoginActivity extends AppCompatActivity
         findViewById(R.id.text_back).setOnClickListener(this);
     }
 
+    // [START on_start_add_listener]
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+    // [END on_start_add_listener]
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -184,21 +236,72 @@ public class ShopLoginActivity extends AppCompatActivity
         if (mCallbackManager.onActivityResult(requestCode, resultCode, data)) {
             return;
         }
-        if (requestCode == MainApplication.GOOGLE_SIGN_IN) {
-            GoogleSignInResult result = Auth
-                    .GoogleSignInApi
-                    .getSignInResultFromIntent(data);
 
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                signInGoogleSuccess(result.getSignInAccount());
-                Log.d(TAG, "Login success");
-
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = result.getSignInAccount();
+                firebaseAuthWithGoogle(account);
             } else {
                 getShowMessages(getString(R.string.login_google_fails));
                 Log.d(TAG, "Login fails 1");
             }
         }
     }
+
+    // [START auth_with_google]
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        // [START_EXCLUDE silent]
+        showProgressDialog();
+        // [END_EXCLUDE]
+
+        Log.d(TAG, acct.getIdToken());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Log.d(TAG, "Authentication failed.");
+                        }
+                        // [START_EXCLUDE]
+                        hideProgressDialog();
+                        // [END_EXCLUDE]
+                    }
+                });
+
+//        account.getServerAuthCode();
+        if (acct != null) {
+            Log.d(TAG, "Login Google " + acct.getId() + " - " + acct.getIdToken());
+
+            String mScope = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
+            new GetAccessTokenTask(acct, mScope).execute();
+        }
+    }
+
+    private void signOut() {
+        // Firebase sign out
+        mAuth.signOut();
+
+        // Google sign out
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        Log.d(TAG, "Log out");
+                    }
+                });
+    }
+
 
     private void getCompanyProfile(final String user, final String pass) {
 
@@ -318,24 +421,10 @@ public class ShopLoginActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void signInGoogleSuccess(GoogleSignInAccount account) {
-
-
-        mAccount = account;
-//        account.getServerAuthCode();
-        if (account != null) {
-            Log.d(TAG, "Login Google " + account.getId() + " - " + account.getIdToken());
-
-            String mEmail = account.getEmail();
-            String mScope = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
-
-            new GetAccessTokenTask(mEmail, mScope).execute();
-        }
-    }
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionListener + " + connectionResult);
+        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -391,7 +480,7 @@ public class ShopLoginActivity extends AppCompatActivity
 
     private void onClickGooglePlus() {
         Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(intent, MainApplication.GOOGLE_SIGN_IN);
+        startActivityForResult(intent, RC_SIGN_IN);
     }
 
     private void onClickLoginFacebook() {
@@ -456,20 +545,6 @@ public class ShopLoginActivity extends AppCompatActivity
         });
     }
 
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.login));
-        }
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
-    }
-
     private void writeSharePreferences(String key, String value) {
         SharedPreferences.Editor editor = MainApplication.getPreferences().edit();
         editor.putString(key, value);
@@ -485,17 +560,18 @@ public class ShopLoginActivity extends AppCompatActivity
 
     public class GetAccessTokenTask extends AsyncTask<Void, Void, Boolean> {
 
-        private String mEmail, mScope;
+        private String mScope;
+        private GoogleSignInAccount mAccout;
 
-        GetAccessTokenTask(String email, String scope) {
-            mEmail = email;
+        GetAccessTokenTask(GoogleSignInAccount account, String scope) {
+            mAccout = account;
             mScope = scope;
         }
 
         @Override
         protected Boolean doInBackground(Void... account) {
             try {
-                mTokenGoogle = GoogleAuthUtil.getToken(ShopLoginActivity.this, mEmail, mScope);
+                mTokenGoogle = GoogleAuthUtil.getToken(ShopLoginActivity.this, mAccout.getEmail(), mScope);
                 Log.d(TAG, "Token" + mTokenGoogle);
                 return true;
             } catch (GoogleAuthException fatalException) {
@@ -510,13 +586,10 @@ public class ShopLoginActivity extends AppCompatActivity
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if (aBoolean) {
-                if (mAccount == null) {
-                    getShowMessages(getString(R.string.login_google_fails));
-                    return;
-                }
-                writeSharePreferences(MainApplication.ID_SHOP, mAccount.getId());
-                writeSharePreferences(MainApplication.TOKEN_SHOP, mAccount.getIdToken());
-                getCompanyProfileSocial(mAccount.getId(), mTokenGoogle);
+
+                writeSharePreferences(MainApplication.ID_SHOP, mAccout.getId());
+                writeSharePreferences(MainApplication.TOKEN_SHOP, mAccout.getIdToken());
+                getCompanyProfileSocial(mAccout.getId(), mTokenGoogle);
 
                 writeSharePreferences(MainApplication.ADMIN, true);
                 logoutGoogle();

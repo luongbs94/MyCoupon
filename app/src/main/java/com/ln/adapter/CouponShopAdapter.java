@@ -43,7 +43,7 @@ public class CouponShopAdapter extends RecyclerView.Adapter<CouponShopAdapter.Vi
         if (item.getLogo_link() != null) {
             Glide.with(mContext)
                     .load(item.getLogo_link())
-                    .thumbnail(0.5f)
+                    .thumbnail(1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.mImgLogo);
         }

@@ -45,7 +45,7 @@ class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
             Glide.with(mContext)
                     .load(item.getPath())
-                    .thumbnail(0.5f)
+                    .thumbnail(1f)
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(holder.imageView);
         }

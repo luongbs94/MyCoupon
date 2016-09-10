@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.activeandroid.ActiveAndroid;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.images.models.ImagesManager;
 
@@ -149,7 +150,7 @@ public class MainApplication extends MultiDexApplication {
         mInstances = this;
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-
+        FirebaseAuth.getInstance();
 
         ActiveAndroid.initialize(this);
 //

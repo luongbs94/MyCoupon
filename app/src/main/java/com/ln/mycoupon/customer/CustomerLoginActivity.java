@@ -26,8 +26,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
@@ -97,7 +95,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         mEdtUser = (MaterialEditText) findViewById(R.id.username);
         mEdtPassword = (MaterialEditText) findViewById(R.id.password);
-       
+
         String user = MainApplication.getPreferences().getString(MainApplication.USER_CUSTOMER, "");
         String pass = MainApplication.getPreferences().getString(MainApplication.PASSWORD_CUSTOMER, "");
         mEdtUser.setText(user);
@@ -176,19 +174,19 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         );
 
-     /* ============== START GOOGLE ===============*/
 
-        GoogleSignInOptions mInOptions = new GoogleSignInOptions
+        GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+        // [END config_signin]
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, mInOptions)
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
 
         /* ================ END GOOGLE ================*/
     }
@@ -253,13 +251,13 @@ public class CustomerLoginActivity extends AppCompatActivity
 
         Log.d(TAG, "Login Google Success " + account.getId() + " - " + account.getIdToken());
         login(accountOflUser.getId(), account.getIdToken(), "android", null);
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        Log.d(TAG, "Logout Google " + status.toString());
-                    }
-                });
+//        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+//                new ResultCallback<Status>() {
+//                    @Override
+//                    public void onResult(@NonNull Status status) {
+//                        Log.d(TAG, "Logout Google " + status.toString());
+//                    }
+//                });
         Log.d(TAG, "login google ");
 
     }
