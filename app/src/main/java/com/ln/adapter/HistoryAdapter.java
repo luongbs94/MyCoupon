@@ -50,7 +50,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             Glide.with(mContext)
                     .load(item.getUser_image_link())
                     .thumbnail(0.5f)
-                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.mImgLogo);
         }

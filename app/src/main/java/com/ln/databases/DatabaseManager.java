@@ -97,6 +97,7 @@ public class DatabaseManager {
         news.save();
     }
 
+
     public static List<NewsOfCompany> getListNewsOfCompany() {
         return new Select()
                 .from(NewsOfCompany.class)

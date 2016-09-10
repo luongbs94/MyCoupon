@@ -519,7 +519,6 @@ public class ShopLoginActivity extends AppCompatActivity
                 getCompanyProfileSocial(mAccount.getId(), mTokenGoogle);
 
                 writeSharePreferences(MainApplication.ADMIN, true);
-                getShowMessages(getString(R.string.login_success));
                 logoutGoogle();
             } else {
                 Log.d(TAG, "login fails 2");

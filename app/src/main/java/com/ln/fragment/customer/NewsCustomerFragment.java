@@ -244,11 +244,18 @@ public class NewsCustomerFragment extends Fragment {
         List<OptionNews> listLike = new ArrayList<>();
         listLike.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_LIKE, MainApplication.CUSTOMER));
 
+        Log.d(TAG, "new like: " + listLike.size() + " = " + listLike);
+
+
         List<OptionNews> listDeleteNews = new ArrayList<>();
         listDeleteNews.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_DELETE, MainApplication.CUSTOMER));
 
+        Log.d(TAG, "new delete: " + listDeleteNews.size() + " = " + listDeleteNews);
+
         List<NewsOfCustomer> news = new ArrayList<>();
         news.addAll(DatabaseManager.getListNewsOfCustomer(mTypeNews));
+
+        Log.d(TAG, "new new: " + news.size() + " = " + news);
 
         for (OptionNews likeNews : listLike) {
             for (NewsOfCustomer item : news) {
@@ -271,6 +278,15 @@ public class NewsCustomerFragment extends Fragment {
                 if (news.get(i).isDelete()) {
                     news.remove(i);
                 }
+            }
+        }
+
+        int size = news.size();
+        Log.d(TAG, "size: " + size);
+        for (int i = size - 1; i > 0; i--) {
+            if (!news.get(i).isLike()) {
+                news.remove(i);
+                size--;
             }
         }
 

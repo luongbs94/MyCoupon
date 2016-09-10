@@ -102,7 +102,6 @@ public class ShopOfCustomerActivity extends AppCompatActivity {
                     Glide.with(this)
                             .load(mCompanyOfCustomer.getLogo())
                             .thumbnail(0.5f)
-                            .crossFade()
                             .placeholder(R.drawable.ic_logo_blank)
                             .into((ImageView) header.findViewById(R.id.img_logo_nav));
 

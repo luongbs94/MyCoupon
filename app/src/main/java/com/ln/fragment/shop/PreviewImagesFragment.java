@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.ln.app.MainApplication;
@@ -52,6 +53,8 @@ public class PreviewImagesFragment extends Fragment {
             Glide.with(container.getContext())
                     .load(path)
                     .asBitmap()
+                    .thumbnail(0.5f)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .fitCenter()
                     .into(new SimpleTarget<Bitmap>(480, 800) {
                         @Override
@@ -65,6 +68,8 @@ public class PreviewImagesFragment extends Fragment {
                     .load(new File(path))
                     .asBitmap()
                     .fitCenter()
+                    .thumbnail(0.5f)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(new SimpleTarget<Bitmap>(480, 800) {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {

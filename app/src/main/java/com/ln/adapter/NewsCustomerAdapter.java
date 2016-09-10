@@ -70,7 +70,6 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             Glide.with(mContext)
                     .load(item.getLogo_link())
                     .thumbnail(0.5f)
-                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.mImgLogo);
         }
@@ -91,7 +90,10 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
             holder.mTxtLink.setText(item.getLink());
         }
 
+        holder.mRecyclerView.setVisibility(View.GONE);
         if (item.getImages_link() != null) {
+            holder.mRecyclerView.setVisibility(View.VISIBLE);
+
             String strImages = item.getImages_link();
             if (strImages != null) {
                 List<LocalMedia> listImages = new ArrayList<>();
@@ -102,10 +104,7 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
                 }
                 GridAdapter gridAdapter = new GridAdapter(mContext, listImages);
                 holder.mRecyclerView.setAdapter(gridAdapter);
-                holder.mRecyclerView.setVisibility(View.VISIBLE);
 
-            } else {
-                holder.mRecyclerView.setVisibility(View.GONE);
             }
         }
 

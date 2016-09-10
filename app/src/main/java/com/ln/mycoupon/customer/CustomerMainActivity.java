@@ -129,7 +129,6 @@ public class CustomerMainActivity extends AppCompatActivity
                 Glide.with(this)
                         .load(accountOflUser.getPicture())
                         .thumbnail(0.5f)
-                        .crossFade()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
             }

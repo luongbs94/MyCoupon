@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.app.MainApplication;
 import com.ln.broadcast.ConnectivityReceiver;
@@ -126,6 +127,7 @@ public class ShopMainActivity extends AppCompatActivity
 
                 Glide.with(this).load(company.getLogo_link())
                         .placeholder(R.drawable.ic_logo_blank)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(mImageLogo);
                 Log.d(TAG, "Logo " + company.getLogo_link());
                 Log.d(TAG, "Logo " + MainApplication.getStringNoBase64(company.getLogo()));

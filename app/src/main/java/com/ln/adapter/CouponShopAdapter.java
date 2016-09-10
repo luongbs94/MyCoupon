@@ -44,7 +44,6 @@ public class CouponShopAdapter extends RecyclerView.Adapter<CouponShopAdapter.Vi
             Glide.with(mContext)
                     .load(item.getLogo_link())
                     .thumbnail(0.5f)
-                    .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.mImgLogo);
         }

@@ -44,7 +44,6 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<SelectedImageAdap
         Glide.with(mContext)
                 .load(item.getPath())
                 .thumbnail(0.5f)
-                .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.mImages);
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
