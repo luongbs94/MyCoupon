@@ -67,6 +67,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         getDataFromIntent();
         initViews();
         setLogin();
+
+
+        String token  = MainApplication.getPreferences().getString(MainApplication.DEVICE_TOKEN, "");
+        Log.d(TAG, token);
     }
 
     private void initViews() {

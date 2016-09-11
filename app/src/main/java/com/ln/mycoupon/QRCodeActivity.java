@@ -148,10 +148,12 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeReaderVie
         coupon.setUser_image_link(mAccountOflUser.getPicture());
         coupon.setUser_name(mAccountOflUser.getName());
         coupon.setUser_social(null);
-        if (mAccountOflUser.getPicture().contains(MainApplication.FACEBOOK)) {
-            coupon.setUser_social(MainApplication.FACEBOOK);
-        } else if (mAccountOflUser.getPicture().contains(MainApplication.GOOGLE)) {
-            coupon.setUser_social(MainApplication.GOOGLE);
+        if (mAccountOflUser.getPicture() != null) {
+            if (mAccountOflUser.getPicture().contains(MainApplication.FACEBOOK)) {
+                coupon.setUser_social(MainApplication.FACEBOOK);
+            } else if (mAccountOflUser.getPicture().contains(MainApplication.GOOGLE)) {
+                coupon.setUser_social(MainApplication.GOOGLE);
+            }
         }
         String city = MainApplication
                 .getSharePrefer()

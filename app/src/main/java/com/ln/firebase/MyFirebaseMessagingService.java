@@ -1,5 +1,6 @@
 package com.ln.firebase;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -22,10 +24,21 @@ import com.ln.mycoupon.R;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
+    private static final int NOTIFICATION_ID = 9083150;
 
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+
+        startForeground(NOTIFICATION_ID, createNotification());
+
+    }
+
+    @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.d(TAG, "From: ");
+
         Log.d(TAG, "From: " + remoteMessage.getData());
         Log.d(TAG, "get notification");
         Log.d(TAG, "Notification NewsOfCustomer Body: " + remoteMessage.toString());
@@ -37,6 +50,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         sendNotification(message, title);
 
 
+    }
+
+    private Notification createNotification() {
+        Builder builder = new Builder(this);
+        builder.setWhen(System.currentTimeMillis());
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setContentTitle("Mycoupon");
+        builder.setContentText("Tap to see my coupon");
+        builder.setOngoing(true);
+        builder.setPriority(-2);
+        builder.setCategory("service");
+//        134217728
+        builder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, FirstActivity.class), 134217728));
+        return builder.build();
     }
 
     private void sendNotification(String messageBody, String title) {
