@@ -1,15 +1,21 @@
 package com.ln.mycoupon;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -17,6 +23,7 @@ import com.google.gson.Gson;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
+import com.ln.images.models.ImagesManager;
 import com.ln.model.AccountOfUser;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
@@ -43,13 +50,15 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     private LoveCouponAPI mCouponAPI;
     private int mStartNotification = 1;
 
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
         try {
-            PackageInfo info = getPackageManager().getPackageInfo(
+            @SuppressLint("PackageManagerGetSignatures") PackageInfo info = getPackageManager().getPackageInfo(
                     "com.ln.mycoupon",
                     PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
@@ -69,9 +78,16 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         setLogin();
 
 
-        String token  = MainApplication.getPreferences().getString(MainApplication.DEVICE_TOKEN, "");
+        String token = MainApplication.getPreferences().getString(MainApplication.DEVICE_TOKEN, "");
         Log.d(TAG, token);
+
+        if (!checkPermission()) {
+            requestPermission();
+        } else {
+            ImagesManager.getInstances(this);
+        }
     }
+
 
     private void initViews() {
         findViewById(R.id.shop).setOnClickListener(this);
@@ -374,6 +390,37 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .preload();
             }
+        }
+    }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            Toast.makeText(getApplicationContext(), "GPS permission allows us to access location data. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+
+        } else {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Log.d(TAG, "Permission Granted, Now you can access location data.");
+                }
+                break;
         }
     }
 }

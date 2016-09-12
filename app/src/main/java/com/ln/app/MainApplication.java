@@ -12,7 +12,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ln.broadcast.ConnectivityReceiver;
-import com.ln.images.models.ImagesManager;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
@@ -193,7 +192,6 @@ public class MainApplication extends MultiDexApplication {
         editor = sharedPreferences.edit();
         isEnglish();
 
-        ImagesManager.getInstances(this);
     }
 
     public static SharedPreferences getPreferences() {
@@ -309,5 +307,6 @@ public class MainApplication extends MultiDexApplication {
         String local = Locale.getDefault().getLanguage();
         return local.equals("en");
     }
+
 
 }

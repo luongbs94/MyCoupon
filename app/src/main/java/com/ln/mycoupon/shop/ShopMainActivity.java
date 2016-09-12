@@ -404,4 +404,5 @@ public class ShopMainActivity extends AppCompatActivity
         super.onResume();
         MainApplication.getInstance().setConnectivityListener(this);
     }
+
 }

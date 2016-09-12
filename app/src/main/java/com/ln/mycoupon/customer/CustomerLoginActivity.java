@@ -374,6 +374,7 @@ public class CustomerLoginActivity extends AppCompatActivity
 
     public void login(final String userId, String token, String device_os, final String password) {
 
+        token = MainApplication.getPreferences().getString(MainApplication.DEVICE_TOKEN, "");
         CustomerProfile profile = new CustomerProfile(userId, device_os, token, password);
         Call<Integer> loginCustomer = MainApplication.getAPI().updateUserToken(profile);
         loginCustomer.enqueue(new Callback<Integer>() {

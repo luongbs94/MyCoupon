@@ -4,9 +4,8 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.x;
 
 /**
  * Created by luongnguyen on 4/8/16.
@@ -30,7 +29,7 @@ public class CompanyOfCustomer extends Model {
     @Column(name = "address")
     private String address;
 
-    private List<Coupon> coupon;
+    private List<Coupon> coupon = new ArrayList<>();
 
     public CompanyOfCustomer() {
     }

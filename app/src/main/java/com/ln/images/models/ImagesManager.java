@@ -51,6 +51,8 @@ public class ImagesManager {
 
     private static List<LocalMedia> getImages(Context context, Uri uris) {
 
+        // check permission
+
         List<LocalMedia> listLocalMedia = new ArrayList<>();
         Cursor cursor = context
                 .getContentResolver()
@@ -70,6 +72,9 @@ public class ImagesManager {
         cursor.close();
         return listLocalMedia;
     }
+
+
+
 
     public static List<LocalMedia> getListImageAll() {
         return mListImageAll;
