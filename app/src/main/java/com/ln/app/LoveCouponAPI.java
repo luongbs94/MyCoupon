@@ -9,6 +9,7 @@ import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
 import com.ln.model.CouponTemplate;
+import com.ln.model.NewMore;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
 import com.ln.mycoupon.ForgetPasswordActivity;
@@ -131,8 +132,8 @@ public interface LoveCouponAPI {
     Call<CityOfUser> getCityOfUser2();
 
     @GET("/get_news_more_by_user_id")
-    Call<List<NewsOfCustomer>> getNewsMoreByUserId(@Query("user_id") String user_id,
-                                                   @Query("city") String city);
+    Call<List<NewMore>> getNewsMoreByUserId(@Query("user_id") String user_id,
+                                            @Query("city") String city);
 
     @POST("/updateMessage")
     Call<Integer> updateMessages(

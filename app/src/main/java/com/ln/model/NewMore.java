@@ -3,22 +3,23 @@ package com.ln.model;
 import android.support.annotation.NonNull;
 
 import com.ln.databases.DatabaseManager;
-import com.ln.until.UntilNews;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.Index;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import static android.R.attr.type;
+
 /**
- * Created by Nhahv on 6/30/2016.
+ * Created by Nhahv on 9/14/2016.
  * <></>
  */
 @Table(database = DatabaseManager.class)
-public class NewsOfCompany extends BaseModel implements Comparable<NewsOfCompany> {
+public class NewMore extends BaseModel implements Comparable<NewsOfCustomer> {
 
-    @Index
     @PrimaryKey
+    @Index
     @Column
     private String message_id;
 
@@ -44,43 +45,21 @@ public class NewsOfCompany extends BaseModel implements Comparable<NewsOfCompany
     private String images_link;
 
     @Column
+    private String logo_link;
+
+    @Column
+    private String name;
+
+    @Column
     private String user;
 
     @Column
-    private boolean like;
+    private boolean isLike = false;
+
+    @Column
+    private boolean isDelete = false;
 
 
-    public NewsOfCompany() {
-        super();
-    }
-
-    public NewsOfCompany(String message_id) {
-        super();
-        this.message_id = message_id;
-    }
-
-    public NewsOfCompany(String message_id, String content,
-                         String company_id, long last_date, String title,
-                         String link, String images_link) {
-        this.message_id = message_id;
-        this.content = content;
-        this.company_id = company_id;
-        this.last_date = last_date;
-        this.title = title;
-        this.link = link;
-        this.images_link = images_link;
-    }
-
-    public NewsOfCompany(UntilNews news) {
-        this.message_id = news.getMessage_id();
-        this.content = news.getContent();
-        this.company_id = news.getCompany_id();
-        this.last_date = news.getLast_date();
-        this.title = news.getTitle();
-        this.link = news.getLink();
-        this.images_link = news.getImages_link();
-        this.created_date = news.getCreated_date();
-    }
 
     public String getMessage_id() {
         return message_id;
@@ -98,6 +77,13 @@ public class NewsOfCompany extends BaseModel implements Comparable<NewsOfCompany
         this.content = content;
     }
 
+    public long getCreated_date() {
+        return created_date;
+    }
+
+    public void setCreated_date(long created_date) {
+        this.created_date = created_date;
+    }
 
     public String getCompany_id() {
         return company_id;
@@ -107,6 +93,13 @@ public class NewsOfCompany extends BaseModel implements Comparable<NewsOfCompany
         this.company_id = company_id;
     }
 
+    public long getLast_date() {
+        return last_date;
+    }
+
+    public void setLast_date(long last_date) {
+        this.last_date = last_date;
+    }
 
     public String getTitle() {
         return title;
@@ -132,29 +125,42 @@ public class NewsOfCompany extends BaseModel implements Comparable<NewsOfCompany
         this.images_link = images_link;
     }
 
-    public void setLast_date(long last_date) {
-        this.last_date = last_date;
+
+    public String getLogo_link() {
+        return logo_link;
     }
 
-    public void setCreated_date(long created_date) {
-        this.created_date = created_date;
+    public void setLogo_link(String logo_link) {
+        this.logo_link = logo_link;
     }
 
-    public long getCreated_date() {
-        return created_date;
+    public String getName() {
+        return name;
     }
 
-    public long getLast_date() {
-        return last_date;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getType() {
+        return type;
     }
 
 
     public boolean isLike() {
-        return like;
+        return isLike;
     }
 
     public void setLike(boolean like) {
-        this.like = like;
+        isLike = like;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 
     public String getUser() {
@@ -166,8 +172,8 @@ public class NewsOfCompany extends BaseModel implements Comparable<NewsOfCompany
     }
 
     @Override
-    public int compareTo(@NonNull NewsOfCompany another) {
-        if (this.created_date >= another.getCreated_date()) {
+    public int compareTo(@NonNull NewsOfCustomer another) {
+        if (created_date > another.getCreated_date()) {
             return -1;
         }
         return 1;

@@ -489,14 +489,14 @@ public class ShopLoginActivity extends BaseActivity
     }
 
     /* =============== Get list coupon of company ==============*/
-    private void getNewsByCompanyId(String idCompany) {
+    private void getNewsByCompanyId(final String idCompany) {
 
         Call<List<NewsOfCompany>> call = MainApplication.getAPI().getNewsByCompanyId(idCompany);
         call.enqueue(new Callback<List<NewsOfCompany>>() {
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
-                    DatabaseManager.addListNewsOfCompany(response.body());
+                    DatabaseManager.addListNewsOfCompany(response.body(), idCompany);
                     Log.d(TAG, "getNewsByCompanyId " + response.body().size());
                 } else {
                     Log.d(TAG, "getNewsByCompanyId " + "null");

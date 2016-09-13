@@ -32,7 +32,8 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
 
     public CouponTemplateClientAdapter(Context context, CompanyOfCustomer company) {
         mContext = context;
-        mListCoupon = company.coupons();
+        // vua sua
+        mListCoupon = company.getCoupon();
         mCompanyOfCustomer = company;
     }
 
@@ -107,7 +108,7 @@ public class CouponTemplateClientAdapter extends RecyclerView.Adapter<CouponTemp
         }
     }
 
-    public void remove(int position){
+    public void remove(int position) {
         mListCoupon.remove(position);
         notifyItemRemoved(position);
     }

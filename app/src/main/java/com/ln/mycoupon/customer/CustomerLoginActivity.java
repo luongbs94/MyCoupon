@@ -33,6 +33,7 @@ import com.ln.broadcast.ConnectivityReceiver;
 import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOfUser;
 import com.ln.model.CompanyOfCustomer;
+import com.ln.model.NewMore;
 import com.ln.model.NewsOfCustomer;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.ForgetPasswordActivity;
@@ -430,7 +431,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
 
                 if (response.body() != null) {
-                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS, id);
+                    DatabaseManager.addListNewsOfCustomer(response.body(), id);
                     loadImages();
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 }
@@ -445,21 +446,20 @@ public class CustomerLoginActivity extends AppCompatActivity
     }
 
     private void getNewsMore(final String id, String city) {
-        Call<List<NewsOfCustomer>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
-        newsMore.enqueue(new Callback<List<NewsOfCustomer>>() {
+        Call<List<NewMore>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
+        newsMore.enqueue(new Callback<List<NewMore>>() {
             @Override
-            public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
+            public void onResponse(Call<List<NewMore>> call, Response<List<NewMore>> response) {
                 if (response.body() != null) {
-                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE, id);
+                    DatabaseManager.addListNewMore(response.body(), id);
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
                     Log.d(TAG, " getNewsMore " + " null");
                 }
-
             }
 
             @Override
-            public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
+            public void onFailure(Call<List<NewMore>> call, Throwable t) {
                 Log.d(TAG, "getNewsMore " + " onFailure " + t.toString());
 
             }
@@ -467,8 +467,12 @@ public class CustomerLoginActivity extends AppCompatActivity
     }
 
     private void loadImages() {
+
+        String strAccount = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+        AccountOfUser item = new Gson().fromJson(strAccount, AccountOfUser.class);
+
         List<NewsOfCustomer> listNews = new ArrayList<>();
-        listNews.addAll(DatabaseManager.getListNewsOfCustomer(MainApplication.TYPE_NEWS));
+        listNews.addAll(DatabaseManager.getListNewsOfCustomer(item.getId()));
         for (NewsOfCustomer news : listNews) {
 
             if (news.getLogo_link() != null) {

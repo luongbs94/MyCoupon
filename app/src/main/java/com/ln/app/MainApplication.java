@@ -7,11 +7,12 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Base64;
 import android.widget.ImageView;
 
-import com.activeandroid.ActiveAndroid;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ln.broadcast.ConnectivityReceiver;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
@@ -146,12 +147,13 @@ public class MainApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        FlowManager.init(new FlowConfig.Builder(this).build());
+
         mInstances = this;
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         FirebaseAuth.getInstance();
 
-        ActiveAndroid.initialize(this);
 //
 //        OkHttpClient httpClient = new OkHttpClient();
 //        httpClient.networkInterceptors().add(new Interceptor() {

@@ -1,8 +1,11 @@
 package com.ln.model;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.ln.databases.DatabaseManager;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Index;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,22 +14,24 @@ import java.util.List;
  * Created by luongnguyen on 4/8/16.
  * <></>
  */
-@Table(name = "CompanyOfCustomer")
-public class CompanyOfCustomer extends Model {
+@Table(database = DatabaseManager.class)
+public class CompanyOfCustomer extends BaseModel {
 
-    @Column(name = "company_id", index = true)
+    @PrimaryKey
+    @Index
+    @Column
     private String company_id;
 
-    @Column(name = "logo")
+    @Column
     private String logo;
 
-    @Column(name = "logo_link")
+    @Column
     private String logo_link;
 
-    @Column(name = "name")
+    @Column
     private String name;
 
-    @Column(name = "address")
+    @Column
     private String address;
 
     private List<Coupon> coupon = new ArrayList<>();
@@ -84,7 +89,5 @@ public class CompanyOfCustomer extends Model {
         return coupon;
     }
 
-    public List<Coupon> coupons() {
-        return getMany(Coupon.class, "CompanyOfCustomer");
-    }
+
 }

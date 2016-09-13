@@ -20,6 +20,7 @@ import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOfUser;
+import com.ln.model.NewMore;
 import com.ln.model.NewsOfCustomer;
 import com.ln.model.OptionNews;
 import com.ln.mycoupon.R;
@@ -43,7 +44,7 @@ public class NewsCustomerFragment extends Fragment {
     private AccountOfUser account;
 
     private int mType;
-    private int mTypeNews;
+    private int mTypeNews = MainApplication.TYPE_NEWS;
 
     public static NewsCustomerFragment getInstances(int typeNews) {
         NewsCustomerFragment instances = new NewsCustomerFragment();
@@ -110,7 +111,16 @@ public class NewsCustomerFragment extends Fragment {
     private void setListMessages() {
 
         List<NewsOfCustomer> news = new ArrayList<>();
-        news.addAll(DatabaseManager.getListNewsOfCustomer(mTypeNews));
+        news.addAll(DatabaseManager.getListNewsOfCustomer(account.getId()));
+
+        if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
+            news.clear();
+            List<NewMore> listNewMore = DatabaseManager.getListNewMore(account.getId());
+            for (NewMore item : listNewMore) {
+                NewsOfCustomer newsOfCustomer = new NewsOfCustomer(item);
+                news.add(newsOfCustomer);
+            }
+        }
 
         List<OptionNews> listLike = new ArrayList<>();
         listLike.addAll(DatabaseManager.getListOptionNews(MainApplication.NEW_LIKE, MainApplication.CUSTOMER));
@@ -149,7 +159,7 @@ public class NewsCustomerFragment extends Fragment {
             }
         }
 
-        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), news, this);
+        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), news, this, mTypeNews);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);
 
@@ -168,7 +178,7 @@ public class NewsCustomerFragment extends Fragment {
                         String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
                         String user = new Gson().fromJson(account, AccountOfUser.class).getId();
 
-                        DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS, user);
+                        DatabaseManager.addListNewsOfCustomer(response.body(), user);
 
                         setListMessages();
                         mSwipeContainer.setRefreshing(false);
@@ -189,17 +199,17 @@ public class NewsCustomerFragment extends Fragment {
             String city = MainApplication
                     .getPreferences()
                     .getString(MainApplication.CITY_OF_USER, "");
-            Call<List<NewsOfCustomer>> newsMore = apiService.getNewsMoreByUserId(account.getId(), city);
-            newsMore.enqueue(new Callback<List<NewsOfCustomer>>() {
+            Call<List<NewMore>> newsMore = apiService.getNewsMoreByUserId(account.getId(), city);
+            newsMore.enqueue(new Callback<List<NewMore>>() {
                 @Override
-                public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
+                public void onResponse(Call<List<NewMore>> call, Response<List<NewMore>> response) {
                     if (response.body() != null) {
 
 
                         String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
                         String user = new Gson().fromJson(account, AccountOfUser.class).getId();
 
-                        DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE, user);
+                        DatabaseManager.addListNewMore(response.body(), user);
                         setListMessages();
                         mSwipeContainer.setRefreshing(false);
                         Log.d(TAG, "getNewsOfCustomer " + response.body().size());
@@ -209,7 +219,7 @@ public class NewsCustomerFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
+                public void onFailure(Call<List<NewMore>> call, Throwable t) {
                     Log.d(TAG, "getNewsOfCustomer onFailure");
                     mSwipeContainer.setRefreshing(false);
                 }
@@ -253,8 +263,17 @@ public class NewsCustomerFragment extends Fragment {
         Log.d(TAG, "new delete: " + listDeleteNews.size() + " = " + listDeleteNews);
 
         List<NewsOfCustomer> news = new ArrayList<>();
-        news.addAll(DatabaseManager.getListNewsOfCustomer(mTypeNews));
+        news.addAll(DatabaseManager.getListNewsOfCustomer(account.getId()));
 
+        if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
+            news.clear();
+            List<NewMore> listNewMore = DatabaseManager.getListNewMore(account.getId());
+            for (NewMore item : listNewMore) {
+                NewsOfCustomer newsOfCustomer = new NewsOfCustomer(item);
+                news.add(newsOfCustomer);
+            }
+        }
+//        mTypeNews
         Log.d(TAG, "new new: " + news.size() + " = " + news);
 
         for (OptionNews likeNews : listLike) {
@@ -291,7 +310,7 @@ public class NewsCustomerFragment extends Fragment {
         }
 
         Collections.sort(listNew);
-        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listNew, this);
+        NewsCustomerAdapter adapter = new NewsCustomerAdapter(getActivity(), listNew, this, mTypeNews);
         mRecyclerNews.setAdapter(adapter);
         mSwipeContainer.setRefreshing(false);
     }

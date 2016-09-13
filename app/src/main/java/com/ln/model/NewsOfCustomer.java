@@ -2,59 +2,84 @@ package com.ln.model;
 
 import android.support.annotation.NonNull;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.ln.databases.DatabaseManager;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Index;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 /**
  * Created by Nhahv on 7/3/2016.
  * <></>
  */
 
-@Table(name = "NewsOfCustomer")
-public class NewsOfCustomer extends Model implements Comparable<NewsOfCustomer> {
+@Table(database = DatabaseManager.class)
+public class NewsOfCustomer extends BaseModel implements Comparable<NewsOfCustomer> {
 
-    @Column(name = "message_id")
+    @PrimaryKey
+    @Index
+    @Column
     private String message_id;
 
-    @Column(name = "content")
+    @Column
     private String content;
 
-    @Column(name = "created_date")
+    @Column
     private long created_date;
 
-    @Column(name = "company_id")
+    @Column
     private String company_id;
 
-    @Column(name = "last_date")
+    @Column
     private long last_date;
 
-    @Column(name = "title")
+    @Column
     private String title;
 
-    @Column(name = "link")
+    @Column
     private String link;
 
-    @Column(name = "images_link")
+    @Column
     private String images_link;
 
-    @Column(name = "logo")
+    @Column
     private String logo;
 
-    @Column(name = "logo_link")
+    @Column
     private String logo_link;
 
-    @Column(name = "name")
+    @Column
     private String name;
+    @Column
+    private String user;
 
-    @Column(name = "type")
-    private int type;
-
-    @Column(name = "isLike")
+    @Column
     private boolean isLike = false;
 
-    @Column(name = "isDelete")
+    @Column
     private boolean isDelete = false;
+
+    public NewsOfCustomer() {
+    }
+
+
+    public NewsOfCustomer(NewMore item) {
+        this.message_id = item.getMessage_id();
+        this.content = item.getContent();
+        this.created_date = item.getCreated_date();
+        this.company_id = item.getCompany_id();
+        this.last_date = item.getLast_date();
+        this.title = item.getTitle();
+        this.link = item.getLink();
+        this.images_link = item.getImages_link();
+        this.logo_link = item.getLogo_link();
+        this.name = item.getName();
+        this.user = item.getUser();
+        this.isLike = item.isLike();
+        this.isDelete = item.isDelete();
+    }
+
 
     public String getMessage_id() {
         return message_id;
@@ -144,13 +169,6 @@ public class NewsOfCustomer extends Model implements Comparable<NewsOfCustomer> 
         this.name = name;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
 
     public boolean isLike() {
         return isLike;
@@ -166,6 +184,14 @@ public class NewsOfCustomer extends Model implements Comparable<NewsOfCustomer> 
 
     public void setDelete(boolean delete) {
         isDelete = delete;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     @Override

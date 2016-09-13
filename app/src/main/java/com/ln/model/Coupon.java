@@ -3,56 +3,61 @@ package com.ln.model;
 
 import android.support.annotation.NonNull;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.ln.databases.DatabaseManager;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Index;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
-@Table(name = "Coupon")
-public class Coupon extends Model implements Comparable<Coupon> {
+@Table(database = DatabaseManager.class)
+public class Coupon extends BaseModel implements Comparable<Coupon> {
 
-    @Column(name = "coupon_id", index = true)
+    @PrimaryKey
+    @Index
+    @Column
     private String coupon_id;
 
-    @Column(name = "user_id")
+    @Column
     private String user_id;
 
-    @Column(name = "coupon_template_id")
+    @Column
     private String coupon_template_id;
 
-    @Column(name = "created_date")
+    @Column
     private long created_date;
 
-    @Column(name = "used_date")
+    @Column
     private long used_date;
 
-    @Column(name = "company_id")
+    @Column
     private String company_id;
 
-    @Column(name = "value")
+    @Column
     private String value;
 
-    @Column(name = "duration")
+    @Column
     private int duration;
 
-    @Column(name = "user_name")
+    @Column
     private String user_name;
 
-    @Column(name = "user_social")
+    @Column
     private String user_social;
 
-    @Column(name = "user_image_link")
+    @Column
     private String user_image_link;
 
-    @Column(name = "content")
+    @Column
     private String content;
 
-
-    @Column(name = "companyOfCustomer", onDelete = Column.ForeignKeyAction.CASCADE)
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
     private CompanyOfCustomer companyOfCustomer;
 
     public Coupon() {
     }
-
 
 
     public String getUser_id() {

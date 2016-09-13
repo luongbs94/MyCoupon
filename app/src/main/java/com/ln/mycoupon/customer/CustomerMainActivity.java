@@ -114,8 +114,11 @@ public class CustomerMainActivity extends AppCompatActivity
         TextView txt = (TextView) headerView.findViewById(R.id.txt_name_customer_nav);
 
         if (mStartNotification == MainApplication.NOTIFICATION) {
+            sTitle = getString(R.string.news);
+
             startFragment(NewsCustomerFragment.getInstances(MainApplication.TYPE_NEWS));
         } else {
+            sTitle = getString(R.string.coupon);
             startFragment(new CouponFragment());
         }
 

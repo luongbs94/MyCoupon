@@ -28,6 +28,7 @@ import com.ln.model.AccountOfUser;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
+import com.ln.model.NewMore;
 import com.ln.model.NewsOfCompany;
 import com.ln.model.NewsOfCustomer;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
@@ -72,6 +73,8 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
         mCouponAPI = MainApplication.getAPI();
 
+//        getNewsOfShop("1k2Bqu67UvqDon1");
+
         getCityOfAccount();
         getDataFromIntent();
         initViews();
@@ -86,6 +89,8 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         } else {
             ImagesManager.getInstances(this);
         }
+
+
     }
 
 
@@ -167,7 +172,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
                     String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
                     String user = new Gson().fromJson(account, AccountOfUser.class).getId();
-                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS, user);
+                    DatabaseManager.addListNewsOfCustomer(response.body(), user);
                     preLoadImagesCustomer();
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 } else {
@@ -183,28 +188,29 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void getNewsMore(String id, String city) {
-        Call<List<NewsOfCustomer>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
+        Call<List<NewMore>> newsMore = mCouponAPI.getNewsMoreByUserId(id, city);
 
-        newsMore.enqueue(new Callback<List<NewsOfCustomer>>() {
+        newsMore.enqueue(new Callback<List<NewMore>>() {
             @Override
-            public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
+            public void onResponse(Call<List<NewMore>> call, Response<List<NewMore>> response) {
                 if (response.body() != null) {
                     preLoadImageNewMore(response.body());
                     String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
                     String user = new Gson().fromJson(account, AccountOfUser.class).getId();
-                    DatabaseManager.addListNewsOfCustomer(response.body(), MainApplication.TYPE_NEWS_MORE, user);
+                    DatabaseManager.addListNewMore(response.body(), user);
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
                     Log.d(TAG, " getNewsMore " + " null");
                 }
             }
 
-
             @Override
-            public void onFailure(Call<List<NewsOfCustomer>> call, Throwable t) {
+            public void onFailure(Call<List<NewMore>> call, Throwable t) {
                 Log.d(TAG, "getNewsMore " + " onFailure " + t.toString());
+
             }
         });
+
     }
     /* ============================ END CUSTOMER ==============*/
 
@@ -232,14 +238,14 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void getNewsOfShop(String idCompany) {
+    private void getNewsOfShop(final String idCompany) {
 
         Call<List<NewsOfCompany>> newsCompany = mCouponAPI.getNewsByCompanyId(idCompany);
         newsCompany.enqueue(new Callback<List<NewsOfCompany>>() {
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
-                    DatabaseManager.addListNewsOfCompany(response.body());
+                    DatabaseManager.addListNewsOfCompany(response.body(), idCompany);
                     preLoadImageShop();
                     Log.d(TAG, "getNewsOfShop " + response.body().size());
                 } else {
@@ -342,8 +348,11 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void preLoadImagesCustomer() {
+
+        String str = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
+        AccountOfUser account = new Gson().fromJson(str, AccountOfUser.class);
         List<NewsOfCustomer> listNews = new ArrayList<>();
-        listNews.addAll(DatabaseManager.getListNewsOfCustomer(MainApplication.TYPE_NEWS));
+        listNews.addAll(DatabaseManager.getListNewsOfCustomer(account.getId()));
         for (NewsOfCustomer news : listNews) {
             if (news.getLogo_link() != null && news.getLogo_link().contains("http")) {
                 Glide.with(MainApplication.getInstance())
@@ -382,8 +391,8 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void preLoadImageNewMore(List<NewsOfCustomer> news) {
-        for (NewsOfCustomer item : news) {
+    private void preLoadImageNewMore(List<NewMore> news) {
+        for (NewMore item : news) {
             if (item.getLogo_link() != null && item.getLogo_link().contains("http")) {
                 Glide.with(MainApplication.getInstance())
                         .load(item.getLogo_link())

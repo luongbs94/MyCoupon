@@ -1,28 +1,35 @@
 package com.ln.model;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 import com.ln.app.MainApplication;
+import com.ln.databases.DatabaseManager;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Index;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 /**
  * Created by Nhahv on 8/18/2016.
  * <></>
  */
 
-@Table(name = "OptionNews")
-public class OptionNews extends Model {
+@Table(database = DatabaseManager.class)
+public class OptionNews extends BaseModel {
 
-    @Column(name = "idNews", index = true)
+
+    @PrimaryKey(autoincrement = true)
+    private long id;
+    @Index
+    @Column
     private String idNews;
 
-    @Column(name = "idUser")
+    @Column
     private String idUser;
 
-    @Column(name = "type")
+    @Column
     private int type = MainApplication.NEW_LIKE;
 
-    @Column(name = "typeShopOfCustomer")
+    @Column
     private int typeShopOfCustomer = MainApplication.SHOP;
 
 
@@ -34,6 +41,14 @@ public class OptionNews extends Model {
         this.idUser = idUser;
         this.type = type;
         this.typeShopOfCustomer = typeShop;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getIdNews() {

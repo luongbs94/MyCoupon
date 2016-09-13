@@ -1,40 +1,54 @@
 package com.ln.model;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.ln.databases.DatabaseManager;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 /**
  * Created by Nhahv on 5/21/2016.
  * <></>
  */
 
-@Table(name = "CouponTemplate")
-public class CouponTemplate extends Model {
+@Table(database = DatabaseManager.class)
+public class CouponTemplate extends BaseModel {
 
-    @Column(name = "coupon_template_id", index = true)
+    @PrimaryKey(autoincrement = true)
+    private long id;
+
+    @Column
     private String coupon_template_id;
 
-    @Column(name = "content")
+    @Column
     private String content;
 
-    @Column(name = "created_date")
+    @Column
     private String created_date;
 
-    @Column(name = "company_id")
+    @Column
     private String company_id;
 
-    @Column(name = "value")
+    @Column
     private String value;
 
-    @Column(name = "duration")
+    @Column
     private int duration;
+
 
     public CouponTemplate() {
     }
 
     public CouponTemplate(String coupon_template_id) {
         this.coupon_template_id = coupon_template_id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getCoupon_template_id() {

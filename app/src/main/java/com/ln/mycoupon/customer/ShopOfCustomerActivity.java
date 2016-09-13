@@ -137,7 +137,7 @@ public class ShopOfCustomerActivity extends AppCompatActivity {
     }
 
     private void deleteCoupon(final int position) {
-        final String id = mCompanyOfCustomer.coupons().get(position).getCoupon_id();
+        final String id = mCompanyOfCustomer.getCoupon().get(position).getCoupon_id();
         Until coupon = new Until();
         coupon.setCoupon_id(id);
 

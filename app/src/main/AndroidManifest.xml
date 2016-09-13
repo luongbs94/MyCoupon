@@ -27,26 +27,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- META DATA -->
-        <meta-data
-            android:name="AA_DB_NAME"
-            android:value="MyCoupon.db" />
-        <meta-data
-            android:name="AA_DB_VERSION"
-            android:value="13" />
-        <meta-data
-            android:name="AA_MODELS"
-            android:value="
-            com.ln.model.CompanyOfCustomer,
-            com.ln.model.Coupon,
-            com.ln.model.CouponTemplate,
-            com.ln.model.NewsOfCompany,
-            com.ln.model.OptionNews,
-            com.ln.model.NewsOfCustomer" />
-        <meta-data
-            android:name="AA_SERIALIZERS"
-            android:value="com.ln.model.ByteImages" />
-        <!-- ======================= START ACTIVITY OF APP =============== -->
         <activity
             android:name=".FirstActivity"
             android:configChanges="keyboardHidden|orientation"

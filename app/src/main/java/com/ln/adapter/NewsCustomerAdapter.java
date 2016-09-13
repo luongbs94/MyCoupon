@@ -45,13 +45,13 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
     private List<NewsOfCustomer> mListNews;
     private Context mContext;
     private ShareDialog mShareDialog;
-    private int mType;
+    private int mType = MainApplication.NEWS_CUSTOMER;
 
-    public NewsCustomerAdapter(Context context, List<NewsOfCustomer> listNews, Fragment fragment) {
+    public NewsCustomerAdapter(Context context, List<NewsOfCustomer> listNews, Fragment fragment, int type) {
         mContext = context;
         mListNews = listNews;
         mShareDialog = new ShareDialog(fragment);
-        mType = MainApplication.NEWS_CUSTOMER;
+        mType = type;
     }
 
     @Override
