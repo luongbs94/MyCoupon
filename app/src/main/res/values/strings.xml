@@ -204,6 +204,9 @@
     <string name="send_email_fails">Send Email fail</string>
     <string name="text_back"><u>Back</u></string>
     <string name="title_activity_scan_qrcode">ScanQRcodeActivity</string>
+    <string name="grant_read_storage">Please grant access picture permission to use the picture</string>
+    <string name="grant_camera">Please grant camera permission to use the QR Scanner</string>
+    <string name="grant_get_account">Please grant get account  permission to use the contact</string>
 
 
 </resources>

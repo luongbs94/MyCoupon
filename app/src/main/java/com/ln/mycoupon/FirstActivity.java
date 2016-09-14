@@ -52,6 +52,9 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     private int mStartNotification = 1;
 
     private static final int PERMISSION_REQUEST_CODE = 1;
+    private static final int ZXING_CAMERA_PERMISSION = 2;
+    private static final int GET_ACCOUNTS = 3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +87,23 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         String token = MainApplication.getPreferences().getString(MainApplication.DEVICE_TOKEN, "");
         Log.d(TAG, token);
 
+        String permissions[] = new String[]{};
+
         if (!checkPermission()) {
             requestPermission();
         } else {
             ImagesManager.getInstances(this);
         }
-
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, ZXING_CAMERA_PERMISSION);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.GET_ACCOUNTS}, GET_ACCOUNTS);
+        }
     }
 
 
@@ -409,7 +422,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void requestPermission() {
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
             Toast.makeText(getApplicationContext(), "GPS permission allows us to access location data. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
 
@@ -417,6 +430,10 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
+    }
+
+    private void showMessage(int id) {
+        Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -427,8 +444,26 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Log.d(TAG, "Permission Granted, Now you can access location data.");
+                    Log.d(TAG, "Permission Granted, Now you can access storage data.");
+                } else {
+                    showMessage(R.string.grant_read_storage);
                 }
+                break;
+            case ZXING_CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "Permission Granted, Now you can access location data.");
+                } else {
+                    showMessage(R.string.grant_camera);
+                }
+                break;
+            case GET_ACCOUNTS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "Permission Granted, Now you can access location data.");
+                } else {
+                    showMessage(R.string.grant_get_account);
+                }
+                break;
+            default:
                 break;
         }
     }

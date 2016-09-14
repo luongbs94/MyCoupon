@@ -203,5 +203,9 @@ Envoyer les nouvelles de promotions à vos chers clients</string>
     <string name="send_email_success">Mot de passe a été envoyé à votre email</string>
     <string name="send_email_fails">Envoyer un message échouer</string>
     <string name="back"><u>Arrière</u></string>
+    <string name="grant_read_storage">S\'il vous plaît accorder l\'autorisation de stockage d\'accès à utiliser l\'image</string>
+    <string name="grant_camera">S\'il vous plaît accorder la permission de la caméra pour utiliser le Scanner QR</string>
+    <string name="grant_get_account">S\'il vous plaît accorder compte obtenir la permission de d\'utiliser le contact</string>
+
 
 </resources>

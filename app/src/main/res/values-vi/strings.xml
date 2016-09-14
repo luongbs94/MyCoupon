@@ -200,5 +200,9 @@
     <string name="send_email_success">Mật khẩu đã được gửi tới Email </string>
     <string name="send_email_fails">Gửi email không thành công</string>
     <string name="text_back"><u>Quay lại</u></string>
+    <string name="grant_read_storage">Cấp phép truy cập lưu trữ để sử dụng các hình ảnh</string>
+    <string name="grant_camera">Cấp phép máy ảnh để sử dụng các máy quét QR</string>
+    <string name="grant_get_account">Cấp phép get  account để sử dụng danh bạ</string>
+
 
 </resources>

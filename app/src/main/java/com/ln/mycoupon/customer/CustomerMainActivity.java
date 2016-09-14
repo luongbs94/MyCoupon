@@ -33,7 +33,6 @@ import com.ln.fragment.customer.NewsCustomerFragment;
 import com.ln.fragment.shop.ShareFragment;
 import com.ln.model.AccountOfUser;
 import com.ln.mycoupon.FirstActivity;
-import com.ln.mycoupon.QRCodeActivity;
 import com.ln.mycoupon.R;
 
 public class CustomerMainActivity extends AppCompatActivity

@@ -1,4 +1,4 @@
-package com.ln.mycoupon;
+package com.ln.mycoupon.shop;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
+import com.ln.mycoupon.R;
 import com.ln.until.UntilCoupon;
 
 import net.glxn.qrgen.android.QRCode;

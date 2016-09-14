@@ -23,7 +23,7 @@ import com.ln.model.Company;
 import com.ln.model.CouponTemplate;
 import com.ln.until.Until;
 import com.ln.mycoupon.R;
-import com.ln.mycoupon.TestQRCode;
+import com.ln.mycoupon.shop.TestQRCode;
 
 import java.util.List;
 

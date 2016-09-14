@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.google.zxing.Result;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
@@ -26,16 +27,17 @@ import com.ln.until.UntilCoupon;
 
 import java.util.List;
 
-import me.dm7.barcodescanner.zbar.Result;
-import me.dm7.barcodescanner.zbar.ZBarScannerView;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ScanQRcodeActivity extends AppCompatActivity implements ZBarScannerView.ResultHandler {
+public class ScanQRcodeActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     private final String TAG = getClass().getSimpleName();
-    private ZBarScannerView mScannerView;
+
+    private ZXingScannerView mScannerView;
+
 
     private LoveCouponAPI apiService;
     private AccountOfUser mAccountOflUser;
@@ -49,7 +51,7 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZBarScanner
 
         setupToolbar();
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
-        mScannerView = new ZBarScannerView(this);
+        mScannerView = new ZXingScannerView(this);
         contentFrame.addView(mScannerView);
 
         initData();
@@ -101,6 +103,11 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZBarScanner
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void handleResult(Result rawResult) {
         // Note:
         // * Wait 2 seconds to resume the preview.
@@ -114,11 +121,11 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZBarScanner
 //            }
 //        }, 2000);
 
-        Log.d(TAG, "onCodeScanned : " + rawResult.getContents());
+        Log.d(TAG, "onCodeScanned : " + rawResult.getText());
         if (!isCamera) {
             isCamera = true;
             mScannerView.stopCamera();
-            updateCoupon(rawResult.getContents());
+            updateCoupon(rawResult.getText());
         }
     }
 
@@ -168,7 +175,6 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZBarScanner
                                         }
                                     }, 500);
 
-//                                    mQRCodeReaderView.startScanner();
                                 }
                             })
                             .positiveText(R.string.ok)
@@ -183,11 +189,8 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZBarScanner
                                             isCamera = false;
                                             mScannerView.setResultHandler(ScanQRcodeActivity.this);
                                             mScannerView.startCamera();
-//                                            mScannerView.resumeCameraPreview(ScanQRcodeActivity.this);
                                         }
                                     }, 500);
-
-//                                    mScannerView.startScanner();
                                 }
                             })
                             .show();
@@ -215,5 +218,6 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZBarScanner
             }
         });
     }
+
 
 }

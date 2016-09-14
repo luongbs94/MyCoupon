@@ -71,7 +71,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".TestQRCode"
+            android:name=".shop.TestQRCode"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_test_qrcode"
             android:screenOrientation="portrait"
@@ -86,12 +86,6 @@
             android:name=".AddMessageActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/add_message"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".QRCodeActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/qrcode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
