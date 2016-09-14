@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -393,7 +394,14 @@ public class CustomerLoginActivity extends AppCompatActivity
                         writeSharePreferences(MainApplication.PASSWORD_CUSTOMER, password);
                     }
                 } else {
-                    getShowMessages(getString(R.string.login_fails));
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideProgressDialog();
+                            getShowMessages(getString(R.string.login_fails));
+                        }
+                    }, MainApplication.TIME_SLEEP_SETTING);
                 }
 
                 Log.d(TAG, "login: " + response.body());

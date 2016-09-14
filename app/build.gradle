@@ -65,22 +65,30 @@ dependencies {
     compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.isseiaoki:simplecropview:1.1.4'
     compile 'com.github.citux:datetimepicker:0.2.0'
-    compile 'com.google.firebase:firebase-core:9.4.0'
     //    compile 'com.google.android.gms:play-services-appinvite:9.4.0'
     compile 'com.github.kenglxn.QRGen:android:2.2.0'
+
+    // crop image
     compile "com.github.hotchemi:permissionsdispatcher:${permissionsDispatcherVersion}"
     apt "com.github.hotchemi:permissionsdispatcher-processor:${permissionsDispatcherVersion}"
     compile('eu.livotov.labs.android:CAMView:2.0.1@aar') { transitive = true }
+
+
     //    compile 'org.parceler:parceler-api:1.1.5'
 
     //    apt 'org.parceler:parceler:1.1.5'
     compile 'com.google.firebase:firebase-messaging:9.4.0'
     compile 'com.google.firebase:firebase-auth:9.4.0'
     compile 'com.google.android.gms:play-services-auth:9.4.0'
+    compile 'com.google.firebase:firebase-core:9.4.0'
+
+
     // db flow
     apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+
+    // libs
     compile files('libs/converter-gson-2.1.0.jar')
     compile files('libs/gson-2.7.jar')
     compile files('libs/okhttp-3.4.1.jar')
@@ -89,6 +97,10 @@ dependencies {
     compile files('libs/parceler-1.1.5.jar')
     compile files('libs/parceler-api-1.1.5.jar')
     compile files('libs/okio-1.10.0.jar')
+
+    // zbar
+    compile 'me.dm7.barcodescanner:zbar:1.9'
+
 }
 apply plugin: 'com.google.gms.google-services'
 
