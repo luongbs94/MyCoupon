@@ -26,7 +26,6 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".FirstActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -103,8 +102,8 @@
         <activity
             android:name=".customer.CustomerLoginActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PreviewImagesActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -118,7 +117,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name="com.ln.firebase.MyFirebaseInstanceIDService"
             tools:ignore="ExportedService">
@@ -184,9 +182,11 @@
         <activity
             android:name=".ForgetPasswordActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".customer.ScanQRcodeActivity"
+            android:label="@string/title_activity_scan_qrcode"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

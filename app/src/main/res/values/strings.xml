@@ -203,6 +203,7 @@
     <string name="send_email_success">Password was sent to your email</string>
     <string name="send_email_fails">Send Email fail</string>
     <string name="text_back"><u>Back</u></string>
+    <string name="title_activity_scan_qrcode">ScanQRcodeActivity</string>
 
 
 </resources>

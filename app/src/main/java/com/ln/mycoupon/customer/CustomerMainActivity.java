@@ -90,7 +90,8 @@ public class CustomerMainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (ConnectivityReceiver.isConnect()) {
-                    Intent intent = new Intent(CustomerMainActivity.this, QRCodeActivity.class);
+//                    Intent intent = new Intent(CustomerMainActivity.this, QRCodeActivity.class);
+                    Intent intent = new Intent(CustomerMainActivity.this, ScanQRcodeActivity.class);
                     startActivityForResult(intent, MainApplication.START_QRCODE);
                 } else {
                     getShowMessages(getString(R.string.check_network));

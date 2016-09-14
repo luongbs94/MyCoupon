@@ -39,5 +39,5 @@
     <color name="colorSnackbar">#3f000000</color>
     <color name="hint_color">#CCCCCC</color>
     <color name="edittext">#FFF59D</color>
-
+    <color name="actionbar_opacity">#33000000</color>
 </resources>
