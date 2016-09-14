@@ -185,7 +185,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
                     String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
                     String user = new Gson().fromJson(account, AccountOfUser.class).getId();
-                    DatabaseManager.addListNewsOfCustomer(response.body(), user);
+                    DatabaseManager.addListNewsOfCustomer(response.body());
                     preLoadImagesCustomer();
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 } else {
@@ -210,7 +210,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                     preLoadImageNewMore(response.body());
                     String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
                     String user = new Gson().fromJson(account, AccountOfUser.class).getId();
-                    DatabaseManager.addListNewMore(response.body(), user);
+                    DatabaseManager.addListNewMore(response.body());
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
                     Log.d(TAG, " getNewsMore " + " null");
@@ -258,7 +258,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
-                    DatabaseManager.addListNewsOfCompany(response.body(), idCompany);
+                    DatabaseManager.addListNewsOfCompany(response.body());
                     preLoadImageShop();
                     Log.d(TAG, "getNewsOfShop " + response.body().size());
                 } else {
@@ -365,7 +365,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         String str = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
         AccountOfUser account = new Gson().fromJson(str, AccountOfUser.class);
         List<NewsOfCustomer> listNews = new ArrayList<>();
-        listNews.addAll(DatabaseManager.getListNewsOfCustomer(account.getId()));
+        listNews.addAll(DatabaseManager.getListNewsOfCustomer());
         for (NewsOfCustomer news : listNews) {
             if (news.getLogo_link() != null && news.getLogo_link().contains("http")) {
                 Glide.with(MainApplication.getInstance())
@@ -389,7 +389,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void preLoadImageShop() {
         List<NewsOfCompany> listNews = new ArrayList<>();
-        listNews.addAll(DatabaseManager.getListNewsOfCompany());
+        listNews.addAll(DatabaseManager.getListNewsOfShop());
         for (NewsOfCompany news : listNews) {
             if (news.getImages_link() != null) {
                 String strImages = news.getImages_link();
@@ -443,7 +443,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                    ImagesManager.getInstances(this);
                     Log.d(TAG, "Permission Granted, Now you can access storage data.");
                 } else {
                     showMessage(R.string.grant_read_storage);

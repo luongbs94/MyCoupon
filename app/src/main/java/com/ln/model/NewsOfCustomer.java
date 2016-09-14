@@ -51,8 +51,7 @@ public class NewsOfCustomer extends BaseModel implements Comparable<NewsOfCustom
 
     @Column
     private String name;
-    @Column
-    private String user;
+
 
     @Column
     private boolean isLike = false;
@@ -75,7 +74,6 @@ public class NewsOfCustomer extends BaseModel implements Comparable<NewsOfCustom
         this.images_link = item.getImages_link();
         this.logo_link = item.getLogo_link();
         this.name = item.getName();
-        this.user = item.getUser();
         this.isLike = item.isLike();
         this.isDelete = item.isDelete();
     }
@@ -184,14 +182,6 @@ public class NewsOfCustomer extends BaseModel implements Comparable<NewsOfCustom
 
     public void setDelete(boolean delete) {
         isDelete = delete;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
     }
 
     @Override

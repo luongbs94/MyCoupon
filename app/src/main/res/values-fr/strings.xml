@@ -29,7 +29,7 @@
     <string name="description">Description</string>
     <string name="limit">Durée</string>
     <string name="month">Mois</string>
-    <string name="add_coupon_success">pas de succès</string>
+    <string name="add_coupon_success">enregistré</string>
     <string name="add_coupon_fail">Succès</string>
     <string name="delete_coupon_success">Succès</string>
     <string name="delete_coupon_fail">pas de succès</string>

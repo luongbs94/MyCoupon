@@ -111,11 +111,11 @@ public class NewsCustomerFragment extends Fragment {
     private void setListMessages() {
 
         List<NewsOfCustomer> news = new ArrayList<>();
-        news.addAll(DatabaseManager.getListNewsOfCustomer(account.getId()));
+        news.addAll(DatabaseManager.getListNewsOfCustomer());
 
         if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
             news.clear();
-            List<NewMore> listNewMore = DatabaseManager.getListNewMore(account.getId());
+            List<NewMore> listNewMore = DatabaseManager.getListNewMore();
             for (NewMore item : listNewMore) {
                 NewsOfCustomer newsOfCustomer = new NewsOfCustomer(item);
                 news.add(newsOfCustomer);
@@ -178,7 +178,7 @@ public class NewsCustomerFragment extends Fragment {
                         String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
                         String user = new Gson().fromJson(account, AccountOfUser.class).getId();
 
-                        DatabaseManager.addListNewsOfCustomer(response.body(), user);
+                        DatabaseManager.addListNewsOfCustomer(response.body());
 
                         setListMessages();
                         mSwipeContainer.setRefreshing(false);
@@ -209,7 +209,7 @@ public class NewsCustomerFragment extends Fragment {
                         String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
                         String user = new Gson().fromJson(account, AccountOfUser.class).getId();
 
-                        DatabaseManager.addListNewMore(response.body(), user);
+                        DatabaseManager.addListNewMore(response.body());
                         setListMessages();
                         mSwipeContainer.setRefreshing(false);
                         Log.d(TAG, "getNewsOfCustomer " + response.body().size());
@@ -263,11 +263,11 @@ public class NewsCustomerFragment extends Fragment {
         Log.d(TAG, "new delete: " + listDeleteNews.size() + " = " + listDeleteNews);
 
         List<NewsOfCustomer> news = new ArrayList<>();
-        news.addAll(DatabaseManager.getListNewsOfCustomer(account.getId()));
+        news.addAll(DatabaseManager.getListNewsOfCustomer());
 
         if (mTypeNews == MainApplication.TYPE_NEWS_MORE) {
             news.clear();
-            List<NewMore> listNewMore = DatabaseManager.getListNewMore(account.getId());
+            List<NewMore> listNewMore = DatabaseManager.getListNewMore();
             for (NewMore item : listNewMore) {
                 NewsOfCustomer newsOfCustomer = new NewsOfCustomer(item);
                 news.add(newsOfCustomer);

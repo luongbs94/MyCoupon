@@ -29,7 +29,7 @@
     <string name="description">Description</string>
     <string name="limit">Duration</string>
     <string name="month">Month</string>
-    <string name="add_coupon_success">Add coupon successfully</string>
+    <string name="add_coupon_success">Saved</string>
     <string name="add_coupon_fail">Failed to add coupon </string>
     <string name="delete_coupon_success">Delete coupon successfully</string>
     <string name="delete_coupon_fail">Failed to delete coupon</string>

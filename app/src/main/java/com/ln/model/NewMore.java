@@ -51,14 +51,10 @@ public class NewMore extends BaseModel implements Comparable<NewsOfCustomer> {
     private String name;
 
     @Column
-    private String user;
-
-    @Column
     private boolean isLike = false;
 
     @Column
     private boolean isDelete = false;
-
 
 
     public String getMessage_id() {
@@ -163,13 +159,6 @@ public class NewMore extends BaseModel implements Comparable<NewsOfCustomer> {
         isDelete = delete;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
 
     @Override
     public int compareTo(@NonNull NewsOfCustomer another) {

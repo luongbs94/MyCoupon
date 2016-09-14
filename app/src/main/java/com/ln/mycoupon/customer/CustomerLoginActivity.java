@@ -439,7 +439,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
 
                 if (response.body() != null) {
-                    DatabaseManager.addListNewsOfCustomer(response.body(), id);
+                    DatabaseManager.addListNewsOfCustomer(response.body());
                     loadImages();
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
                 }
@@ -459,7 +459,7 @@ public class CustomerLoginActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<NewMore>> call, Response<List<NewMore>> response) {
                 if (response.body() != null) {
-                    DatabaseManager.addListNewMore(response.body(), id);
+                    DatabaseManager.addListNewMore(response.body());
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
                     Log.d(TAG, " getNewsMore " + " null");
@@ -480,7 +480,7 @@ public class CustomerLoginActivity extends AppCompatActivity
         AccountOfUser item = new Gson().fromJson(strAccount, AccountOfUser.class);
 
         List<NewsOfCustomer> listNews = new ArrayList<>();
-        listNews.addAll(DatabaseManager.getListNewsOfCustomer(item.getId()));
+        listNews.addAll(DatabaseManager.getListNewsOfCustomer());
         for (NewsOfCustomer news : listNews) {
 
             if (news.getLogo_link() != null) {

@@ -1,14 +1,18 @@
 package com.ln.mycoupon.customer;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -40,6 +44,7 @@ public class CustomerMainActivity extends AppCompatActivity
         ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static final int NETWORK = 1000;
+    private static final int ZXING_CAMERA_PERMISSION = 1;
     private final String TAG = getClass().getSimpleName();
     private static String sTitle;
 
@@ -89,11 +94,18 @@ public class CustomerMainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (ConnectivityReceiver.isConnect()) {
-//                    Intent intent = new Intent(CustomerMainActivity.this, QRCodeActivity.class);
-                    Intent intent = new Intent(CustomerMainActivity.this, ScanQRcodeActivity.class);
-                    startActivityForResult(intent, MainApplication.START_QRCODE);
+
+                    if (ContextCompat.checkSelfPermission(CustomerMainActivity.this, Manifest.permission.CAMERA)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(CustomerMainActivity.this,
+                                new String[]{Manifest.permission.CAMERA}, ZXING_CAMERA_PERMISSION);
+                    } else {
+                        Intent intent = new Intent(CustomerMainActivity.this, ScanQRcodeActivity.class);
+                        startActivityForResult(intent, MainApplication.START_QRCODE);
+                    }
+
                 } else {
-                    getShowMessages(getString(R.string.check_network));
+                    showMessage(getString(R.string.check_network));
                 }
 
             }
@@ -161,7 +173,7 @@ public class CustomerMainActivity extends AppCompatActivity
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             if (!isClose) {
-                getShowMessages(getString(R.string.press_back_again));
+                showMessage(getString(R.string.press_back_again));
                 isClose = true;
             } else if (isClose) {
                 super.onBackPressed();
@@ -307,7 +319,33 @@ public class CustomerMainActivity extends AppCompatActivity
         MainApplication.getInstance().setConnectivityListener(this);
     }
 
-    private void getShowMessages(String msg) {
+    private void showMessage(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
+
+    private void showMessage(int msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case ZXING_CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "Permission Granted, Now you can access location data.");
+                    Intent intent = new Intent(CustomerMainActivity.this, ScanQRcodeActivity.class);
+                    startActivityForResult(intent, MainApplication.START_QRCODE);
+                } else {
+                    showMessage(R.string.grant_camera);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
 }

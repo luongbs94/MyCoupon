@@ -95,8 +95,8 @@ public class NewsFragment extends Fragment implements NewsShopAdapter.OnClickUpd
     public void setNewsOfCompany() {
 
         List<NewsOfCompany> news = new ArrayList<>();
-        if (DatabaseManager.getListNewsOfCompany() != null) {
-            news.addAll(DatabaseManager.getListNewsOfCompany());
+        if (DatabaseManager.getListNewsOfShop() != null) {
+            news.addAll(DatabaseManager.getListNewsOfShop());
         }
 
         Log.d(TAG, "======================");
@@ -140,7 +140,7 @@ public class NewsFragment extends Fragment implements NewsShopAdapter.OnClickUpd
 
                     if (response.body() != null) {
 
-                        DatabaseManager.addListNewsOfCompany(response.body(), mCompany.getCompany_id());
+                        DatabaseManager.addListNewsOfCompany(response.body());
                         setNewsOfCompany();
                         Log.d(TAG, "getNewsByCompanyId " + response.body().size());
                         swipeContainer.setRefreshing(false);

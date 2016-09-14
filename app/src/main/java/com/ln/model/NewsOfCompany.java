@@ -44,9 +44,6 @@ public class NewsOfCompany extends BaseModel implements Comparable<NewsOfCompany
     private String images_link;
 
     @Column
-    private String user;
-
-    @Column
     private boolean like;
 
 
@@ -157,13 +154,6 @@ public class NewsOfCompany extends BaseModel implements Comparable<NewsOfCompany
         this.like = like;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
 
     @Override
     public int compareTo(@NonNull NewsOfCompany another) {

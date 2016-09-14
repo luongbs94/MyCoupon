@@ -496,7 +496,7 @@ public class ShopLoginActivity extends BaseActivity
             @Override
             public void onResponse(Call<List<NewsOfCompany>> call, Response<List<NewsOfCompany>> response) {
                 if (response.body() != null) {
-                    DatabaseManager.addListNewsOfCompany(response.body(), idCompany);
+                    DatabaseManager.addListNewsOfCompany(response.body());
                     Log.d(TAG, "getNewsByCompanyId " + response.body().size());
                 } else {
                     Log.d(TAG, "getNewsByCompanyId " + "null");

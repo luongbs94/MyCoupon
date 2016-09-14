@@ -29,7 +29,7 @@
     <string name="description">Mô tả</string>
     <string name="limit">Thời hạn</string>
     <string name="month">Tháng</string>
-    <string name="add_coupon_success">Thêm coupon thành công </string>
+    <string name="add_coupon_success">Đã lưu</string>
     <string name="add_coupon_fail">Thêm coupon thất bại </string>
     <string name="delete_coupon_success">Xoá coupon thành công </string>
     <string name="delete_coupon_fail">Xoá coupon thất bại </string>
