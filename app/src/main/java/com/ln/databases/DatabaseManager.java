@@ -231,7 +231,7 @@ public class DatabaseManager {
                 .where(CompanyOfCustomer_Table.company_id.is(idShop))
                 .queryList();
     }
-    
+
     public static void addListShopOfCustomer(List<CompanyOfCustomer> shopOfCustomers) {
 
         new Delete().from(CompanyOfCustomer.class).execute();

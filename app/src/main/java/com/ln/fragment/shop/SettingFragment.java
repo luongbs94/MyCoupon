@@ -131,6 +131,7 @@ public class SettingFragment extends Fragment implements
 
         mEdtNameCompany = (MaterialEditText) v.findViewById(R.id.name_company);
         mEdtAddress = (MaterialEditText) v.findViewById(R.id.address_company);
+
         mEdtUser1 = (MaterialEditText) v.findViewById(R.id.username1);
         mEdtPassword1 = (MaterialEditText) v.findViewById(R.id.password1);
 
@@ -226,10 +227,6 @@ public class SettingFragment extends Fragment implements
 
         mEdtUser1.addTextChangedListener(new Events(mEdtUser1));
         mEdtUser2.addTextChangedListener(new Events(mEdtUser2));
-
-        mEdtPassword1.addTextChangedListener(new Events(mEdtPassword1));
-        mEdtPassword2.addTextChangedListener(new Events(mEdtPassword2));
-
     }
 
 
@@ -237,9 +234,6 @@ public class SettingFragment extends Fragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d(TAG, "requestCode = " + requestCode
-                + " - resultCode " + resultCode
-                + " + " + Activity.RESULT_OK);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == START_CROP_IMAGES) {
 
@@ -248,8 +242,6 @@ public class SettingFragment extends Fragment implements
                 Log.d(TAG, "data");
                 isChoseImages = true;
             }
-        } else {
-            getShowMessage(getString(R.string.cancel_camera));
         }
     }
 
@@ -474,22 +466,16 @@ public class SettingFragment extends Fragment implements
 
             switch (view.getId()) {
                 case R.id.username1:
-                    validateUser(mEdtUser1, mEdtUser2, mEdtPassword1);
+                    validateUser(mEdtUser1, mEdtUser2);
                     break;
                 case R.id.username2:
-                    validateUser(mEdtUser2, mEdtUser1, mEdtPassword2);
+                    validateUser(mEdtUser2, mEdtUser1);
                     break;
                 case R.id.name_company:
                     mTxtNameCompany.setText(editable.toString());
                     break;
                 case R.id.address_company:
                     mTxtAddress.setText(editable.toString());
-                    break;
-                case R.id.password1:
-                    validatePassword(mEdtUser1, (MaterialEditText) view);
-                    break;
-                case R.id.password2:
-                    validatePassword(mEdtUser2, (MaterialEditText) view);
                     break;
                 default:
                     break;
@@ -498,8 +484,7 @@ public class SettingFragment extends Fragment implements
 
     }
 
-    private void validateUser(MaterialEditText editText,
-                              MaterialEditText editText2, MaterialEditText edtPassword) {
+    private void validateUser(MaterialEditText editText, MaterialEditText editText2) {
 
         String text = editText.getText().toString().trim();
         String text2 = editText2.getText().toString().trim();
@@ -508,33 +493,16 @@ public class SettingFragment extends Fragment implements
             editText.setError(getString(R.string.check_account));
             requestFocus(editText);
         }
-
-        if (!text.isEmpty() && edtPassword.getText().toString().trim().isEmpty()) {
-            edtPassword.setError(getString(R.string.enter_password));
-            Log.d(TAG, "1");
-        } else if (text.isEmpty()) {
-            edtPassword.setError("");
-        }
     }
 
     private void requestFocus(View view) {
 
         if (view.requestFocus()) {
-            getActivity()
-                    .getWindow()
-                    .setSoftInputMode(WindowManager
-                            .LayoutParams
-                            .SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            getActivity().getWindow().setSoftInputMode(WindowManager
+                    .LayoutParams
+                    .SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
-
-    private void validatePassword(MaterialEditText user, MaterialEditText password) {
-        if (!user.getText().toString().trim().isEmpty() && password.getText().toString().trim().isEmpty()) {
-            password.setError(getString(R.string.enter_password));
-            requestFocus(password);
-        }
-    }
-
 
     private void writeSharePreferences(String key, String value) {
         SharedPreferences.Editor editor = MainApplication.getPreferences().edit();
@@ -578,7 +546,6 @@ public class SettingFragment extends Fragment implements
                 e.printStackTrace();
             }
         }
-
     }
 
     public int calcImageSize() {

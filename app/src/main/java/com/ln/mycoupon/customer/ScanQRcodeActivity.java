@@ -22,8 +22,8 @@ import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
 import com.ln.model.AccountOfUser;
 import com.ln.model.CompanyOfCustomer;
+import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
-import com.ln.until.UntilCoupon;
 
 import java.util.List;
 
@@ -135,7 +135,7 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZXingScanne
         Log.d(TAG, "updateCoupon " + mAccountOflUser.getName());
         Log.d(TAG, "updateCoupon " + mAccountOflUser.getPicture());
 
-        UntilCoupon coupon = new UntilCoupon();
+        Coupon coupon = new Coupon();
         coupon.setCoupon_id(coupon_id);
         coupon.setUser_id(mAccountOflUser.getId());
         coupon.setUser_image_link(mAccountOflUser.getPicture());

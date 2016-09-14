@@ -11,6 +11,7 @@
     <color name="title_bg">#ff2c5aa9</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="white_text_tab">#cad6d6</color>
     <color name="white1">#ffffff</color>
     <color name="colorTextNews">#71ACE5</color>
     <color name="background_green">#E0E0E0</color>

@@ -177,22 +177,6 @@ Envoyer les nouvelles de promotions à vos chers clients</string>
     <string name="only_admin">Seul administrateur</string>
 
 
-    <string name="icon_calendar">\uf133</string>
-    <string name="icon_clock">\uf017</string>
-    <string name="ic_heart">\uf004</string>
-    <string name="ic_share">\uf064</string>
-    <string name="ic_delete">\uf00d</string>
-    <string name="ic_email">\uf0e0</string>
-    <string name="ic_start">\uf006</string>
-    <string name="ic_start_like">\uf005</string>
-    <string name="ic_globe">\uf0ac</string>
-    <string name="icon_picture">\uf03e</string>
-    <string name="icon_more">\uf142</string>
-    <string name="bookmark">Bookmark</string>
-    <string name="ic_close">\uf00d</string>
-    <string name="ic_calendar_message">\uf073</string>
-    <string name="icon_bell">\uf0a2</string>
-
     <string name="forgot_password"><u>Mot de passe oublié</u></string>
     <string name="title_forget_password">Mot de passe oublié</string>
     <string name="email">Email</string>

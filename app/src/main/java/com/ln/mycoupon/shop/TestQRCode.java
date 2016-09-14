@@ -12,8 +12,8 @@ import com.google.gson.Gson;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
+import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
-import com.ln.until.UntilCoupon;
 
 import net.glxn.qrgen.android.QRCode;
 
@@ -82,7 +82,7 @@ public class TestQRCode extends AppCompatActivity {
 
     private void addCoupon(final String coupon_id) {
 
-        UntilCoupon template = new UntilCoupon();
+        Coupon template = new Coupon();
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);

@@ -213,19 +213,17 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     }
 
     private void onClickMoreNews(final int position, View view) {
+
+        if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
+            showMessage(R.string.only_admin);
+            return;
+        }
         PopupMenu popupMenu = new PopupMenu(mContext, view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_news, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.menu_edit_news) {
-//                    Intent intent = new Intent(mContext, AddMessageActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putInt(MainApplication.WHAT_ADD_MESSAGES, MainApplication.WHAT_UPDATE_NEWS);
-//                    bundle.putString(MainApplication.DATA, mListNews.get(position).getMessage_id());
-//                    intent.putExtras(bundle);
-//                    mContext.startActivity(intent);
-
                     if (mOnClickUpdateNews != null) {
                         mOnClickUpdateNews.onClickUpdateNews(position, mListNews.get(position).getMessage_id());
                     }
@@ -321,13 +319,13 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.body() == MainApplication.SUCCESS) {
-                    getShowMessages(mContext.getString(R.string.delete_news_success));
+                    showMessage(mContext.getString(R.string.delete_news_success));
                     DatabaseManager.deleteNewsOfCompany(idNews);
                     mListNews.remove(positionNews);
                     notifyItemRemoved(positionNews);
                     Log.d("NewsShopAdapter", "Delete : News Success");
                 } else {
-                    getShowMessages(mContext.getString(R.string.delete_news_error));
+                    showMessage(mContext.getString(R.string.delete_news_error));
                 }
 
                 Log.d(TAG, "deleteNewsOfCompany " + response.body());
@@ -335,13 +333,17 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
-                getShowMessages(mContext.getString(R.string.delete_news_error));
+                showMessage(mContext.getString(R.string.delete_news_error));
                 Log.d(TAG, t.toString());
             }
         });
     }
 
-    private void getShowMessages(String msg) {
+    private void showMessage(String msg) {
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showMessage(int msg) {
         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
 

@@ -12,13 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.adapter.HistoryAdapter;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
+import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
-import com.ln.until.UntilCoupon;
 
 import java.util.Date;
 import java.util.List;
@@ -84,37 +86,45 @@ public class UseFragment extends Fragment {
 
     private void getListCoupon() {
 
+        mRecyclerView.setVisibility(View.VISIBLE);
         if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
             ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin);
-            mRecyclerView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
             return;
         }
+
+        mRecyclerView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
 
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
 
-        Call<List<UntilCoupon>> listCoupon = mApiServices.getUsedCoupon(company.getWeb_token(), company.getCompany_id() + "", utc1, utc2);
-        listCoupon.enqueue(new Callback<List<UntilCoupon>>() {
+        Call<List<Coupon>> listCoupon = mApiServices.getUsedCoupon(company.getWeb_token(), company.getCompany_id() + "", utc1, utc2);
+        listCoupon.enqueue(new Callback<List<Coupon>>() {
             @Override
-            public void onResponse(Call<List<UntilCoupon>> call, Response<List<UntilCoupon>> response) {
+            public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
+                if (response.body() == null) {
+                    return;
+                }
+                for (Coupon item : response.body()) {
+                    Glide.with(UseFragment.this)
+                            .load(item.getUser_image_link())
+                            .thumbnail(.5f)
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .preload();
+                }
+
                 HistoryAdapter mAdapter = new HistoryAdapter(getActivity(), response.body());
                 mRecyclerView.setAdapter(mAdapter);
                 swipeContainer.setRefreshing(false);
-                for (UntilCoupon item : response.body()) {
-                    Log.d(TAG, "getListCoupon" + item.getCoupon_id() + "\n");
-                }
-
-                Log.d(TAG, "getListCoupon" + response.body().size() + " ");
             }
 
             @Override
-            public void onFailure(Call<List<UntilCoupon>> call, Throwable t) {
+            public void onFailure(Call<List<Coupon>> call, Throwable t) {
                 Log.d(TAG, t.toString());
                 swipeContainer.setRefreshing(false);
             }
         });
-
     }
 
     public void getData(long time) {

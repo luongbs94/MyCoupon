@@ -13,13 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.ln.adapter.HistoryAdapter;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.model.Company;
+import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
-import com.ln.until.UntilCoupon;
 
 import java.util.Date;
 import java.util.List;
@@ -113,45 +115,46 @@ public class CreateFragment extends Fragment {
 
     private void getListCoupon() {
 
+        mRecyclerCreate.setVisibility(View.VISIBLE);
+
         if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
             ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin);
-            mRecyclerCreate.setVisibility(View.GONE);
+            mRecyclerCreate.setVisibility(View.VISIBLE);
             return;
         }
-
-
+        mRecyclerCreate.setVisibility(View.GONE);
         mRecyclerCreate.setVisibility(View.VISIBLE);
-//
 //
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
 
-        Call<List<UntilCoupon>> listCoupon = mApiServices.getCreatedCoupon(company.getWeb_token(), company.getCompany_id(), utc1, utc2);
-        listCoupon.enqueue(new Callback<List<UntilCoupon>>() {
+        Call<List<Coupon>> listCoupon = mApiServices.getCreatedCoupon(company.getWeb_token(), company.getCompany_id(), utc1, utc2);
+        listCoupon.enqueue(new Callback<List<Coupon>>() {
             @Override
-            public void onResponse(Call<List<UntilCoupon>> call, Response<List<UntilCoupon>> response) {
+            public void onResponse(Call<List<Coupon>> call, Response<List<Coupon>> response) {
 
-                for (UntilCoupon item : response.body()) {
-                    Log.d(TAG, item.getUser_id() + "\n");
+                if (response.body() != null) {
+                    for (Coupon item : response.body()) {
+                        Glide.with(CreateFragment.this)
+                                .load(item.getUser_image_link())
+                                .thumbnail(.5f)
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .preload();
+                    }
+                    HistoryAdapter mAdapter = new HistoryAdapter(getContext(), response.body());
+                    mRecyclerCreate.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                    swipeContainer.setRefreshing(false);
+
+                    Log.d(TAG, response.body().size() + " ");
                 }
 
-                HistoryAdapter mAdapter = new HistoryAdapter(getContext(), response.body());
-                mRecyclerCreate.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
-                swipeContainer.setRefreshing(false);
-
-                Log.d(TAG, response.body().size() + " ");
-                for (UntilCoupon item : response.body()) {
-                    Log.d(TAG, item.getUser_id() + "\n");
-                }
             }
 
             @Override
-            public void onFailure(Call<List<UntilCoupon>> call, Throwable t) {
+            public void onFailure(Call<List<Coupon>> call, Throwable t) {
                 swipeContainer.setRefreshing(false);
-
                 Log.d(TAG, t.toString());
-
             }
         });
     }

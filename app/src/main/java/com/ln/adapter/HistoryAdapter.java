@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.ln.model.Coupon;
 import com.ln.mycoupon.R;
-import com.ln.until.UntilCoupon;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,10 +27,10 @@ import java.util.Locale;
  */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    private List<UntilCoupon> mListCoupons;
+    private List<Coupon> mListCoupons;
     private Context mContext;
 
-    public HistoryAdapter(Context context, List<UntilCoupon> listCoupon) {
+    public HistoryAdapter(Context context, List<Coupon> listCoupon) {
         mListCoupons = listCoupon;
         mContext = context;
     }
@@ -45,12 +45,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final UntilCoupon item = mListCoupons.get(position);
+        final Coupon item = mListCoupons.get(position);
         if (item.getUser_image_link() != null) {
             Glide.with(mContext)
                     .load(item.getUser_image_link())
                     .thumbnail(0.5f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(holder.mImgLogo);
         }
 

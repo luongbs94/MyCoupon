@@ -8,6 +8,7 @@ package com.ln.app;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
 import com.ln.model.CompanyOfCustomer;
+import com.ln.model.Coupon;
 import com.ln.model.CouponTemplate;
 import com.ln.model.NewMore;
 import com.ln.model.NewsOfCompany;
@@ -16,7 +17,6 @@ import com.ln.mycoupon.ForgetPasswordActivity;
 import com.ln.mycoupon.customer.CustomerLoginActivity;
 import com.ln.mycoupon.shop.ShopLoginActivity;
 import com.ln.until.Until;
-import com.ln.until.UntilCoupon;
 import com.ln.until.UntilCouponTemplate;
 import com.ln.until.UntilNews;
 
@@ -69,7 +69,7 @@ public interface LoveCouponAPI {
     @POST("/addCoupon")
     Call<Integer> addCoupon(
             @Header("Authorization") String token,
-            @Body UntilCoupon coupon);
+            @Body Coupon coupon);
 
     @GET("/get_companies_by_user_id")
     Call<List<CompanyOfCustomer>> getCompaniesByUserId(
@@ -82,17 +82,17 @@ public interface LoveCouponAPI {
     @POST("/update_user_coupon")
     Call<List<CompanyOfCustomer>> updateUserCoupon(
             @Header("city") String city,
-            @Body UntilCoupon template);
+            @Body Coupon template);
 
     @GET("/get_created_coupon_by_company_id")
-    Call<List<UntilCoupon>> getCreatedCoupon(
+    Call<List<Coupon>> getCreatedCoupon(
             @Header("Authorization") String token,
             @Query("company_id") String company_id,
             @Query("utc1") long utc1,
             @Query("utc2") long utc2);
 
     @GET("/get_used_coupon_by_company_id")
-    Call<List<UntilCoupon>> getUsedCoupon(
+    Call<List<Coupon>> getUsedCoupon(
             @Header("Authorization") String token,
             @Query("company_id") String company_id,
             @Query("utc1") long utc1,
