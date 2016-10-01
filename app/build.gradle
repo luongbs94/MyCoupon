@@ -73,7 +73,6 @@ dependencies {
     apt "com.github.hotchemi:permissionsdispatcher-processor:${permissionsDispatcherVersion}"
     compile('eu.livotov.labs.android:CAMView:2.0.1@aar') { transitive = true }
 
-
     //    compile 'org.parceler:parceler-api:1.1.5'
 
     //    apt 'org.parceler:parceler:1.1.5'
@@ -82,21 +81,36 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:9.4.0'
     compile 'com.google.firebase:firebase-core:9.4.0'
 
-
     // db flow
     apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
 
     // libs
-    compile files('libs/converter-gson-2.1.0.jar')
-    compile files('libs/gson-2.7.jar')
-    compile files('libs/okhttp-3.4.1.jar')
-    compile files('libs/retrofit-2.1.0.jar')
-    compile files('libs/glide-3.7.0.jar')
-    compile files('libs/parceler-1.1.5.jar')
-    compile files('libs/parceler-api-1.1.5.jar')
-    compile files('libs/okio-1.10.0.jar')
+//    compile files('libs/converter-gson-2.1.0.jar')
+//    compile files('libs/gson-2.7.jar')
+//    compile files('libs/okhttp-3.4.1.jar')
+//    compile files('libs/retrofit-2.1.0.jar')
+//    compile files('libs/glide-3.7.0.jar')
+//    compile files('libs/parceler-1.1.5.jar')
+//    compile files('libs/parceler-api-1.1.5.jar')
+//    compile files('libs/okio-1.10.0.jar')
+
+    // gson
+    compile 'com.google.code.gson:gson:2.7'
+
+    // glide
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    // retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okio:okio:1.10.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+
+    // parceler
+    compile 'org.parceler:parceler-api:1.1.5'
+    apt 'org.parceler:parceler:1.1.5'
 
     // zbar
 //    compile 'me.dm7.barcodescanner:zbar:1.9'
