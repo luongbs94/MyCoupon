@@ -1,6 +1,5 @@
 package com.ln.mycoupon;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,14 +7,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -23,7 +18,6 @@ import com.google.gson.Gson;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
-import com.ln.images.models.ImagesManager;
 import com.ln.model.AccountOfUser;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
@@ -51,11 +45,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
     private LoveCouponAPI mCouponAPI;
     private int mStartNotification = 1;
 
-    private static final int PERMISSION_REQUEST_CODE = 1;
-    private static final int ZXING_CAMERA_PERMISSION = 2;
-    private static final int GET_ACCOUNTS = 3;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +65,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
         mCouponAPI = MainApplication.getAPI();
 
-//        getNewsOfShop("1k2Bqu67UvqDon1");
-
         getCityOfAccount();
         getDataFromIntent();
         initViews();
@@ -87,23 +74,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         String token = MainApplication.getPreferences().getString(MainApplication.DEVICE_TOKEN, "");
         Log.d(TAG, token);
 
-        String permissions[] = new String[]{};
-
-        if (!checkPermission()) {
-            requestPermission();
-        } else {
-            ImagesManager.getInstances(this);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA}, ZXING_CAMERA_PERMISSION);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.GET_ACCOUNTS}, GET_ACCOUNTS);
-        }
     }
 
 
@@ -183,8 +153,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<List<NewsOfCustomer>> call, Response<List<NewsOfCustomer>> response) {
                 if (response.body() != null) {
 
-                    String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
-                    String user = new Gson().fromJson(account, AccountOfUser.class).getId();
                     DatabaseManager.addListNewsOfCustomer(response.body());
                     preLoadImagesCustomer();
                     Log.d(TAG, "List NewsOfCustomer " + response.body().size());
@@ -208,8 +176,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<List<NewMore>> call, Response<List<NewMore>> response) {
                 if (response.body() != null) {
                     preLoadImageNewMore(response.body());
-                    String account = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
-                    String user = new Gson().fromJson(account, AccountOfUser.class).getId();
                     DatabaseManager.addListNewMore(response.body());
                     Log.d(TAG, " getNewsMore " + response.body().size());
                 } else {
@@ -362,8 +328,6 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
 
     private void preLoadImagesCustomer() {
 
-        String str = MainApplication.getPreferences().getString(MainApplication.ACCOUNT_CUSTOMER, "");
-        AccountOfUser account = new Gson().fromJson(str, AccountOfUser.class);
         List<NewsOfCustomer> listNews = new ArrayList<>();
         listNews.addAll(DatabaseManager.getListNewsOfCustomer());
         for (NewsOfCustomer news : listNews) {
@@ -415,56 +379,4 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-            Toast.makeText(getApplicationContext(), "GPS permission allows us to access location data. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
-
-        } else {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    private void showMessage(int id) {
-        Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ImagesManager.getInstances(this);
-                    Log.d(TAG, "Permission Granted, Now you can access storage data.");
-                } else {
-                    showMessage(R.string.grant_read_storage);
-                }
-                break;
-            case ZXING_CAMERA_PERMISSION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Permission Granted, Now you can access location data.");
-                } else {
-                    showMessage(R.string.grant_camera);
-                }
-                break;
-            case GET_ACCOUNTS:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Permission Granted, Now you can access location data.");
-                } else {
-                    showMessage(R.string.grant_get_account);
-                }
-                break;
-            default:
-                break;
-        }
-    }
 }

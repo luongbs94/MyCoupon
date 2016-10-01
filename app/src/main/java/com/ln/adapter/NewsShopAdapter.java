@@ -120,7 +120,8 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
 
         holder.mTxtTime.setText(fmt.format(item.getCreated_date()));
 
-        if (item.getLast_date() != 0) {
+        holder.linearLastDate.setVisibility(View.GONE);
+        if (item.getLast_date() > 0) {
             holder.linearLastDate.setVisibility(View.VISIBLE);
             holder.textLastDate.setText(fmt.format(item.getLast_date()));
             holder.textTimeShelf.setText(String.valueOf(MainApplication.dayLeft(item.getLast_date())));
@@ -215,7 +216,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
     private void onClickMoreNews(final int position, View view) {
 
         if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
-            showMessage(R.string.only_admin);
+            showMessage(R.string.only_admin_edit);
             return;
         }
         PopupMenu popupMenu = new PopupMenu(mContext, view);
@@ -312,7 +313,7 @@ public class NewsShopAdapter extends RecyclerView.Adapter<NewsShopAdapter.ViewHo
         Log.d(TAG, "Id: " + idNews + " token: " + company.getWeb_token());
 
         Company company1 = new Company();
-        company1.setCompany_id("2342423423");
+        company1.setCompany_id(company.getCompany_id());
         Until news = new Until(idNews);
         Call<Integer> call = mApi.deleteMessage(company.getWeb_token(), news);
         call.enqueue(new Callback<Integer>() {

@@ -114,6 +114,16 @@ public class SettingFragment extends Fragment implements
         addEvents();
         setHasOptionsMenu(false);
 
+
+        (v.findViewById(R.id.text_no_data)).setVisibility(View.GONE);
+
+        if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
+            (v.findViewById(R.id.linear_information)).setVisibility(View.GONE);
+            mFabDoneSave.setVisibility(View.GONE);
+            ((TextView) v.findViewById(R.id.text_no_data)).setText(R.string.only_admin_edit);
+            (v.findViewById(R.id.text_no_data)).setVisibility(View.VISIBLE);
+        }
+
         return v;
     }
 
@@ -123,11 +133,6 @@ public class SettingFragment extends Fragment implements
         mFabDoneSave = (FloatingActionButton) v.findViewById(R.id.fab_done);
         mChbShowPass = (CheckBox) v.findViewById(R.id.chb_show_password);
 
-
-        if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
-            (v.findViewById(R.id.linear_information)).setVisibility(View.GONE);
-            mFabDoneSave.setVisibility(View.GONE);
-        }
 
         mEdtNameCompany = (MaterialEditText) v.findViewById(R.id.name_company);
         mEdtAddress = (MaterialEditText) v.findViewById(R.id.address_company);
@@ -198,19 +203,17 @@ public class SettingFragment extends Fragment implements
             mEdtPassword2.setText("");
         }
 
+        checkBox.setChecked(false);
         if (company.getUser1_admin() != null) {
             if (company.getUser1_admin().equals("1")) {
                 checkBox.setChecked(true);
-            } else {
-                checkBox.setChecked(false);
             }
         }
 
+        checkBox1.setChecked(false);
         if (company.getUser2_admin() != null) {
             if (company.getUser2_admin().equals("1")) {
                 checkBox1.setChecked(true);
-            } else {
-                checkBox1.setChecked(false);
             }
         }
     }
@@ -268,7 +271,7 @@ public class SettingFragment extends Fragment implements
 
         boolean isNetwork = ConnectivityReceiver.isConnect();
         if (!isNetwork) {
-            getShowMessage(getString(R.string.check_network));
+            showMessage(getString(R.string.check_network));
             return;
         }
 
@@ -295,11 +298,20 @@ public class SettingFragment extends Fragment implements
             company.setLogo(mLogoBase64);
         }
 
-
         company.setUser1(user1);
         company.setUser2(user2);
         company.setPass1(mEdtPassword1.getText().toString().trim());
         company.setPass2(mEdtPassword2.getText().toString().trim());
+
+        company.setUser1_admin("");
+        if (checkBox.isChecked()) {
+            company.setUser1_admin("1");
+        }
+
+        company.setUser2_admin("");
+        if (checkBox1.isChecked()) {
+            company.setUser2_admin("1");
+        }
 
         createSave();
     }
@@ -379,7 +391,7 @@ public class SettingFragment extends Fragment implements
                         @Override
                         public void run() {
 
-                            getShowMessage("Success");
+                            showMessage(R.string.add_coupon_success);
 
                             String str = new Gson().toJson(company);
                             writeSharePreferences(MainApplication.COMPANY_SHOP, str);
@@ -411,7 +423,7 @@ public class SettingFragment extends Fragment implements
                     @Override
                     public void run() {
 
-                        getShowMessage("Save do not Success");
+                        showMessage("Save do not Success");
                         hideProgressDialog();
                     }
                 }, MainApplication.TIME_SLEEP);
@@ -510,7 +522,11 @@ public class SettingFragment extends Fragment implements
         editor.apply();
     }
 
-    private void getShowMessage(String s) {
+    private void showMessage(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showMessage(int s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 

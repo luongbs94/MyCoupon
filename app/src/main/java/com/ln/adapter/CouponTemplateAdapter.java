@@ -98,7 +98,6 @@ public class CouponTemplateAdapter
             public void onResponse(Call<Integer> call, Response<Integer> response) {
 
                 if (response.body() == MainApplication.SUCCESS) {
-                    getShowMessages(mContext.getString(R.string.delete_coupon_success));
                     DatabaseManager.deleteCouponTemplate(idCoupon);
                     mListCoupon.remove(position);
                     notifyItemRemoved(position);

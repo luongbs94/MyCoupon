@@ -1,8 +1,8 @@
 package com.ln.mycoupon.customer;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,12 +12,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -39,6 +39,14 @@ import com.ln.model.AccountOfUser;
 import com.ln.mycoupon.FirstActivity;
 import com.ln.mycoupon.R;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
+
+@RuntimePermissions
 public class CustomerMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ConnectivityReceiver.ConnectivityReceiverListener {
@@ -93,21 +101,7 @@ public class CustomerMainActivity extends AppCompatActivity
         mFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ConnectivityReceiver.isConnect()) {
-
-                    if (ContextCompat.checkSelfPermission(CustomerMainActivity.this, Manifest.permission.CAMERA)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(CustomerMainActivity.this,
-                                new String[]{Manifest.permission.CAMERA}, ZXING_CAMERA_PERMISSION);
-                    } else {
-                        Intent intent = new Intent(CustomerMainActivity.this, ScanQRcodeActivity.class);
-                        startActivityForResult(intent, MainApplication.START_QRCODE);
-                    }
-
-                } else {
-                    showMessage(getString(R.string.check_network));
-                }
-
+                CustomerMainActivityPermissionsDispatcher.showCameraWithCheck(CustomerMainActivity.this);
             }
         });
 
@@ -327,25 +321,49 @@ public class CustomerMainActivity extends AppCompatActivity
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
 
-        switch (requestCode) {
-
-            case ZXING_CAMERA_PERMISSION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Permission Granted, Now you can access location data.");
-                    Intent intent = new Intent(CustomerMainActivity.this, ScanQRcodeActivity.class);
-                    startActivityForResult(intent, MainApplication.START_QRCODE);
-                } else {
-                    showMessage(R.string.grant_camera);
-                }
-                break;
-
-            default:
-                break;
-        }
+        CustomerMainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void showCamera() {
+        Intent intent = new Intent(CustomerMainActivity.this, ScanQRcodeActivity.class);
+        startActivityForResult(intent, MainApplication.START_QRCODE);
+    }
+
+    @OnShowRationale(Manifest.permission.CAMERA)
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_camera_rationale)
+                .setPositiveButton(R.string.button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton(R.string.button_deny, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.cancel();
+                    }
+                })
+                .show();
+    }
+
+    @OnPermissionDenied(Manifest.permission.CAMERA)
+    void showDeniedForCamera() {
+        showMessage(R.string.permission_camera_denied);
+    }
+
+    @OnNeverAskAgain(Manifest.permission.CAMERA)
+    void showNeverAskForCamera() {
+        showMessage(R.string.permission_camera_never_askagain);
+    }
+
 
 }

@@ -15,6 +15,17 @@
 
             <include layout="@layout/nav_header_main" />
 
+            <TextView
+                android:id="@+id/text_no_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:text="@string/only_admin"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/size_26sp"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/linear_information"
                 android:layout_width="match_parent"

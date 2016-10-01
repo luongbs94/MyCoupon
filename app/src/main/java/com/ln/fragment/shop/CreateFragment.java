@@ -115,16 +115,15 @@ public class CreateFragment extends Fragment {
 
     private void getListCoupon() {
 
-        mRecyclerCreate.setVisibility(View.VISIBLE);
+        (mView.findViewById(R.id.text_no_data)).setVisibility(View.GONE);
 
         if (!MainApplication.getPreferences().getBoolean(MainApplication.ADMIN, false)) {
-            ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin);
-            mRecyclerCreate.setVisibility(View.VISIBLE);
+            ((TextView) mView.findViewById(R.id.text_no_data)).setText(R.string.only_admin_edit);
+            (mView.findViewById(R.id.text_no_data)).setVisibility(View.VISIBLE);
             return;
         }
-        mRecyclerCreate.setVisibility(View.GONE);
-        mRecyclerCreate.setVisibility(View.VISIBLE);
-//
+
+        swipeContainer.setVisibility(View.VISIBLE);
         String strCompany = MainApplication.getPreferences().getString(MainApplication.COMPANY_SHOP, "");
         Company company = new Gson().fromJson(strCompany, Company.class);
 

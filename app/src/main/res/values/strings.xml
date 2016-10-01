@@ -94,8 +94,8 @@
     <string name="delete_news">Do you want to delete this news</string>
     <string name="exit_alert">Do you want to exit</string>
 
-    <string name="agree">Agree</string>
-    <string name="disagree">Disagree</string>
+    <string name="agree">OK</string>
+    <string name="disagree">Cancel</string>
     <string name="delete_news_success">Message is deleted</string>
     <string name="all_news">All</string>
     <string name="history_news">Delete News</string>
@@ -147,7 +147,7 @@
     <string name="internal">Internal storage</string>
     <string name="message_max_num">Up to %1$s photos can be selected</string>
     <string name="coupon">Coupons</string>
-    <string name="coupon_used">Coupon was used</string>
+    <string name="coupon_used">The code is not valid or already used</string>
     <string name="you_add_news_coupon">You have added a new coupon</string>
     <string name="title_qr_code">QR Code  %1$S coupon</string>
     <string name="edit_news">Edit</string>
@@ -172,9 +172,9 @@
         <item>Create</item>
         <item>Use</item>
     </string-array>
-    <string name="account_exists">*Exists</string>
     <string name="up_loading">Uploading</string>
     <string name="only_admin">Only admin</string>
+    <string name="only_admin_edit">Only for admin</string>
 
 
     <string name="forgot_password"> <u>Forgot password</u></string>
@@ -192,5 +192,8 @@
     <string name="grant_camera">Please grant camera permission to use the QR Scanner</string>
     <string name="grant_get_account">Please grant get account  permission to use the contact</string>
 
-
+    <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
+    <string name="permission_contacts_rationale">Contacts permissions are needed to demonstrate access to the contacts database.</string>
+    <string name="permission_camera_denied">Camera permission was denied. Please consider granting it in order to access the camera!</string>
+    <string name="permission_camera_never_askagain">Camera permission was denied with never ask again.</string>
 </resources>

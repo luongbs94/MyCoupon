@@ -1,6 +1,7 @@
 package com.ln.mycoupon;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,6 +11,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,10 +55,17 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@RuntimePermissions
 public class AddMessageActivity extends AppCompatActivity
         implements DatePickerDialog.OnDateSetListener,
         View.OnClickListener, SelectedImageAdapter.OnClickRemoveImages {
@@ -261,20 +271,20 @@ public class AddMessageActivity extends AppCompatActivity
                                 intent.putExtras(bundle);
                                 setResult(RESULT_OK, intent);
                                 hideProgressDialog();
-                                getShowMessages(getString(R.string.add_message_success));
+                                showMessages(getString(R.string.add_message_success));
                                 mType = 0;
                                 finish();
                             }
                         }, MainApplication.TIME_SLEEP_SETTING);
                     } else {
-                        getShowMessages(getString(R.string.add_message_fail));
+                        showMessages(getString(R.string.add_message_fail));
                         hideProgressDialog();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Integer> call, Throwable t) {
-                    getShowMessages(getString(R.string.add_message_fail));
+                    showMessages(getString(R.string.add_message_fail));
                     Log.d(TAG, "update " + t.toString());
                 }
             });
@@ -298,19 +308,19 @@ public class AddMessageActivity extends AppCompatActivity
                             public void run() {
                                 setResult(RESULT_OK);
                                 hideProgressDialog();
-                                getShowMessages(getString(R.string.add_message_success));
+                                showMessages(getString(R.string.add_message_success));
                                 finish();
                             }
                         }, MainApplication.TIME_SLEEP_SETTING);
                     } else {
-                        getShowMessages(getString(R.string.add_message_fail));
+                        showMessages(getString(R.string.add_message_fail));
                         hideProgressDialog();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Integer> call, Throwable t) {
-                    getShowMessages(getString(R.string.add_message_fail));
+                    showMessages(getString(R.string.add_message_fail));
                     Log.d(TAG, "addNews " + t.toString());
                 }
             });
@@ -330,7 +340,7 @@ public class AddMessageActivity extends AppCompatActivity
                     mRecyclerViewImages.setVisibility(View.VISIBLE);
                     mAdapter.notifyDataSetChanged();
                 } else {
-                    getShowMessages(getString(R.string.images_chose_is_exists));
+                    showMessages(getString(R.string.images_chose_is_exists));
                 }
             }
         }
@@ -364,13 +374,13 @@ public class AddMessageActivity extends AppCompatActivity
         switch (v.getId()) {
             case R.id.card_view_add_messages:
                 if (!ConnectivityReceiver.isConnect()) {
-                    getShowMessages(getString(R.string.check_network));
+                    showMessages(getString(R.string.check_network));
                     return;
                 }
                 onClickAddMessages();
                 break;
             case R.id.img_selected_images:
-                startActivityForResult(new Intent(this, ImagesCheckActivity.class), REQUEST_IMAGE);
+                AddMessageActivityPermissionsDispatcher.showStorageWithCheck(this);
                 break;
             case R.id.text_change_date:
                 DatePickerDialog.newInstance(AddMessageActivity.this,
@@ -430,7 +440,7 @@ public class AddMessageActivity extends AppCompatActivity
             }
 
         } else {
-            getShowMessages(getString(R.string.not_fill_login));
+            showMessages(getString(R.string.not_fill_login));
         }
     }
 
@@ -534,7 +544,11 @@ public class AddMessageActivity extends AppCompatActivity
         editor.apply();
     }
 
-    private void getShowMessages(String s) {
+    private void showMessages(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showMessages(int s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
@@ -543,4 +557,46 @@ public class AddMessageActivity extends AppCompatActivity
         mListStringSelectImages.remove(position);
     }
 
+
+    @NeedsPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    void showStorage() {
+        startActivityForResult(new Intent(this, ImagesCheckActivity.class), REQUEST_IMAGE);
+    }
+
+    @OnShowRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    void showRationaleForStorage(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_camera_rationale)
+                .setPositiveButton(R.string.button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton(R.string.button_deny, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.cancel();
+                    }
+                })
+                .show();
+    }
+
+    @OnPermissionDenied(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    void showDeniedForStorage() {
+        showMessages(R.string.permission_camera_denied);
+    }
+
+    @OnNeverAskAgain(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    void showNeverAskForStorage() {
+        showMessages(R.string.permission_camera_never_askagain);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+
+        AddMessageActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
 }

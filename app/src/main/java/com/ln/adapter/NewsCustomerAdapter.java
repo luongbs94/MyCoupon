@@ -114,8 +114,8 @@ public class NewsCustomerAdapter extends RecyclerView.Adapter<NewsCustomerAdapte
         }
 
         holder.mTxtTime.setText(fmt.format(item.getCreated_date()));
-
-        if (item.getLast_date() != 0) {
+        holder.linearLastDate.setVisibility(View.GONE);
+        if (item.getLast_date() > 0) {
             holder.linearLastDate.setVisibility(View.VISIBLE);
             holder.textLastDate.setText(fmt.format(item.getLast_date()));
             holder.textTimeShelf.setText(String.valueOf(MainApplication.dayLeft(item.getLast_date())));

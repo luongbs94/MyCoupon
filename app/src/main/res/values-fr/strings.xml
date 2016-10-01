@@ -94,8 +94,8 @@
     <string name="delete_news">Voulez-vous supprimer ces nouvelles</string>
     <string name="exit_alert">Voulez-vous sortir</string>
 
-    <string name="agree">Se mettre d\'accord</string>
-    <string name="disagree">Être en désaccord</string>
+    <string name="agree">D\'accord</string>
+    <string name="disagree">Annuler</string>
     <string name="delete_news_success">Le message est supprimé</string>
     <string name="all_news">Tout</string>
     <string name="history_news">Supprimer Nouvelles</string>
@@ -147,7 +147,7 @@ Envoyer les nouvelles de promotions à vos chers clients</string>
     <string name="internal">Internal storage</string>
     <string name="message_max_num">Up to %1$s photos can be selected</string>
     <string name="coupon">Coupon</string>
-    <string name="coupon_used">CCode a été utilisé , s\'il vous plaît vérifier autre code</string>
+    <string name="coupon_used">Le code est pas valide ou déjà utilisé</string>
     <string name="you_add_news_coupon">Vous avez ajouté un nouveau coupon</string>
     <string name="title_qr_code">QR Code  %1$S coupon</string>
     <string name="edit_news">modifier</string>
@@ -172,10 +172,9 @@ Envoyer les nouvelles de promotions à vos chers clients</string>
         <item>Créer</item>
         <item>Utilisé</item>
     </string-array>
-    <string name="account_exists">*Existant</string>
     <string name="up_loading">Uploading</string>
     <string name="only_admin">Seul administrateur</string>
-
+    <string name="only_admin_edit">Uniquement pour administration</string>
 
     <string name="forgot_password"><u>Mot de passe oublié</u></string>
     <string name="title_forget_password">Mot de passe oublié</string>

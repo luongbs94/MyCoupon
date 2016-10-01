@@ -40,7 +40,7 @@
 
     <string name="title_delete_coupon">Xoá coupon</string>
     <string name="content_delete_coupon">Bạn có muốn xoá coupon này không</string>
-    <string name="ok">Đồng ý</string>
+    <string name="ok">OK</string>
     <string name="cancel">Không</string>
     <string name="qrcode">Quét mã Coupon</string>
     <string name="name_company">Tên cửa hàng</string>
@@ -145,11 +145,11 @@
     <string name="internal">Internal storage</string>
     <string name="message_max_num">Up to %1$s photos can be selected</string>
     <string name="coupon">Coupon</string>
-    <string name="coupon_used">Coupon này đã được sử dụng </string>
+    <string name="coupon_used">Mã không chính xác hoặc đã dùng</string>
     <string name="you_add_news_coupon">Bạn đã thêm 1 coupon mới </string>
     <string name="title_qr_code">QR Code  %1$S coupon</string>
     <string name="edit_news">Sửa</string>
-    <string name="check_account">*Đã tòn tại</string>
+    <string name="check_account">*Đã tồn tại</string>
 
 
     <string-array name="month">
@@ -171,9 +171,9 @@
         <item>Tạo</item>
         <item>Sử dụng</item>
     </string-array>
-    <string name="account_exists">*Đã tồn tại</string>
     <string name="up_loading">Đang tạo</string>
     <string name="only_admin">Chỉ admin mới được xem</string>
+    <string name="only_admin_edit">Dành cho admin</string>
 
 
     <string name="forgot_password"><u>Quên mật khẩu</u></string>

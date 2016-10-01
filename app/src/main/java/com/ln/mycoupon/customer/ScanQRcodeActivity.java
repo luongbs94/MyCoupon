@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -109,17 +108,6 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZXingScanne
 
     @Override
     public void handleResult(Result rawResult) {
-        // Note:
-        // * Wait 2 seconds to resume the preview.
-        // * On older devices continuously stopping and resuming camera preview can result in freezing the app.
-        // * I don't know why this is the case but I don't have the time to figure out.
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mScannerView.resumeCameraPreview(ScanQRcodeActivity.this);
-//            }
-//        }, 2000);
 
         Log.d(TAG, "onCodeScanned : " + rawResult.getText());
         if (!isCamera) {
@@ -130,10 +118,6 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZXingScanne
     }
 
     private void updateCoupon(String coupon_id) {
-
-        Log.d(TAG, "updateCoupon " + mAccountOflUser.getId());
-        Log.d(TAG, "updateCoupon " + mAccountOflUser.getName());
-        Log.d(TAG, "updateCoupon " + mAccountOflUser.getPicture());
 
         Coupon coupon = new Coupon();
         coupon.setCoupon_id(coupon_id);
@@ -205,9 +189,7 @@ public class ScanQRcodeActivity extends AppCompatActivity implements ZXingScanne
                     bundle.putString(MainApplication.ID_COMPANY, company.getCompany_id());
                     intent.putExtras(bundle);
                     setResult(RESULT_OK, intent);
-                    Toast.makeText(ScanQRcodeActivity.this, getString(R.string.you_add_news_coupon), Toast.LENGTH_SHORT).show();
                     finish();
-
                     Log.d(TAG, "CompanyOfCustomer " + response.body());
                 }
             }
