@@ -13,24 +13,26 @@ import java.util.Locale;
  * <></>
  */
 public class FileUtils {
+
     public static final String POSTFIX = ".JPEG";
     public static final String APP_NAME = "ImageSelector";
     public static final String CAMERA_PATH = "/" + APP_NAME + "/CameraImage/";
     public static final String CROP_PATH = "/" + APP_NAME + "/CropImage/";
 
     public static File createCameraFile(Context context) {
-        return createMediaFile(context,CAMERA_PATH);
-    }
-    public static File createCropFile(Context context) {
-        return createMediaFile(context,CROP_PATH);
+        return createMediaFile(context, CAMERA_PATH);
     }
 
-    private static File createMediaFile(Context context, String parentPath){
+    public static File createCropFile(Context context) {
+        return createMediaFile(context, CROP_PATH);
+    }
+
+    private static File createMediaFile(Context context, String parentPath) {
         String state = Environment.getExternalStorageState();
-        File rootDir = state.equals(Environment.MEDIA_MOUNTED)? Environment.getExternalStorageDirectory():context.getCacheDir();
+        File rootDir = state.equals(Environment.MEDIA_MOUNTED) ? Environment.getExternalStorageDirectory() : context.getCacheDir();
 
         File folderDir = new File(rootDir.getAbsolutePath() + parentPath);
-        if (!folderDir.exists() && folderDir.mkdirs()){
+        if (!folderDir.exists() && folderDir.mkdirs()) {
 
         }
 

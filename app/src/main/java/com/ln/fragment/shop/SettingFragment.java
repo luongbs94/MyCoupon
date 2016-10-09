@@ -55,7 +55,6 @@ public class SettingFragment extends Fragment implements
         CompoundButton.OnCheckedChangeListener {
 
     private static final int START_CROP_IMAGES = 99;
-    private static final int IS_CHECK_FOCUS = 999;
     private final String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mLoveCouponAPI;
@@ -68,8 +67,6 @@ public class SettingFragment extends Fragment implements
     private TextView mTxtNameCompany, mTxtAddress;
     private CheckBox mChbShowPass;
     private FloatingActionButton mFabDoneSave;
-
-    private static final int SELECT_PICTURE = 100;
 
     private Company company;
     private static OnClickSetInformation mListener;

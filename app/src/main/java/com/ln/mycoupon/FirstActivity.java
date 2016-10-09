@@ -1,13 +1,15 @@
 package com.ln.mycoupon;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.google.gson.Gson;
 import com.ln.app.LoveCouponAPI;
 import com.ln.app.MainApplication;
 import com.ln.databases.DatabaseManager;
+import com.ln.images.models.ImagesManager;
 import com.ln.model.AccountOfUser;
 import com.ln.model.CityOfUser;
 import com.ln.model.Company;
@@ -35,12 +38,20 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FirstActivity extends AppCompatActivity implements View.OnClickListener {
+@RuntimePermissions
+public class FirstActivity extends BaseActivity  {
 
+    private static final int REQUEST_IMAGE = 2;
     private final String TAG = getClass().getSimpleName();
     private LoveCouponAPI mCouponAPI;
     private int mStartNotification = 1;
@@ -74,6 +85,7 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
         String token = MainApplication.getPreferences().getString(MainApplication.DEVICE_TOKEN, "");
         Log.d(TAG, token);
 
+        FirstActivityPermissionsDispatcher.showStorageWithCheck(this);
     }
 
 
@@ -377,6 +389,48 @@ public class FirstActivity extends AppCompatActivity implements View.OnClickList
                         .preload();
             }
         }
+    }
+
+    @NeedsPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    void showStorage() {
+        ImagesManager.getInstances(this);
+    }
+
+    @OnShowRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    void showRationaleForStorage(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_camera_rationale)
+                .setPositiveButton(R.string.button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton(R.string.button_deny, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.cancel();
+                    }
+                })
+                .show();
+    }
+
+    @OnPermissionDenied(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    void showDeniedForStorage() {
+        showMessage(R.string.permission_camera_denied);
+    }
+
+    @OnNeverAskAgain(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    void showNeverAskForStorage() {
+        showMessage(R.string.permission_camera_never_askagain);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+
+        FirstActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
 }

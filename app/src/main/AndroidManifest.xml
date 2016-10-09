@@ -24,6 +24,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".FirstActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -36,6 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".shop.ShopMainActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -49,6 +51,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".customer.CustomerMainActivity"
             android:configChanges="keyboardHidden|orientation"

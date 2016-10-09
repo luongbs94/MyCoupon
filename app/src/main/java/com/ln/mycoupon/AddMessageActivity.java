@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -66,13 +65,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @RuntimePermissions
-public class AddMessageActivity extends AppCompatActivity
-        implements DatePickerDialog.OnDateSetListener,
-        View.OnClickListener, SelectedImageAdapter.OnClickRemoveImages {
+public class AddMessageActivity extends BaseActivity
+        implements DatePickerDialog.OnDateSetListener, SelectedImageAdapter.OnClickRemoveImages {
 
 
     private static final int REQUEST_IMAGE = 77;
-    private static final int CREATE_NEWS = 76;
     private final String TAG = getClass().getSimpleName();
 
     private LoveCouponAPI mApiService;
@@ -353,20 +350,6 @@ public class AddMessageActivity extends AppCompatActivity
             }
         }
         return false;
-    }
-
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.up_loading));
-        }
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
     }
 
     @Override

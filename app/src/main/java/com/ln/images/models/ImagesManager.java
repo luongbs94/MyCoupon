@@ -74,8 +74,6 @@ public class ImagesManager {
     }
 
 
-
-
     public static List<LocalMedia> getListImageAll() {
         return mListImageAll;
     }

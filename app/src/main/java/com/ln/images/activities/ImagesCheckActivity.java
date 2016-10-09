@@ -1,10 +1,13 @@
 package com.ln.images.activities;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +23,7 @@ import com.ln.images.models.GridSpacingItemDecoration;
 import com.ln.images.models.ImagesManager;
 import com.ln.images.models.LocalMedia;
 import com.ln.images.models.ScreenUtils;
+import com.ln.mycoupon.BaseActivity;
 import com.ln.mycoupon.R;
 
 import org.parceler.Parcels;
@@ -28,7 +32,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImagesCheckActivity extends AppCompatActivity {
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
+
+@RuntimePermissions
+public class ImagesCheckActivity extends BaseActivity {
 
     private static final int spanCount = 3;
     private static final int REQUEST_CAMERA = 66;
@@ -80,7 +92,7 @@ public class ImagesCheckActivity extends AppCompatActivity {
 
             @Override
             public void onTakePhoto() {
-                startCamera();
+              ImagesCheckActivityPermissionsDispatcher.showCameraWithCheck(ImagesCheckActivity.this);
             }
 
         });
@@ -169,5 +181,47 @@ public class ImagesCheckActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void showCamera() {
+        startCamera();
+    }
+
+    @OnShowRationale(Manifest.permission.CAMERA)
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_camera_rationale)
+                .setPositiveButton(R.string.button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton(R.string.button_deny, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.cancel();
+                    }
+                })
+                .show();
+    }
+
+    @OnPermissionDenied(Manifest.permission.CAMERA)
+    void showDeniedForCamera() {
+        showMessage(R.string.permission_camera_denied);
+    }
+
+    @OnNeverAskAgain(Manifest.permission.CAMERA)
+    void showNeverAskForCamera() {
+        showMessage(R.string.permission_camera_never_askagain);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+
+        ImagesCheckActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }
